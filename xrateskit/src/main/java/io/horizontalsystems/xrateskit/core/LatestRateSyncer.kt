@@ -1,11 +1,13 @@
 package io.horizontalsystems.xrateskit.core
 
 import io.horizontalsystems.xrateskit.XRatesDataSource
-import io.horizontalsystems.xrateskit.storage.Rate
+import io.horizontalsystems.xrateskit.storage.LatestRate
+import io.horizontalsystems.xrateskit.storage.RateInfo
 import io.reactivex.disposables.Disposable
 
 class LatestRateSyncer(
         private val storage: IStorage,
+        private val factory: Factory,
         private val dataSource: XRatesDataSource,
         private val rateProvider: ILatestRateProvider)
     : SyncScheduler.Listener {
@@ -14,7 +16,7 @@ class LatestRateSyncer(
     var syncListener: ISyncCompletionListener? = null
 
     interface Listener {
-        fun onUpdate(rate: Rate)
+        fun onUpdate(rate: RateInfo)
     }
 
     private var disposable: Disposable? = null
@@ -33,9 +35,9 @@ class LatestRateSyncer(
                 })
     }
 
-    private fun update(rate: Rate) {
-        listener?.onUpdate(rate)
-        storage.saveRate(rate)
+    private fun update(rate: LatestRate) {
+        listener?.onUpdate(factory.createRateInfo(rate))
+        storage.saveLatestRate(rate)
     }
 
     //  Scheduler.Listener

@@ -9,25 +9,31 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import io.horizontalsystems.xrateskit.XRatesKit
-import io.horizontalsystems.xrateskit.storage.Rate
+import io.horizontalsystems.xrateskit.storage.RateInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import java.nio.file.attribute.UserPrincipalLookupService
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val ratesAdapter = RatesAdapter()
+    private val disposables = CompositeDisposable()
+
+    private val coins = listOf("BTC", "ETH", "BCH", "DASH", "XRP", "LTC", "EOS", "BSV", "BNB", "TRX", "ETC")
+    private val currency = "USD"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var rates = mutableListOf<Rate>()
+        var rates = mutableListOf<RateInfo>()
         val exchangeRatesKit = XRatesKit.create(this)
 
         coinsRecyclerView.adapter = ratesAdapter
 
-        exchangeRatesKit.start(listOf("BTC", "ETH", "BCH"), "USD")
+        exchangeRatesKit.start(coins, currency)
         exchangeRatesKit.rateFlowable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -40,14 +46,22 @@ class MainActivity : AppCompatActivity() {
                 }, {
                     it.printStackTrace()
                 })
-                .let {
+                .let { disposables.add(it) }
 
-                }
+        exchangeRatesKit.getHistoricalRate("BTC", currency, 1567932269)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ rate ->
+                    println(rate)
+                }, {
+                    it.printStackTrace()
+                })
+                .let { disposables.add(it) }
     }
 }
 
 class RatesAdapter : RecyclerView.Adapter<ViewHolderTransaction>() {
-    var items = listOf<Rate>()
+    var items = listOf<RateInfo>()
 
     override fun getItemCount() = items.size
 
@@ -63,7 +77,7 @@ class RatesAdapter : RecyclerView.Adapter<ViewHolderTransaction>() {
 class ViewHolderTransaction(private val containerView: View) : RecyclerView.ViewHolder(containerView) {
     private val summary = containerView.findViewById<TextView>(R.id.summary)!!
 
-    fun bind(rate: Rate, index: Int) {
+    fun bind(rate: RateInfo, index: Int) {
         containerView.setBackgroundColor(if (index % 2 == 0)
             Color.parseColor("#dddddd") else
             Color.TRANSPARENT

@@ -1,6 +1,6 @@
 package io.horizontalsystems.xrateskit.core
 
-import io.horizontalsystems.xrateskit.storage.Rate
+import io.horizontalsystems.xrateskit.storage.LatestRate
 import io.reactivex.Observable
 
 class LatestRateProviderChain : ILatestRateProvider {
@@ -10,13 +10,13 @@ class LatestRateProviderChain : ILatestRateProvider {
         providers.add(provider)
     }
 
-    override fun getLatestRate(coins: List<String>, currency: String): Observable<Rate> {
+    override fun getLatestRate(coins: List<String>, currency: String): Observable<LatestRate> {
         return getLatestRate(providers, coins, currency)
     }
 
     //  Private
 
-    private fun getLatestRate(providers: List<ILatestRateProvider>, coins: List<String>, currency: String): Observable<Rate> {
+    private fun getLatestRate(providers: List<ILatestRateProvider>, coins: List<String>, currency: String): Observable<LatestRate> {
         val currentProvider = providers.firstOrNull()
                 ?: return Observable.error(Exception("Invalid provider"))
 

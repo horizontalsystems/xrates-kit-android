@@ -1,13 +1,12 @@
 package io.horizontalsystems.xrateskit.storage
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
+import java.math.BigDecimal
 
-@Entity
-class Rate(
-        @PrimaryKey
+@Entity(primaryKeys = ["coin", "currency", "timestamp"])
+class HistoricalRate(
         val coin: String,
         val currency: String,
-        val value: Double,
+        val value: BigDecimal,
         val timestamp: Long
 )
