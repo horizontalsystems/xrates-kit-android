@@ -56,4 +56,26 @@ object XRatesKitTest : Spek({
             verify(syncScheduler).stop()
         }
     }
+
+    describe("#update(coins)") {
+
+        it("updates coins and restarts scheduler") {
+            val newCoins = listOf("BCH", "DASH")
+            ratesKit.update(newCoins)
+
+            verify(dataSource).coins = newCoins
+            verify(syncScheduler).start()
+        }
+    }
+
+    describe("#update(currency)") {
+
+        it("updates currency and restarts scheduler") {
+            val newCurrency = "KGS"
+            ratesKit.update(newCurrency)
+
+            verify(syncScheduler).start()
+            verify(dataSource).currency = newCurrency
+        }
+    }
 })

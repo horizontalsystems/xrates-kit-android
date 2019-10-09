@@ -32,20 +32,30 @@ class XRatesKit(
         latestRateScheduler.start()
     }
 
-    fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
-        return historicalRateManager.getHistoricalRate(coin, currency, timestamp)
-    }
-
-    fun getLatestRate(coin: String, currency: String): RateInfo? {
-        return storage.getLatestRate(coin, currency)?.let { RateInfo(it.coin, it.currency, it.value, it.timestamp) }
-    }
-
     fun refresh() {
         latestRateScheduler.start()
     }
 
     fun stop() {
         latestRateScheduler.stop()
+    }
+
+    fun update(coins: List<String>) {
+        dataSource.coins = coins
+        latestRateScheduler.start()
+    }
+
+    fun update(currency: String) {
+        dataSource.currency = currency
+        latestRateScheduler.start()
+    }
+
+    fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
+        return historicalRateManager.getHistoricalRate(coin, currency, timestamp)
+    }
+
+    fun getLatestRate(coin: String, currency: String): RateInfo? {
+        return storage.getLatestRate(coin, currency)?.let { RateInfo(it.coin, it.currency, it.value, it.timestamp) }
     }
 
     //  RateSyncer Listener
