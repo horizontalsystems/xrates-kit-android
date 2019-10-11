@@ -1,10 +1,11 @@
-package io.horizontalsystems.xrateskit.storage
+package io.horizontalsystems.xrateskit.entities
 
 import androidx.room.Entity
 import java.math.BigDecimal
 
-@Entity(primaryKeys = ["coin", "currency"])
-class LatestRate(
+@Entity(primaryKeys = ["type", "coin", "currency"])
+class ChartStats(
+        val type: ChartType,
         val coin: String,
         val currency: String,
         val value: BigDecimal,

@@ -3,6 +3,7 @@ package io.horizontalsystems.xrateskit.core
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import io.horizontalsystems.xrateskit.XRatesDataSource
+import io.horizontalsystems.xrateskit.managers.LatestRateSyncer
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
@@ -19,7 +20,7 @@ class LatestRateSyncerTest : Spek({
         LatestRateSyncer(storage, factory, dataSource, rateProvider)
     }
 
-    describe("#sync") {
+    describe("#syncChartStats") {
         it("gets latest rate from provider") {
             latestRateSyncer.sync()
             verify(rateProvider).getLatestRate(coins, currency)

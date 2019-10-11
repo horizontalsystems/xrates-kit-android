@@ -9,39 +9,38 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import io.horizontalsystems.xrateskit.XRatesKit
-import io.horizontalsystems.xrateskit.storage.RateInfo
+import io.horizontalsystems.xrateskit.entities.ChartPoint
+import io.horizontalsystems.xrateskit.entities.ChartType
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import java.nio.file.attribute.UserPrincipalLookupService
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val ratesAdapter = RatesAdapter()
     private val disposables = CompositeDisposable()
 
-    private val coins = listOf("BTC", "ETH", "BCH", "DASH", "XRP", "LTC", "EOS", "BSV", "BNB", "TRX", "ETC")
+    private val coins = listOf("BTC")
     private val currency = "USD"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var rates = mutableListOf<RateInfo>()
-        val exchangeRatesKit = XRatesKit.create(this)
+        val exchangeRatesKit = XRatesKit.create(this, "USD")
 
         coinsRecyclerView.adapter = ratesAdapter
 
-        exchangeRatesKit.start(coins, currency)
-        exchangeRatesKit.rateFlowable
+        exchangeRatesKit.set(coins)
+        exchangeRatesKit.set(currency)
+        // exchangeRatesKit.getChartStats("BTC", currency, ChartType.DAILY)
+
+        exchangeRatesKit.chartStatsFlowable("BTC", "USD", ChartType.DAILY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ rate ->
-                    rates = rates.filter { it.coin != rate.coin }.toMutableList()
-                    rates.add(rate)
-
-                    ratesAdapter.items = rates
+                .subscribe({ points ->
+                    ratesAdapter.items = points
                     ratesAdapter.notifyDataSetChanged()
                 }, {
                     it.printStackTrace()
@@ -61,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 }
 
 class RatesAdapter : RecyclerView.Adapter<ViewHolderTransaction>() {
-    var items = listOf<RateInfo>()
+    var items = listOf<ChartPoint>()
 
     override fun getItemCount() = items.size
 
@@ -77,7 +76,7 @@ class RatesAdapter : RecyclerView.Adapter<ViewHolderTransaction>() {
 class ViewHolderTransaction(private val containerView: View) : RecyclerView.ViewHolder(containerView) {
     private val summary = containerView.findViewById<TextView>(R.id.summary)!!
 
-    fun bind(rate: RateInfo, index: Int) {
+    fun bind(rate: ChartPoint, index: Int) {
         containerView.setBackgroundColor(if (index % 2 == 0)
             Color.parseColor("#dddddd") else
             Color.TRANSPARENT
@@ -85,7 +84,6 @@ class ViewHolderTransaction(private val containerView: View) : RecyclerView.View
 
         val value = """
             - #$index
-            - Coin: ${rate.coin}
             - Rate: ${rate.value}
             - Time: ${Date(rate.timestamp * 1000)}
         """

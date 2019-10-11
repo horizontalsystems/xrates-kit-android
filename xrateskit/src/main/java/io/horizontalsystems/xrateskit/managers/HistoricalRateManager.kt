@@ -1,6 +1,7 @@
-package io.horizontalsystems.xrateskit.core
+package io.horizontalsystems.xrateskit.managers
 
 import io.horizontalsystems.xrateskit.api.CryptoCompareProvider
+import io.horizontalsystems.xrateskit.core.IStorage
 import io.reactivex.Single
 import java.math.BigDecimal
 

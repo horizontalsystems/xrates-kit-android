@@ -1,6 +1,7 @@
 package io.horizontalsystems.xrateskit.storage
 
 import androidx.room.*
+import io.horizontalsystems.xrateskit.entities.LatestRate
 
 @Dao
 interface LatestRateDao {

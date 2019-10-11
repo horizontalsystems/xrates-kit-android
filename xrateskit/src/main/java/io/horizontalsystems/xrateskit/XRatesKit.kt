@@ -3,87 +3,100 @@ package io.horizontalsystems.xrateskit
 import android.content.Context
 import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.api.CryptoCompareProvider
-import io.horizontalsystems.xrateskit.core.*
+import io.horizontalsystems.xrateskit.core.DataProvider
+import io.horizontalsystems.xrateskit.core.Factory
+import io.horizontalsystems.xrateskit.core.SubjectHolder
+import io.horizontalsystems.xrateskit.core.SyncScheduler
+import io.horizontalsystems.xrateskit.entities.ChartPoint
+import io.horizontalsystems.xrateskit.entities.ChartType
+import io.horizontalsystems.xrateskit.entities.MarketStatsInfo
+import io.horizontalsystems.xrateskit.entities.RateInfo
+import io.horizontalsystems.xrateskit.managers.ChartStatsSyncer
+import io.horizontalsystems.xrateskit.managers.HistoricalRateManager
+import io.horizontalsystems.xrateskit.managers.LatestRateSyncer
+import io.horizontalsystems.xrateskit.managers.MarketStatsManager
 import io.horizontalsystems.xrateskit.storage.Database
-import io.horizontalsystems.xrateskit.storage.RateInfo
 import io.horizontalsystems.xrateskit.storage.Storage
-import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.subjects.PublishSubject
 import java.math.BigDecimal
 
 class XRatesKit(
-        private val storage: IStorage,
         private val dataSource: XRatesDataSource,
-        private val latestRateScheduler: SyncScheduler,
-        private val historicalRateManager: HistoricalRateManager)
-    : LatestRateSyncer.Listener {
+        private val subjectHolder: SubjectHolder,
+        private val syncScheduler: SyncScheduler,
+        private val dataProvider: DataProvider) {
 
-    val rateFlowable: Flowable<RateInfo>
-        get() = rateSubject.toFlowable(BackpressureStrategy.BUFFER)
+    init {
+        syncScheduler.start()
+    }
 
-    private val rateSubject = PublishSubject.create<RateInfo>()
-
-    fun start(coins: List<String>, currency: String) {
+    fun set(coins: List<String>) {
         dataSource.coins = coins
-        dataSource.currency = currency
+        subjectHolder.clear()
 
-        latestRateScheduler.start()
+        syncScheduler.start()
+    }
+
+    fun set(currency: String) {
+        dataSource.currency = currency
+        syncScheduler.start()
     }
 
     fun refresh() {
-        latestRateScheduler.start()
-    }
-
-    fun stop() {
-        latestRateScheduler.stop()
-    }
-
-    fun update(coins: List<String>) {
-        dataSource.coins = coins
-        latestRateScheduler.start()
-    }
-
-    fun update(currency: String) {
-        dataSource.currency = currency
-        latestRateScheduler.start()
+        syncScheduler.start()
     }
 
     fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
-        return historicalRateManager.getHistoricalRate(coin, currency, timestamp)
+        return dataProvider.getHistoricalRate(coin, currency, timestamp)
     }
 
     fun getLatestRate(coin: String, currency: String): RateInfo? {
-        return storage.getLatestRate(coin, currency)?.let { RateInfo(it.coin, it.currency, it.value, it.timestamp) }
+        return dataProvider.getLatestRate(coin, currency)
     }
 
-    //  RateSyncer Listener
+    fun getMarketStats(coin: String, currency: String): Single<MarketStatsInfo> {
+        return dataProvider.getMarketStats(coin, currency)
+    }
 
-    override fun onUpdate(rate: RateInfo) {
-        rateSubject.onNext(rate)
+    fun getChartStats(coin: String, currency: String, type: ChartType): List<ChartPoint> {
+        return dataProvider.getChartPoints(coin, currency, type)
+    }
+
+    fun latestRateFlowable(coin: String, currency: String): Flowable<RateInfo> {
+        return subjectHolder.latestRateFlowable(coin, currency)
+    }
+
+    fun chartStatsFlowable(coin: String, currency: String, type: ChartType): Flowable<List<ChartPoint>> {
+        return subjectHolder.chartStatsFlowable(coin, currency, type)
     }
 
     companion object {
-        fun create(context: Context): XRatesKit {
-            val storage = Storage(Database.create(context))
-            val dataSource = XRatesDataSource()
+        fun create(context: Context, currency: String): XRatesKit {
             val factory = Factory()
+            val storage = Storage(Database.create(context))
+            val dataSource = XRatesDataSource(currency = currency)
+
+            val subjectHolder = SubjectHolder()
+            val syncScheduler = SyncScheduler(5 * 60, 60)
 
             val apiManager = ApiManager()
             val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, "https://min-api.cryptocompare.com")
-            val latestRateScheduler = SyncScheduler(5 * 60, 60)
-            val latestRateSyncer = LatestRateSyncer(storage, factory, dataSource, cryptoCompareProvider)
+
+            val chartStatsSyncer = ChartStatsSyncer(storage, subjectHolder, cryptoCompareProvider)
+            val latestRateSyncer = LatestRateSyncer(storage, dataSource, cryptoCompareProvider)
+
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
+            val marketStatsManager = MarketStatsManager(storage, cryptoCompareProvider)
 
-            val exchangeRatesKit = XRatesKit(storage, dataSource, latestRateScheduler, historicalRateManager)
+            val dataProvider = DataProvider(storage, factory, subjectHolder, chartStatsSyncer, historicalRateManager, marketStatsManager)
 
-            latestRateSyncer.listener = exchangeRatesKit
-            latestRateSyncer.syncListener = latestRateScheduler
+            chartStatsSyncer.subscribe(syncScheduler)
+            latestRateSyncer.subscribe(syncScheduler)
+            latestRateSyncer.syncListener = syncScheduler
+            latestRateSyncer.listener = dataProvider
 
-            latestRateScheduler.listener = latestRateSyncer
-
-            return exchangeRatesKit
+            return XRatesKit(dataSource, subjectHolder, syncScheduler, dataProvider)
         }
     }
 }

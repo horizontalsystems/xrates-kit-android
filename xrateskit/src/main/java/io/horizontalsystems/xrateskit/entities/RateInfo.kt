@@ -1,4 +1,4 @@
-package io.horizontalsystems.xrateskit.storage
+package io.horizontalsystems.xrateskit.entities
 
 import java.math.BigDecimal
 

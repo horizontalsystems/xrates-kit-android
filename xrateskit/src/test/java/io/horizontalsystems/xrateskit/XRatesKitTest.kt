@@ -3,10 +3,9 @@ package io.horizontalsystems.xrateskit
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import io.horizontalsystems.xrateskit.core.HistoricalRateManager
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.core.SyncScheduler
-import org.junit.Assert.assertEquals
+import io.horizontalsystems.xrateskit.managers.HistoricalRateManager
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
@@ -27,20 +26,6 @@ object XRatesKitTest : Spek({
 
     val ratesKit by memoized { XRatesKit(storage, dataSource, syncScheduler, historicalRateManager) }
 
-    describe("#start") {
-
-        it("starts the kit") {
-            assertEquals(listOf<String>(), dataSource.coins)
-            assertEquals("USD", dataSource.currency)
-
-            ratesKit.start(coins, currency)
-
-            verify(dataSource).coins = coins
-            verify(dataSource).currency = currency
-            verify(syncScheduler).start()
-        }
-    }
-
     describe("#refresh") {
 
         it("refreshes the kit") {
@@ -49,30 +34,22 @@ object XRatesKitTest : Spek({
         }
     }
 
-    describe("#stop") {
+    describe("#set(coins)") {
 
-        it("stops the kit") {
-            ratesKit.stop()
-            verify(syncScheduler).stop()
-        }
-    }
-
-    describe("#update(coins)") {
-
-        it("updates coins and restarts scheduler") {
+        it("sets coins and restarts scheduler") {
             val newCoins = listOf("BCH", "DASH")
-            ratesKit.update(newCoins)
+            ratesKit.set(newCoins)
 
             verify(dataSource).coins = newCoins
             verify(syncScheduler).start()
         }
     }
 
-    describe("#update(currency)") {
+    describe("#set(currency)") {
 
-        it("updates currency and restarts scheduler") {
+        it("sets currency and restarts scheduler") {
             val newCurrency = "KGS"
-            ratesKit.update(newCurrency)
+            ratesKit.set(newCurrency)
 
             verify(syncScheduler).start()
             verify(dataSource).currency = newCurrency

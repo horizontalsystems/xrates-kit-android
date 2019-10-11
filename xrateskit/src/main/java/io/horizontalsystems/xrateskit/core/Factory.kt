@@ -1,8 +1,6 @@
 package io.horizontalsystems.xrateskit.core
 
-import io.horizontalsystems.xrateskit.storage.HistoricalRate
-import io.horizontalsystems.xrateskit.storage.LatestRate
-import io.horizontalsystems.xrateskit.storage.RateInfo
+import io.horizontalsystems.xrateskit.entities.*
 import java.math.BigDecimal
 import java.util.*
 
@@ -17,5 +15,17 @@ class Factory {
 
     fun createRateInfo(rate: LatestRate): RateInfo {
         return RateInfo(rate.coin, rate.currency, rate.value, rate.timestamp)
+    }
+
+    fun createChartPoint(value: BigDecimal, timestamp: Long): ChartPoint {
+        return ChartPoint(value, timestamp)
+    }
+
+    fun createMarketCap(coin: String, currency: String, volume: Double, marketCap: Double, supply: Double): MarketStats {
+        return MarketStats(coin, currency, volume, marketCap, supply, timestamp = Date().time / 1000)
+    }
+
+    fun createMarketCapInfo(marketStats: MarketStats): MarketStatsInfo {
+        return MarketStatsInfo(marketStats.volume, marketStats.marketCap, marketStats.supply)
     }
 }

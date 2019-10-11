@@ -3,17 +3,16 @@ package io.horizontalsystems.xrateskit.core
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
+enum class SyncSchedulerEvent {
+    FIRE,
+    STOP
+}
+
 class SyncScheduler(private val interval: Long, private val retryInterval: Long) : ISyncCompletionListener {
-
-    var listener: Listener? = null
-
-    interface Listener {
-        fun onFire()
-        fun onStop()
-    }
-
+    val eventSubject = PublishSubject.create<SyncSchedulerEvent>()
     var disposable: Disposable? = null
 
     fun start() {
@@ -23,6 +22,7 @@ class SyncScheduler(private val interval: Long, private val retryInterval: Long)
     fun stop() {
         disposable?.dispose()
         disposable = null
+        eventSubject.onNext(SyncSchedulerEvent.STOP)
     }
 
     private fun start(delay: Long) {
@@ -31,7 +31,7 @@ class SyncScheduler(private val interval: Long, private val retryInterval: Long)
                 .timer(delay, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .subscribe {
-                    listener?.onFire()
+                    eventSubject.onNext(SyncSchedulerEvent.FIRE)
                 }
     }
 
