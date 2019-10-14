@@ -59,16 +59,16 @@ class XRatesKit(
         return dataProvider.getMarketStats(coin, currency)
     }
 
-    fun getChartStats(coin: String, currency: String, type: ChartType): List<ChartPoint> {
-        return dataProvider.getChartPoints(coin, currency, type)
+    fun getChartStats(coin: String, currency: String, chartType: ChartType): List<ChartPoint> {
+        return dataProvider.getChartPoints(coin, currency, chartType)
     }
 
     fun latestRateFlowable(coin: String, currency: String): Flowable<RateInfo> {
         return subjectHolder.latestRateFlowable(coin, currency)
     }
 
-    fun chartStatsFlowable(coin: String, currency: String, type: ChartType): Flowable<List<ChartPoint>> {
-        return subjectHolder.chartStatsFlowable(coin, currency, type)
+    fun chartStatsFlowable(coin: String, currency: String, chartType: ChartType): Flowable<List<ChartPoint>> {
+        return subjectHolder.chartStatsFlowable(coin, currency, chartType)
     }
 
     companion object {

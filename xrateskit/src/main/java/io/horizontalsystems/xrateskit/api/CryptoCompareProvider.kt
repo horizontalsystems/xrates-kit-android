@@ -16,21 +16,21 @@ class CryptoCompareProvider(
     // Latest Rate
 
     override fun getLatestRate(coins: List<String>, currency: String): Observable<LatestRate> {
-        return Observable.create<LatestRate> { subscriber ->
+        return Observable.create<LatestRate> { emitter ->
             try {
-                val fSyms = coins.joinToString(",")
-                val jsonObject = apiManager.getJson("$baseUrl/data/pricemulti?fsyms=$fSyms&tsyms=${currency}")
+                val coinsCodes = coins.joinToString(",")
+                val jsonObject = apiManager.getJson("$baseUrl/data/pricemulti?fsyms=$coinsCodes&tsyms=${currency}")
 
                 for (coin in coins) {
                     val rateObject = jsonObject.get(coin).asObject()
                     val value = rateObject.get(currency).toString()
 
-                    subscriber.onNext(factory.createLatestRate(coin, currency, value.toBigDecimal()))
+                    emitter.onNext(factory.createLatestRate(coin, currency, value.toBigDecimal()))
                 }
 
-                subscriber.onComplete()
+                emitter.onComplete()
             } catch (e: Exception) {
-                subscriber.onError(e)
+                emitter.onError(e)
             }
         }
     }
@@ -82,10 +82,10 @@ class CryptoCompareProvider(
 
     // Chart Data
 
-    override fun getChartStats(coin: String, currency: String, type: ChartType): Single<List<ChartStats>> {
+    override fun getChartStats(coin: String, currency: String, chartType: ChartType): Single<List<ChartStats>> {
         return Single.create<List<ChartStats>> { emitter ->
             try {
-                val response = apiManager.getJson("$baseUrl/data/v2/${type.resource}?fsym=$coin&tsym=$currency&limit=${type.points}")
+                val response = apiManager.getJson("$baseUrl/data/v2/${chartType.resource}?fsym=$coin&tsym=$currency&limit=${chartType.points}")
                 val result = response["Data"].asObject()["Data"].asArray().map { it.asObject() }
                 val stats = mutableListOf<ChartStats>()
 
@@ -95,7 +95,7 @@ class CryptoCompareProvider(
                             data["close"].asDouble()
                     )
 
-                    stats.add(ChartStats(type, coin, currency, value, data["time"].asLong()))
+                    stats.add(ChartStats(chartType, coin, currency, value, data["time"].asLong()))
                 }
 
                 emitter.onSuccess(stats)

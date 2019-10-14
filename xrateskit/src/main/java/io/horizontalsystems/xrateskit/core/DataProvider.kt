@@ -23,12 +23,12 @@ class DataProvider(
         }
     }
 
-    fun getChartPoints(coin: String, currency: String, type: ChartType): List<ChartPoint> {
-        val chartStats = storage.getChartStats(coin, currency, type)
+    fun getChartPoints(coin: String, currency: String, chartType: ChartType): List<ChartPoint> {
+        val chartStats = storage.getChartStats(coin, currency, chartType)
 
         val lastChartStats = chartStats.lastOrNull()
-        if (lastChartStats == null || lastChartStats.timestamp < 0L) {
-            chartStatsSyncer.syncChartStats(coin, currency, type)
+        if (lastChartStats == null || chartType.isExpired(lastChartStats.timestamp)) {
+            chartStatsSyncer.sync(coin, currency, chartType)
         }
 
         return pointsWithLatestRate(chartStats, storage.getLatestRate(coin, currency))
@@ -46,30 +46,30 @@ class DataProvider(
 
     //  LatestRateSyncer Listener
 
-    override fun onUpdate(rate: LatestRate) {
-        val rateInfo = factory.createRateInfo(rate)
-        val rateSubjectKey = LatestRateSubjectKey(rate.coin, rate.currency)
+    override fun onUpdate(latestRate: LatestRate) {
+        val rateInfo = factory.createRateInfo(latestRate)
+        val rateSubjectKey = LatestRateSubjectKey(latestRate.coin, latestRate.currency)
 
         subjectHolder.latestRateSubject[rateSubjectKey]?.onNext(rateInfo)
 
         //  Update chart stats
-        val filteredChartStatsKeys = subjectHolder.activeChartStatsKeys.filter { it.coin == rate.coin }
+        val filteredChartStatsKeys = subjectHolder.activeChartStatsKeys.filter { it.coin == latestRate.coin }
 
         for (subjectKey in filteredChartStatsKeys) {
-            val chartStats = storage.getChartStats(subjectKey.coin, subjectKey.currency, subjectKey.type)
+            val chartStats = storage.getChartStats(subjectKey.coin, subjectKey.currency, subjectKey.chartType)
             if (chartStats.isEmpty()) {
                 continue
             }
 
             val subject = subjectHolder.chartStatsSubject[subjectKey] ?: continue
-            subject.onNext(pointsWithLatestRate(chartStats, rate))
+            subject.onNext(pointsWithLatestRate(chartStats, latestRate))
         }
     }
 
     //  ChartStatsManager Listener
 
-    override fun onUpdate(stats: List<ChartStats>, coin: String, currency: String, type: ChartType) {
-        val statsSubjectKey = ChartStatsSubjectKey(coin, currency, type)
+    override fun onUpdate(stats: List<ChartStats>, coin: String, currency: String, chartType: ChartType) {
+        val statsSubjectKey = ChartStatsSubjectKey(coin, currency, chartType)
 
         val publishSubject = subjectHolder.chartStatsSubject[statsSubjectKey]
         if (publishSubject == null || stats.isEmpty()) {
@@ -95,5 +95,4 @@ class DataProvider(
 
         return chartPoints + factory.createChartPoint(latestRate.value, latestRate.timestamp)
     }
-
 }

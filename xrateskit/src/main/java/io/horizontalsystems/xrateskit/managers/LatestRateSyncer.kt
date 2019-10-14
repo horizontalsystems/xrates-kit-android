@@ -4,7 +4,6 @@ import io.horizontalsystems.xrateskit.XRatesDataSource
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.LatestRate
 import io.reactivex.BackpressureStrategy
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 class LatestRateSyncer(
@@ -15,38 +14,34 @@ class LatestRateSyncer(
     var listener: Listener? = null
     var syncListener: ISyncCompletionListener? = null
 
-    private val disposables = CompositeDisposable()
+    private var schedulerDisposable: Disposable? = null
+    private var syncDisposable: Disposable? = null
 
     interface Listener {
-        fun onUpdate(rate: LatestRate)
+        fun onUpdate(latestRate: LatestRate)
     }
 
-    private var disposable: Disposable? = null
-
     fun subscribe(scheduler: SyncScheduler) {
-        scheduler.eventSubject
-                .toFlowable(BackpressureStrategy.BUFFER)
+        schedulerDisposable = scheduler.eventSubject
+                .toFlowable(BackpressureStrategy.DROP)
                 .subscribe { state: SyncSchedulerEvent ->
                     when (state) {
                         SyncSchedulerEvent.FIRE -> onFire()
                         SyncSchedulerEvent.STOP -> onStop()
                     }
                 }
-                .let {
-                    disposables.add(it)
-                }
     }
 
-
     fun sync() {
-        if (dataSource.coins.isEmpty()) {
+        if (dataSource.currency == "" || dataSource.coins.isEmpty()) {
             return
         }
 
-        disposable?.dispose()
-        disposable = rateProvider.getLatestRate(dataSource.coins, dataSource.currency)
-                .subscribe({
-                    update(it)
+        syncDisposable?.dispose()
+        syncDisposable = rateProvider.getLatestRate(dataSource.coins, dataSource.currency)
+                .subscribe({ rate ->
+                    storage.saveLatestRate(rate)
+                    listener?.onUpdate(rate)
                 }, {
                     syncListener?.onFail()
                 }, {
@@ -54,17 +49,12 @@ class LatestRateSyncer(
                 })
     }
 
-    private fun update(rate: LatestRate) {
-        storage.saveLatestRate(rate)
-        listener?.onUpdate(rate)
-    }
-
     private fun onFire() {
         sync()
     }
 
     private fun onStop() {
-        disposable?.dispose()
-        disposable = null
+        syncDisposable?.dispose()
+        syncDisposable = null
     }
 }

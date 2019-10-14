@@ -4,7 +4,7 @@ import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.ChartStats
 import io.horizontalsystems.xrateskit.entities.ChartType
 import io.reactivex.BackpressureStrategy
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class ChartStatsSyncer(
@@ -12,54 +12,51 @@ class ChartStatsSyncer(
         private val subjectHolder: SubjectHolder,
         private val statsProvider: IChartStatsProvider) {
 
-    private val listener: Listener? = null
-    private val syncListener: ISyncCompletionListener? = null
+    var listener: Listener? = null
+    var syncListener: ISyncCompletionListener? = null
 
-    private val disposables = CompositeDisposable()
+    private var schedulerDisposable: Disposable? = null
+    private var syncDisposable: Disposable? = null
 
     interface Listener {
-        fun onUpdate(stats: List<ChartStats>, coin: String, currency: String, type: ChartType)
+        fun onUpdate(stats: List<ChartStats>, coin: String, currency: String, chartType: ChartType)
     }
 
     fun subscribe(scheduler: SyncScheduler) {
-        scheduler.eventSubject
-                .toFlowable(BackpressureStrategy.BUFFER)
+        schedulerDisposable = scheduler.eventSubject
+                .toFlowable(BackpressureStrategy.DROP)
                 .subscribe { state: SyncSchedulerEvent ->
                     when (state) {
                         SyncSchedulerEvent.FIRE -> onFire()
                         SyncSchedulerEvent.STOP -> onStop()
                     }
                 }
-                .let {
-                    disposables.add(it)
-                }
     }
 
-    fun syncChartStats(coin: String, currency: String, type: ChartType) {
-        statsProvider.getChartStats(coin, currency, type)
+    fun sync(coin: String, currency: String, chartType: ChartType) {
+        syncDisposable = statsProvider.getChartStats(coin, currency, chartType)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe({
                     storage.saveChartStats(it)
-                    listener?.onUpdate(it, coin, currency, type)
+                    listener?.onUpdate(it, coin, currency, chartType)
+                    syncListener?.onSuccess()
                 }, {
                     syncListener?.onFail()
                 })
-                .let {
-                    disposables.add(it)
-                }
     }
 
     private fun onFire() {
         for (subjectKey in subjectHolder.activeChartStatsKeys) {
-            val latestStats = storage.getLatestChartStats(subjectKey.coin, subjectKey.currency, subjectKey.type)
-            if (latestStats == null || latestStats.timestamp < 0L) {
-                syncChartStats(subjectKey.coin, subjectKey.currency, subjectKey.type)
+            val latestStats = storage.getLatestChartStats(subjectKey.coin, subjectKey.currency, subjectKey.chartType)
+            if (latestStats == null || subjectKey.chartType.isExpired(latestStats.timestamp)) {
+                sync(subjectKey.coin, subjectKey.currency, subjectKey.chartType)
             }
         }
     }
 
     private fun onStop() {
-        disposables.clear()
+        syncDisposable?.dispose()
+        syncDisposable = null
     }
 }

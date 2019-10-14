@@ -31,16 +31,16 @@ class Storage(database: Database) : IStorage {
 
     //  ChartStats
 
-    override fun getChartStats(coin: String, currency: String, type: ChartType): List<ChartStats> {
-        return chartStatsDao.getList(coin, currency, type)
+    override fun getChartStats(coin: String, currency: String, chartType: ChartType): List<ChartStats> {
+        return chartStatsDao.getList(coin, currency, chartType)
     }
 
     override fun saveChartStats(chartStats: List<ChartStats>) {
         chartStatsDao.insert(chartStats)
     }
 
-    override fun getLatestChartStats(coin: String, currency: String, type: ChartType): ChartStats? {
-        return chartStatsDao.getLast(coin, currency, type)
+    override fun getLatestChartStats(coin: String, currency: String, chartType: ChartType): ChartStats? {
+        return chartStatsDao.getLast(coin, currency, chartType)
     }
 
     //  MarketStats

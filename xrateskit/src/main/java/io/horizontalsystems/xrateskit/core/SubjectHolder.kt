@@ -34,8 +34,8 @@ class SubjectHolder {
         return subject.toFlowable(BackpressureStrategy.BUFFER)
     }
 
-    fun chartStatsFlowable(coin: String, currency: String, type: ChartType): Flowable<List<ChartPoint>> {
-        val subjectKey = ChartStatsSubjectKey(coin, currency, type)
+    fun chartStatsFlowable(coin: String, currency: String, chartType: ChartType): Flowable<List<ChartPoint>> {
+        val subjectKey = ChartStatsSubjectKey(coin, currency, chartType)
 
         var subject = chartStatsSubject[subjectKey]
         if (subject == null) {
