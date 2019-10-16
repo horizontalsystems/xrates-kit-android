@@ -3,7 +3,7 @@ package io.horizontalsystems.xrateskit.entities
 import androidx.room.Entity
 import java.math.BigDecimal
 
-@Entity(primaryKeys = ["type", "coin", "currency"])
+@Entity(primaryKeys = ["type", "coin", "currency", "timestamp"])
 class ChartStats(
         val type: ChartType,
         val coin: String,
