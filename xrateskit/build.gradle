@@ -32,8 +32,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.11'
 
     // Room
-    implementation "androidx.room:room-runtime:2.2.0-rc01"
-    kapt "androidx.room:room-compiler:2.2.0-rc01"
+    implementation "androidx.room:room-runtime:2.2.0"
+    kapt "androidx.room:room-compiler:2.2.0"
 
     // JSON
     implementation 'com.eclipsesource.minimal-json:minimal-json:0.9.5'
