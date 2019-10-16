@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.stetho.Stetho
 import io.horizontalsystems.xrateskit.XRatesKit
 import io.horizontalsystems.xrateskit.entities.ChartPoint
 import io.horizontalsystems.xrateskit.entities.ChartType
@@ -21,37 +22,47 @@ class MainActivity : AppCompatActivity() {
     private val ratesAdapter = RatesAdapter()
     private val disposables = CompositeDisposable()
 
-    private val coins = listOf("BTC")
+    private val btc = "BTC"
+    private val coins = listOf(btc)
     private val currency = "USD"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val exchangeRatesKit = XRatesKit.create(this, "USD")
+        val exchangeRatesKit = XRatesKit.create(this, currency)
 
-        coinsRecyclerView.adapter = ratesAdapter
+        chartStatsRecyclerView.adapter = ratesAdapter
 
         exchangeRatesKit.set(coins)
-        exchangeRatesKit.set(currency)
         // exchangeRatesKit.getChartStats("BTC", currency, ChartType.DAILY)
 
-        exchangeRatesKit.chartStatsFlowable("BTC", "USD", ChartType.DAILY)
+        exchangeRatesKit.latestRateFlowable(btc, currency)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ points ->
-                    ratesAdapter.items = points
-                    ratesAdapter.notifyDataSetChanged()
+                .subscribe({ rate ->
+                    val value = """
+                        - Coin: ${rate.coin}
+                        - Currency: ${rate.currency}
+                        - Rate: ${rate.value}
+                        - Time: ${Date(rate.timestamp * 1000)}
+                    """
+
+                    latestRate.text = value.trimIndent()
                 }, {
                     it.printStackTrace()
                 })
                 .let { disposables.add(it) }
 
-        exchangeRatesKit.getHistoricalRate("BTC", currency, 1567932269)
+        ratesAdapter.items = exchangeRatesKit.getChartStats(btc, currency, ChartType.DAILY)
+        ratesAdapter.notifyDataSetChanged()
+
+        exchangeRatesKit.chartStatsFlowable(btc, currency, ChartType.DAILY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ rate ->
-                    println(rate)
+                .subscribe({
+                    ratesAdapter.items = it
+                    ratesAdapter.notifyDataSetChanged()
                 }, {
                     it.printStackTrace()
                 })
@@ -83,9 +94,9 @@ class ViewHolderTransaction(private val containerView: View) : RecyclerView.View
         )
 
         val value = """
-            - #$index
-            - Rate: ${rate.value}
-            - Time: ${Date(rate.timestamp * 1000)}
+          - #$index
+          - Rate: ${rate.value}
+          - Time: ${Date(rate.timestamp * 1000)}
         """
 
         summary.text = value.trimIndent()

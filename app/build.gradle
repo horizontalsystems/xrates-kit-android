@@ -32,5 +32,9 @@ dependencies {
 
     implementation project(':xrateskit')
 
+    // For debugging
+    implementation 'com.facebook.stetho:stetho:1.5.1'
+
+    //  Tests
     testImplementation 'junit:junit:4.12'
 }
