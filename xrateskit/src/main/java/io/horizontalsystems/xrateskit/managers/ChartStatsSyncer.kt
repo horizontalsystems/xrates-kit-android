@@ -1,49 +1,58 @@
 package io.horizontalsystems.xrateskit.managers
 
-import io.horizontalsystems.xrateskit.core.*
+import io.horizontalsystems.xrateskit.XRatesDataSource
+import io.horizontalsystems.xrateskit.core.Factory
+import io.horizontalsystems.xrateskit.core.IChartStatsProvider
+import io.horizontalsystems.xrateskit.core.IStorage
+import io.horizontalsystems.xrateskit.core.SubjectHolder
 import io.horizontalsystems.xrateskit.entities.ChartStats
 import io.horizontalsystems.xrateskit.entities.ChartType
-import io.reactivex.BackpressureStrategy
+import io.reactivex.Single
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 
 class ChartStatsSyncer(
+        private val factory: Factory,
         private val storage: IStorage,
+        private val dataSource: XRatesDataSource,
         private val subjectHolder: SubjectHolder,
         private val statsProvider: IChartStatsProvider) {
 
     var listener: Listener? = null
-    var syncListener: ISyncCompletionListener? = null
 
-    private var schedulerDisposable: Disposable? = null
-    private var syncDisposable: Disposable? = null
+    private var disposable: Disposable? = null
 
     interface Listener {
         fun onUpdate(stats: List<ChartStats>, coin: String, currency: String, chartType: ChartType)
     }
 
-    fun subscribe(scheduler: SyncScheduler) {
-        schedulerDisposable = scheduler.eventSubject
-                .toFlowable(BackpressureStrategy.DROP)
-                .subscribe { state: SyncSchedulerEvent ->
-                    when (state) {
-                        SyncSchedulerEvent.FIRE -> onFire()
-                        SyncSchedulerEvent.STOP -> onStop()
-                    }
-                }
+    val lastSyncTimestamp: Long?
+        get() = lastSyncTimestamp()
+
+    val syncSingle: Single<Unit>
+        get() = syncAll()
+
+    private fun syncAll(): Single<Unit> {
+        return Single.just(Unit)
     }
 
-    fun sync(coin: String, currency: String, chartType: ChartType) {
-        syncDisposable = statsProvider.getChartStats(coin, currency, chartType)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe({
-                    storage.saveChartStats(it)
-                    listener?.onUpdate(it, coin, currency, chartType)
-                    syncListener?.onSuccess()
-                }, {
-                    syncListener?.onFail()
-                })
+    fun sync(coin: String, currency: String, chartType: ChartType): Single<Unit> {
+        return statsProvider
+                .getChartStats(coin, currency, chartType)
+                .doOnSuccess { stats ->
+                    storage.saveChartStats(stats)
+                    listener?.onUpdate(stats, coin, currency, chartType)
+                }
+                .map { Unit }
+    }
+
+    private fun lastSyncTimestamp(): Long? {
+        val activeKeys = subjectHolder.activeChartStatsKeys
+        val chartStats = storage.getOldChartStats(activeKeys.map { it.chartType }, activeKeys.map { it.coin }, dataSource.currency)
+        if (chartStats.size != activeKeys.size) {
+            return null
+        }
+
+        return chartStats.lastOrNull()?.timestamp
     }
 
     private fun onFire() {
@@ -56,7 +65,7 @@ class ChartStatsSyncer(
     }
 
     private fun onStop() {
-        syncDisposable?.dispose()
-        syncDisposable = null
+        disposable?.dispose()
+        disposable = null
     }
 }

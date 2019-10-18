@@ -11,12 +11,16 @@ class Storage(database: Database) : IStorage {
 
     // LatestRate
 
-    override fun saveLatestRate(rate: LatestRate) {
-        latestRateDao.insert(rate)
+    override fun saveLatestRates(rates: List<LatestRate>) {
+        latestRateDao.insert(rates)
     }
 
     override fun getLatestRate(coin: String, currency: String): LatestRate? {
         return latestRateDao.getRate(coin, currency)
+    }
+
+    override fun getOldLatestRates(coins: List<String>, currency: String): List<LatestRate> {
+        return latestRateDao.getOldRates(coins, currency) // expired last
     }
 
     // HistoricalRate
@@ -41,6 +45,10 @@ class Storage(database: Database) : IStorage {
 
     override fun getLatestChartStats(coin: String, currency: String, chartType: ChartType): ChartStats? {
         return chartStatsDao.getLast(coin, currency, chartType)
+    }
+
+    override fun getOldChartStats(chartTypes: List<ChartType>, coins: List<String>, currency: String): List<ChartStats> {
+        return chartStatsDao.getOldStats(chartTypes, coins, currency)
     }
 
     //  MarketStats

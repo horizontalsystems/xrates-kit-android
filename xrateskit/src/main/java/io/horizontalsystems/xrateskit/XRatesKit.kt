@@ -3,10 +3,7 @@ package io.horizontalsystems.xrateskit
 import android.content.Context
 import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.api.CryptoCompareProvider
-import io.horizontalsystems.xrateskit.core.DataProvider
-import io.horizontalsystems.xrateskit.core.Factory
-import io.horizontalsystems.xrateskit.core.SubjectHolder
-import io.horizontalsystems.xrateskit.core.SyncScheduler
+import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.ChartPoint
 import io.horizontalsystems.xrateskit.entities.ChartType
 import io.horizontalsystems.xrateskit.entities.MarketStatsInfo
@@ -24,12 +21,8 @@ import java.math.BigDecimal
 class XRatesKit(
         private val dataSource: XRatesDataSource,
         private val subjectHolder: SubjectHolder,
-        private val syncScheduler: SyncScheduler,
+        private val syncScheduler: LatestRateScheduler,
         private val dataProvider: DataProvider) {
-
-    init {
-        syncScheduler.start()
-    }
 
     fun set(coins: List<String>) {
         dataSource.coins = coins
@@ -44,7 +37,7 @@ class XRatesKit(
     }
 
     fun refresh() {
-        syncScheduler.start()
+        syncScheduler.start(force = true)
     }
 
     fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
@@ -73,30 +66,30 @@ class XRatesKit(
 
     companion object {
         fun create(context: Context, currency: String): XRatesKit {
-            val factory = Factory()
+            val rateExpirationSeconds = 20L
+            val rateSyncRetrySeconds = 10L
+
+            val factory = Factory(rateExpirationSeconds)
             val storage = Storage(Database.create(context))
             val dataSource = XRatesDataSource(currency = currency)
 
             val subjectHolder = SubjectHolder()
-            val syncScheduler = SyncScheduler(5 * 60, 60)
 
             val apiManager = ApiManager()
             val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, "https://min-api.cryptocompare.com")
 
-            val chartStatsSyncer = ChartStatsSyncer(storage, subjectHolder, cryptoCompareProvider)
-            val latestRateSyncer = LatestRateSyncer(storage, dataSource, cryptoCompareProvider)
+            val chartStatsSyncer = ChartStatsSyncer(factory, storage, dataSource, subjectHolder, cryptoCompareProvider)
+            val latestRateSyncer = LatestRateSyncer(factory, storage, dataSource, cryptoCompareProvider)
 
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
             val marketStatsManager = MarketStatsManager(storage, cryptoCompareProvider)
 
             val dataProvider = DataProvider(storage, factory, subjectHolder, chartStatsSyncer, historicalRateManager, marketStatsManager)
-
-            chartStatsSyncer.subscribe(syncScheduler)
-            latestRateSyncer.subscribe(syncScheduler)
-            latestRateSyncer.syncListener = syncScheduler
             latestRateSyncer.listener = dataProvider
 
-            return XRatesKit(dataSource, subjectHolder, syncScheduler, dataProvider)
+            val latestRateScheduler = LatestRateScheduler(rateExpirationSeconds, rateSyncRetrySeconds, latestRateSyncer)
+
+            return XRatesKit(dataSource, subjectHolder, latestRateScheduler, dataProvider)
         }
     }
 }

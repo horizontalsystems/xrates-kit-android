@@ -1,5 +1,11 @@
 package io.horizontalsystems.xrateskit.entities
 
 import java.math.BigDecimal
+import java.util.*
 
-data class RateInfo(val coin: String, val currency: String, val value: BigDecimal, val timestamp: Long)
+class RateInfo(val value: BigDecimal, val timestamp: Long, private val expirationIntervalSeconds: Long) {
+
+    fun isExpired(): Boolean {
+        return timestamp < Date().time / 1000 - expirationIntervalSeconds
+    }
+}

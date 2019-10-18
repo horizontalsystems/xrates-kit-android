@@ -30,6 +30,8 @@ dependencies {
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.11'
+    // Kotlin coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
 
     // Room
     implementation "androidx.room:room-runtime:2.2.0"

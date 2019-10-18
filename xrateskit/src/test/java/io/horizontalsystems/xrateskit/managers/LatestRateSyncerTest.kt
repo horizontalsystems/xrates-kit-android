@@ -41,7 +41,7 @@ class LatestRateSyncerTest : Spek({
         val disposable by memoized { mock<Disposable>() }
         val flowable by memoized { mock<Flowable<SyncSchedulerEvent>>() }
         val subject by memoized { mock<PublishSubject<SyncSchedulerEvent>>() }
-        val scheduler by memoized { mock<SyncScheduler>() }
+        val scheduler by memoized { mock<LatestRateScheduler>() }
 
         beforeEach {
             whenever(flowable.subscribe(any<Consumer<SyncSchedulerEvent>>())).thenReturn(disposable)
@@ -92,7 +92,7 @@ class LatestRateSyncerTest : Spek({
                 it("saves fetched data into DB and emits update to listener") {
                     latestRateSyncer.sync()
 
-                    verify(storage).saveLatestRate(latestRate)
+                    verify(storage).saveLatestRates(latestRate)
                     verify(rateListener).onUpdate(latestRate)
                     verify(syncListener).onSuccess()
                 }

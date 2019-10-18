@@ -2,8 +2,10 @@ package io.horizontalsystems.xrateskit.api
 
 import com.eclipsesource.json.JsonObject
 import io.horizontalsystems.xrateskit.core.*
-import io.horizontalsystems.xrateskit.entities.*
-import io.reactivex.Observable
+import io.horizontalsystems.xrateskit.entities.ChartStats
+import io.horizontalsystems.xrateskit.entities.ChartType
+import io.horizontalsystems.xrateskit.entities.HistoricalRate
+import io.horizontalsystems.xrateskit.entities.MarketStats
 import io.reactivex.Single
 import java.math.BigDecimal
 
@@ -15,20 +17,21 @@ class CryptoCompareProvider(
 
     // Latest Rate
 
-    override fun getLatestRate(coins: List<String>, currency: String): Observable<LatestRate> {
-        return Observable.create<LatestRate> { emitter ->
+    override fun getLatestRate(coins: List<String>, currency: String): Single<Map<String, String>> {
+        return Single.create<Map<String, String>> { emitter ->
             try {
                 val coinsCodes = coins.joinToString(",")
-                val jsonObject = apiManager.getJson("$baseUrl/data/pricemulti?fsyms=$coinsCodes&tsyms=${currency}")
+                val json = apiManager.getJson("$baseUrl/data/pricemulti?fsyms=$coinsCodes&tsyms=${currency}")
+                val list = mutableMapOf<String, String>()
 
                 for (coin in coins) {
-                    val rateObject = jsonObject.get(coin).asObject()
-                    val value = rateObject.get(currency).toString()
+                    val rate = json.get(coin) ?: continue
+                    val value = rate.asObject().get(currency).toString()
 
-                    emitter.onNext(factory.createLatestRate(coin, currency, value.toBigDecimal()))
+                    list[coin] = value
                 }
 
-                emitter.onComplete()
+                emitter.onSuccess(list)
             } catch (e: Exception) {
                 emitter.onError(e)
             }

@@ -4,7 +4,7 @@ import io.horizontalsystems.xrateskit.entities.*
 import java.math.BigDecimal
 import java.util.*
 
-class Factory {
+class Factory(private val latestRateSyncInterval: Long) {
     fun createLatestRate(coin: String, currency: String, value: BigDecimal): LatestRate {
         return LatestRate(coin, currency, value, timestamp = Date().time / 1000)
     }
@@ -14,7 +14,7 @@ class Factory {
     }
 
     fun createRateInfo(rate: LatestRate): RateInfo {
-        return RateInfo(rate.coin, rate.currency, rate.value, rate.timestamp)
+        return RateInfo(rate.value, rate.timestamp, latestRateSyncInterval)
     }
 
     fun createChartPoint(value: BigDecimal, timestamp: Long): ChartPoint {

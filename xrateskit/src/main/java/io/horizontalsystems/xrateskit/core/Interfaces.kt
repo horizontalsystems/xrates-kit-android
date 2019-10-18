@@ -1,17 +1,13 @@
 package io.horizontalsystems.xrateskit.core
 
-import io.horizontalsystems.xrateskit.entities.ChartStats
-import io.horizontalsystems.xrateskit.entities.ChartType
-import io.horizontalsystems.xrateskit.entities.MarketStats
-import io.horizontalsystems.xrateskit.entities.HistoricalRate
-import io.horizontalsystems.xrateskit.entities.LatestRate
-import io.reactivex.Observable
+import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 
 interface IStorage {
     //  LatestRate
-    fun saveLatestRate(rate: LatestRate)
+    fun saveLatestRates(rates: List<LatestRate>)
     fun getLatestRate(coin: String, currency: String): LatestRate?
+    fun getOldLatestRates(coins: List<String>, currency: String): List<LatestRate>
 
     //  HistoricalRate
     fun saveHistoricalRate(rate: HistoricalRate)
@@ -21,6 +17,7 @@ interface IStorage {
     fun getChartStats(coin: String, currency: String, chartType: ChartType): List<ChartStats>
     fun saveChartStats(chartStats: List<ChartStats>)
     fun getLatestChartStats(coin: String, currency: String, chartType: ChartType): ChartStats?
+    fun getOldChartStats(chartTypes: List<ChartType>, coins: List<String>, currency: String): List<ChartStats>
 
     //  MarketStats
     fun getMarketStats(coin: String, currency: String): MarketStats?
@@ -28,7 +25,7 @@ interface IStorage {
 }
 
 interface ILatestRateProvider {
-    fun getLatestRate(coins: List<String>, currency: String): Observable<LatestRate>
+    fun getLatestRate(coins: List<String>, currency: String): Single<Map<String, String>>
 }
 
 interface IChartStatsProvider {
@@ -41,9 +38,4 @@ interface IMarketStatsProvider {
 
 interface IHistoricalRateProvider {
     fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<HistoricalRate>
-}
-
-interface ISyncCompletionListener {
-    fun onSuccess()
-    fun onFail()
 }

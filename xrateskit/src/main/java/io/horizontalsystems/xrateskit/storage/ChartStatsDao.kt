@@ -18,4 +18,7 @@ interface ChartStatsDao {
     @Query("SELECT * FROM ChartStats WHERE coin = :coin AND currency = :currency AND type = :type ORDER BY timestamp")
     fun getList(coin: String, currency: String, type: ChartType): List<ChartStats>
 
+    @Query("SELECT * FROM ChartStats WHERE type IN(:types) AND coin IN(:coins) AND currency = :currency ORDER BY timestamp DESC")
+    fun getOldStats(types: List<ChartType>, coins: List<String>, currency: String): List<ChartStats>
+
 }

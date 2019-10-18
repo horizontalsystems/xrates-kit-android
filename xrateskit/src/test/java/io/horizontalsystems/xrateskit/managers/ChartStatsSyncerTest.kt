@@ -73,7 +73,7 @@ object ChartStatsSyncerTest : Spek({
         val disposable by memoized { mock<Disposable>() }
         val flowable by memoized { mock<Flowable<SyncSchedulerEvent>>() }
         val subject by memoized { mock<PublishSubject<SyncSchedulerEvent>>() }
-        val scheduler by memoized { mock<SyncScheduler>() }
+        val scheduler by memoized { mock<LatestRateScheduler>() }
 
         beforeEach {
             whenever(flowable.subscribe(any<Consumer<SyncSchedulerEvent>>())).thenReturn(disposable)
@@ -91,7 +91,7 @@ object ChartStatsSyncerTest : Spek({
 
     describe("#subscribe(onFire)") {
         val subject = PublishSubject.create<SyncSchedulerEvent>()
-        val scheduler by memoized { mock<SyncScheduler>() }
+        val scheduler by memoized { mock<LatestRateScheduler>() }
 
         beforeEach {
             whenever(scheduler.eventSubject).thenReturn(subject)
