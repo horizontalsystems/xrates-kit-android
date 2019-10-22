@@ -13,12 +13,12 @@ class Factory(private val expirationInterval: Long) {
         return HistoricalRate(coin, currency, value, timestamp)
     }
 
-    fun createRateInfo(rate: LatestRate): RateInfo {
-        return RateInfo(rate.value, rate.timestamp, expirationInterval)
+    fun createRateInfo(rate: LatestRate): Rate {
+        return Rate(rate.value, rate.timestamp, expirationInterval)
     }
 
-    fun createChartPoint(value: BigDecimal, timestamp: Long): ChartPointInfo {
-        return ChartPointInfo(value, timestamp)
+    fun createChartPoint(value: BigDecimal, timestamp: Long): ChartPoint {
+        return ChartPoint(value, timestamp)
     }
 
     fun createMarketCap(coin: String, currency: String, volume: Double, marketCap: Double, supply: Double): MarketStats {

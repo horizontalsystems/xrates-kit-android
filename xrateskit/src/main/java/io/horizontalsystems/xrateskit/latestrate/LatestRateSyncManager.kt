@@ -1,7 +1,7 @@
 package io.horizontalsystems.xrateskit.latestrate
 
 import io.horizontalsystems.xrateskit.entities.LatestRateKey
-import io.horizontalsystems.xrateskit.entities.RateInfo
+import io.horizontalsystems.xrateskit.entities.Rate
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
@@ -11,7 +11,7 @@ class LatestRateSyncManager(
     : LatestRateManager.Listener {
 
     private var coins: List<String> = listOf()
-    private val subjects = mutableMapOf<LatestRateKey, PublishSubject<RateInfo>>()
+    private val subjects = mutableMapOf<LatestRateKey, PublishSubject<Rate>>()
     private var scheduler: LatestRateScheduler? = null
 
     fun set(coinCodes: List<String>) {
@@ -28,10 +28,10 @@ class LatestRateSyncManager(
         scheduler?.start(force = true)
     }
 
-    fun latestRateObservable(key: LatestRateKey): Observable<RateInfo> {
+    fun latestRateObservable(key: LatestRateKey): Observable<Rate> {
         var subject = subjects[key]
         if (subject == null) {
-            subject = PublishSubject.create<RateInfo>()
+            subject = PublishSubject.create<Rate>()
             subjects[key] = subject
         }
 
@@ -52,7 +52,7 @@ class LatestRateSyncManager(
 
     //  LatestRateManager.Listener
 
-    override fun onUpdate(rate: RateInfo, key: LatestRateKey) {
+    override fun onUpdate(rate: Rate, key: LatestRateKey) {
         subjects[key]?.onNext(rate)
     }
 }

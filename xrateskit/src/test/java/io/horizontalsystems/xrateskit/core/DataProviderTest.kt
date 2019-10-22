@@ -27,7 +27,7 @@ object DataProviderTest : Spek({
         DataProvider(storage, factory, subjectHolder, chartStatsSyncer, historicalRateManager, marketStatsManager)
     }
 
-    describe("#getChartPoints") {
+    describe("#getChartInfo") {
 
         context("when chart stats does not exists in DB") {
 
@@ -38,24 +38,24 @@ object DataProviderTest : Spek({
             it("returns points from DB") {
                 val points = dataProvider.getChartPoints(coin, currency, chartType)
 
-                assertEquals(listOf<ChartPointInfo>(), points)
+                assertEquals(listOf<ChartPoint>(), points)
                 verify(chartStatsSyncer).sync(coin, currency, chartType)
             }
         }
 
         context("when chart stats exists in DB but expired") {
             val today = Date().time / 1000
-            val chartStats = ChartPoint(chartType, coin, currency, BigDecimal.TEN, today - (chartType.seconds + 1))
+            val chartStats = ChartPointEntity(chartType, coin, currency, BigDecimal.TEN, today - (chartType.seconds + 1))
 
             beforeEach {
                 whenever(storage.getChartPoints(coin, currency, chartType)).thenReturn(listOf(chartStats))
                 whenever(factory.createChartPoint(chartStats.value, chartStats.timestamp))
-                        .thenReturn(ChartPointInfo(chartStats.value, chartStats.timestamp))
+                        .thenReturn(ChartPoint(chartStats.value, chartStats.timestamp))
             }
 
             it("returns points from DB and start syncer") {
                 val points = dataProvider.getChartPoints(coin, currency, chartType)
-                val pointsFromDB = listOf(ChartPointInfo(chartStats.value, chartStats.timestamp))
+                val pointsFromDB = listOf(ChartPoint(chartStats.value, chartStats.timestamp))
 
                 assertEquals(pointsFromDB, points)
                 verify(chartStatsSyncer).sync(coin, currency, chartType)
@@ -63,17 +63,17 @@ object DataProviderTest : Spek({
         }
 
         context("when chart stats exists in DB") {
-            val chartStats = ChartPoint(chartType, coin, currency, BigDecimal.TEN, Date().time / 1000 - 1)
+            val chartStats = ChartPointEntity(chartType, coin, currency, BigDecimal.TEN, Date().time / 1000 - 1)
 
             beforeEach {
                 whenever(storage.getChartPoints(coin, currency, chartType)).thenReturn(listOf(chartStats))
                 whenever(factory.createChartPoint(chartStats.value, chartStats.timestamp))
-                        .thenReturn(ChartPointInfo(chartStats.value, chartStats.timestamp))
+                        .thenReturn(ChartPoint(chartStats.value, chartStats.timestamp))
             }
 
             it("returns points from DB") {
                 val points = dataProvider.getChartPoints(coin, currency, chartType)
-                val pointsFromDB = listOf(ChartPointInfo(chartStats.value, chartStats.timestamp))
+                val pointsFromDB = listOf(ChartPoint(chartStats.value, chartStats.timestamp))
 
                 assertEquals(pointsFromDB, points)
                 verifyZeroInteractions(chartStatsSyncer)
@@ -84,15 +84,15 @@ object DataProviderTest : Spek({
 
                 beforeEach {
                     whenever(storage.getLatestRate(coin, currency)).thenReturn(latestRate)
-                    whenever(factory.createChartPoint(chartStats.value, chartStats.timestamp)).thenReturn(ChartPointInfo(chartStats.value, chartStats.timestamp))
-                    whenever(factory.createChartPoint(latestRate.value, latestRate.timestamp)).thenReturn(ChartPointInfo(latestRate.value, latestRate.timestamp))
+                    whenever(factory.createChartPoint(chartStats.value, chartStats.timestamp)).thenReturn(ChartPoint(chartStats.value, chartStats.timestamp))
+                    whenever(factory.createChartPoint(latestRate.value, latestRate.timestamp)).thenReturn(ChartPoint(latestRate.value, latestRate.timestamp))
                 }
 
                 it("concatenates to to return list") {
                     val points = dataProvider.getChartPoints(coin, currency, chartType)
                     val pointsFromDB = listOf(
-                            ChartPointInfo(chartStats.value, chartStats.timestamp),
-                            ChartPointInfo(latestRate.value, latestRate.timestamp)
+                            ChartPoint(chartStats.value, chartStats.timestamp),
+                            ChartPoint(latestRate.value, latestRate.timestamp)
                     )
 
                     assertEquals(pointsFromDB, points)
@@ -103,7 +103,7 @@ object DataProviderTest : Spek({
     }
 
     describe("#update(latestRate)") {
-        val rateInfo by memoized<RateInfo> { mock() }
+        val rateInfo by memoized<Rate> { mock() }
         val rateSubjectKey = LatestRateKey(coin, currency)
         val latestRate by memoized<LatestRate> {
             mock {

@@ -4,14 +4,14 @@ import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.LatestRate
 import io.horizontalsystems.xrateskit.entities.LatestRateKey
-import io.horizontalsystems.xrateskit.entities.RateInfo
+import io.horizontalsystems.xrateskit.entities.Rate
 
 class LatestRateManager(private val storage: IStorage, private val factory: Factory) {
 
     var listener: Listener? = null
 
     interface Listener {
-        fun onUpdate(rate: RateInfo, key: LatestRateKey)
+        fun onUpdate(rate: Rate, key: LatestRateKey)
     }
 
     fun getLastSyncTimestamp(coins: List<String>, currency: String): Long? {
@@ -23,7 +23,7 @@ class LatestRateManager(private val storage: IStorage, private val factory: Fact
         return rates.lastOrNull()?.timestamp
     }
 
-    fun getLatestRate(coin: String, currency: String): RateInfo? {
+    fun getLatestRate(coin: String, currency: String): Rate? {
         return storage.getLatestRate(coin, currency)?.let { factory.createRateInfo(it) }
     }
 

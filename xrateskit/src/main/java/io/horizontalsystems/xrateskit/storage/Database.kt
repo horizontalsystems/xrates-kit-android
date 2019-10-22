@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import io.horizontalsystems.xrateskit.entities.ChartPoint
+import io.horizontalsystems.xrateskit.entities.ChartPointEntity
 import io.horizontalsystems.xrateskit.entities.HistoricalRate
 import io.horizontalsystems.xrateskit.entities.LatestRate
 import io.horizontalsystems.xrateskit.entities.MarketStats
@@ -12,7 +12,7 @@ import io.horizontalsystems.xrateskit.entities.MarketStats
 @androidx.room.Database(version = 1, exportSchema = false, entities = [
     LatestRate::class,
     HistoricalRate::class,
-    ChartPoint::class,
+    ChartPointEntity::class,
     MarketStats::class
 ])
 

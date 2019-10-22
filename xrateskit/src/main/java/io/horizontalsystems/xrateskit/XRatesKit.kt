@@ -39,19 +39,19 @@ class XRatesKit(
         latestRateSyncManager.refresh()
     }
 
-    fun getLatestRate(coin: String, currency: String): RateInfo? {
+    fun getLatestRate(coin: String, currency: String): Rate? {
         return latestRateManager.getLatestRate(coin, currency)
     }
 
-    fun latestRateObservable(coin: String, currency: String): Observable<RateInfo> {
+    fun latestRateObservable(coin: String, currency: String): Observable<Rate> {
         return latestRateSyncManager.latestRateObservable(LatestRateKey(coin, currency))
     }
 
-    fun getChartPoints(coin: String, currency: String, chartType: ChartType): List<ChartPointInfo> {
-        return chartPointManager.getChartPoints(ChartPointKey(coin, currency, chartType))
+    fun getChartInfo(coin: String, currency: String, chartType: ChartType): ChartInfo? {
+        return chartPointManager.getChartInfo(ChartPointKey(coin, currency, chartType))
     }
 
-    fun chartPointsObservable(coin: String, currency: String, chartType: ChartType): Observable<List<ChartPointInfo>> {
+    fun chartPointsObservable(coin: String, currency: String, chartType: ChartType): Observable<ChartInfo> {
         return chartPointSyncManager.chartPointsObservable(ChartPointKey(coin, currency, chartType))
     }
 
@@ -80,9 +80,9 @@ class XRatesKit(
                 latestRateManager.listener = it
             }
 
-            val chartPointManager = ChartPointManager(storage, factory)
+            val chartPointManager = ChartPointManager(storage, factory, latestRateManager)
             val chartPointSchedulerFactory = ChartPointSchedulerFactory(chartPointManager, cryptoCompareProvider, retryInterval)
-            val chartPointSyncManager = ChartPointSyncManager(chartPointSchedulerFactory).also {
+            val chartPointSyncManager = ChartPointSyncManager(chartPointSchedulerFactory, chartPointManager, latestRateSyncManager).also {
                 chartPointManager.listener = it
             }
 

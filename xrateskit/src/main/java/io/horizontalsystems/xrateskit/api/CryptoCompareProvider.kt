@@ -2,7 +2,7 @@ package io.horizontalsystems.xrateskit.api
 
 import com.eclipsesource.json.JsonObject
 import io.horizontalsystems.xrateskit.core.*
-import io.horizontalsystems.xrateskit.entities.ChartPoint
+import io.horizontalsystems.xrateskit.entities.ChartPointEntity
 import io.horizontalsystems.xrateskit.entities.ChartPointKey
 import io.horizontalsystems.xrateskit.entities.HistoricalRate
 import io.horizontalsystems.xrateskit.entities.MarketStats
@@ -85,16 +85,16 @@ class CryptoCompareProvider(
 
     //  Chart Points
 
-    override fun getChartPoints(chartPointKey: ChartPointKey): Single<List<ChartPoint>> {
+    override fun getChartPoints(chartPointKey: ChartPointKey): Single<List<ChartPointEntity>> {
         val coin = chartPointKey.coin
         val currency = chartPointKey.currency
         val chartType = chartPointKey.chartType
 
-        return Single.create<List<ChartPoint>> { emitter ->
+        return Single.create<List<ChartPointEntity>> { emitter ->
             try {
                 val response = apiManager.getJson("$baseUrl/data/v2/${chartType.resource}?fsym=$coin&tsym=$currency&aggregate=${chartType.interval}&limit=${chartType.points}")
                 val result = response["Data"].asObject()["Data"].asArray().map { it.asObject() }
-                val stats = mutableListOf<ChartPoint>()
+                val stats = mutableListOf<ChartPointEntity>()
 
                 for (data in result) {
                     val value = valueAverage(
@@ -102,7 +102,7 @@ class CryptoCompareProvider(
                             data["close"].asDouble()
                     )
 
-                    stats.add(ChartPoint(chartType, coin, currency, value, data["time"].asLong()))
+                    stats.add(ChartPointEntity(chartType, coin, currency, value, data["time"].asLong()))
                 }
 
                 emitter.onSuccess(stats)

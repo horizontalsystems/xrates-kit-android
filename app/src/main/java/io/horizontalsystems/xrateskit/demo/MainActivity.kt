@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.horizontalsystems.xrateskit.XRatesKit
 import io.horizontalsystems.xrateskit.entities.ChartType
-import io.horizontalsystems.xrateskit.entities.RateInfo
+import io.horizontalsystems.xrateskit.entities.Rate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private val coins = listOf("BTC")
     private val currency = "USD"
 
-    private val latestRates = mutableMapOf<String, RateInfo>()
+    private val latestRates = mutableMapOf<String, Rate>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,14 +74,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeChartStats(coin: String) {
-        ratesAdapter.items = exchangeRatesKit.getChartPoints(coin, currency, ChartType.DAILY)
-        ratesAdapter.notifyDataSetChanged()
+        val info = exchangeRatesKit.getChartInfo(coin, currency, ChartType.DAILY)
+        if (info!= null) {
+            ratesAdapter.items = info.points
+            ratesAdapter.notifyDataSetChanged()
+        }
 
         exchangeRatesKit.chartPointsObservable(coin, currency, ChartType.DAILY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    ratesAdapter.items = it
+                    ratesAdapter.items = it.points
                     ratesAdapter.notifyDataSetChanged()
                 }, {
                     it.printStackTrace()

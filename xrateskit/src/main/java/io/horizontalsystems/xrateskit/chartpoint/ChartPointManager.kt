@@ -2,49 +2,89 @@ package io.horizontalsystems.xrateskit.chartpoint
 
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IStorage
-import io.horizontalsystems.xrateskit.entities.ChartPoint
-import io.horizontalsystems.xrateskit.entities.ChartPointInfo
-import io.horizontalsystems.xrateskit.entities.ChartPointKey
+import io.horizontalsystems.xrateskit.entities.*
+import io.horizontalsystems.xrateskit.latestrate.LatestRateManager
+import java.math.BigDecimal
+import java.util.*
 
 class ChartPointManager(
         private val storage: IStorage,
-        private val factory: Factory) {
+        private val factory: Factory,
+        private val latestRateManager: LatestRateManager) {
 
     var listener: Listener? = null
 
     interface Listener {
-        fun onUpdate(points: List<ChartPointInfo>, key: ChartPointKey)
+        fun onUpdate(chartInfo: ChartInfo?, key: ChartPointKey)
     }
 
     fun getLastSyncTimestamp(key: ChartPointKey): Long? {
-        return storage.getLatestChartPoints(key)?.timestamp
+        return storedChartPoints(key).lastOrNull()?.timestamp
     }
 
-    fun getChartPoints(key: ChartPointKey): List<ChartPointInfo> {
-        val stats = storage.getChartPoints(key)
-        return pointsWithLatestRate(stats, key)
+    fun getChartInfo(key: ChartPointKey): ChartInfo? {
+        val latestRate = latestRateManager.getLatestRate(key.coin, key.currency)
+        return chartInfo(storedChartPoints(key), latestRate, key)
     }
 
-    fun update(points: List<ChartPoint>, key: ChartPointKey) {
+    private fun chartInfo(points: List<ChartPoint>, latestRate: Rate?, key: ChartPointKey): ChartInfo? {
+        val lastPoint = points.lastOrNull() ?: return null
+        val firstPoint = points.first()
+
+        val currentTimestamp = Date().time / 1000
+        val lastPointDiffInterval = currentTimestamp - lastPoint.timestamp
+        if (lastPointDiffInterval > key.chartType.expirationInterval) {
+            return ChartInfo(
+                    points,
+                    firstPoint.timestamp,
+                    currentTimestamp,
+                    diff = null
+            )
+        }
+
+        if (latestRate == null || latestRate.timestamp < lastPoint.timestamp) {
+            return ChartInfo(
+                    points,
+                    firstPoint.timestamp,
+                    lastPoint.timestamp,
+                    diff = null
+            )
+        }
+
+        val chartPointsWithLatestRate = points + ChartPoint(latestRate.value, latestRate.timestamp)
+        var diff: BigDecimal? = null
+
+        if (!latestRate.isExpired()) {
+            diff = (latestRate.value - firstPoint.value) / firstPoint.value * BigDecimal(100)
+        }
+
+        return ChartInfo(
+                chartPointsWithLatestRate,
+                firstPoint.timestamp,
+                latestRate.timestamp,
+                diff
+        )
+    }
+
+    fun update(points: List<ChartPointEntity>, key: ChartPointKey) {
         storage.deleteChartPoints(key)
         storage.saveChartPoints(points)
-        listener?.onUpdate(pointsWithLatestRate(points, key), key)
+        listener?.onUpdate(chartInfo(points.map { ChartPoint(it.value, it.timestamp) }, key), key)
     }
 
-    private fun pointsWithLatestRate(points: List<ChartPoint>, key: ChartPointKey): List<ChartPointInfo> {
-        val latestRate = storage.getLatestRate(key.coin, key.currency)
-        val chartPoints = points.map { factory.createChartPoint(it.value, it.timestamp) }
+    fun update(latestRate: Rate, key: ChartPointKey) {
+        listener?.onUpdate(chartInfo(storedChartPoints(key), latestRate, key), key)
+    }
 
-        val lastPoint = chartPoints.lastOrNull()
-        if (lastPoint == null || latestRate == null) {
-            return chartPoints
-        }
+    private fun chartInfo(points: List<ChartPoint>, key: ChartPointKey): ChartInfo? {
+        val latestRate = latestRateManager.getLatestRate(key.coin, key.currency)
+        return chartInfo(points, latestRate, key)
+    }
 
-        //  Skip adding latest rate to charts if expired
-        if (lastPoint.timestamp >= latestRate.timestamp) {
-            return chartPoints
-        }
+    private fun storedChartPoints(key: ChartPointKey): List<ChartPoint> {
+        val currentTimestamp = Date().time / 1000
+        val fromTimestamp = currentTimestamp - key.chartType.rangeInterval
 
-        return chartPoints + factory.createChartPoint(latestRate.value, latestRate.timestamp)
+        return storage.getChartPoints(key, fromTimestamp).map { factory.createChartPoint(it.value, it.timestamp) }
     }
 }

@@ -35,15 +35,19 @@ class Storage(database: Database) : IStorage {
 
     //  ChartPoint
 
-    override fun getChartPoints(key: ChartPointKey): List<ChartPoint> {
+    override fun getChartPoints(key: ChartPointKey): List<ChartPointEntity> {
         return chartStatsDao.getList(key.coin, key.currency, key.chartType)
     }
 
-    override fun getLatestChartPoints(key: ChartPointKey): ChartPoint? {
+    override fun getChartPoints(key: ChartPointKey, fromTimestamp: Long): List<ChartPointEntity> {
+        return chartStatsDao.getList(key.coin, key.currency, key.chartType, fromTimestamp)
+    }
+
+    override fun getLatestChartPoints(key: ChartPointKey): ChartPointEntity? {
         return chartStatsDao.getLast(key.coin, key.currency, key.chartType)
     }
 
-    override fun saveChartPoints(points: List<ChartPoint>) {
+    override fun saveChartPoints(points: List<ChartPointEntity>) {
         chartStatsDao.insert(points)
     }
 

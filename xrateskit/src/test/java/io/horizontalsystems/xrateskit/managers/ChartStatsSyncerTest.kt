@@ -2,7 +2,7 @@ package io.horizontalsystems.xrateskit.managers
 
 import com.nhaarman.mockitokotlin2.*
 import io.horizontalsystems.xrateskit.core.*
-import io.horizontalsystems.xrateskit.entities.ChartPoint
+import io.horizontalsystems.xrateskit.entities.ChartPointEntity
 import io.horizontalsystems.xrateskit.entities.ChartPointKey
 import io.horizontalsystems.xrateskit.entities.ChartType
 import io.horizontalsystems.xrateskit.latestrate.LatestRateScheduler
@@ -38,7 +38,7 @@ object ChartStatsSyncerTest : Spek({
 
     describe("#sync") {
         context("when latest rates fetched from API") {
-            val stats = listOf<ChartPoint>(mock())
+            val stats = listOf<ChartPointEntity>(mock())
 
             beforeEach {
                 whenever(statsProvider.getChartPoints(coin, currency, chartType)).thenReturn(Single.just(stats))
@@ -135,7 +135,7 @@ object ChartStatsSyncerTest : Spek({
 
                 beforeEach {
                     val today = Date().time / 1000
-                    val chartStats = ChartPoint(chartType, coin, currency, BigDecimal.TEN, today - (chartType.seconds + 1))
+                    val chartStats = ChartPointEntity(chartType, coin, currency, BigDecimal.TEN, today - (chartType.seconds + 1))
                     whenever(storage.getLatestChartPoints(coin, currency, chartType)).thenReturn(chartStats)
                 }
 
@@ -149,7 +149,7 @@ object ChartStatsSyncerTest : Spek({
 
                 beforeEach {
                     val today = Date().time / 1000
-                    val chartStats = ChartPoint(chartType, coin, currency, BigDecimal.TEN, today - (chartType.seconds))
+                    val chartStats = ChartPointEntity(chartType, coin, currency, BigDecimal.TEN, today - (chartType.seconds))
                     whenever(storage.getLatestChartPoints(coin, currency, chartType)).thenReturn(chartStats)
                 }
 
