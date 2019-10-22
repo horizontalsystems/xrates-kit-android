@@ -33,22 +33,22 @@ class Storage(database: Database) : IStorage {
         return historicalRateDao.getRate(coin, currency, timestamp)
     }
 
-    //  ChartStats
+    //  ChartPoint
 
-    override fun getChartStats(coin: String, currency: String, chartType: ChartType): List<ChartStats> {
-        return chartStatsDao.getList(coin, currency, chartType)
+    override fun getChartPoints(key: ChartPointKey): List<ChartPoint> {
+        return chartStatsDao.getList(key.coin, key.currency, key.chartType)
     }
 
-    override fun saveChartStats(chartStats: List<ChartStats>) {
-        chartStatsDao.insert(chartStats)
+    override fun getLatestChartPoints(key: ChartPointKey): ChartPoint? {
+        return chartStatsDao.getLast(key.coin, key.currency, key.chartType)
     }
 
-    override fun getLatestChartStats(coin: String, currency: String, chartType: ChartType): ChartStats? {
-        return chartStatsDao.getLast(coin, currency, chartType)
+    override fun saveChartPoints(points: List<ChartPoint>) {
+        chartStatsDao.insert(points)
     }
 
-    override fun getOldChartStats(chartTypes: List<ChartType>, coins: List<String>, currency: String): List<ChartStats> {
-        return chartStatsDao.getOldStats(chartTypes, coins, currency)
+    override fun deleteChartPoints(key: ChartPointKey) {
+        chartStatsDao.delete(key.coin, key.currency, key.chartType)
     }
 
     //  MarketStats

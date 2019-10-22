@@ -1,5 +1,13 @@
 package io.horizontalsystems.xrateskit.entities
 
+import androidx.room.Entity
 import java.math.BigDecimal
 
-data class ChartPoint(val value: BigDecimal, val timestamp: Long)
+@Entity(primaryKeys = ["type", "coin", "currency", "timestamp"])
+class ChartPoint(
+        val type: ChartType,
+        val coin: String,
+        val currency: String,
+        val value: BigDecimal,
+        val timestamp: Long
+)

@@ -1,6 +1,5 @@
-package io.horizontalsystems.xrateskit.core
+package io.horizontalsystems.xrateskit.latestrate
 
-import io.horizontalsystems.xrateskit.managers.LatestRateSyncer
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -10,14 +9,12 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
-class LatestRateScheduler(
-        private val interval: Long,
-        private val retryInterval: Long,
-        private val latestRateSyncer: LatestRateSyncer) {
+class LatestRateScheduler(private val provider: LatestRateSchedulerProvider) {
 
-    private var disposable: Disposable? = null
+    private var timeDisposable: Disposable? = null
+    private var syncDisposable: Disposable? = null
     private var isExpiredRatesNotified = false
-    private val bufferForNotifyExpired = 5
+    private val bufferInterval = 5
 
     fun start(force: Boolean = false) {
         //  Force sync
@@ -26,26 +23,31 @@ class LatestRateScheduler(
         }
 
         GlobalScope.launch {
-            start()
+            autoSchedule()
         }
     }
 
     fun stop() {
-        disposable?.dispose()
+        timeDisposable?.dispose()
+        syncDisposable?.dispose()
     }
 
-    private fun start() {
-        val lastSync = latestRateSyncer.lastSyncTimestamp ?: return schedule(0)
-        val nextSync = lastSync - (Date().time / 1000 - interval)
+    private fun autoSchedule() {
+        var newDelay = 0L
 
-        schedule(max(0, nextSync))
+        provider.lastSyncTimestamp?.let { lastSync ->
+            val diff = Date().time / 1000 - lastSync
+            newDelay = max(0, provider.expirationInterval - bufferInterval - diff)
+        }
+
+        schedule(newDelay)
     }
 
     private fun schedule(delay: Long) {
         notifyRatesIfExpired()
 
-        disposable?.dispose()
-        disposable = Observable
+        timeDisposable?.dispose()
+        timeDisposable = Observable
                 .timer(delay, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .subscribe({
@@ -56,22 +58,22 @@ class LatestRateScheduler(
     }
 
     private fun onFire() {
-        disposable?.dispose()
-        disposable = latestRateSyncer.syncSingle
+        syncDisposable?.dispose()
+        syncDisposable = provider.syncSingle
                 .subscribe({
-                    start()
+                    autoSchedule()
                     isExpiredRatesNotified = false
                 }, {
-                    schedule(retryInterval)
+                    schedule(provider.retryInterval)
                 })
     }
 
     private fun notifyRatesIfExpired() {
         if (isExpiredRatesNotified) return
 
-        val timestamp = latestRateSyncer.lastSyncTimestamp
-        if (timestamp == null || timestamp < Date().time / 1000 - interval - bufferForNotifyExpired) {
-            latestRateSyncer.notifyExpiredRates()
+        val timestamp = provider.lastSyncTimestamp
+        if (timestamp == null || Date().time / 1000 - timestamp > provider.expirationInterval) {
+            provider.notifyExpiredRates()
             isExpiredRatesNotified = true
         }
     }

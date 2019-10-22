@@ -1,24 +1,24 @@
 package io.horizontalsystems.xrateskit.storage
 
-import androidx.room.*
-import io.horizontalsystems.xrateskit.entities.ChartStats
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import io.horizontalsystems.xrateskit.entities.ChartPoint
 import io.horizontalsystems.xrateskit.entities.ChartType
 
 @Dao
 interface ChartStatsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(stats: List<ChartStats>)
+    fun insert(stats: List<ChartPoint>)
 
-    @Delete
-    fun delete(stats: ChartStats)
+    @Query("DELETE FROM ChartPoint WHERE coin = :coin AND currency = :currency AND type = :chartType")
+    fun delete(coin: String, currency: String, chartType: ChartType)
 
-    @Query("SELECT * FROM ChartStats WHERE coin = :coin AND currency = :currency AND type = :type ORDER BY timestamp LIMIT 1")
-    fun getLast(coin: String, currency: String, type: ChartType): ChartStats?
+    @Query("SELECT * FROM ChartPoint WHERE coin = :coin AND currency = :currency AND type = :type ORDER BY timestamp DESC LIMIT 1")
+    fun getLast(coin: String, currency: String, type: ChartType): ChartPoint?
 
-    @Query("SELECT * FROM ChartStats WHERE coin = :coin AND currency = :currency AND type = :type ORDER BY timestamp")
-    fun getList(coin: String, currency: String, type: ChartType): List<ChartStats>
-
-    @Query("SELECT * FROM ChartStats WHERE type IN(:types) AND coin IN(:coins) AND currency = :currency ORDER BY timestamp DESC")
-    fun getOldStats(types: List<ChartType>, coins: List<String>, currency: String): List<ChartStats>
+    @Query("SELECT * FROM ChartPoint WHERE coin = :coin AND currency = :currency AND type = :type ORDER BY timestamp")
+    fun getList(coin: String, currency: String, type: ChartType): List<ChartPoint>
 
 }

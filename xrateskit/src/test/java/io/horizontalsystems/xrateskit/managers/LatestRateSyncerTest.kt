@@ -5,6 +5,8 @@ import io.horizontalsystems.xrateskit.RxTestRule
 import io.horizontalsystems.xrateskit.XRatesDataSource
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.LatestRate
+import io.horizontalsystems.xrateskit.latestrate.LatestRateScheduler
+import io.horizontalsystems.xrateskit.latestrate.LatestRateSyncer
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -78,15 +80,15 @@ class LatestRateSyncerTest : Spek({
             }
 
             it("fetches latest rate from API") {
-                whenever(rateProvider.getLatestRate(coins, currency)).thenReturn(Observable.create {})
+                whenever(rateProvider.getLatestRates(coins, currency)).thenReturn(Observable.create {})
                 latestRateSyncer.sync()
 
-                verify(rateProvider).getLatestRate(coins, currency)
+                verify(rateProvider).getLatestRates(coins, currency)
             }
 
             context("when latest rates fetched from API") {
                 beforeEach {
-                    whenever(rateProvider.getLatestRate(coins, currency)).thenReturn(Observable.just(latestRate))
+                    whenever(rateProvider.getLatestRates(coins, currency)).thenReturn(Observable.just(latestRate))
                 }
 
                 it("saves fetched data into DB and emits update to listener") {
@@ -102,7 +104,7 @@ class LatestRateSyncerTest : Spek({
                 val stubException = Exception("Failed to fetch rate from API")
 
                 beforeEach {
-                    whenever(rateProvider.getLatestRate(coins, currency)).thenReturn(Observable.error(stubException))
+                    whenever(rateProvider.getLatestRates(coins, currency)).thenReturn(Observable.error(stubException))
                 }
 
                 it("emits `onFail` events to sync completion listener") {

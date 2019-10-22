@@ -2,9 +2,10 @@ package io.horizontalsystems.xrateskit.managers
 
 import com.nhaarman.mockitokotlin2.*
 import io.horizontalsystems.xrateskit.core.*
-import io.horizontalsystems.xrateskit.entities.ChartStats
-import io.horizontalsystems.xrateskit.entities.ChartStatsSubjectKey
+import io.horizontalsystems.xrateskit.entities.ChartPoint
+import io.horizontalsystems.xrateskit.entities.ChartPointKey
 import io.horizontalsystems.xrateskit.entities.ChartType
+import io.horizontalsystems.xrateskit.latestrate.LatestRateScheduler
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -23,13 +24,13 @@ object ChartStatsSyncerTest : Spek({
 
     val storage by memoized { mock<IStorage>() }
     val subjectHolder by memoized { mock<SubjectHolder>() }
-    val statsProvider by memoized { mock<IChartStatsProvider>() }
-    val statsListener by memoized { mock<ChartStatsSyncer.Listener>() }
+    val statsProvider by memoized { mock<IChartPointProvider>() }
+    val statsListener by memoized { mock<ChartStatSyncer.Listener>() }
 
     val syncListener by memoized { mock<ISyncCompletionListener>() }
 
     val chartStatsSyncer by memoized {
-        ChartStatsSyncer(storage, subjectHolder, statsProvider).also {
+        ChartStatSyncer(storage, subjectHolder, statsProvider).also {
             it.listener = statsListener
             it.syncListener = syncListener
         }
@@ -37,16 +38,16 @@ object ChartStatsSyncerTest : Spek({
 
     describe("#sync") {
         context("when latest rates fetched from API") {
-            val stats = listOf<ChartStats>(mock())
+            val stats = listOf<ChartPoint>(mock())
 
             beforeEach {
-                whenever(statsProvider.getChartStats(coin, currency, chartType)).thenReturn(Single.just(stats))
+                whenever(statsProvider.getChartPoints(coin, currency, chartType)).thenReturn(Single.just(stats))
             }
 
             it("saves fetched data into DB and emits update to listener") {
                 chartStatsSyncer.sync(coin, currency, chartType)
 
-                verify(storage).saveChartStats(stats)
+                verify(storage).saveChartPoints(stats)
                 verify(statsListener).onUpdate(stats, coin, currency, chartType)
                 verify(syncListener).onSuccess()
             }
@@ -56,7 +57,7 @@ object ChartStatsSyncerTest : Spek({
             val stubException = Exception("Failed to fetch rate from API")
 
             beforeEach {
-                whenever(statsProvider.getChartStats(coin, currency, chartType)).thenReturn(Single.error(stubException))
+                whenever(statsProvider.getChartPoints(coin, currency, chartType)).thenReturn(Single.error(stubException))
             }
 
             it("emits `onFail` events to sync completion listener") {
@@ -112,21 +113,21 @@ object ChartStatsSyncerTest : Spek({
         }
 
         context("when subject holders has observers") {
-            val subjectKey = ChartStatsSubjectKey(coin, currency, chartType)
+            val subjectKey = ChartPointKey(coin, currency, chartType)
 
             beforeEach {
                 whenever(subjectHolder.activeChartStatsKeys).thenReturn(listOf(subjectKey))
-                whenever(statsProvider.getChartStats(coin, currency, chartType)).thenReturn(Single.just(listOf()))
+                whenever(statsProvider.getChartPoints(coin, currency, chartType)).thenReturn(Single.just(listOf()))
             }
 
             context("when no chart stats in DB") {
                 beforeEach {
-                    whenever(storage.getLatestChartStats(coin, currency, chartType)).thenReturn(null)
+                    whenever(storage.getLatestChartPoints(coin, currency, chartType)).thenReturn(null)
                 }
 
                 it("syncs from the beginning") {
                     subject.onNext(SyncSchedulerEvent.FIRE)
-                    verify(statsProvider).getChartStats(coin, currency, chartType)
+                    verify(statsProvider).getChartPoints(coin, currency, chartType)
                 }
             }
 
@@ -134,13 +135,13 @@ object ChartStatsSyncerTest : Spek({
 
                 beforeEach {
                     val today = Date().time / 1000
-                    val chartStats = ChartStats(chartType, coin, currency, BigDecimal.TEN, today - (chartType.minutes * 60 + 1))
-                    whenever(storage.getLatestChartStats(coin, currency, chartType)).thenReturn(chartStats)
+                    val chartStats = ChartPoint(chartType, coin, currency, BigDecimal.TEN, today - (chartType.seconds + 1))
+                    whenever(storage.getLatestChartPoints(coin, currency, chartType)).thenReturn(chartStats)
                 }
 
                 it("syncs from the beginning") {
                     subject.onNext(SyncSchedulerEvent.FIRE)
-                    verify(statsProvider).getChartStats(coin, currency, chartType)
+                    verify(statsProvider).getChartPoints(coin, currency, chartType)
                 }
             }
 
@@ -148,8 +149,8 @@ object ChartStatsSyncerTest : Spek({
 
                 beforeEach {
                     val today = Date().time / 1000
-                    val chartStats = ChartStats(chartType, coin, currency, BigDecimal.TEN, today - (chartType.minutes * 60))
-                    whenever(storage.getLatestChartStats(coin, currency, chartType)).thenReturn(chartStats)
+                    val chartStats = ChartPoint(chartType, coin, currency, BigDecimal.TEN, today - (chartType.seconds))
+                    whenever(storage.getLatestChartPoints(coin, currency, chartType)).thenReturn(chartStats)
                 }
 
                 it("syncs from the beginning") {

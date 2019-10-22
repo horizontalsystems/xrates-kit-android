@@ -2,8 +2,8 @@ package io.horizontalsystems.xrateskit.api
 
 import com.eclipsesource.json.JsonObject
 import io.horizontalsystems.xrateskit.core.*
-import io.horizontalsystems.xrateskit.entities.ChartStats
-import io.horizontalsystems.xrateskit.entities.ChartType
+import io.horizontalsystems.xrateskit.entities.ChartPoint
+import io.horizontalsystems.xrateskit.entities.ChartPointKey
 import io.horizontalsystems.xrateskit.entities.HistoricalRate
 import io.horizontalsystems.xrateskit.entities.MarketStats
 import io.reactivex.Single
@@ -13,11 +13,11 @@ class CryptoCompareProvider(
         private val factory: Factory,
         private val apiManager: ApiManager,
         private val baseUrl: String)
-    : ILatestRateProvider, IHistoricalRateProvider, IChartStatsProvider, IMarketStatsProvider {
+    : ILatestRateProvider, IHistoricalRateProvider, IChartPointProvider, IMarketStatsProvider {
 
     // Latest Rate
 
-    override fun getLatestRate(coins: List<String>, currency: String): Single<Map<String, String>> {
+    override fun getLatestRates(coins: List<String>, currency: String): Single<Map<String, String>> {
         return Single.create<Map<String, String>> { emitter ->
             try {
                 val coinsCodes = coins.joinToString(",")
@@ -38,7 +38,7 @@ class CryptoCompareProvider(
         }
     }
 
-    // Historical Rate
+    //  Historical Rate
 
     override fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<HistoricalRate> {
         return Single.create { emitter ->
@@ -83,14 +83,18 @@ class CryptoCompareProvider(
         )
     }
 
-    // Chart Data
+    //  Chart Points
 
-    override fun getChartStats(coin: String, currency: String, chartType: ChartType): Single<List<ChartStats>> {
-        return Single.create<List<ChartStats>> { emitter ->
+    override fun getChartPoints(chartPointKey: ChartPointKey): Single<List<ChartPoint>> {
+        val coin = chartPointKey.coin
+        val currency = chartPointKey.currency
+        val chartType = chartPointKey.chartType
+
+        return Single.create<List<ChartPoint>> { emitter ->
             try {
-                val response = apiManager.getJson("$baseUrl/data/v2/${chartType.resource}?fsym=$coin&tsym=$currency&limit=${chartType.points}")
+                val response = apiManager.getJson("$baseUrl/data/v2/${chartType.resource}?fsym=$coin&tsym=$currency&aggregate=${chartType.interval}&limit=${chartType.points}")
                 val result = response["Data"].asObject()["Data"].asArray().map { it.asObject() }
-                val stats = mutableListOf<ChartStats>()
+                val stats = mutableListOf<ChartPoint>()
 
                 for (data in result) {
                     val value = valueAverage(
@@ -98,7 +102,7 @@ class CryptoCompareProvider(
                             data["close"].asDouble()
                     )
 
-                    stats.add(ChartStats(chartType, coin, currency, value, data["time"].asLong()))
+                    stats.add(ChartPoint(chartType, coin, currency, value, data["time"].asLong()))
                 }
 
                 emitter.onSuccess(stats)

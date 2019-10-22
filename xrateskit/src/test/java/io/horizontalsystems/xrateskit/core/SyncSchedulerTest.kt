@@ -1,5 +1,6 @@
 package io.horizontalsystems.xrateskit.core
 
+import io.horizontalsystems.xrateskit.latestrate.LatestRateScheduler
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 

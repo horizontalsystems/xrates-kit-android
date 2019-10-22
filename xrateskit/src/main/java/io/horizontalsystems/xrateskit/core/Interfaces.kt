@@ -14,10 +14,10 @@ interface IStorage {
     fun getHistoricalRate(coin: String, currency: String, timestamp: Long): HistoricalRate?
 
     //  ChartStats
-    fun getChartStats(coin: String, currency: String, chartType: ChartType): List<ChartStats>
-    fun saveChartStats(chartStats: List<ChartStats>)
-    fun getLatestChartStats(coin: String, currency: String, chartType: ChartType): ChartStats?
-    fun getOldChartStats(chartTypes: List<ChartType>, coins: List<String>, currency: String): List<ChartStats>
+    fun getChartPoints(key: ChartPointKey): List<ChartPoint>
+    fun getLatestChartPoints(key: ChartPointKey): ChartPoint?
+    fun saveChartPoints(points: List<ChartPoint>)
+    fun deleteChartPoints(key: ChartPointKey)
 
     //  MarketStats
     fun getMarketStats(coin: String, currency: String): MarketStats?
@@ -25,11 +25,11 @@ interface IStorage {
 }
 
 interface ILatestRateProvider {
-    fun getLatestRate(coins: List<String>, currency: String): Single<Map<String, String>>
+    fun getLatestRates(coins: List<String>, currency: String): Single<Map<String, String>>
 }
 
-interface IChartStatsProvider {
-    fun getChartStats(coin: String, currency: String, chartType: ChartType): Single<List<ChartStats>>
+interface IChartPointProvider {
+    fun getChartPoints(chartPointKey: ChartPointKey): Single<List<ChartPoint>>
 }
 
 interface IMarketStatsProvider {

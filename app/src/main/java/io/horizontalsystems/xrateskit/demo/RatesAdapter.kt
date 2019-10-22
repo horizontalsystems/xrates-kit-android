@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import io.horizontalsystems.xrateskit.entities.ChartPoint
+import io.horizontalsystems.xrateskit.entities.ChartPointInfo
 import java.util.*
 
 class RatesAdapter : RecyclerView.Adapter<ViewHolderTransaction>() {
-    var items = listOf<ChartPoint>()
+    var items = listOf<ChartPointInfo>()
 
     override fun getItemCount() = items.size
 
@@ -26,7 +26,7 @@ class RatesAdapter : RecyclerView.Adapter<ViewHolderTransaction>() {
 class ViewHolderTransaction(private val containerView: View) : RecyclerView.ViewHolder(containerView) {
     private val summary = containerView.findViewById<TextView>(R.id.summary)!!
 
-    fun bind(rate: ChartPoint, index: Int) {
+    fun bind(rate: ChartPointInfo, index: Int) {
         containerView.setBackgroundColor(if (index % 2 == 0)
             Color.parseColor("#dddddd") else
             Color.TRANSPARENT

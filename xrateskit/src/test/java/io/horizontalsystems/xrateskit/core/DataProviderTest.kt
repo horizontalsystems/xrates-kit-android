@@ -2,7 +2,7 @@ package io.horizontalsystems.xrateskit.core
 
 import com.nhaarman.mockitokotlin2.*
 import io.horizontalsystems.xrateskit.entities.*
-import io.horizontalsystems.xrateskit.managers.ChartStatsSyncer
+import io.horizontalsystems.xrateskit.managers.ChartStatSyncer
 import io.horizontalsystems.xrateskit.managers.HistoricalRateManager
 import io.horizontalsystems.xrateskit.managers.MarketStatsManager
 import org.junit.Assert.assertEquals
@@ -19,7 +19,7 @@ object DataProviderTest : Spek({
     val factory by memoized<Factory> { mock() }
     val storage by memoized<IStorage> { mock() }
     val subjectHolder by memoized { SubjectHolder() }
-    val chartStatsSyncer by memoized<ChartStatsSyncer> { mock() }
+    val chartStatsSyncer by memoized<ChartStatSyncer> { mock() }
     val historicalRateManager by memoized<HistoricalRateManager> { mock() }
     val marketStatsManager by memoized<MarketStatsManager> { mock() }
 
@@ -32,30 +32,30 @@ object DataProviderTest : Spek({
         context("when chart stats does not exists in DB") {
 
             beforeEach {
-                whenever(storage.getChartStats(coin, currency, chartType)).thenReturn(listOf())
+                whenever(storage.getChartPoints(coin, currency, chartType)).thenReturn(listOf())
             }
 
             it("returns points from DB") {
                 val points = dataProvider.getChartPoints(coin, currency, chartType)
 
-                assertEquals(listOf<ChartPoint>(), points)
+                assertEquals(listOf<ChartPointInfo>(), points)
                 verify(chartStatsSyncer).sync(coin, currency, chartType)
             }
         }
 
         context("when chart stats exists in DB but expired") {
             val today = Date().time / 1000
-            val chartStats = ChartStats(chartType, coin, currency, BigDecimal.TEN, today - (chartType.minutes * 60 + 1))
+            val chartStats = ChartPoint(chartType, coin, currency, BigDecimal.TEN, today - (chartType.seconds + 1))
 
             beforeEach {
-                whenever(storage.getChartStats(coin, currency, chartType)).thenReturn(listOf(chartStats))
+                whenever(storage.getChartPoints(coin, currency, chartType)).thenReturn(listOf(chartStats))
                 whenever(factory.createChartPoint(chartStats.value, chartStats.timestamp))
-                        .thenReturn(ChartPoint(chartStats.value, chartStats.timestamp))
+                        .thenReturn(ChartPointInfo(chartStats.value, chartStats.timestamp))
             }
 
             it("returns points from DB and start syncer") {
                 val points = dataProvider.getChartPoints(coin, currency, chartType)
-                val pointsFromDB = listOf(ChartPoint(chartStats.value, chartStats.timestamp))
+                val pointsFromDB = listOf(ChartPointInfo(chartStats.value, chartStats.timestamp))
 
                 assertEquals(pointsFromDB, points)
                 verify(chartStatsSyncer).sync(coin, currency, chartType)
@@ -63,17 +63,17 @@ object DataProviderTest : Spek({
         }
 
         context("when chart stats exists in DB") {
-            val chartStats = ChartStats(chartType, coin, currency, BigDecimal.TEN, Date().time / 1000 - 1)
+            val chartStats = ChartPoint(chartType, coin, currency, BigDecimal.TEN, Date().time / 1000 - 1)
 
             beforeEach {
-                whenever(storage.getChartStats(coin, currency, chartType)).thenReturn(listOf(chartStats))
+                whenever(storage.getChartPoints(coin, currency, chartType)).thenReturn(listOf(chartStats))
                 whenever(factory.createChartPoint(chartStats.value, chartStats.timestamp))
-                        .thenReturn(ChartPoint(chartStats.value, chartStats.timestamp))
+                        .thenReturn(ChartPointInfo(chartStats.value, chartStats.timestamp))
             }
 
             it("returns points from DB") {
                 val points = dataProvider.getChartPoints(coin, currency, chartType)
-                val pointsFromDB = listOf(ChartPoint(chartStats.value, chartStats.timestamp))
+                val pointsFromDB = listOf(ChartPointInfo(chartStats.value, chartStats.timestamp))
 
                 assertEquals(pointsFromDB, points)
                 verifyZeroInteractions(chartStatsSyncer)
@@ -84,15 +84,15 @@ object DataProviderTest : Spek({
 
                 beforeEach {
                     whenever(storage.getLatestRate(coin, currency)).thenReturn(latestRate)
-                    whenever(factory.createChartPoint(chartStats.value, chartStats.timestamp)).thenReturn(ChartPoint(chartStats.value, chartStats.timestamp))
-                    whenever(factory.createChartPoint(latestRate.value, latestRate.timestamp)).thenReturn(ChartPoint(latestRate.value, latestRate.timestamp))
+                    whenever(factory.createChartPoint(chartStats.value, chartStats.timestamp)).thenReturn(ChartPointInfo(chartStats.value, chartStats.timestamp))
+                    whenever(factory.createChartPoint(latestRate.value, latestRate.timestamp)).thenReturn(ChartPointInfo(latestRate.value, latestRate.timestamp))
                 }
 
                 it("concatenates to to return list") {
                     val points = dataProvider.getChartPoints(coin, currency, chartType)
                     val pointsFromDB = listOf(
-                            ChartPoint(chartStats.value, chartStats.timestamp),
-                            ChartPoint(latestRate.value, latestRate.timestamp)
+                            ChartPointInfo(chartStats.value, chartStats.timestamp),
+                            ChartPointInfo(latestRate.value, latestRate.timestamp)
                     )
 
                     assertEquals(pointsFromDB, points)
@@ -102,9 +102,9 @@ object DataProviderTest : Spek({
         }
     }
 
-    describe("#onUpdate(latestRate)") {
+    describe("#update(latestRate)") {
         val rateInfo by memoized<RateInfo> { mock() }
-        val rateSubjectKey = LatestRateSubjectKey(coin, currency)
+        val rateSubjectKey = LatestRateKey(coin, currency)
         val latestRate by memoized<LatestRate> {
             mock {
                 on { this.coin } doReturn coin

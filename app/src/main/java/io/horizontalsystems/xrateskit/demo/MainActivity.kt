@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity() {
     private val ratesAdapter = RatesAdapter()
     private val disposables = CompositeDisposable()
 
-
     private val coins = listOf("BTC")
     private val currency = "USD"
 
@@ -40,11 +39,15 @@ class MainActivity : AppCompatActivity() {
             observeLatestRates(coin)
         }
 
-        // exchangeRatesKit.getChartStats("BTC", currency, ChartType.DAILY)
+        observeChartStats("BTC")
+
+        unsubscribeBtn.setOnClickListener {
+            disposables.dispose()
+        }
     }
 
     private fun observeLatestRates(coin: String) {
-        exchangeRatesKit.latestRateFlowable(coin, currency)
+        exchangeRatesKit.latestRateObservable(coin, currency)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -58,7 +61,6 @@ class MainActivity : AppCompatActivity() {
                 }
     }
 
-
     private fun updateLatestRates() {
         latestRate.text = latestRates.map { (coinName, rate) ->
             """
@@ -71,19 +73,19 @@ class MainActivity : AppCompatActivity() {
         }.joinToString("\n\n")
     }
 
-    private fun observeChartStats() {
-//        ratesAdapter.items = exchangeRatesKit.getChartStats(btc, currency, ChartType.DAILY)
-//        ratesAdapter.notifyDataSetChanged()
-//
-//        exchangeRatesKit.chartStatsFlowable(btc, currency, ChartType.DAILY)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({
-//                    ratesAdapter.items = it
-//                    ratesAdapter.notifyDataSetChanged()
-//                }, {
-//                    it.printStackTrace()
-//                })
-//                .let { disposables.add(it) }
+    private fun observeChartStats(coin: String) {
+        ratesAdapter.items = exchangeRatesKit.getChartPoints(coin, currency, ChartType.DAILY)
+        ratesAdapter.notifyDataSetChanged()
+
+        exchangeRatesKit.chartPointsObservable(coin, currency, ChartType.DAILY)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    ratesAdapter.items = it
+                    ratesAdapter.notifyDataSetChanged()
+                }, {
+                    it.printStackTrace()
+                })
+                .let { disposables.add(it) }
     }
 }

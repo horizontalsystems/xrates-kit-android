@@ -16,6 +16,15 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="TEXT" />
 
+    <Button
+        android:id="@+id/unsubscribeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Unsubscribe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/chartStats"
         android:layout_width="match_parent"

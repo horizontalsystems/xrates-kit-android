@@ -1,6 +1,6 @@
 package io.horizontalsystems.xrateskit.entities
 
-data class LatestRateSubjectKey(
+data class LatestRateKey(
         val coin: String,
         val currency: String
 )
