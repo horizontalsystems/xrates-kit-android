@@ -55,11 +55,11 @@ class XRatesKit(
         return chartPointSyncManager.chartPointsObservable(ChartPointKey(coin, currency, chartType))
     }
 
-    fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
+    fun historicalRateSingle(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
         return historicalRateManager.getHistoricalRate(coin, currency, timestamp)
     }
 
-    fun getMarketStats(coin: String, currency: String): Single<MarketStatsInfo> {
+    fun marketStatsSingle(coin: String, currency: String): Single<MarketStatsInfo> {
         return marketStatsManager.getMarketStats(coin, currency)
     }
 

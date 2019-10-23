@@ -23,7 +23,7 @@ object MarketStatsManagerTest : Spek({
         MarketStatsManager(storage, statsProvider)
     }
 
-    describe("#getMarketStats") {
+    describe("#marketStatsSingle") {
         beforeEach {
             whenever(statsProvider.getMarketStats(coin, currency)).thenReturn(Single.just(marketStats))
         }
