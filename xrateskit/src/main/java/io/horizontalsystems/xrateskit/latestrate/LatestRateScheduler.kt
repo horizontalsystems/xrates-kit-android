@@ -17,13 +17,13 @@ class LatestRateScheduler(private val provider: LatestRateSchedulerProvider) {
     private val bufferInterval = 5
 
     fun start(force: Boolean = false) {
-        //  Force sync
-        if (force) {
-            return onFire()
-        }
-
         GlobalScope.launch {
-            autoSchedule()
+            //  Force sync
+            if (force) {
+                onFire()
+            } else {
+                autoSchedule()
+            }
         }
     }
 
