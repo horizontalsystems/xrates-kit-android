@@ -35,9 +35,8 @@ class ChartPointSyncManager(
 
     //  ChartPointManager Listener
 
-    override fun onUpdate(chartInfo: ChartInfo?, key: ChartPointKey) {
-        if (chartInfo != null)
-            subjects[key]?.onNext(chartInfo)
+    override fun onUpdate(chartInfo: ChartInfo, key: ChartPointKey) {
+        subjects[key]?.onNext(chartInfo)
     }
 
     private fun getSubject(key: ChartPointKey): Observable<ChartInfo> {
@@ -57,6 +56,7 @@ class ChartPointSyncManager(
             schedulers[key] = scheduler
         }
 
+        observeLatestRates(key)
 
         return scheduler
     }

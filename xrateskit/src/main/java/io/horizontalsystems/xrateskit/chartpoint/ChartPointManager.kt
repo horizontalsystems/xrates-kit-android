@@ -15,7 +15,7 @@ class ChartPointManager(
     var listener: Listener? = null
 
     interface Listener {
-        fun onUpdate(chartInfo: ChartInfo?, key: ChartPointKey)
+        fun onUpdate(chartInfo: ChartInfo, key: ChartPointKey)
     }
 
     fun getLastSyncTimestamp(key: ChartPointKey): Long? {
@@ -69,11 +69,15 @@ class ChartPointManager(
     fun update(points: List<ChartPointEntity>, key: ChartPointKey) {
         storage.deleteChartPoints(key)
         storage.saveChartPoints(points)
-        listener?.onUpdate(chartInfo(points.map { ChartPoint(it.value, it.timestamp) }, key), key)
+        chartInfo(points.map { ChartPoint(it.value, it.timestamp) }, key)?.let {
+            listener?.onUpdate(it, key)
+        }
     }
 
     fun update(latestRate: Rate, key: ChartPointKey) {
-        listener?.onUpdate(chartInfo(storedChartPoints(key), latestRate, key), key)
+        chartInfo(storedChartPoints(key), latestRate, key)?.let {
+            listener?.onUpdate(it, key)
+        }
     }
 
     private fun chartInfo(points: List<ChartPoint>, key: ChartPointKey): ChartInfo? {
