@@ -1,5 +1,6 @@
 package io.horizontalsystems.xrateskit.chartpoint
 
+import io.horizontalsystems.xrateskit.core.NoChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartInfoKey
 import io.horizontalsystems.xrateskit.entities.MarketInfoKey
@@ -20,8 +21,13 @@ class ChartInfoSyncManager(
     private val schedulers = mutableMapOf<ChartInfoKey, ChartInfoScheduler>()
     private val ratesDisposables = mutableMapOf<ChartInfoKey, Disposable>()
     private val observersCount = mutableMapOf<ChartInfoKey, AtomicInteger>()
+    private val failedKeys = mutableListOf<ChartInfoKey>()
 
     fun chartInfoObservable(key: ChartInfoKey): Observable<ChartInfo> {
+        if (failedKeys.contains(key)) {
+            return Observable.error(NoChartInfo())
+        }
+
         return getSubject(key)
                 .doOnSubscribe {
                     getCounter(key).incrementAndGet()
@@ -33,10 +39,15 @@ class ChartInfoSyncManager(
                 }
     }
 
-    //  ChartPointManager Listener
+    //  ChartInfoManager Listener
 
     override fun onUpdate(chartInfo: ChartInfo, key: ChartInfoKey) {
         subjects[key]?.onNext(chartInfo)
+    }
+
+    override fun noChartInfo(key: ChartInfoKey) {
+        failedKeys.add(key)
+        subjects[key]?.onError(NoChartInfo())
     }
 
     private fun getSubject(key: ChartInfoKey): Observable<ChartInfo> {

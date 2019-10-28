@@ -15,6 +15,7 @@ class ChartInfoManager(
 
     interface Listener {
         fun onUpdate(chartInfo: ChartInfo, key: ChartInfoKey)
+        fun noChartInfo(key: ChartInfoKey)
     }
 
     fun getLastSyncTimestamp(key: ChartInfoKey): Long? {
@@ -60,8 +61,12 @@ class ChartInfoManager(
     fun update(points: List<ChartPointEntity>, key: ChartInfoKey) {
         storage.deleteChartPoints(key)
         storage.saveChartPoints(points)
-        chartInfo(points.map { ChartPoint(it.value, it.timestamp) }, key)?.let {
-            listener?.onUpdate(it, key)
+
+        val chartInfo = chartInfo(points.map { ChartPoint(it.value, it.timestamp) }, key)
+        if (chartInfo == null) {
+            listener?.noChartInfo(key)
+        } else {
+            listener?.onUpdate(chartInfo, key)
         }
     }
 
