@@ -3,9 +3,9 @@ package io.horizontalsystems.xrateskit
 import android.content.Context
 import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.api.CryptoCompareProvider
-import io.horizontalsystems.xrateskit.chartpoint.ChartPointManager
-import io.horizontalsystems.xrateskit.chartpoint.ChartPointSchedulerFactory
-import io.horizontalsystems.xrateskit.chartpoint.ChartPointSyncManager
+import io.horizontalsystems.xrateskit.chartpoint.ChartInfoManager
+import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSchedulerFactory
+import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSyncManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.managers.HistoricalRateManager
@@ -21,8 +21,8 @@ import java.math.BigDecimal
 class XRatesKit(
         private val marketInfoManager: MarketInfoManager,
         private val marketInfoSyncManager: MarketInfoSyncManager,
-        private val chartPointManager: ChartPointManager,
-        private val chartPointSyncManager: ChartPointSyncManager,
+        private val chartInfoManager: ChartInfoManager,
+        private val chartInfoSyncManager: ChartInfoSyncManager,
         private val historicalRateManager: HistoricalRateManager) {
 
     fun set(coins: List<String>) {
@@ -50,11 +50,11 @@ class XRatesKit(
     }
 
     fun getChartInfo(coin: String, currency: String, chartType: ChartType): ChartInfo? {
-        return chartPointManager.getChartInfo(ChartPointKey(coin, currency, chartType))
+        return chartInfoManager.getChartInfo(ChartInfoKey(coin, currency, chartType))
     }
 
     fun chartInfoObservable(coin: String, currency: String, chartType: ChartType): Observable<ChartInfo> {
-        return chartPointSyncManager.chartPointsObservable(ChartPointKey(coin, currency, chartType))
+        return chartInfoSyncManager.chartInfoObservable(ChartInfoKey(coin, currency, chartType))
     }
 
     fun historicalRate(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
@@ -77,17 +77,17 @@ class XRatesKit(
                 marketInfoManager.listener = it
             }
 
-            val chartPointManager = ChartPointManager(storage, factory, marketInfoManager)
-            val chartPointSchedulerFactory = ChartPointSchedulerFactory(chartPointManager, cryptoCompareProvider, retryInterval)
-            val chartPointSyncManager = ChartPointSyncManager(chartPointSchedulerFactory, chartPointManager, marketInfoSyncManager).also {
-                chartPointManager.listener = it
+            val chartInfoManager = ChartInfoManager(storage, factory, marketInfoManager)
+            val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, cryptoCompareProvider, retryInterval)
+            val chartInfoSyncManager = ChartInfoSyncManager(chartInfoSchedulerFactory, chartInfoManager, marketInfoSyncManager).also {
+                chartInfoManager.listener = it
             }
 
             return XRatesKit(
                     marketInfoManager,
                     marketInfoSyncManager,
-                    chartPointManager,
-                    chartPointSyncManager,
+                    chartInfoManager,
+                    chartInfoSyncManager,
                     historicalRateManager
             )
         }

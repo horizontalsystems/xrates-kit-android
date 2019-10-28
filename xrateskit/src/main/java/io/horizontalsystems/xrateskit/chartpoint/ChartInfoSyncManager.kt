@@ -1,7 +1,7 @@
 package io.horizontalsystems.xrateskit.chartpoint
 
 import io.horizontalsystems.xrateskit.entities.ChartInfo
-import io.horizontalsystems.xrateskit.entities.ChartPointKey
+import io.horizontalsystems.xrateskit.entities.ChartInfoKey
 import io.horizontalsystems.xrateskit.entities.MarketInfoKey
 import io.horizontalsystems.xrateskit.marketinfo.MarketInfoSyncManager
 import io.reactivex.Observable
@@ -10,18 +10,18 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.atomic.AtomicInteger
 
-class ChartPointSyncManager(
-        private val factory: ChartPointSchedulerFactory,
-        private val chartPointManager: ChartPointManager,
+class ChartInfoSyncManager(
+        private val factory: ChartInfoSchedulerFactory,
+        private val chartPointManager: ChartInfoManager,
         private val latestRateSyncManager: MarketInfoSyncManager)
-    : ChartPointManager.Listener {
+    : ChartInfoManager.Listener {
 
-    private val subjects = mutableMapOf<ChartPointKey, PublishSubject<ChartInfo>>()
-    private val schedulers = mutableMapOf<ChartPointKey, ChartPointScheduler>()
-    private val ratesDisposables = mutableMapOf<ChartPointKey, Disposable>()
-    private val observersCount = mutableMapOf<ChartPointKey, AtomicInteger>()
+    private val subjects = mutableMapOf<ChartInfoKey, PublishSubject<ChartInfo>>()
+    private val schedulers = mutableMapOf<ChartInfoKey, ChartInfoScheduler>()
+    private val ratesDisposables = mutableMapOf<ChartInfoKey, Disposable>()
+    private val observersCount = mutableMapOf<ChartInfoKey, AtomicInteger>()
 
-    fun chartPointsObservable(key: ChartPointKey): Observable<ChartInfo> {
+    fun chartInfoObservable(key: ChartInfoKey): Observable<ChartInfo> {
         return getSubject(key)
                 .doOnSubscribe {
                     getCounter(key).incrementAndGet()
@@ -35,11 +35,11 @@ class ChartPointSyncManager(
 
     //  ChartPointManager Listener
 
-    override fun onUpdate(chartInfo: ChartInfo, key: ChartPointKey) {
+    override fun onUpdate(chartInfo: ChartInfo, key: ChartInfoKey) {
         subjects[key]?.onNext(chartInfo)
     }
 
-    private fun getSubject(key: ChartPointKey): Observable<ChartInfo> {
+    private fun getSubject(key: ChartInfoKey): Observable<ChartInfo> {
         var subject = subjects[key]
         if (subject == null) {
             subject = PublishSubject.create<ChartInfo>()
@@ -49,7 +49,7 @@ class ChartPointSyncManager(
         return subject
     }
 
-    private fun getScheduler(key: ChartPointKey): ChartPointScheduler {
+    private fun getScheduler(key: ChartInfoKey): ChartInfoScheduler {
         var scheduler = schedulers[key]
         if (scheduler == null) {
             scheduler = factory.getScheduler(key)
@@ -61,7 +61,7 @@ class ChartPointSyncManager(
         return scheduler
     }
 
-    private fun observeLatestRates(key: ChartPointKey) {
+    private fun observeLatestRates(key: ChartInfoKey) {
         latestRateSyncManager.marketInfoObservable(MarketInfoKey(key.coin, key.currency))
                 .subscribeOn(Schedulers.io())
                 .subscribe({
@@ -72,7 +72,7 @@ class ChartPointSyncManager(
                 }
     }
 
-    private fun cleanup(key: ChartPointKey) {
+    private fun cleanup(key: ChartInfoKey) {
         val subject = subjects[key]
         if (subject == null || getCounter(key).get() > 0) {
             return
@@ -84,7 +84,7 @@ class ChartPointSyncManager(
     }
 
     @Synchronized
-    private fun getCounter(key: ChartPointKey): AtomicInteger {
+    private fun getCounter(key: ChartInfoKey): AtomicInteger {
         var count = observersCount[key]
         if (count == null) {
             count = AtomicInteger(0)

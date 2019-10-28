@@ -3,7 +3,7 @@ package io.horizontalsystems.xrateskit.managers
 import com.nhaarman.mockitokotlin2.*
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.ChartPointEntity
-import io.horizontalsystems.xrateskit.entities.ChartPointKey
+import io.horizontalsystems.xrateskit.entities.ChartInfoKey
 import io.horizontalsystems.xrateskit.entities.ChartType
 import io.horizontalsystems.xrateskit.marketinfo.MarketInfoScheduler
 import io.reactivex.BackpressureStrategy
@@ -24,7 +24,7 @@ object ChartStatsSyncerTest : Spek({
 
     val storage by memoized { mock<IStorage>() }
     val subjectHolder by memoized { mock<SubjectHolder>() }
-    val statsProvider by memoized { mock<IChartPointProvider>() }
+    val statsProvider by memoized { mock<IChartInfoProvider>() }
     val statsListener by memoized { mock<ChartStatSyncer.Listener>() }
 
     val syncListener by memoized { mock<ISyncCompletionListener>() }
@@ -113,7 +113,7 @@ object ChartStatsSyncerTest : Spek({
         }
 
         context("when subject holders has observers") {
-            val subjectKey = ChartPointKey(coin, currency, chartType)
+            val subjectKey = ChartInfoKey(coin, currency, chartType)
 
             beforeEach {
                 whenever(subjectHolder.activeChartStatsKeys).thenReturn(listOf(subjectKey))

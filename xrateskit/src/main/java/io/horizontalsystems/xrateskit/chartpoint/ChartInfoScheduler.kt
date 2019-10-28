@@ -9,7 +9,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
-class ChartPointScheduler(private val provider: ChartPointSchedulerProvider) {
+class ChartInfoScheduler(private val provider: ChartInfoSchedulerProvider) {
 
     private var timeDisposable: Disposable? = null
     private var syncDisposable: Disposable? = null

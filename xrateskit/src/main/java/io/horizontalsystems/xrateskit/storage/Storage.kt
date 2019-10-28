@@ -1,8 +1,8 @@
 package io.horizontalsystems.xrateskit.storage
 
 import io.horizontalsystems.xrateskit.core.IStorage
+import io.horizontalsystems.xrateskit.entities.ChartInfoKey
 import io.horizontalsystems.xrateskit.entities.ChartPointEntity
-import io.horizontalsystems.xrateskit.entities.ChartPointKey
 import io.horizontalsystems.xrateskit.entities.HistoricalRate
 import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 
@@ -23,23 +23,15 @@ class Storage(database: Database) : IStorage {
 
     //  ChartPoint
 
-    override fun getChartPoints(key: ChartPointKey): List<ChartPointEntity> {
-        return chartPointDao.getList(key.coin, key.currency, key.chartType)
-    }
-
-    override fun getChartPoints(key: ChartPointKey, fromTimestamp: Long): List<ChartPointEntity> {
+    override fun getChartPoints(key: ChartInfoKey, fromTimestamp: Long): List<ChartPointEntity> {
         return chartPointDao.getList(key.coin, key.currency, key.chartType, fromTimestamp)
-    }
-
-    override fun getLatestChartPoints(key: ChartPointKey): ChartPointEntity? {
-        return chartPointDao.getLast(key.coin, key.currency, key.chartType)
     }
 
     override fun saveChartPoints(points: List<ChartPointEntity>) {
         chartPointDao.insert(points)
     }
 
-    override fun deleteChartPoints(key: ChartPointKey) {
+    override fun deleteChartPoints(key: ChartInfoKey) {
         chartPointDao.delete(key.coin, key.currency, key.chartType)
     }
 

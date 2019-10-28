@@ -1,7 +1,6 @@
 package io.horizontalsystems.xrateskit.storage
 
 import androidx.room.*
-import io.horizontalsystems.xrateskit.entities.LatestRate
 import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 
 @Dao

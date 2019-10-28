@@ -1,14 +1,14 @@
 package io.horizontalsystems.xrateskit.chartpoint
 
-import io.horizontalsystems.xrateskit.core.IChartPointProvider
-import io.horizontalsystems.xrateskit.entities.ChartPointKey
+import io.horizontalsystems.xrateskit.core.IChartInfoProvider
+import io.horizontalsystems.xrateskit.entities.ChartInfoKey
 import io.reactivex.Single
 
-class ChartPointSchedulerProvider(
+class ChartInfoSchedulerProvider(
         val retryInterval: Long,
-        private val key: ChartPointKey,
-        private val provider: IChartPointProvider,
-        private val manager: ChartPointManager) {
+        private val key: ChartInfoKey,
+        private val provider: IChartInfoProvider,
+        private val manager: ChartInfoManager) {
 
     val lastSyncTimestamp: Long?
         get() = manager.getLastSyncTimestamp(key)

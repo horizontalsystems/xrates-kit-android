@@ -2,18 +2,18 @@ package io.horizontalsystems.xrateskit.api
 
 import com.eclipsesource.json.JsonObject
 import io.horizontalsystems.xrateskit.core.Factory
-import io.horizontalsystems.xrateskit.core.IChartPointProvider
+import io.horizontalsystems.xrateskit.core.IChartInfoProvider
 import io.horizontalsystems.xrateskit.core.IHistoricalRateProvider
 import io.horizontalsystems.xrateskit.core.IMarketInfoProvider
 import io.horizontalsystems.xrateskit.entities.ChartPointEntity
-import io.horizontalsystems.xrateskit.entities.ChartPointKey
+import io.horizontalsystems.xrateskit.entities.ChartInfoKey
 import io.horizontalsystems.xrateskit.entities.HistoricalRate
 import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 import io.reactivex.Single
 import java.math.BigDecimal
 
 class CryptoCompareProvider(private val factory: Factory, private val apiManager: ApiManager, private val baseUrl: String)
-    : IMarketInfoProvider, IHistoricalRateProvider, IChartPointProvider {
+    : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider {
 
     // Market Info
 
@@ -98,7 +98,7 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
 
     //  Chart Points
 
-    override fun getChartPoints(chartPointKey: ChartPointKey): Single<List<ChartPointEntity>> {
+    override fun getChartPoints(chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>> {
         val coin = chartPointKey.coin
         val currency = chartPointKey.currency
         val chartType = chartPointKey.chartType
