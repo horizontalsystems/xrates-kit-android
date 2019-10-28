@@ -4,7 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.horizontalsystems.xrateskit.XRatesKit
 import io.horizontalsystems.xrateskit.entities.ChartType
-import io.horizontalsystems.xrateskit.entities.Rate
+import io.horizontalsystems.xrateskit.entities.MarketInfo
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val coins = listOf("BTC")
     private val currency = "USD"
 
-    private val latestRates = mutableMapOf<String, Rate>()
+    private val marketInfoMap = mutableMapOf<String, MarketInfo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,12 +32,12 @@ class MainActivity : AppCompatActivity() {
         exchangeRatesKit = XRatesKit.create(this, currency)
         exchangeRatesKit.set(coins)
         coins.forEach { coin ->
-            exchangeRatesKit.getLatestRate(coin, currency)?.let {
-                latestRates[coin] = it
+            exchangeRatesKit.getMarketInfo(coin, currency)?.let {
+                marketInfoMap[coin] = it
             }
 
-            updateLatestRates()
-            observeLatestRates(coin)
+            updateMarketInfo()
+            observeMarketInfo(coin)
         }
 
         observeChartStats("BTC")
@@ -46,13 +47,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeLatestRates(coin: String) {
-        exchangeRatesKit.latestRateObservable(coin, currency)
+    private fun observeMarketInfo(coin: String) {
+        exchangeRatesKit.marketInfoObservable(coin, currency)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    latestRates[coin] = it
-                    updateLatestRates()
+                    marketInfoMap[coin] = it
+                    updateMarketInfo()
                 }, {
                     it.printStackTrace()
                 })
@@ -61,27 +62,27 @@ class MainActivity : AppCompatActivity() {
                 }
     }
 
-    private fun updateLatestRates() {
-        latestRate.text = latestRates.map { (coinName, rate) ->
+    private fun updateMarketInfo() {
+        latestRate.text = marketInfoMap.map { (coinName, marketInfo) ->
             """
             $coinName
               - Currency: $currency
-              - Rate: ${rate.value}
-              - Time: ${Date(rate.timestamp * 1000)}
-              - Is Expired: ${rate.isExpired()}
+              - Rate: ${marketInfo.rate}
+              - Time: ${Date(marketInfo.timestamp * 1000)}
+              - Is Expired: ${marketInfo.isExpired()}
             """.trimIndent()
         }.joinToString("\n\n")
     }
 
-    private fun observeChartStats(coin: String) {
+    private fun observeChartStats(coin: String, scheduler: Scheduler = Schedulers.io()) {
         val info = exchangeRatesKit.getChartInfo(coin, currency, ChartType.DAILY)
-        if (info!= null) {
+        if (info != null) {
             ratesAdapter.items = info.points
             ratesAdapter.notifyDataSetChanged()
         }
 
-        exchangeRatesKit.chartPointsObservable(coin, currency, ChartType.DAILY)
-                .subscribeOn(Schedulers.io())
+        exchangeRatesKit.chartInfoObservable(coin, currency, ChartType.DAILY)
+                .subscribeOn(scheduler)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     ratesAdapter.items = it.points

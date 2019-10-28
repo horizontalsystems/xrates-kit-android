@@ -4,9 +4,13 @@ import androidx.room.Entity
 import java.math.BigDecimal
 
 @Entity(primaryKeys = ["coin", "currency"])
-class LatestRate(
+class MarketInfoEntity(
         val coin: String,
         val currency: String,
-        val value: BigDecimal,
+        val rate: BigDecimal,
+        val diff: BigDecimal,
+        val volume: Double,
+        val marketCap: Double,
+        val supply: Double,
         val timestamp: Long
 )

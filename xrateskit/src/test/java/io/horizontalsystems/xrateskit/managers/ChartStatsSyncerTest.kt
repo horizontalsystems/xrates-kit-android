@@ -5,7 +5,7 @@ import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.ChartPointEntity
 import io.horizontalsystems.xrateskit.entities.ChartPointKey
 import io.horizontalsystems.xrateskit.entities.ChartType
-import io.horizontalsystems.xrateskit.latestrate.LatestRateScheduler
+import io.horizontalsystems.xrateskit.marketinfo.MarketInfoScheduler
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -74,7 +74,7 @@ object ChartStatsSyncerTest : Spek({
         val disposable by memoized { mock<Disposable>() }
         val flowable by memoized { mock<Flowable<SyncSchedulerEvent>>() }
         val subject by memoized { mock<PublishSubject<SyncSchedulerEvent>>() }
-        val scheduler by memoized { mock<LatestRateScheduler>() }
+        val scheduler by memoized { mock<MarketInfoScheduler>() }
 
         beforeEach {
             whenever(flowable.subscribe(any<Consumer<SyncSchedulerEvent>>())).thenReturn(disposable)
@@ -92,7 +92,7 @@ object ChartStatsSyncerTest : Spek({
 
     describe("#subscribe(onFire)") {
         val subject = PublishSubject.create<SyncSchedulerEvent>()
-        val scheduler by memoized { mock<LatestRateScheduler>() }
+        val scheduler by memoized { mock<MarketInfoScheduler>() }
 
         beforeEach {
             whenever(scheduler.eventSubject).thenReturn(subject)

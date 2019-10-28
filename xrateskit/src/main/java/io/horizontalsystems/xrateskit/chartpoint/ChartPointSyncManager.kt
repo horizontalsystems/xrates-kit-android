@@ -2,8 +2,8 @@ package io.horizontalsystems.xrateskit.chartpoint
 
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartPointKey
-import io.horizontalsystems.xrateskit.entities.LatestRateKey
-import io.horizontalsystems.xrateskit.latestrate.LatestRateSyncManager
+import io.horizontalsystems.xrateskit.entities.MarketInfoKey
+import io.horizontalsystems.xrateskit.marketinfo.MarketInfoSyncManager
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class ChartPointSyncManager(
         private val factory: ChartPointSchedulerFactory,
         private val chartPointManager: ChartPointManager,
-        private val latestRateSyncManager: LatestRateSyncManager)
+        private val latestRateSyncManager: MarketInfoSyncManager)
     : ChartPointManager.Listener {
 
     private val subjects = mutableMapOf<ChartPointKey, PublishSubject<ChartInfo>>()
@@ -62,7 +62,7 @@ class ChartPointSyncManager(
     }
 
     private fun observeLatestRates(key: ChartPointKey) {
-        latestRateSyncManager.latestRateObservable(LatestRateKey(key.coin, key.currency))
+        latestRateSyncManager.marketInfoObservable(MarketInfoKey(key.coin, key.currency))
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     chartPointManager.update(it, key)

@@ -1,34 +1,47 @@
 package io.horizontalsystems.xrateskit.api
 
 import com.eclipsesource.json.JsonObject
-import io.horizontalsystems.xrateskit.core.*
+import io.horizontalsystems.xrateskit.core.Factory
+import io.horizontalsystems.xrateskit.core.IChartPointProvider
+import io.horizontalsystems.xrateskit.core.IHistoricalRateProvider
+import io.horizontalsystems.xrateskit.core.IMarketInfoProvider
 import io.horizontalsystems.xrateskit.entities.ChartPointEntity
 import io.horizontalsystems.xrateskit.entities.ChartPointKey
 import io.horizontalsystems.xrateskit.entities.HistoricalRate
-import io.horizontalsystems.xrateskit.entities.MarketStats
+import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 import io.reactivex.Single
 import java.math.BigDecimal
 
-class CryptoCompareProvider(
-        private val factory: Factory,
-        private val apiManager: ApiManager,
-        private val baseUrl: String)
-    : ILatestRateProvider, IHistoricalRateProvider, IChartPointProvider, IMarketStatsProvider {
+class CryptoCompareProvider(private val factory: Factory, private val apiManager: ApiManager, private val baseUrl: String)
+    : IMarketInfoProvider, IHistoricalRateProvider, IChartPointProvider {
 
-    // Latest Rate
+    // Market Info
 
-    override fun getLatestRates(coins: List<String>, currency: String): Single<Map<String, String>> {
-        return Single.create<Map<String, String>> { emitter ->
+    override fun getMarketInfo(coins: List<String>, currency: String): Single<List<MarketInfoEntity>> {
+        return Single.create<List<MarketInfoEntity>> { emitter ->
             try {
-                val coinsCodes = coins.joinToString(",")
-                val json = apiManager.getJson("$baseUrl/data/pricemulti?fsyms=$coinsCodes&tsyms=${currency}")
-                val list = mutableMapOf<String, String>()
+                val codes = coins.joinToString(",")
+
+                val json = apiManager.getJson("$baseUrl/data/pricemultifull?fsyms=${codes}&tsyms=${currency}")
+                val data = json["RAW"].asObject()
+                val list = mutableListOf<MarketInfoEntity>()
 
                 for (coin in coins) {
-                    val rate = json.get(coin) ?: continue
-                    val value = rate.asObject().get(currency).toString()
+                    try {
+                        val dataCoin = data.get(coin).asObject()
+                        val dataFiat = dataCoin.get(currency).asObject()
 
-                    list[coin] = value
+                        val rate = dataFiat["PRICE"].toString().toBigDecimal()
+                        val diff = dataFiat["CHANGEPCT24HOUR"].toString().toBigDecimal()
+                        val time = dataFiat["LASTUPDATE"].asLong()
+                        val volume = dataFiat["VOLUME24HOURTO"].asDouble()
+                        val mktcap = dataFiat["MKTCAP"].asDouble()
+                        val supply = dataFiat["SUPPLY"].asDouble()
+
+                        list.add(factory.createMarketInfoEntity(coin, currency, rate, diff, volume, mktcap, supply, time))
+                    } catch (e: Exception) {
+                        continue
+                    }
                 }
 
                 emitter.onSuccess(list)
@@ -106,25 +119,6 @@ class CryptoCompareProvider(
                 }
 
                 emitter.onSuccess(stats)
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
-        }
-    }
-
-    //  Market Stats
-
-    override fun getMarketStats(coin: String, currency: String): Single<MarketStats> {
-        return Single.create<MarketStats> { emitter ->
-            try {
-                val response = apiManager.getJson("$baseUrl/data/pricemultifull?fsym=$coin&tsym=$currency")
-                val data = response["RAW"].asObject()[coin].asObject()[currency].asObject()
-
-                val volume = data["VOLUMEDAYTO"].asDouble()
-                val mktcap = data["MKTCAP"].asDouble()
-                val supply = data["SUPPLY"].asDouble()
-
-                emitter.onSuccess(factory.createMarketCap(coin, currency, volume, mktcap, supply))
             } catch (e: Exception) {
                 emitter.onError(e)
             }

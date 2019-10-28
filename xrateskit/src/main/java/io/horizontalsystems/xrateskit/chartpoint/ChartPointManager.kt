@@ -3,14 +3,13 @@ package io.horizontalsystems.xrateskit.chartpoint
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
-import io.horizontalsystems.xrateskit.latestrate.LatestRateManager
-import java.math.BigDecimal
+import io.horizontalsystems.xrateskit.marketinfo.MarketInfoManager
 import java.util.*
 
 class ChartPointManager(
         private val storage: IStorage,
         private val factory: Factory,
-        private val latestRateManager: LatestRateManager) {
+        private val latestRateManager: MarketInfoManager) {
 
     var listener: Listener? = null
 
@@ -23,11 +22,11 @@ class ChartPointManager(
     }
 
     fun getChartInfo(key: ChartPointKey): ChartInfo? {
-        val latestRate = latestRateManager.getLatestRate(key.coin, key.currency)
-        return chartInfo(storedChartPoints(key), latestRate, key)
+        val marketInfo = latestRateManager.getMarketInfo(key.coin, key.currency)
+        return chartInfo(storedChartPoints(key), marketInfo, key)
     }
 
-    private fun chartInfo(points: List<ChartPoint>, latestRate: Rate?, key: ChartPointKey): ChartInfo? {
+    private fun chartInfo(points: List<ChartPoint>, marketInfo: MarketInfo?, key: ChartPointKey): ChartInfo? {
         val lastPoint = points.lastOrNull() ?: return null
         val firstPoint = points.first()
 
@@ -37,32 +36,24 @@ class ChartPointManager(
             return ChartInfo(
                     points,
                     firstPoint.timestamp,
-                    currentTimestamp,
-                    diff = null
+                    currentTimestamp
             )
         }
 
-        if (latestRate == null || latestRate.timestamp < lastPoint.timestamp) {
+        if (marketInfo == null || marketInfo.timestamp < lastPoint.timestamp) {
             return ChartInfo(
                     points,
                     firstPoint.timestamp,
-                    lastPoint.timestamp,
-                    diff = null
+                    lastPoint.timestamp
             )
         }
 
-        val chartPointsWithLatestRate = points + ChartPoint(latestRate.value, latestRate.timestamp)
-        var diff: BigDecimal? = null
-
-        if (!latestRate.isExpired()) {
-            diff = (latestRate.value - firstPoint.value) / firstPoint.value * BigDecimal(100)
-        }
+        val chartPointsWithLatestRate = points + ChartPoint(marketInfo.rate, marketInfo.timestamp)
 
         return ChartInfo(
                 chartPointsWithLatestRate,
                 firstPoint.timestamp,
-                latestRate.timestamp,
-                diff
+                marketInfo.timestamp
         )
     }
 
@@ -74,14 +65,14 @@ class ChartPointManager(
         }
     }
 
-    fun update(latestRate: Rate, key: ChartPointKey) {
-        chartInfo(storedChartPoints(key), latestRate, key)?.let {
+    fun update(marketInfo: MarketInfo, key: ChartPointKey) {
+        chartInfo(storedChartPoints(key), marketInfo, key)?.let {
             listener?.onUpdate(it, key)
         }
     }
 
     private fun chartInfo(points: List<ChartPoint>, key: ChartPointKey): ChartInfo? {
-        val latestRate = latestRateManager.getLatestRate(key.coin, key.currency)
+        val latestRate = latestRateManager.getMarketInfo(key.coin, key.currency)
         return chartInfo(points, latestRate, key)
     }
 

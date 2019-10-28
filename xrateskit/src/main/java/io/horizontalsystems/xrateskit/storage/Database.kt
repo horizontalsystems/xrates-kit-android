@@ -6,23 +6,20 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import io.horizontalsystems.xrateskit.entities.ChartPointEntity
 import io.horizontalsystems.xrateskit.entities.HistoricalRate
-import io.horizontalsystems.xrateskit.entities.LatestRate
-import io.horizontalsystems.xrateskit.entities.MarketStats
+import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 
 @androidx.room.Database(version = 1, exportSchema = false, entities = [
-    LatestRate::class,
     HistoricalRate::class,
     ChartPointEntity::class,
-    MarketStats::class
+    MarketInfoEntity::class
 ])
 
 @TypeConverters(DatabaseConverters::class)
 
 abstract class Database : RoomDatabase() {
-    abstract val latestRateDao: LatestRateDao
     abstract val historicalRateDao: HistoricalRateDao
-    abstract val chartStatsDao: ChartStatsDao
-    abstract val marketStatsDao: MarketStatsDao
+    abstract val chartPointDao: ChartStatsDao
+    abstract val marketInfoDao: MarketInfoDao
 
     companion object {
         fun create(context: Context): Database {

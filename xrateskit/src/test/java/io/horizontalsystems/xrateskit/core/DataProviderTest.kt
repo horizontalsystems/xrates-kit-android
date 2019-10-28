@@ -104,7 +104,7 @@ object DataProviderTest : Spek({
 
     describe("#update(latestRate)") {
         val rateInfo by memoized<Rate> { mock() }
-        val rateSubjectKey = LatestRateKey(coin, currency)
+        val rateSubjectKey = MarketInfoKey(coin, currency)
         val latestRate by memoized<LatestRate> {
             mock {
                 on { this.coin } doReturn coin

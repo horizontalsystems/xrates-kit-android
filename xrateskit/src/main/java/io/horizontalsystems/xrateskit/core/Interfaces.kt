@@ -4,11 +4,6 @@ import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 
 interface IStorage {
-    //  LatestRate
-    fun saveLatestRates(rates: List<LatestRate>)
-    fun getLatestRate(coin: String, currency: String): LatestRate?
-    fun getOldLatestRates(coins: List<String>, currency: String): List<LatestRate>
-
     //  HistoricalRate
     fun saveHistoricalRate(rate: HistoricalRate)
     fun getHistoricalRate(coin: String, currency: String, timestamp: Long): HistoricalRate?
@@ -20,21 +15,18 @@ interface IStorage {
     fun saveChartPoints(points: List<ChartPointEntity>)
     fun deleteChartPoints(key: ChartPointKey)
 
-    //  MarketStats
-    fun getMarketStats(coin: String, currency: String): MarketStats?
-    fun saveMarketStats(marketStats: MarketStats)
+    //  MarketInfo
+    fun getMarketInfo(coin: String, currency: String): MarketInfoEntity?
+    fun getOldMarketInfo(coins: List<String>, currency: String): List<MarketInfoEntity>
+    fun saveMarketInfo(marketInfoList: List<MarketInfoEntity>)
 }
 
-interface ILatestRateProvider {
-    fun getLatestRates(coins: List<String>, currency: String): Single<Map<String, String>>
+interface IMarketInfoProvider {
+    fun getMarketInfo(coins: List<String>, currency: String): Single<List<MarketInfoEntity>>
 }
 
 interface IChartPointProvider {
     fun getChartPoints(chartPointKey: ChartPointKey): Single<List<ChartPointEntity>>
-}
-
-interface IMarketStatsProvider {
-    fun getMarketStats(coin: String, currency: String): Single<MarketStats>
 }
 
 interface IHistoricalRateProvider {

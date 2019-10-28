@@ -1,27 +1,15 @@
 package io.horizontalsystems.xrateskit.storage
 
 import io.horizontalsystems.xrateskit.core.IStorage
-import io.horizontalsystems.xrateskit.entities.*
+import io.horizontalsystems.xrateskit.entities.ChartPointEntity
+import io.horizontalsystems.xrateskit.entities.ChartPointKey
+import io.horizontalsystems.xrateskit.entities.HistoricalRate
+import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 
 class Storage(database: Database) : IStorage {
-    private val latestRateDao = database.latestRateDao
     private val historicalRateDao = database.historicalRateDao
-    private val chartStatsDao = database.chartStatsDao
-    private val marketStatsDao = database.marketStatsDao
-
-    // LatestRate
-
-    override fun saveLatestRates(rates: List<LatestRate>) {
-        latestRateDao.insert(rates)
-    }
-
-    override fun getLatestRate(coin: String, currency: String): LatestRate? {
-        return latestRateDao.getRate(coin, currency)
-    }
-
-    override fun getOldLatestRates(coins: List<String>, currency: String): List<LatestRate> {
-        return latestRateDao.getOldRates(coins, currency) // expired last
-    }
+    private val chartPointDao = database.chartPointDao
+    private val marketInfoDao = database.marketInfoDao
 
     // HistoricalRate
 
@@ -36,32 +24,36 @@ class Storage(database: Database) : IStorage {
     //  ChartPoint
 
     override fun getChartPoints(key: ChartPointKey): List<ChartPointEntity> {
-        return chartStatsDao.getList(key.coin, key.currency, key.chartType)
+        return chartPointDao.getList(key.coin, key.currency, key.chartType)
     }
 
     override fun getChartPoints(key: ChartPointKey, fromTimestamp: Long): List<ChartPointEntity> {
-        return chartStatsDao.getList(key.coin, key.currency, key.chartType, fromTimestamp)
+        return chartPointDao.getList(key.coin, key.currency, key.chartType, fromTimestamp)
     }
 
     override fun getLatestChartPoints(key: ChartPointKey): ChartPointEntity? {
-        return chartStatsDao.getLast(key.coin, key.currency, key.chartType)
+        return chartPointDao.getLast(key.coin, key.currency, key.chartType)
     }
 
     override fun saveChartPoints(points: List<ChartPointEntity>) {
-        chartStatsDao.insert(points)
+        chartPointDao.insert(points)
     }
 
     override fun deleteChartPoints(key: ChartPointKey) {
-        chartStatsDao.delete(key.coin, key.currency, key.chartType)
+        chartPointDao.delete(key.coin, key.currency, key.chartType)
     }
 
     //  MarketStats
 
-    override fun getMarketStats(coin: String, currency: String): MarketStats? {
-        return marketStatsDao.getMarketStats(coin, currency)
+    override fun getMarketInfo(coin: String, currency: String): MarketInfoEntity? {
+        return marketInfoDao.getMarketInfo(coin, currency)
     }
 
-    override fun saveMarketStats(marketStats: MarketStats) {
-        marketStatsDao.insert(marketStats)
+    override fun getOldMarketInfo(coins: List<String>, currency: String): List<MarketInfoEntity> {
+        return marketInfoDao.getOldList(coins, currency)
+    }
+
+    override fun saveMarketInfo(marketInfoList: List<MarketInfoEntity>) {
+        marketInfoDao.insertAll(marketInfoList)
     }
 }

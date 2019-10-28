@@ -1,4 +1,4 @@
-package io.horizontalsystems.xrateskit.latestrate
+package io.horizontalsystems.xrateskit.marketinfo
 
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -9,7 +9,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
-class LatestRateScheduler(private val provider: LatestRateSchedulerProvider) {
+class MarketInfoScheduler(private val provider: MarketInfoSchedulerProvider) {
 
     private var timeDisposable: Disposable? = null
     private var syncDisposable: Disposable? = null
