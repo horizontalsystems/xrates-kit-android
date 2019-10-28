@@ -32,7 +32,7 @@ class MarketInfoScheduler(private val provider: MarketInfoSchedulerProvider) {
         syncDisposable?.dispose()
     }
 
-    private fun autoSchedule() {
+    private fun autoSchedule(minDelay: Long = 0) {
         var newDelay = 0L
 
         provider.lastSyncTimestamp?.let { lastSync ->
@@ -40,7 +40,7 @@ class MarketInfoScheduler(private val provider: MarketInfoSchedulerProvider) {
             newDelay = max(0, provider.expirationInterval - bufferInterval - diff)
         }
 
-        schedule(newDelay)
+        schedule(max(newDelay, minDelay))
     }
 
     private fun schedule(delay: Long) {
@@ -61,7 +61,7 @@ class MarketInfoScheduler(private val provider: MarketInfoSchedulerProvider) {
         syncDisposable?.dispose()
         syncDisposable = provider.syncSingle
                 .subscribe({
-                    autoSchedule()
+                    autoSchedule(provider.retryInterval)
                     isExpiredRatesNotified = false
                 }, {
                     schedule(provider.retryInterval)
