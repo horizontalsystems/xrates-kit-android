@@ -5,8 +5,8 @@ import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IChartInfoProvider
 import io.horizontalsystems.xrateskit.core.IHistoricalRateProvider
 import io.horizontalsystems.xrateskit.core.IMarketInfoProvider
-import io.horizontalsystems.xrateskit.entities.ChartPointEntity
 import io.horizontalsystems.xrateskit.entities.ChartInfoKey
+import io.horizontalsystems.xrateskit.entities.ChartPointEntity
 import io.horizontalsystems.xrateskit.entities.HistoricalRate
 import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 import io.reactivex.Single
@@ -110,12 +110,15 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
                 val stats = mutableListOf<ChartPointEntity>()
 
                 for (data in result) {
-                    val value = valueAverage(
-                            data["open"].asDouble(),
-                            data["close"].asDouble()
-                    )
+                    val value = (data["open"].asDouble() + data["close"].asDouble()) / 2
 
-                    stats.add(ChartPointEntity(chartType, coin, currency, value, data["time"].asLong()))
+                    stats.add(ChartPointEntity(
+                            chartType,
+                            coin,
+                            currency,
+                            value.toBigDecimal(),
+                            data["time"].asLong())
+                    )
                 }
 
                 emitter.onSuccess(stats)
