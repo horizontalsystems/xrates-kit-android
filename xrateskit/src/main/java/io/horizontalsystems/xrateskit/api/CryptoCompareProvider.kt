@@ -89,10 +89,8 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
         val data2 = data.first().asObject()
 
         return valueAverage(
-                data1["open"].asDouble(),
-                data1["close"].asDouble(),
-                data2["open"].asDouble(),
-                data2["close"].asDouble()
+                data1["open"].asDouble() + data1["close"].asDouble(),
+                data2["open"].asDouble() + data2["close"].asDouble()
         )
     }
 
@@ -110,13 +108,13 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
                 val stats = mutableListOf<ChartPointEntity>()
 
                 for (data in result) {
-                    val value = (data["open"].asDouble() + data["close"].asDouble()) / 2
+                    val value = valueAverage(data["open"].asDouble() + data["close"].asDouble())
 
                     stats.add(ChartPointEntity(
                             chartType,
                             coin,
                             currency,
-                            value.toBigDecimal(),
+                            value,
                             data["time"].asLong())
                     )
                 }

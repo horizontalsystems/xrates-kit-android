@@ -41,10 +41,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         observeChartStats("BTC")
+        getHistoricalRate("BTC", 1572631200)
 
         unsubscribeBtn.setOnClickListener {
             disposables.dispose()
         }
+    }
+
+    private fun getHistoricalRate(coin: String, timestamp: Long) {
+        exchangeRatesKit.historicalRate(coin, currency, timestamp)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    println(it)
+                }, {
+                    it.printStackTrace()
+                })
+                .let {
+                    disposables.add(it)
+                }
     }
 
     private fun observeMarketInfo(coin: String) {
