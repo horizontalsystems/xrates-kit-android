@@ -20,7 +20,7 @@ enum class ChartType(val interval: Long, val points: Int, val resource: String) 
         }
 
     val rangeInterval: Long
-        get() = expirationInterval * interval * points
+        get() = expirationInterval * points
 
     val seconds: Long
         get() = when (this) {
