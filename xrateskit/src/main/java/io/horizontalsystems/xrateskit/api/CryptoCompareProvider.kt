@@ -32,13 +32,13 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
                         val dataFiat = dataCoin.get(currency).asObject()
 
                         val rate = dataFiat["PRICE"].toString().toBigDecimal()
+                        val rateOpen24Hour = dataFiat["OPEN24HOUR"].toString().toBigDecimal()
                         val diff = dataFiat["CHANGEPCT24HOUR"].toString().toBigDecimal()
-                        // val time = dataFiat["LASTUPDATE"].asLong()
                         val volume = dataFiat["VOLUME24HOURTO"].asDouble()
                         val mktcap = dataFiat["MKTCAP"].asDouble()
                         val supply = dataFiat["SUPPLY"].asDouble()
 
-                        list.add(factory.createMarketInfoEntity(coin, currency, rate, diff, volume, mktcap, supply))
+                        list.add(factory.createMarketInfoEntity(coin, currency, rate, rateOpen24Hour, diff, volume, mktcap, supply))
                     } catch (e: Exception) {
                         continue
                     }

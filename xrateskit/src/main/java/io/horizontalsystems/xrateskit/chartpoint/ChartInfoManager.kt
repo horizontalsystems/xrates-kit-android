@@ -41,7 +41,7 @@ class ChartInfoManager(
             )
         }
 
-        if (marketInfo == null || marketInfo.timestamp < lastPoint.timestamp) {
+        if (marketInfo == null) {
             return ChartInfo(
                     points,
                     firstPoint.timestamp,
@@ -49,11 +49,18 @@ class ChartInfoManager(
             )
         }
 
-        val chartPointsWithLatestRate = points + ChartPoint(marketInfo.rate, marketInfo.timestamp)
+        var firstTimestamp = firstPoint.timestamp
+        var chartPoints = points.filter { it.timestamp < marketInfo.timestamp }
+        if (key.chartType == ChartType.DAILY) {
+            firstTimestamp = marketInfo.timestamp - key.chartType.rangeInterval
+            chartPoints = listOf(ChartPoint(marketInfo.rateOpen24Hour, firstTimestamp)) + chartPoints.filter { it.timestamp > firstTimestamp }
+        }
+
+        val chartPointsWithLatestRate = chartPoints + ChartPoint(marketInfo.rate, marketInfo.timestamp)
 
         return ChartInfo(
                 chartPointsWithLatestRate,
-                firstPoint.timestamp,
+                firstTimestamp,
                 marketInfo.timestamp
         )
     }

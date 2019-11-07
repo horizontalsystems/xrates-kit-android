@@ -8,6 +8,7 @@ class MarketInfoEntity(
         val coin: String,
         val currency: String,
         val rate: BigDecimal,
+        val rateOpen24Hour: BigDecimal,
         val diff: BigDecimal,
         val volume: Double,
         val marketCap: Double,
