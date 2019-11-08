@@ -9,6 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 class ChartInfoSyncManager(
@@ -50,6 +51,7 @@ class ChartInfoSyncManager(
         subjects[key]?.onError(NoChartInfo())
     }
 
+    @Synchronized
     private fun getSubject(key: ChartInfoKey): Observable<ChartInfo> {
         var subject = subjects[key]
         if (subject == null) {
@@ -60,6 +62,7 @@ class ChartInfoSyncManager(
         return subject
     }
 
+    @Synchronized
     private fun getScheduler(key: ChartInfoKey): ChartInfoScheduler {
         var scheduler = schedulers[key]
         if (scheduler == null) {
@@ -83,6 +86,7 @@ class ChartInfoSyncManager(
                 }
     }
 
+    @Synchronized
     private fun cleanup(key: ChartInfoKey) {
         val subject = subjects[key]
         if (subject == null || getCounter(key).get() > 0) {
