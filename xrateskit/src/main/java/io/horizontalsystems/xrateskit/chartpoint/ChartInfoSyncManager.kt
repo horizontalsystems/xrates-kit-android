@@ -9,14 +9,13 @@ import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 class ChartInfoSyncManager(
-        private val factory: ChartInfoSchedulerFactory,
-        private val chartPointManager: ChartInfoManager,
-        private val latestRateSyncManager: MarketInfoSyncManager)
-    : ChartInfoManager.Listener {
+    private val factory: ChartInfoSchedulerFactory,
+    private val chartPointManager: ChartInfoManager,
+    private val latestRateSyncManager: MarketInfoSyncManager
+) : ChartInfoManager.Listener {
 
     private val subjects = mutableMapOf<ChartInfoKey, PublishSubject<ChartInfo>>()
     private val schedulers = mutableMapOf<ChartInfoKey, ChartInfoScheduler>()
@@ -30,14 +29,18 @@ class ChartInfoSyncManager(
         }
 
         return getSubject(key)
-                .doOnSubscribe {
-                    getCounter(key).incrementAndGet()
-                    getScheduler(key).start()
-                }
-                .doOnDispose {
-                    getCounter(key).decrementAndGet()
-                    cleanup(key)
-                }
+            .doOnSubscribe {
+                getCounter(key).incrementAndGet()
+                getScheduler(key).start()
+            }
+            .doOnDispose {
+                getCounter(key).decrementAndGet()
+                cleanup(key)
+            }
+            .doOnError {
+                getCounter(key).decrementAndGet()
+                cleanup(key)
+            }
     }
 
     //  ChartInfoManager Listener
@@ -48,7 +51,9 @@ class ChartInfoSyncManager(
 
     override fun noChartInfo(key: ChartInfoKey) {
         failedKeys.add(key)
-        subjects[key]?.onError(NoChartInfo())
+        if (subjects[key]?.hasObservers() == true) {
+            subjects[key]?.onError(NoChartInfo())
+        }
     }
 
     @Synchronized
@@ -77,13 +82,13 @@ class ChartInfoSyncManager(
 
     private fun observeLatestRates(key: ChartInfoKey) {
         latestRateSyncManager.marketInfoObservable(MarketInfoKey(key.coin, key.currency))
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    chartPointManager.update(it, key)
-                }, {})
-                .let {
-                    ratesDisposables[key] = it
-                }
+            .subscribeOn(Schedulers.io())
+            .subscribe({
+                chartPointManager.update(it, key)
+            }, {})
+            .let {
+                ratesDisposables[key] = it
+            }
     }
 
     @Synchronized
@@ -95,6 +100,7 @@ class ChartInfoSyncManager(
 
         subject.onComplete()
         schedulers[key]?.stop()
+        schedulers.remove(key)
         ratesDisposables[key]?.dispose()
     }
 

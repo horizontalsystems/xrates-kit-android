@@ -1,5 +1,6 @@
 package io.horizontalsystems.xrateskit.chartpoint
 
+import io.horizontalsystems.xrateskit.entities.CryptoCompareError
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -52,7 +53,9 @@ class ChartInfoScheduler(private val provider: ChartInfoSchedulerProvider) {
                 .subscribe({
                     autoSchedule(provider.retryInterval)
                 }, {
-                    schedule(provider.retryInterval)
+                    if (it !is CryptoCompareError.NoDataForCoin) {
+                        schedule(provider.retryInterval)
+                    }
                 })
     }
 

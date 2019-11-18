@@ -41,9 +41,48 @@ class MainActivity : AppCompatActivity() {
             observeMarketInfo(coin)
         }
 
-        observeChartStats("BTC")
         for (i in 1..100) {
             getHistoricalRate("BTC", (1542105480 + (i * 200)).toLong())
+        }
+
+        //get chart points
+        val coinCodes = listOf(
+            "BTC",
+            "ETH",
+            "BCH",
+            "DASH",
+            "BNB",
+            "EOS",
+            "ZRX",
+            "ELF",
+            "ANKR",
+            "GTO",
+            "HOT",
+            "BNT",
+            "BAT",
+            "BUSD",
+            "BTCB",
+            "CAS",
+            "LINK",
+            "MCO",
+            "CRO",
+            "CRPT",
+            "DAI",
+            "MANA",
+            "DGD",
+            "DGX",
+            "ENJ",
+            "MEETONE",
+            "NEXO",
+            "NDX",
+            "NUT",
+            "AURA"
+        )
+        val currency = "USD"
+        val chartType = ChartType.DAILY
+
+        coinCodes.forEach { coinCode ->
+            observeChartStats(coinCode, currency, chartType)
         }
 
         unsubscribeBtn.setOnClickListener {
@@ -92,14 +131,19 @@ class MainActivity : AppCompatActivity() {
         }.joinToString("\n\n")
     }
 
-    private fun observeChartStats(coin: String, scheduler: Scheduler = Schedulers.io()) {
-        val info = exchangeRatesKit.getChartInfo(coin, currency, ChartType.DAILY)
+    private fun observeChartStats(
+        coinCode: String,
+        currency: String,
+        chartType: ChartType,
+        scheduler: Scheduler = Schedulers.io()
+    ) {
+        val info = exchangeRatesKit.getChartInfo(coinCode, currency, chartType)
         if (info != null) {
             ratesAdapter.items = info.points
             ratesAdapter.notifyDataSetChanged()
         }
 
-        exchangeRatesKit.chartInfoObservable(coin, currency, ChartType.DAILY)
+        exchangeRatesKit.chartInfoObservable(coinCode, currency, ChartType.DAILY)
             .subscribeOn(scheduler)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
