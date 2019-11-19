@@ -5,15 +5,19 @@ import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IChartInfoProvider
 import io.horizontalsystems.xrateskit.core.IHistoricalRateProvider
 import io.horizontalsystems.xrateskit.core.IMarketInfoProvider
-import io.horizontalsystems.xrateskit.entities.ChartInfoKey
-import io.horizontalsystems.xrateskit.entities.ChartPointEntity
-import io.horizontalsystems.xrateskit.entities.HistoricalRate
-import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
+import io.horizontalsystems.xrateskit.entities.*
+import io.reactivex.Flowable
 import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import java.math.BigDecimal
+import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.math.pow
 
 class CryptoCompareProvider(private val factory: Factory, private val apiManager: ApiManager, private val baseUrl: String)
     : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider {
+
+    private val retryLimit = 3
 
     // Market Info
 
@@ -54,19 +58,24 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
     //  Historical Rate
 
     override fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<HistoricalRate> {
-        return Single.create { emitter ->
+        val todayInSeconds = Date().time / 1000
+        val sevenDaysInSeconds = 604800
+
+        val single = Single.create<HistoricalRate> { emitter ->
             try {
-                val rate = try {
+                //API has records by minutes only for the last 7 days
+                val rate = if (todayInSeconds - timestamp < sevenDaysInSeconds){
                     getByMinute(coin, currency, timestamp)
-                } catch (e: Exception) {
+                } else  {
                     getByHour(coin, currency, timestamp)
                 }
-
                 emitter.onSuccess(rate)
             } catch (e: Exception) {
                 emitter.onError(e)
             }
         }
+
+        return singleWithRetry(single)
     }
 
     private fun getByMinute(coin: String, currency: String, timestamp: Long): HistoricalRate {
@@ -84,7 +93,9 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
     }
 
     private fun parseValue(jsonObject: JsonObject): BigDecimal {
-        val data = jsonObject["Data"].asObject()["Data"].asArray()
+        val dataObject = CryptoCompareResponse.parseData(jsonObject)
+
+        val data = dataObject["Data"].asArray()
         val data1 = data.first().asObject()
         val data2 = data.first().asObject()
 
@@ -101,10 +112,11 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
         val currency = chartPointKey.currency
         val chartType = chartPointKey.chartType
 
-        return Single.create<List<ChartPointEntity>> { emitter ->
+        val single = Single.create<List<ChartPointEntity>> { emitter ->
             try {
                 val response = apiManager.getJson("$baseUrl/data/v2/${chartType.resource}?fsym=$coin&tsym=$currency&aggregate=${chartType.interval}&limit=${chartType.points}")
-                val result = response["Data"].asObject()["Data"].asArray().map { it.asObject() }
+                val dataObject = CryptoCompareResponse.parseData(response)
+                val result = dataObject["Data"].asArray().map { it.asObject() }
                 val stats = mutableListOf<ChartPointEntity>()
 
                 for (data in result) {
@@ -122,6 +134,27 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
                 emitter.onSuccess(stats)
             } catch (e: Exception) {
                 emitter.onError(e)
+            }
+        }
+
+        return singleWithRetry(single)
+    }
+
+    private fun <T> singleWithRetry(single: Single<T>): Single<T> {
+        return single.retryWhen { errors: Flowable<Throwable> ->
+            errors.zipWith(
+                Flowable.range(1, retryLimit + 1),
+                BiFunction<Throwable, Int, Int> { error: Throwable, retryCount: Int ->
+                    if (error is CryptoCompareError.ApiRequestLimitExceeded && retryCount < retryLimit) {
+                        retryCount
+                    } else {
+                        throw error
+                    }
+                }
+            ).flatMap { retryCount ->
+                //exponential 1, 2, 4
+                val delay = 2.toDouble().pow(retryCount.toDouble()).toLong() / 2
+                Flowable.timer(delay, TimeUnit.SECONDS)
             }
         }
     }

@@ -94,4 +94,8 @@ class ChartInfoManager(
 
         return storage.getChartPoints(key, fromTimestamp).map { factory.createChartPoint(it.value, it.timestamp) }
     }
+
+    fun handleNoChartPoints(key: ChartInfoKey) {
+        listener?.noChartInfo(key)
+    }
 }
