@@ -57,8 +57,12 @@ class XRatesKit(
         return chartInfoSyncManager.chartInfoObservable(ChartInfoKey(coin, currency, chartType))
     }
 
-    fun historicalRate(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
+    fun historicalRate(coin: String, currency: String, timestamp: Long): BigDecimal? {
         return historicalRateManager.getHistoricalRate(coin, currency, timestamp)
+    }
+
+    fun historicalRateFromApi(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
+        return historicalRateManager.getHistoricalRateFromApi(coin, currency, timestamp)
     }
 
     companion object {

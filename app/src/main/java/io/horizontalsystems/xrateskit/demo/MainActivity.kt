@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getHistoricalRate(coin: String, timestamp: Long) {
-        exchangeRatesKit.historicalRate(coin, currency, timestamp)
+        exchangeRatesKit.historicalRateFromApi(coin, currency, timestamp)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({

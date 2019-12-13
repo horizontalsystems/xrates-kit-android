@@ -7,11 +7,11 @@ import java.math.BigDecimal
 
 class HistoricalRateManager(private val storage: IStorage, private val rateProvider: CryptoCompareProvider) {
 
-    fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
-        storage.getHistoricalRate(coin, currency, timestamp)?.let {
-            return Single.just(it.value)
-        }
+    fun getHistoricalRate(coin: String, currency: String, timestamp: Long): BigDecimal? {
+        return storage.getHistoricalRate(coin, currency, timestamp)?.value
+    }
 
+    fun getHistoricalRateFromApi(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
         return rateProvider
                 .getHistoricalRate(coin, currency, timestamp)
                 .doOnSuccess {
