@@ -50,9 +50,17 @@ class MarketInfoSyncManager(
     }
 
     private fun updateScheduler() {
-        subjects.clear()
-        currencySubjects.clear()
         scheduler?.stop()
+
+        subjects.forEach { (key, subject) ->
+            subject.onComplete()
+            subjects.remove(key)
+        }
+
+        currencySubjects.forEach { (key, subject) ->
+            subject.onComplete()
+            currencySubjects.remove(key)
+        }
 
         if (coins.isEmpty()) {
             return
