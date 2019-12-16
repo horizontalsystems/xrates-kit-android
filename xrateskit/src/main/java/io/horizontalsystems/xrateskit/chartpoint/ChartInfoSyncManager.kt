@@ -99,8 +99,11 @@ class ChartInfoSyncManager(
         }
 
         subject.onComplete()
+        subjects.remove(key)
+
         schedulers[key]?.stop()
         schedulers.remove(key)
+
         ratesDisposables[key]?.dispose()
     }
 
