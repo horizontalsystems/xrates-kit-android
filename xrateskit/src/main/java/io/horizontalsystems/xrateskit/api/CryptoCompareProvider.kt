@@ -12,7 +12,6 @@ import io.reactivex.functions.BiFunction
 import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.math.pow
 
 class CryptoCompareProvider(private val factory: Factory, private val apiManager: ApiManager, private val baseUrl: String)
     : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider {
@@ -145,15 +144,15 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
             errors.zipWith(
                 Flowable.range(1, retryLimit + 1),
                 BiFunction<Throwable, Int, Int> { error: Throwable, retryCount: Int ->
-                    if (error is CryptoCompareError.ApiRequestLimitExceeded && retryCount < retryLimit) {
+                    if (error is CryptoCompareError.ApiRequestLimitExceeded && retryCount <= retryLimit) {
                         retryCount
                     } else {
                         throw error
                     }
                 }
             ).flatMap { retryCount ->
-                //exponential 1, 2, 4
-                val delay = 2.toDouble().pow(retryCount.toDouble()).toLong() / 2
+                //exponential delay 3, 6, 9
+                val delay = 3.toDouble().times(retryCount.toDouble()).toLong()
                 Flowable.timer(delay, TimeUnit.SECONDS)
             }
         }

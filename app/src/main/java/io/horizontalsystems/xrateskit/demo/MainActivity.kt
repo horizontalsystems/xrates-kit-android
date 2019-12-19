@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             observeMarketInfo(coin)
         }
 
-        for (i in 1..100) {
+        for (i in 1..10) {
             getHistoricalRate("BTC", (1542105480 + (i * 200)).toLong())
         }
 
