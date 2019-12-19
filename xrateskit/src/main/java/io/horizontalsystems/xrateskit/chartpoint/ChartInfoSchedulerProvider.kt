@@ -6,11 +6,10 @@ import io.horizontalsystems.xrateskit.entities.CryptoCompareError
 import io.reactivex.Single
 
 class ChartInfoSchedulerProvider(
-    val retryInterval: Long,
-    private val key: ChartInfoKey,
-    private val provider: IChartInfoProvider,
-    private val manager: ChartInfoManager
-) {
+        val retryInterval: Long,
+        private val key: ChartInfoKey,
+        private val provider: IChartInfoProvider,
+        private val manager: ChartInfoManager) {
 
     val lastSyncTimestamp: Long?
         get() = manager.getLastSyncTimestamp(key)
@@ -20,13 +19,13 @@ class ChartInfoSchedulerProvider(
 
     val syncSingle: Single<Unit>
         get() = provider.getChartPoints(key)
-            .doOnSuccess { points ->
-                manager.update(points, key)
-            }
-            .doOnError {
-                if (it is CryptoCompareError.NoDataForCoin) {
-                    manager.handleNoChartPoints(key)
+                .doOnSuccess { points ->
+                    manager.update(points, key)
                 }
-            }
-            .map { Unit }
+                .doOnError {
+                    if (it is CryptoCompareError.NoDataForCoin) {
+                        manager.handleNoChartPoints(key)
+                    }
+                }
+                .map { Unit }
 }

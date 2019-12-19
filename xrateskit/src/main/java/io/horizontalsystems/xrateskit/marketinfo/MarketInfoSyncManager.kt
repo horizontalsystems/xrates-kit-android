@@ -4,6 +4,7 @@ import io.horizontalsystems.xrateskit.entities.MarketInfo
 import io.horizontalsystems.xrateskit.entities.MarketInfoKey
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.ConcurrentHashMap
 
 class MarketInfoSyncManager(
         private var currency: String,
@@ -11,8 +12,9 @@ class MarketInfoSyncManager(
     : MarketInfoManager.Listener {
 
     private var coins: List<String> = listOf()
-    private val subjects = mutableMapOf<MarketInfoKey, PublishSubject<MarketInfo>>()
-    private val currencySubjects = mutableMapOf<String, PublishSubject<Map<String, MarketInfo>>>()
+    private val subjects = ConcurrentHashMap<MarketInfoKey, PublishSubject<MarketInfo>>()
+    private val currencySubjects = ConcurrentHashMap<String, PublishSubject<Map<String, MarketInfo>>>()
+
     private var scheduler: MarketInfoScheduler? = null
 
     fun set(coinCodes: List<String>) {
@@ -21,6 +23,11 @@ class MarketInfoSyncManager(
     }
 
     fun set(currencyCode: String) {
+        if (currencyCode == currency) return
+
+        currencySubjects.values.forEach { it.onComplete() }
+        currencySubjects.clear()
+
         currency = currencyCode
         updateScheduler()
     }
@@ -51,15 +58,11 @@ class MarketInfoSyncManager(
 
     private fun updateScheduler() {
         scheduler?.stop()
+        scheduler = null
 
         subjects.forEach { (key, subject) ->
             subject.onComplete()
             subjects.remove(key)
-        }
-
-        currencySubjects.forEach { (key, subject) ->
-            subject.onComplete()
-            currencySubjects.remove(key)
         }
 
         if (coins.isEmpty()) {

@@ -66,7 +66,7 @@ class XRatesKit(
     }
 
     companion object {
-        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 10): XRatesKit {
+        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30): XRatesKit {
             val factory = Factory(rateExpirationInterval)
             val storage = Storage(Database.create(context))
 
