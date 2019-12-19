@@ -2,9 +2,6 @@ package io.horizontalsystems.xrateskit.marketinfo
 
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -13,21 +10,25 @@ class MarketInfoScheduler(private val provider: MarketInfoSchedulerProvider) {
 
     private var timeDisposable: Disposable? = null
     private var syncDisposable: Disposable? = null
+
     private var isExpiredRatesNotified = false
     private val bufferInterval = 5
 
+    @Volatile
+    private var stopped = false
+
     fun start(force: Boolean = false) {
-        GlobalScope.launch {
-            //  Force sync
-            if (force) {
-                onFire()
-            } else {
-                autoSchedule()
-            }
+        //  Force sync
+        if (force) {
+            onFire()
+        } else {
+            autoSchedule()
         }
     }
 
+    @Synchronized
     fun stop() {
+        stopped = true
         timeDisposable?.dispose()
         syncDisposable?.dispose()
     }
@@ -40,16 +41,19 @@ class MarketInfoScheduler(private val provider: MarketInfoSchedulerProvider) {
             newDelay = max(0, provider.expirationInterval - bufferInterval - diff)
         }
 
-        schedule(max(newDelay, minDelay))
+        val delay = max(newDelay, minDelay)
+        schedule(delay)
     }
 
+    @Synchronized
     private fun schedule(delay: Long) {
+        if (stopped) return
+
         notifyRatesIfExpired()
 
         timeDisposable?.dispose()
         timeDisposable = Observable
                 .timer(delay, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.io())
                 .subscribe({
                     onFire()
                 }, {
@@ -58,6 +62,8 @@ class MarketInfoScheduler(private val provider: MarketInfoSchedulerProvider) {
     }
 
     private fun onFire() {
+        if (stopped) return
+
         syncDisposable?.dispose()
         syncDisposable = provider.syncSingle
                 .subscribe({

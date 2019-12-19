@@ -9,38 +9,42 @@ import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 
 class ChartInfoSyncManager(
-    private val factory: ChartInfoSchedulerFactory,
-    private val chartPointManager: ChartInfoManager,
-    private val latestRateSyncManager: MarketInfoSyncManager
-) : ChartInfoManager.Listener {
+        private val factory: ChartInfoSchedulerFactory,
+        private val chartPointManager: ChartInfoManager,
+        private val latestRateSyncManager: MarketInfoSyncManager)
+    : ChartInfoManager.Listener {
 
-    private val subjects = mutableMapOf<ChartInfoKey, PublishSubject<ChartInfo>>()
-    private val schedulers = mutableMapOf<ChartInfoKey, ChartInfoScheduler>()
-    private val ratesDisposables = mutableMapOf<ChartInfoKey, Disposable>()
-    private val observersCount = mutableMapOf<ChartInfoKey, AtomicInteger>()
-    private val failedKeys = mutableListOf<ChartInfoKey>()
+    private val subjects = ConcurrentHashMap<ChartInfoKey, PublishSubject<ChartInfo>>()
+    private val schedulers = ConcurrentHashMap<ChartInfoKey, ChartInfoScheduler>()
+    private val observers = ConcurrentHashMap<ChartInfoKey, AtomicInteger>()
+
+    private val failedKeys = ConcurrentLinkedQueue<ChartInfoKey>()
+    private val disposables = ConcurrentHashMap<ChartInfoKey, Disposable>()
 
     fun chartInfoObservable(key: ChartInfoKey): Observable<ChartInfo> {
+
         if (failedKeys.contains(key)) {
             return Observable.error(NoChartInfo())
         }
 
         return getSubject(key)
-            .doOnSubscribe {
-                getCounter(key).incrementAndGet()
-                getScheduler(key).start()
-            }
-            .doOnDispose {
-                getCounter(key).decrementAndGet()
-                cleanup(key)
-            }
-            .doOnError {
-                getCounter(key).decrementAndGet()
-                cleanup(key)
-            }
+                .doOnSubscribe {
+                    getCounter(key).incrementAndGet()
+                    getScheduler(key).start()
+                }
+                .doOnDispose {
+                    getCounter(key).decrementAndGet()
+                    cleanup(key)
+                }
+                .doOnError {
+                    getCounter(key).decrementAndGet()
+                    cleanup(key)
+                }
     }
 
     //  ChartInfoManager Listener
@@ -82,16 +86,15 @@ class ChartInfoSyncManager(
 
     private fun observeLatestRates(key: ChartInfoKey) {
         latestRateSyncManager.marketInfoObservable(MarketInfoKey(key.coin, key.currency))
-            .subscribeOn(Schedulers.io())
-            .subscribe({
-                chartPointManager.update(it, key)
-            }, {})
-            .let {
-                ratesDisposables[key] = it
-            }
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    chartPointManager.update(it, key)
+                }, {
+
+                })
+                .let { disposables[key] = it }
     }
 
-    @Synchronized
     private fun cleanup(key: ChartInfoKey) {
         val subject = subjects[key]
         if (subject == null || getCounter(key).get() > 0) {
@@ -99,17 +102,19 @@ class ChartInfoSyncManager(
         }
 
         subject.onComplete()
+        subjects.remove(key)
+
         schedulers[key]?.stop()
         schedulers.remove(key)
-        ratesDisposables[key]?.dispose()
+
+        disposables[key]?.dispose()
     }
 
-    @Synchronized
     private fun getCounter(key: ChartInfoKey): AtomicInteger {
-        var count = observersCount[key]
+        var count = observers[key]
         if (count == null) {
             count = AtomicInteger(0)
-            observersCount[key] = count
+            observers[key] = count
         }
 
         return count
