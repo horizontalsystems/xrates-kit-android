@@ -7,44 +7,46 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/latestRate"
-        android:layout_width="match_parent"
+        android:id="@+id/currencyName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:padding="10dp"
+        android:text="Currency"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="TEXT" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/unsubscribeBtn"
+    <Spinner
+        android:id="@+id/currency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:text="Unsubscribe"
+        android:paddingStart="20dp"
+        android:paddingEnd="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/coinsRecyclerView"
+        app:layout_constraintStart_toEndOf="@+id/currencyName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Refresh"
+        app:layout_constraintBottom_toTopOf="@+id/coinsRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/chartStats"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/latestRate"
-        tools:text="Chart Points" />
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chartStatsRecyclerView"
+        android:id="@+id/coinsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:paddingTop="20dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chartStats"
+        app:layout_constraintTop_toBottomOf="@id/currencyName"
         app:layout_constraintVertical_bias="0.0"
         tools:itemCount="5"
         tools:listitem="@layout/view_holder_rate" />
