@@ -8,11 +8,11 @@ import io.horizontalsystems.xrateskit.entities.ChartPointEntity
 import io.horizontalsystems.xrateskit.entities.HistoricalRate
 import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 
-@androidx.room.Database(version = 1, exportSchema = false, entities = [
-    HistoricalRate::class,
-    ChartPointEntity::class,
-    MarketInfoEntity::class
-])
+@androidx.room.Database(version = 2, exportSchema = false, entities = [
+        HistoricalRate::class,
+        ChartPointEntity::class,
+        MarketInfoEntity::class
+    ])
 
 @TypeConverters(DatabaseConverters::class)
 
@@ -24,8 +24,9 @@ abstract class Database : RoomDatabase() {
     companion object {
         fun create(context: Context): Database {
             return Room.databaseBuilder(context, Database::class.java, "x-rate-database")
-                    .allowMainThreadQueries()
-                    .build()
+                .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
+                .build()
         }
     }
 }

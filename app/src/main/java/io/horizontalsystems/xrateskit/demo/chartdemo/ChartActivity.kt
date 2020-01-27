@@ -36,7 +36,10 @@ class ChartActivity : AppCompatActivity(), ChartView.Listener {
         chartView.setIndicator(chartViewIndicator)
 
         presenter.view.chartInfoLiveData.observe(this, Observer { chartInfo ->
-            val chartPoints = chartInfo.points.map { ChartPointFloat(it.value.toFloat(), it.timestamp) }
+
+            val chartPoints = chartInfo.points.map {
+                ChartPointFloat(it.value.toFloat(), it.volume?.toFloat(), it.timestamp)
+            }
             chartView.setData(chartPoints, ChartView.ChartType.DAILY, chartInfo.startTimestamp, chartInfo.endTimestamp, currency)
         })
 

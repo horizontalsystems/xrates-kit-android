@@ -38,21 +38,4 @@ class ChartHelper(private val shape: RectF, private val config: ChartConfig) {
 
         return Pair(topCoordinate, lowCoordinate)
     }
-
-    companion object {
-        fun convert(points: List<Float>, scaleMinutes: Int, lastTimestamp: Long): List<ChartPointFloat> {
-
-            val scaleSecs = scaleMinutes * 60
-            var timestamp = lastTimestamp
-
-            val chartPoints = mutableListOf<ChartPointFloat>()
-
-            for (i in (points.size - 1) downTo 0) {
-                chartPoints.add(0, ChartPointFloat(points[i], timestamp))
-                timestamp -= scaleSecs
-            }
-
-            return chartPoints
-        }
-    }
 }
