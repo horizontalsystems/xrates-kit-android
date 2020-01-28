@@ -99,9 +99,9 @@ class ChartCurve(private val shape: RectF, private val config: ChartConfig) {
 
         coordinates.forEachIndexed { index, point ->
             if (index == 0) {
-                path.moveTo(point.x, animatedY(point.y))
+                path.moveTo(point.x, config.getAnimatedY(point.y, shape.bottom))
             } else {
-                path.lineTo(point.x, animatedY(point.y))
+                path.lineTo(point.x, config.getAnimatedY(point.y, shape.bottom))
             }
         }
 
@@ -113,9 +113,9 @@ class ChartCurve(private val shape: RectF, private val config: ChartConfig) {
 
         coordinates.forEachIndexed { index, point ->
             if (index == 0) {
-                path.moveTo(point.x, animatedY(point.y))
+                path.moveTo(point.x, config.getAnimatedY(point.y, shape.bottom))
             } else {
-                path.lineTo(point.x, animatedY(point.y))
+                path.lineTo(point.x, config.getAnimatedY(point.y, shape.bottom))
             }
         }
 
@@ -148,14 +148,6 @@ class ChartCurve(private val shape: RectF, private val config: ChartConfig) {
             drawText(format(top.point.value), shape.left + config.textPricePL, config.yAxisPrice(top.y, isTop = true), textPaint)
             drawText(format(low.point.value), shape.left + config.textPricePL, config.yAxisPrice(low.y, isTop = false), textPaint)
         }
-    }
-
-    private fun animatedY(y: Float): Float {
-        if (!config.animated) return y
-
-        // Figure out top of column based on INVERSE of percentage. Bigger the percentage,
-        // the smaller top is, since 100% goes to 0.
-        return shape.bottom - (shape.bottom - y) * config.animatedFraction
     }
 
     private fun setGradient(colorStart: Int, colorEnd: Int) {

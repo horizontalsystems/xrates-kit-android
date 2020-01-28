@@ -36,6 +36,7 @@ class ChartView : View {
     private val shape = RectF()
     private val chartCurve = ChartCurve(shape, config)
     private val chartGrid = ChartGrid(shape, config)
+    private val chartVolume = ChartVolume(config)
     private var chartIndicator: ChartIndicator? = null
 
     // Animator
@@ -85,6 +86,7 @@ class ChartView : View {
 
     override fun onDraw(canvas: Canvas) {
         chartCurve.draw(canvas)
+        chartVolume.draw(canvas)
         if (config.showGrid) {
             chartGrid.draw(canvas)
         }
@@ -166,6 +168,8 @@ class ChartView : View {
         shape.set(0f, 0f, shapeWidth, shapeHeight - config.offsetBottom)
 
         chartCurve.init(points, startTimestamp, endTimestamp, currency)
+
+        chartVolume.init(points, startTimestamp, endTimestamp, shape)
 
         if (config.showGrid) {
             chartGrid.init(chartType, startTimestamp, endTimestamp)
