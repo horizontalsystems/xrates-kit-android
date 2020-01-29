@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_grey"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/chartPointsInfo"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingTop="2dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/pointInfoPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@color/steel_dark"
+            android:textSize="14sp"
+            tools:text="3,867.50" />
+
+        <TextView
+            android:id="@+id/pointInfoDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@color/grey"
+            android:textSize="12sp"
+            tools:text="June 18, 2019 at 1:45 PM" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/coinChartView"
+        android:layout_width="match_parent"
+        android:layout_height="213dp"
+        android:background="@color/white"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <io.horizontalsystems.xrateskit.demo.chartdemo.chartview.ChartIndicator
+            android:id="@+id/chartViewIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+        <io.horizontalsystems.xrateskit.demo.chartdemo.chartview.ChartView
+            android:id="@+id/chartView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:fallColor="@color/red_d"
+            app:gridDottedColor="@color/black_50"
+            app:growColor="@color/green_d"
+            app:indicatorColor="@color/dark"
+            app:partialChartColor="@color/grey_50"
+            app:textColor="@color/grey"
+            app:textPriceColor="@color/steel_dark"
+            app:touchColor="@color/dark" />
+
+    </RelativeLayout>
+
+</LinearLayout>

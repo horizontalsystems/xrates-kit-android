@@ -53,10 +53,11 @@ class ChartInfoManager(
         var chartPoints = points.filter { it.timestamp < marketInfo.timestamp }
         if (key.chartType == ChartType.DAILY) {
             firstTimestamp = marketInfo.timestamp - key.chartType.rangeInterval
-            chartPoints = listOf(ChartPoint(marketInfo.rateOpen24Hour, firstTimestamp)) + chartPoints.filter { it.timestamp > firstTimestamp }
+            val previousVolume = chartPoints.lastOrNull{ it.timestamp < firstTimestamp }?.volume ?: firstPoint.volume
+            chartPoints = listOf(ChartPoint(marketInfo.rateOpen24Hour, previousVolume, firstTimestamp)) + chartPoints.filter { it.timestamp > firstTimestamp }
         }
 
-        val chartPointsWithLatestRate = chartPoints + ChartPoint(marketInfo.rate, marketInfo.timestamp)
+        val chartPointsWithLatestRate = chartPoints + ChartPoint(marketInfo.rate, null, marketInfo.timestamp)
 
         return ChartInfo(
                 chartPointsWithLatestRate,
@@ -69,7 +70,7 @@ class ChartInfoManager(
         storage.deleteChartPoints(key)
         storage.saveChartPoints(points)
 
-        val chartInfo = chartInfo(points.map { ChartPoint(it.value, it.timestamp) }, key)
+        val chartInfo = chartInfo(points.map { ChartPoint(it.value, it.volume, it.timestamp) }, key)
         if (chartInfo == null) {
             listener?.noChartInfo(key)
         } else {
@@ -92,7 +93,7 @@ class ChartInfoManager(
         val currentTimestamp = Date().time / 1000
         val fromTimestamp = currentTimestamp - key.chartType.rangeInterval
 
-        return storage.getChartPoints(key, fromTimestamp).map { factory.createChartPoint(it.value, it.timestamp) }
+        return storage.getChartPoints(key, fromTimestamp).map { factory.createChartPoint(it.value, it.volume, it.timestamp) }
     }
 
     fun handleNoChartPoints(key: ChartInfoKey) {

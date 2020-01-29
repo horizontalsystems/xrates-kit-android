@@ -1,12 +1,16 @@
 package io.horizontalsystems.xrateskit.demo
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import io.horizontalsystems.xrateskit.demo.chartdemo.ChartActivity
 import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -30,6 +34,22 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         configureView()
 
         RxJavaPlugins.setErrorHandler {}
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_chart -> {
+                val intent = Intent(this, ChartActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun observeLiveData() {

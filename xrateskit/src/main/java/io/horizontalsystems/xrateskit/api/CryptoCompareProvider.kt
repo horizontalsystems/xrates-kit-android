@@ -113,12 +113,14 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
 
                 for (data in result) {
                     val value = valueAverage(data["open"].asDouble() + data["close"].asDouble())
+                    val volume = data["volumefrom"].asDouble().toBigDecimal()
 
-                    stats.add(ChartPointEntity(
+                        stats.add(ChartPointEntity(
                             chartType,
                             coin,
                             currency,
                             value,
+                            volume,
                             data["time"].asLong())
                     )
                 }

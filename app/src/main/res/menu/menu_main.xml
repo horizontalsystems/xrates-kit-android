@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.aizonme.coachme.MainActivity">
+    <item
+        android:id="@+id/action_chart"
+        android:orderInCategory="100"
+        android:title="Chart View"
+        app:showAsAction="never" />
+</menu>

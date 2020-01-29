@@ -12,8 +12,8 @@ class Factory(private val expirationInterval: Long) {
         return HistoricalRate(coin, currency, value, timestamp)
     }
 
-    fun createChartPoint(value: BigDecimal, timestamp: Long): ChartPoint {
-        return ChartPoint(value, timestamp)
+    fun createChartPoint(value: BigDecimal, volume: BigDecimal, timestamp: Long): ChartPoint {
+        return ChartPoint(value, volume, timestamp)
     }
 
     fun createMarketInfoEntity(coin: String, currency: String, rate: BigDecimal, rateOpen24Hour: BigDecimal, diff: BigDecimal, volume: Double, marketCap: Double, supply: Double): MarketInfoEntity {

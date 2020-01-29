@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">XRatesKit</string>
+    <string name="title_activity_chart">ChartActivity</string>
 </resources>
