@@ -2,26 +2,32 @@ package io.horizontalsystems.xrateskit.demo.chartdemo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import io.horizontalsystems.chartview.ChartView
+import io.horizontalsystems.chartview.models.ChartPoint
 import io.horizontalsystems.xrateskit.demo.App
-import io.horizontalsystems.xrateskit.demo.chartdemo.chartview.ChartView
-import io.horizontalsystems.xrateskit.demo.chartdemo.chartview.models.ChartPointFloat
 import io.horizontalsystems.xrateskit.demo.chartdemo.entities.Currency
 import io.horizontalsystems.xrateskit.demo.chartdemo.entities.CurrencyValue
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import java.util.concurrent.Executors
 
-class ChartPresenter(val view: ChartActivityView, private val interactor: ChartInteractor) : ViewModel() {
+class ChartPresenter(
+        val view: ChartActivityView,
+        val rateFormatter: ChartView.RateFormatter,
+        private val currency: Currency,
+        private val interactor: ChartInteractor)
+    : ViewModel() {
+
     private val coinCode = "BTC"
-    var currency = App.baseCurrency
 
     private val executor = Executors.newSingleThreadExecutor()
 
     fun onLoad() {
         executor.submit {
-            interactor.chartInfo(coinCode, currency)?.let {
+            interactor.chartInfo(coinCode, currency.code)?.let {
                 view.updateChart(it)
             }
-            interactor.subscribeToChartInfo(coinCode, currency)
+
+            interactor.subscribeToChartInfo(coinCode, currency.code)
         }
     }
 
@@ -31,8 +37,8 @@ class ChartPresenter(val view: ChartActivityView, private val interactor: ChartI
         }
     }
 
-    fun onTouchSelect(point: ChartPointFloat){
-        val currencyValue = CurrencyValue(Currency(currency, "$"), point.value.toBigDecimal())
+    fun onTouchSelect(point: ChartPoint) {
+        val currencyValue = CurrencyValue(currency, point.value.toBigDecimal())
         view.showSelectedPoint(Triple(point.timestamp, currencyValue, ChartView.ChartType.DAILY))
     }
 
@@ -40,9 +46,14 @@ class ChartPresenter(val view: ChartActivityView, private val interactor: ChartI
 
     class Factory : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            val currency = Currency(App.baseCurrency, "$")
+
             val view = ChartActivityView()
+            val formatter = RateFormatter(currency)
+
             val interactor = ChartInteractor(App.ratesManager)
-            val presenter = ChartPresenter(view, interactor)
+            val presenter = ChartPresenter(view, formatter, currency, interactor)
+
             interactor.presenter = presenter
 
             return presenter as T

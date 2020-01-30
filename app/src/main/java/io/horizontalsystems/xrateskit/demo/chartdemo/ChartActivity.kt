@@ -7,15 +7,13 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import io.horizontalsystems.chartview.ChartView
+import io.horizontalsystems.chartview.models.ChartPoint
 import io.horizontalsystems.xrateskit.demo.App
 import io.horizontalsystems.xrateskit.demo.R
-import io.horizontalsystems.xrateskit.demo.chartdemo.chartview.ChartView
-import io.horizontalsystems.xrateskit.demo.chartdemo.chartview.models.ChartPointFloat
-import io.horizontalsystems.xrateskit.demo.chartdemo.entities.Currency
 import kotlinx.android.synthetic.main.activity_chart.*
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class ChartActivity : AppCompatActivity(), ChartView.Listener {
 
@@ -30,17 +28,16 @@ class ChartActivity : AppCompatActivity(), ChartView.Listener {
         presenter = ViewModelProvider(this, ChartPresenter.Factory()).get(ChartPresenter::class.java)
         presenter.onLoad()
 
-        val currency = Currency(App.baseCurrency, "$")
-
         chartView.listener = this
+        chartView.setFormatter(presenter.rateFormatter)
         chartView.setIndicator(chartViewIndicator)
 
         presenter.view.chartInfoLiveData.observe(this, Observer { chartInfo ->
-
             val chartPoints = chartInfo.points.map {
-                ChartPointFloat(it.value.toFloat(), it.volume?.toFloat(), it.timestamp)
+                ChartPoint(it.value.toFloat(), it.volume?.toFloat(), it.timestamp)
             }
-            chartView.setData(chartPoints, ChartView.ChartType.DAILY, chartInfo.startTimestamp, chartInfo.endTimestamp, currency)
+
+            chartView.setData(chartPoints, ChartView.ChartType.DAILY, chartInfo.startTimestamp, chartInfo.endTimestamp)
         })
 
         presenter.view.setSelectedPoint.observe(this, Observer { (time, value, type) ->
@@ -61,6 +58,7 @@ class ChartActivity : AppCompatActivity(), ChartView.Listener {
                 return true
             }
         }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -72,7 +70,7 @@ class ChartActivity : AppCompatActivity(), ChartView.Listener {
         setViewVisibility(chartViewIndicator, isVisible = false)
     }
 
-    override fun onTouchSelect(point: ChartPointFloat) {
+    override fun onTouchSelect(point: ChartPoint) {
         presenter.onTouchSelect(point)
     }
 
@@ -84,7 +82,7 @@ class ChartActivity : AppCompatActivity(), ChartView.Listener {
         }
     }
 
-    //Date helpers
+    //  Date helpers
 
     private val timeFormat: String by lazy {
         val is24HourFormat = DateFormat.is24HourFormat(this)
@@ -95,8 +93,6 @@ class ChartActivity : AppCompatActivity(), ChartView.Listener {
     private fun getDateWithYear(date: Date): String = formatDate(date, "MMM d, yyyy")
 
     private fun formatDate(date: Date, pattern: String): String {
-        return SimpleDateFormat(
-            DateFormat.getBestDateTimePattern(Locale.getDefault(), pattern),
-            Locale.getDefault()).format(date)
+        return SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), pattern), Locale.getDefault()).format(date)
     }
 }

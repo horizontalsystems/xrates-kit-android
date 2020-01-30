@@ -1,7 +1,7 @@
 package io.horizontalsystems.xrateskit.demo.chartdemo
 
 import androidx.lifecycle.MutableLiveData
-import io.horizontalsystems.xrateskit.demo.chartdemo.chartview.ChartView
+import io.horizontalsystems.chartview.ChartView
 import io.horizontalsystems.xrateskit.demo.chartdemo.entities.CurrencyValue
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 

@@ -45,13 +45,13 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
-        <io.horizontalsystems.xrateskit.demo.chartdemo.chartview.ChartIndicator
+        <io.horizontalsystems.chartview.ChartIndicator
             android:id="@+id/chartViewIndicator"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="invisible" />
 
-        <io.horizontalsystems.xrateskit.demo.chartdemo.chartview.ChartView
+        <io.horizontalsystems.chartview.ChartView
             android:id="@+id/chartView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
