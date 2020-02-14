@@ -1,11 +1,13 @@
 package io.horizontalsystems.xrateskit.entities
 
 enum class ChartType(val interval: Long, val points: Int, val resource: String) {
-    DAILY(30, 48, "histominute"),    // minutes
+    DAILY(30, 48, "histominute"),   // minutes
     WEEKLY(3, 56, "histohour"),     // hourly
     MONTHLY(12, 60, "histohour"),   // hourly
+    MONTHLY3(2, 45, "histoday"),    // daily
     MONTHLY6(3, 60, "histoday"),    // daily
-    MONTHLY12(7, 52, "histoday");   // daily
+    MONTHLY12(7, 52, "histoday"),   // daily
+    MONTHLY24(14, 52, "histoday");  // daily
 
     val expirationInterval: Long
         get() {
@@ -27,8 +29,10 @@ enum class ChartType(val interval: Long, val points: Int, val resource: String) 
             DAILY -> interval
             WEEKLY -> interval * 60
             MONTHLY -> interval * 60
+            MONTHLY3 -> interval * 24 * 60
             MONTHLY6 -> interval * 24 * 60
             MONTHLY12 -> interval * 24 * 60
+            MONTHLY24 -> interval * 24 * 60
         } * 60
 
     companion object {
