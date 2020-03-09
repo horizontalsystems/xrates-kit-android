@@ -7,6 +7,7 @@ import io.horizontalsystems.xrateskit.chartpoint.ChartInfoManager
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSchedulerFactory
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSyncManager
 import io.horizontalsystems.xrateskit.core.Factory
+import io.horizontalsystems.xrateskit.cryptonews.CryptoNewsManager
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.managers.HistoricalRateManager
 import io.horizontalsystems.xrateskit.marketinfo.MarketInfoManager
@@ -23,7 +24,8 @@ class XRatesKit(
         private val marketInfoSyncManager: MarketInfoSyncManager,
         private val chartInfoManager: ChartInfoManager,
         private val chartInfoSyncManager: ChartInfoSyncManager,
-        private val historicalRateManager: HistoricalRateManager) {
+        private val historicalRateManager: HistoricalRateManager,
+        private val cryptoNewsManager: CryptoNewsManager) {
 
     fun set(coins: List<String>) {
         marketInfoSyncManager.set(coins)
@@ -65,6 +67,10 @@ class XRatesKit(
         return historicalRateManager.getHistoricalRateFromApi(coin, currency, timestamp)
     }
 
+    fun cryptoNews(coinCode: String, timestamp: Long): Single<List<CryptoNews>> {
+        return cryptoNewsManager.getNews(coinCode, timestamp)
+    }
+
     companion object {
         fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30): XRatesKit {
             val factory = Factory(rateExpirationInterval)
@@ -74,6 +80,7 @@ class XRatesKit(
             val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, "https://min-api.cryptocompare.com")
 
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
+            val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
 
             val marketInfoManager = MarketInfoManager(storage, factory)
             val marketInfoSchedulerFactory = MarketInfoSchedulerFactory(marketInfoManager, cryptoCompareProvider, rateExpirationInterval, retryInterval)
@@ -92,7 +99,8 @@ class XRatesKit(
                     marketInfoSyncManager,
                     chartInfoManager,
                     chartInfoSyncManager,
-                    historicalRateManager
+                    historicalRateManager,
+                    cryptoNewsManager
             )
         }
     }

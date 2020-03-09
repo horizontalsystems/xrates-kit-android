@@ -1,17 +1,14 @@
 package io.horizontalsystems.xrateskit.api
 
 import com.eclipsesource.json.JsonObject
-import io.horizontalsystems.xrateskit.core.Factory
-import io.horizontalsystems.xrateskit.core.IChartInfoProvider
-import io.horizontalsystems.xrateskit.core.IHistoricalRateProvider
-import io.horizontalsystems.xrateskit.core.IMarketInfoProvider
+import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 import java.math.BigDecimal
 import java.util.*
 
 class CryptoCompareProvider(private val factory: Factory, private val apiManager: ApiManager, private val baseUrl: String)
-    : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider {
+    : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider {
 
     // Market Info
 
@@ -134,5 +131,39 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
 
     private fun valueAverage(vararg value: Double): BigDecimal {
         return (value.sum() / (value.size * 2)).toBigDecimal()
+    }
+
+    //  CryptoNews
+
+    override fun getNews(categories: String, timestamp: Long): Single<List<CryptoNews>> {
+        return Single.create<List<CryptoNews>> { emitter ->
+            try {
+                val json = apiManager.getJson("$baseUrl/data/v2/news/?categories=${categories}&excludeCategories=Sponsored")
+                val data = json["Data"].asArray()
+                val list = mutableListOf<CryptoNews>()
+
+                for (item in data) {
+                    try {
+                        val news = item.asObject()
+
+                        val id = news.get("id").asString().toInt()
+                        val time = news.get("published_on").asLong()
+                        val imageUrl = news.get("imageurl").asString()
+                        val title = news.get("title").asString()
+                        val url = news.get("url").asString()
+                        val body = news.get("body").asString()
+                        val types = news.get("categories").asString().split("|")
+
+                        list.add(factory.createCryptoNews(id, time, imageUrl, title, url, body, types))
+                    } catch (e: Exception) {
+                        continue
+                    }
+                }
+
+                emitter.onSuccess(list)
+            } catch (e: Exception) {
+                emitter.onError(e)
+            }
+        }
     }
 }

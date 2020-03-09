@@ -30,3 +30,7 @@ interface IChartInfoProvider {
 interface IHistoricalRateProvider {
     fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<HistoricalRate>
 }
+
+interface ICryptoNewsProvider {
+    fun getNews(categories: String, timestamp: Long): Single<List<CryptoNews>>
+}

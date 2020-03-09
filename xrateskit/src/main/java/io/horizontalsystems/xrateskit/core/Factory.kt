@@ -1,9 +1,6 @@
 package io.horizontalsystems.xrateskit.core
 
-import io.horizontalsystems.xrateskit.entities.ChartPoint
-import io.horizontalsystems.xrateskit.entities.HistoricalRate
-import io.horizontalsystems.xrateskit.entities.MarketInfo
-import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
+import io.horizontalsystems.xrateskit.entities.*
 import java.math.BigDecimal
 import java.util.*
 
@@ -22,5 +19,9 @@ class Factory(private val expirationInterval: Long) {
 
     fun createMarketInfo(marketInfoEntity: MarketInfoEntity): MarketInfo {
         return MarketInfo(marketInfoEntity, expirationInterval)
+    }
+
+    fun createCryptoNews(id: Int, time: Long, imageUrl: String, title: String, url: String, body: String, types: List<String>): CryptoNews {
+        return CryptoNews(id, time, imageUrl, title, url, body, types)
     }
 }
