@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 class CryptoNewsManager(private val expirationMinutes: Long, private val newsProvider: CryptoCompareProvider) {
 
+    private val altcoinCategories = listOf("Altcoin", "Trading")
     private val registeredCoinList = listOf(
         "BTC",
         "BCH",
@@ -41,7 +42,8 @@ class CryptoNewsManager(private val expirationMinutes: Long, private val newsPro
     }
 
     private fun fetchFreshNews(coin: String): Single<List<CryptoNews>> {
-        val categoriesOfNews = registeredCoinList + categories
+        val newsFilter = if (registeredCoinList.contains(coin)) listOf(coin) else altcoinCategories
+        val categoriesOfNews = newsFilter + categories
 
         return newsProvider
             .getNews(categoriesOfNews.joinToString(","))
