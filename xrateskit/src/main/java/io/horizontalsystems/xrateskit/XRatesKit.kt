@@ -67,8 +67,8 @@ class XRatesKit(
         return historicalRateManager.getHistoricalRateFromApi(coin, currency, timestamp)
     }
 
-    fun cryptoNews(coinCode: String, timestamp: Long): Single<List<CryptoNews>> {
-        return cryptoNewsManager.getNews(coinCode, timestamp)
+    fun cryptoNews(coinCode: String): Single<List<CryptoNews>> {
+        return cryptoNewsManager.getNews(coinCode)
     }
 
     companion object {

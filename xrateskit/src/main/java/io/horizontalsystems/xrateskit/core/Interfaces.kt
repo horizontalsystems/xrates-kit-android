@@ -32,5 +32,5 @@ interface IHistoricalRateProvider {
 }
 
 interface ICryptoNewsProvider {
-    fun getNews(categories: String, timestamp: Long): Single<List<CryptoNews>>
+    fun getNews(categories: String): Single<List<CryptoNews>>
 }

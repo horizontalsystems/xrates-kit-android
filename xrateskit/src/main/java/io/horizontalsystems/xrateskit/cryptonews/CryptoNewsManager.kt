@@ -8,12 +8,20 @@ import java.util.concurrent.ConcurrentHashMap
 
 class CryptoNewsManager(private val expirationMinutes: Long, private val newsProvider: CryptoCompareProvider) {
 
+    private val registeredCoinList = listOf(
+        "BTC",
+        "BCH",
+        "ETH",
+        "DASH",
+        "USDT"
+    )
+
     private val categories = listOf("Regulation")
     private val news = ConcurrentHashMap<String, List<CryptoNews>>()
     private val newsLastUpdate = ConcurrentHashMap<String, Long>()
 
-    fun getNews(coin: String, timestamp: Long): Single<List<CryptoNews>> {
-        return nonExpiredNews(coin) ?: fetchFreshNews(coin, timestamp)
+    fun getNews(coin: String): Single<List<CryptoNews>> {
+        return nonExpiredNews(coin) ?: fetchFreshNews(coin)
     }
 
     private fun nonExpiredNews(coin: String): Single<List<CryptoNews>>? {
@@ -32,9 +40,11 @@ class CryptoNewsManager(private val expirationMinutes: Long, private val newsPro
         return Single.just(newsCache)
     }
 
-    private fun fetchFreshNews(coin: String, timestamp: Long): Single<List<CryptoNews>> {
+    private fun fetchFreshNews(coin: String): Single<List<CryptoNews>> {
+        val categoriesOfNews = registeredCoinList + categories
+
         return newsProvider
-            .getNews(categories.joinToString(","), timestamp)
+            .getNews(categoriesOfNews.joinToString(","))
             .doOnSuccess {
                 news[coin] = it
                 newsLastUpdate[coin] = Date().time / 1000

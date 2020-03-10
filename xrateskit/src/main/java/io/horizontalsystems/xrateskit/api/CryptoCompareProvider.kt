@@ -135,7 +135,7 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
 
     //  CryptoNews
 
-    override fun getNews(categories: String, timestamp: Long): Single<List<CryptoNews>> {
+    override fun getNews(categories: String): Single<List<CryptoNews>> {
         return Single.create<List<CryptoNews>> { emitter ->
             try {
                 val json = apiManager.getJson("$baseUrl/data/v2/news/?categories=${categories}&excludeCategories=Sponsored")
