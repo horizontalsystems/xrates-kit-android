@@ -85,13 +85,8 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
         val dataObject = CryptoCompareResponse.parseData(jsonObject)
 
         val data = dataObject["Data"].asArray()
-        val data1 = data.first().asObject()
-        val data2 = data.first().asObject()
-
-        return valueAverage(
-                data1["open"].asDouble() + data1["close"].asDouble(),
-                data2["open"].asDouble() + data2["close"].asDouble()
-        )
+        val dataLast = data.last().asObject()
+        return dataLast["close"].asDouble().toBigDecimal()
     }
 
     //  Chart Points
