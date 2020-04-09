@@ -2,10 +2,7 @@ package io.horizontalsystems.xrateskit.demo
 
 import android.content.Context
 import io.horizontalsystems.xrateskit.XRatesKit
-import io.horizontalsystems.xrateskit.entities.ChartInfo
-import io.horizontalsystems.xrateskit.entities.ChartType
-import io.horizontalsystems.xrateskit.entities.MarketInfo
-import io.horizontalsystems.xrateskit.entities.PriceInfo
+import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Observable
 import io.reactivex.Single
 

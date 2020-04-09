@@ -1,23 +1,24 @@
 package io.horizontalsystems.xrateskit.toplist
 
 import io.horizontalsystems.xrateskit.api.CryptoCompareProvider
+import io.horizontalsystems.xrateskit.entities.CoinInfo
 import io.horizontalsystems.xrateskit.entities.PriceInfo
 import io.reactivex.Single
 
 class TopListManager(private val provider: CryptoCompareProvider) {
 
-    private var topCoinsCodes = mutableListOf<String>()
+    private var topCoinsCodes = mutableListOf<CoinInfo>()
 
     fun getTopList(currency: String, shownItemSize: Int = 0): Single<List<PriceInfo>> {
         if (shownItemSize >= MAX_SIZE) return Single.just(listOf())
 
         return getCoinCodes(currency, shownItemSize)
             .flatMap { coinCodes ->
-                provider.getPrices(coinCodes, currency)
+                provider.getPriceInfo(coinCodes, currency)
             }
     }
 
-    private fun getCoinCodes(currency: String, shownItemSize: Int): Single<List<String>> {
+    private fun getCoinCodes(currency: String, shownItemSize: Int): Single<List<CoinInfo>> {
         return if (topCoinsCodes.isEmpty()) {
             provider.getTopListCoins(currency).doOnSuccess {
                 topCoinsCodes.addAll(it)
@@ -29,7 +30,7 @@ class TopListManager(private val provider: CryptoCompareProvider) {
         }
     }
 
-    private fun getPaged(list: List<String>, currentlyShownSize: Int) =
+    private fun getPaged(list: List<CoinInfo>, currentlyShownSize: Int) =
         if (currentlyShownSize == 0) list.take(HALF_SIZE) else list.takeLast(HALF_SIZE)
 
 

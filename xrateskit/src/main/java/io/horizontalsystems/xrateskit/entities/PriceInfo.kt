@@ -3,6 +3,8 @@ package io.horizontalsystems.xrateskit.entities
 import java.math.BigDecimal
 
 class PriceInfo(
-        val coin: String,
-        val price: BigDecimal
+        val coinCode: String,
+        val coinName: String,
+        val rate: BigDecimal,
+        val diff: BigDecimal
 )

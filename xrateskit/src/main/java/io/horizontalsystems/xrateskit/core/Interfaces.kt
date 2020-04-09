@@ -36,6 +36,6 @@ interface ICryptoNewsProvider {
 }
 
 interface ITopListProvider {
-    fun getTopListCoins(currency: String): Single<List<String>>
-    fun getPrices(coins: List<String>, currency: String): Single<List<PriceInfo>>
+    fun getTopListCoins(currency: String): Single<List<CoinInfo>>
+    fun getPriceInfo(coins: List<CoinInfo>, currency: String): Single<List<PriceInfo>>
 }

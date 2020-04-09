@@ -65,7 +65,7 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     it.forEach { priceInfo ->
-                        Log.i("CoinsInteractor", "top list ${priceInfo.coin} ${priceInfo.price}")
+                        Log.i("CoinsInteractor", "coinCode: ${priceInfo.coinCode} coinName: ${priceInfo.coinName} price: ${priceInfo.rate} dailyDiff: ${priceInfo.diff}")
                     }
                     topListDisposable?.dispose()
                     //fetch second page

@@ -163,17 +163,18 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
         }
     }
 
-    override fun getTopListCoins(currency: String): Single<List<String>> {
+    override fun getTopListCoins(currency: String): Single<List<CoinInfo>> {
         return Single.create { emitter ->
             try {
                 val json = apiManager.getJson("$baseUrl/data/top/mktcapfull?limit=100&tsym=${currency}")
                 val data = json["Data"].asArray()
-                val list = mutableListOf<String>()
+                val list = mutableListOf<CoinInfo>()
 
                 for (item in data) {
                     try {
-                        val coinName = item.asObject().get("CoinInfo").asObject().get("Name").asString()
-                        list.add(coinName)
+                        val coinCode = item.asObject().get("CoinInfo").asObject().get("Name").asString()
+                        val coinName = item.asObject().get("CoinInfo").asObject().get("FullName").asString()
+                        list.add(CoinInfo(coinCode, coinName))
                     } catch (e: Exception) {
                         continue
                     }
@@ -186,21 +187,24 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
         }
     }
 
-    override fun getPrices(coins: List<String>, currency: String): Single<List<PriceInfo>> {
+    override fun getPriceInfo(coins: List<CoinInfo>, currency: String): Single<List<PriceInfo>> {
         return Single.create { emitter ->
             try {
-                val codes = coins.joinToString(",")
+                val codes = coins.joinToString(",") { it.coinCode }
 
-                val json = apiManager.getJson("$baseUrl/data/pricemulti?fsyms=${codes}&tsyms=${currency}")
-                val data = json.asObject()
+                val json = apiManager.getJson("$baseUrl/data/pricemultifull?fsyms=${codes}&tsyms=${currency}")
+                val data = json["RAW"].asObject()
                 val list = mutableListOf<PriceInfo>()
 
                 for (coin in coins) {
                     try {
-                        val dataCoin = data.get(coin).asObject()
-                        val price = dataCoin.get(currency).asDouble().toBigDecimal()
+                        val dataCoin = data.get(coin.coinCode).asObject()
+                        val dataFiat = dataCoin.get(currency).asObject()
 
-                        list.add(PriceInfo(coin, price))
+                        val rate = dataFiat["PRICE"].toString().toBigDecimal()
+                        val diff = dataFiat["CHANGEPCT24HOUR"].toString().toBigDecimal()
+
+                        list.add(PriceInfo(coin.coinCode, coin.coinName, rate, diff))
                     } catch (e: Exception) {
                         continue
                     }
@@ -212,4 +216,5 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
             }
         }
     }
+
 }
