@@ -1,9 +1,12 @@
 package io.horizontalsystems.xrateskit.demo
 
+import android.util.Log
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartType
 import io.horizontalsystems.xrateskit.entities.MarketInfo
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class CoinsInteractor(private val ratesManager: RatesManager) {
@@ -11,6 +14,7 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
 
     private var marketInfoDisposables = CompositeDisposable()
     private var chartInfoDisposables = CompositeDisposable()
+    private var topListDisposable : Disposable? = null
 
     fun set(coins: List<String>) {
         ratesManager.set(coins)
@@ -51,6 +55,29 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
                     }).let {
                         chartInfoDisposables.add(it)
                     }
+        }
+    }
+
+    fun getTopList(currency: String, shownSize: Int){
+        if (topListDisposable == null || topListDisposable?.isDisposed == true) {
+            ratesManager.topList(currency, shownSize)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    it.forEach { priceInfo ->
+                        Log.i("CoinsInteractor", "top list ${priceInfo.coin} ${priceInfo.price}")
+                    }
+                    topListDisposable?.dispose()
+                    //fetch second page
+                    if (shownSize == 0) {
+                        getTopList(currency, 50)
+                    }
+                }, {
+                    Log.e("CoinsInteractor", "exception", it)
+                    topListDisposable?.dispose()
+                }).let {
+                    topListDisposable = it
+                }
         }
     }
 

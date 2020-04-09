@@ -5,7 +5,9 @@ import io.horizontalsystems.xrateskit.XRatesKit
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartType
 import io.horizontalsystems.xrateskit.entities.MarketInfo
+import io.horizontalsystems.xrateskit.entities.PriceInfo
 import io.reactivex.Observable
+import io.reactivex.Single
 
 class RatesManager(context: Context, currency: String) {
     private val kit = XRatesKit.create(context, currency, 60 * 10)
@@ -40,5 +42,9 @@ class RatesManager(context: Context, currency: String) {
 
     fun chartInfoObservable(coin: String, currency: String, chartType: ChartType): Observable<ChartInfo> {
         return kit.chartInfoObservable(coin, currency, chartType)
+    }
+
+    fun topList(currency: String, shownItemSize: Int): Single<List<PriceInfo>>{
+        return kit.getTopList(currency, shownItemSize)
     }
 }

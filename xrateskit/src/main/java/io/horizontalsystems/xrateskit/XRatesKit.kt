@@ -15,6 +15,7 @@ import io.horizontalsystems.xrateskit.marketinfo.MarketInfoSchedulerFactory
 import io.horizontalsystems.xrateskit.marketinfo.MarketInfoSyncManager
 import io.horizontalsystems.xrateskit.storage.Database
 import io.horizontalsystems.xrateskit.storage.Storage
+import io.horizontalsystems.xrateskit.toplist.TopListManager
 import io.reactivex.Observable
 import io.reactivex.Single
 import java.math.BigDecimal
@@ -25,7 +26,8 @@ class XRatesKit(
         private val chartInfoManager: ChartInfoManager,
         private val chartInfoSyncManager: ChartInfoSyncManager,
         private val historicalRateManager: HistoricalRateManager,
-        private val cryptoNewsManager: CryptoNewsManager) {
+        private val cryptoNewsManager: CryptoNewsManager,
+        private val topListManager: TopListManager) {
 
     fun set(coins: List<String>) {
         marketInfoSyncManager.set(coins)
@@ -71,6 +73,10 @@ class XRatesKit(
         return cryptoNewsManager.getNews(coinCode)
     }
 
+    fun getTopList(currency: String, shownItemSize: Int): Single<List<PriceInfo>>{
+        return topListManager.getTopList(currency, shownItemSize)
+    }
+
     companion object {
         fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30): XRatesKit {
             val factory = Factory(rateExpirationInterval)
@@ -81,6 +87,7 @@ class XRatesKit(
 
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
+            val topListManager = TopListManager(cryptoCompareProvider)
 
             val marketInfoManager = MarketInfoManager(storage, factory)
             val marketInfoSchedulerFactory = MarketInfoSchedulerFactory(marketInfoManager, cryptoCompareProvider, rateExpirationInterval, retryInterval)
@@ -100,7 +107,8 @@ class XRatesKit(
                     chartInfoManager,
                     chartInfoSyncManager,
                     historicalRateManager,
-                    cryptoNewsManager
+                    cryptoNewsManager,
+                    topListManager
             )
         }
     }

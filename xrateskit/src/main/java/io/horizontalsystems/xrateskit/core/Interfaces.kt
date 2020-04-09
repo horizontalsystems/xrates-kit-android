@@ -34,3 +34,8 @@ interface IHistoricalRateProvider {
 interface ICryptoNewsProvider {
     fun getNews(categories: String): Single<List<CryptoNews>>
 }
+
+interface ITopListProvider {
+    fun getTopListCoins(currency: String): Single<List<String>>
+    fun getPrices(coins: List<String>, currency: String): Single<List<PriceInfo>>
+}
