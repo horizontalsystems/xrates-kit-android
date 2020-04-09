@@ -1,5 +1,6 @@
 package io.horizontalsystems.xrateskit.api
 
+import android.util.Log
 import com.eclipsesource.json.JsonObject
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
@@ -8,12 +9,12 @@ import java.math.BigDecimal
 import java.util.*
 
 class CryptoCompareProvider(private val factory: Factory, private val apiManager: ApiManager, private val baseUrl: String)
-    : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider {
+    : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, ITopListProvider {
 
     // Market Info
 
     override fun getMarketInfo(coins: List<String>, currency: String): Single<List<MarketInfoEntity>> {
-        return Single.create<List<MarketInfoEntity>> { emitter ->
+        return Single.create { emitter ->
             try {
                 val codes = coins.joinToString(",")
 
@@ -131,7 +132,7 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
     //  CryptoNews
 
     override fun getNews(categories: String): Single<List<CryptoNews>> {
-        return Single.create<List<CryptoNews>> { emitter ->
+        return Single.create { emitter ->
             try {
                 val json = apiManager.getJson("$baseUrl/data/v2/news/?categories=${categories}&excludeCategories=Sponsored")
                 val data = json["Data"].asArray()
@@ -150,6 +151,56 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
                         val types = news.get("categories").asString().split("|")
 
                         list.add(factory.createCryptoNews(id, time, imageUrl, title, url, body, types))
+                    } catch (e: Exception) {
+                        continue
+                    }
+                }
+
+                emitter.onSuccess(list)
+            } catch (e: Exception) {
+                emitter.onError(e)
+            }
+        }
+    }
+
+    override fun getTopListCoins(currency: String): Single<List<String>> {
+        return Single.create { emitter ->
+            try {
+                val json = apiManager.getJson("$baseUrl/data/top/mktcapfull?limit=100&tsym=${currency}")
+                val data = json["Data"].asArray()
+                val list = mutableListOf<String>()
+
+                for (item in data) {
+                    try {
+                        val coinName = item.asObject().get("CoinInfo").asObject().get("Name").asString()
+                        list.add(coinName)
+                    } catch (e: Exception) {
+                        continue
+                    }
+                }
+
+                emitter.onSuccess(list)
+            } catch (e: Exception) {
+                emitter.onError(e)
+            }
+        }
+    }
+
+    override fun getPrices(coins: List<String>, currency: String): Single<List<PriceInfo>> {
+        return Single.create { emitter ->
+            try {
+                val codes = coins.joinToString(",")
+
+                val json = apiManager.getJson("$baseUrl/data/pricemulti?fsyms=${codes}&tsyms=${currency}")
+                val data = json.asObject()
+                val list = mutableListOf<PriceInfo>()
+
+                for (coin in coins) {
+                    try {
+                        val dataCoin = data.get(coin).asObject()
+                        val price = dataCoin.get(currency).asDouble().toBigDecimal()
+
+                        list.add(PriceInfo(coin, price))
                     } catch (e: Exception) {
                         continue
                     }
