@@ -7,11 +7,9 @@ import io.reactivex.Single
 class TopListManager(private val provider: CryptoCompareProvider) {
 
     private var topCoinsCodes = mutableListOf<String>()
-    private val maxSize = 100
-    private val halfSize = 50
 
     fun getTopList(currency: String, shownItemSize: Int = 0): Single<List<PriceInfo>> {
-        if (shownItemSize >= maxSize) return Single.just(listOf())
+        if (shownItemSize >= MAX_SIZE) return Single.just(listOf())
 
         return getCoinCodes(currency, shownItemSize)
             .flatMap { coinCodes ->
@@ -32,5 +30,11 @@ class TopListManager(private val provider: CryptoCompareProvider) {
     }
 
     private fun getPaged(list: List<String>, currentlyShownSize: Int) =
-        if (currentlyShownSize == 0) list.take(halfSize) else list.takeLast(halfSize)
+        if (currentlyShownSize == 0) list.take(HALF_SIZE) else list.takeLast(HALF_SIZE)
+
+
+    companion object{
+        private const val MAX_SIZE = 100
+        private const val HALF_SIZE = 50
+    }
 }
