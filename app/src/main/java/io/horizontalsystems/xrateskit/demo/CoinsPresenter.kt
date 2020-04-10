@@ -23,7 +23,7 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
             interactor.subscribeToMarketInfo(currency)
 
             //test fetching rates for top 100 coins
-            interactor.getTopList(currency, 0)
+            interactor.getTopList(currency)
 
             view.updateCoins(items)
         }

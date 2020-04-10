@@ -73,8 +73,8 @@ class XRatesKit(
         return cryptoNewsManager.getNews(coinCode)
     }
 
-    fun getTopList(currency: String, shownItemSize: Int): Single<List<PriceInfo>>{
-        return topListManager.getTopList(currency, shownItemSize)
+    fun getTopList(currency: String): Single<List<PriceInfo>>{
+        return topListManager.getTopList(currency)
     }
 
     companion object {

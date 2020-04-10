@@ -14,7 +14,7 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
 
     private var marketInfoDisposables = CompositeDisposable()
     private var chartInfoDisposables = CompositeDisposable()
-    private var topListDisposable : Disposable? = null
+    private var topListDisposable: Disposable? = null
 
     fun set(coins: List<String>) {
         ratesManager.set(coins)
@@ -58,27 +58,19 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
         }
     }
 
-    fun getTopList(currency: String, shownSize: Int){
-        if (topListDisposable == null || topListDisposable?.isDisposed == true) {
-            ratesManager.topList(currency, shownSize)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    it.forEach { priceInfo ->
-                        Log.i("CoinsInteractor", "coinCode: ${priceInfo.coinCode} coinName: ${priceInfo.coinName} price: ${priceInfo.rate} dailyDiff: ${priceInfo.diff}")
-                    }
-                    topListDisposable?.dispose()
-                    //fetch second page
-                    if (shownSize == 0) {
-                        getTopList(currency, 50)
-                    }
-                }, {
-                    Log.e("CoinsInteractor", "exception", it)
-                    topListDisposable?.dispose()
-                }).let {
-                    topListDisposable = it
+    fun getTopList(currency: String) {
+        ratesManager.topList(currency)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                it.forEach { priceInfo ->
+                    Log.i("CoinsInteractor", "coinCode: ${priceInfo.coinCode} coinName: ${priceInfo.coinName} price: ${priceInfo.rate} dailyDiff: ${priceInfo.diff}")
                 }
-        }
+            }, {
+                Log.e("CoinsInteractor", "exception", it)
+            }).let {
+                topListDisposable = it
+            }
     }
 
 
