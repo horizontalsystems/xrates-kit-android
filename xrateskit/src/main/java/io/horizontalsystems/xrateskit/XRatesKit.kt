@@ -73,7 +73,7 @@ class XRatesKit(
         return cryptoNewsManager.getNews(coinCode)
     }
 
-    fun getTopList(currency: String): Single<List<PriceInfo>>{
+    fun getTopList(currency: String): Single<List<TopMarket>>{
         return topListManager.getTopList(currency)
     }
 
@@ -87,7 +87,7 @@ class XRatesKit(
 
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
-            val topListManager = TopListManager(cryptoCompareProvider)
+            val topListManager = TopListManager(cryptoCompareProvider, factory)
 
             val marketInfoManager = MarketInfoManager(storage, factory)
             val marketInfoSchedulerFactory = MarketInfoSchedulerFactory(marketInfoManager, cryptoCompareProvider, rateExpirationInterval, retryInterval)
