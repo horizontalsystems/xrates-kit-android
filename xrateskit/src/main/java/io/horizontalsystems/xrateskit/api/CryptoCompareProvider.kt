@@ -187,34 +187,4 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
         }
     }
 
-    override fun getPriceInfo(coins: List<CoinInfo>, currency: String): Single<List<PriceInfo>> {
-        return Single.create { emitter ->
-            try {
-                val codes = coins.joinToString(",") { it.coinCode }
-
-                val json = apiManager.getJson("$baseUrl/data/pricemultifull?fsyms=${codes}&tsyms=${currency}")
-                val data = json["RAW"].asObject()
-                val list = mutableListOf<PriceInfo>()
-
-                for (coin in coins) {
-                    try {
-                        val dataCoin = data.get(coin.coinCode).asObject()
-                        val dataFiat = dataCoin.get(currency).asObject()
-
-                        val rate = dataFiat["PRICE"].toString().toBigDecimal()
-                        val diff = dataFiat["CHANGEPCT24HOUR"].toString().toBigDecimal()
-
-                        list.add(PriceInfo(coin.coinCode, coin.coinName, rate, diff))
-                    } catch (e: Exception) {
-                        continue
-                    }
-                }
-
-                emitter.onSuccess(list)
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
-        }
-    }
-
 }

@@ -63,8 +63,8 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                it.forEach { priceInfo ->
-                    Log.i("CoinsInteractor", "coinCode: ${priceInfo.coinCode} coinName: ${priceInfo.coinName} price: ${priceInfo.rate} dailyDiff: ${priceInfo.diff}")
+                it.forEach { topMarket ->
+                    Log.i("CoinsInteractor", "coinCode: ${topMarket.coinCode} coinName: ${topMarket.coinName} price: ${topMarket.marketInfo.rate} dailyDiff: ${topMarket.marketInfo.diff}")
                 }
             }, {
                 Log.e("CoinsInteractor", "exception", it)

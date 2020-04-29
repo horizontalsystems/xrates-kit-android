@@ -21,6 +21,10 @@ class Factory(private val expirationInterval: Long) {
         return MarketInfo(marketInfoEntity, expirationInterval)
     }
 
+    fun createTopMarket(coinInfo: CoinInfo, marketInfoEntity: MarketInfoEntity): TopMarket {
+        return TopMarket(coinInfo.coinCode, coinInfo.coinName, MarketInfo(marketInfoEntity, expirationInterval))
+    }
+
     fun createCryptoNews(id: Int, time: Long, imageUrl: String, title: String, url: String, body: String, types: List<String>): CryptoNews {
         return CryptoNews(id, time, imageUrl, title, url, body, types)
     }
