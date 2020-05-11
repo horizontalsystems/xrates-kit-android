@@ -48,6 +48,7 @@ class CryptoCompareProvider(
 
                 emitter.onSuccess(list)
             } catch (e: Exception) {
+                logger.severe(e.message)
                 emitter.onError(e)
             }
         }

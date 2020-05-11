@@ -2,11 +2,13 @@ package io.horizontalsystems.xrateskit
 
 import android.content.Context
 import io.horizontalsystems.xrateskit.api.ApiManager
+import io.horizontalsystems.xrateskit.api.CoinMarketCapProvider
 import io.horizontalsystems.xrateskit.api.CryptoCompareProvider
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoManager
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSchedulerFactory
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSyncManager
 import io.horizontalsystems.xrateskit.core.Factory
+import io.horizontalsystems.xrateskit.core.ITopMarketsProvider
 import io.horizontalsystems.xrateskit.cryptonews.CryptoNewsManager
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.managers.HistoricalRateManager
@@ -79,7 +81,7 @@ class XRatesKit(
     }
 
     companion object {
-        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, topMarketsCount: Int = 100): XRatesKit {
+        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, topMarketsCount: Int = 100, coinMarketCapApiKey: String = ""): XRatesKit {
             val factory = Factory(rateExpirationInterval)
             val storage = Storage(Database.create(context))
 
@@ -95,13 +97,18 @@ class XRatesKit(
                 marketInfoManager.listener = it
             }
 
-            val topMarketsManager = TopMarketsManager(cryptoCompareProvider, factory, storage)
-
             val chartInfoManager = ChartInfoManager(storage, factory, marketInfoManager)
             val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, cryptoCompareProvider, retryInterval)
             val chartInfoSyncManager = ChartInfoSyncManager(chartInfoSchedulerFactory, chartInfoManager, marketInfoSyncManager).also {
                 chartInfoManager.listener = it
             }
+
+            val topMarketsProvider: ITopMarketsProvider = if (coinMarketCapApiKey.isNotBlank()) {
+                CoinMarketCapProvider(factory, apiManager, "https://pro-api.coinmarketcap.com/v1/cryptocurrency", topMarketsCount, coinMarketCapApiKey, cryptoCompareProvider)
+            } else {
+                cryptoCompareProvider
+            }
+            val topMarketsManager = TopMarketsManager(topMarketsProvider, factory, storage)
 
             return XRatesKit(
                     marketInfoManager,
