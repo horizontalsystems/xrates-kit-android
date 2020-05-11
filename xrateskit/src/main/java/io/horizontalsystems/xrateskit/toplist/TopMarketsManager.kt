@@ -24,7 +24,7 @@ class TopMarketsManager(
 
                     topMarketCoins.mapNotNull { coin ->
                         oldMarketInfos.firstOrNull { it.coin == coin.code }?.let { marketInfo ->
-                            factory.createTopMarket(coin.code, coin.name, marketInfo)
+                            factory.createTopMarket(coin, marketInfo)
                         }
                     }
                 }
