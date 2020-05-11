@@ -15,7 +15,7 @@ import io.horizontalsystems.xrateskit.marketinfo.MarketInfoSchedulerFactory
 import io.horizontalsystems.xrateskit.marketinfo.MarketInfoSyncManager
 import io.horizontalsystems.xrateskit.storage.Database
 import io.horizontalsystems.xrateskit.storage.Storage
-import io.horizontalsystems.xrateskit.toplist.TopListManager
+import io.horizontalsystems.xrateskit.toplist.TopMarketsManager
 import io.reactivex.Observable
 import io.reactivex.Single
 import java.math.BigDecimal
@@ -27,7 +27,8 @@ class XRatesKit(
         private val chartInfoSyncManager: ChartInfoSyncManager,
         private val historicalRateManager: HistoricalRateManager,
         private val cryptoNewsManager: CryptoNewsManager,
-        private val topListManager: TopListManager) {
+        private val topMarketsManager: TopMarketsManager
+) {
 
     fun set(coins: List<String>) {
         marketInfoSyncManager.set(coins)
@@ -73,17 +74,17 @@ class XRatesKit(
         return cryptoNewsManager.getNews(coinCode)
     }
 
-    fun getTopList(currency: String): Single<List<TopMarket>>{
-        return topListManager.getTopList(currency)
+    fun getTopMarkets(currency: String): Single<List<TopMarket>> {
+        return topMarketsManager.getTopMarkets(currency)
     }
 
     companion object {
-        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30): XRatesKit {
+        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, topMarketsCount: Int = 100): XRatesKit {
             val factory = Factory(rateExpirationInterval)
             val storage = Storage(Database.create(context))
 
             val apiManager = ApiManager()
-            val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, "https://min-api.cryptocompare.com")
+            val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, "https://min-api.cryptocompare.com", topMarketsCount)
 
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
@@ -94,7 +95,7 @@ class XRatesKit(
                 marketInfoManager.listener = it
             }
 
-            val topListManager = TopListManager(cryptoCompareProvider, factory, marketInfoManager)
+            val topMarketsManager = TopMarketsManager(cryptoCompareProvider, factory, storage)
 
             val chartInfoManager = ChartInfoManager(storage, factory, marketInfoManager)
             val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, cryptoCompareProvider, retryInterval)
@@ -109,7 +110,7 @@ class XRatesKit(
                     chartInfoSyncManager,
                     historicalRateManager,
                     cryptoNewsManager,
-                    topListManager
+                    topMarketsManager
             )
         }
     }

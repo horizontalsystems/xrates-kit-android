@@ -17,6 +17,10 @@ interface IStorage {
     fun getMarketInfo(coin: String, currency: String): MarketInfoEntity?
     fun getOldMarketInfo(coins: List<String>, currency: String): List<MarketInfoEntity>
     fun saveMarketInfo(marketInfoList: List<MarketInfoEntity>)
+
+    // Top markets
+    fun getTopMarketCoins(): List<TopMarketCoin>
+    fun saveTopMarkets(topMarkets: List<TopMarket>)
 }
 
 interface IMarketInfoProvider {
@@ -35,6 +39,6 @@ interface ICryptoNewsProvider {
     fun getNews(categories: String): Single<List<CryptoNews>>
 }
 
-interface ITopListProvider {
-    fun getTopListCoins(currency: String): Single<List<CoinInfo>>
+interface ITopMarketsProvider {
+    fun getTopMarkets(currency: String): Single<List<TopMarket>>
 }

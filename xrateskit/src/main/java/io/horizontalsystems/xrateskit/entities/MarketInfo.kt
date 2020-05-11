@@ -4,6 +4,7 @@ import java.math.BigDecimal
 import java.util.*
 
 class MarketInfo(marketInfo: MarketInfoEntity, val expirationInterval: Long) {
+    val currency: String = marketInfo.currency
     val rate: BigDecimal = marketInfo.rate
     val rateOpen24Hour: BigDecimal = marketInfo.rateOpen24Hour
     val diff: BigDecimal = marketInfo.diff

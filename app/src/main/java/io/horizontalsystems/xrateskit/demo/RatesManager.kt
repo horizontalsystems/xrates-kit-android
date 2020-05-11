@@ -42,6 +42,6 @@ class RatesManager(context: Context, currency: String) {
     }
 
     fun topList(currency: String): Single<List<TopMarket>>{
-        return kit.getTopList(currency)
+        return kit.getTopMarkets(currency)
     }
 }

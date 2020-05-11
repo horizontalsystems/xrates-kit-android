@@ -1,15 +1,21 @@
 package io.horizontalsystems.xrateskit.api
 
-import android.util.Log
 import com.eclipsesource.json.JsonObject
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 import java.math.BigDecimal
 import java.util.*
+import java.util.logging.Logger
 
-class CryptoCompareProvider(private val factory: Factory, private val apiManager: ApiManager, private val baseUrl: String)
-    : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, ITopListProvider {
+class CryptoCompareProvider(
+        private val factory: Factory,
+        private val apiManager: ApiManager,
+        private val baseUrl: String,
+        private val topMarketsCount: Int
+) : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, ITopMarketsProvider {
+
+    private val logger = Logger.getLogger("CryptoCompareProvider")
 
     // Market Info
 
@@ -108,7 +114,7 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
                     val value = valueAverage(data["open"].asDouble() + data["close"].asDouble())
                     val volume = data["volumefrom"].asDouble().toBigDecimal()
 
-                        stats.add(ChartPointEntity(
+                    stats.add(ChartPointEntity(
                             chartType,
                             coin,
                             currency,
@@ -163,26 +169,39 @@ class CryptoCompareProvider(private val factory: Factory, private val apiManager
         }
     }
 
-    override fun getTopListCoins(currency: String): Single<List<CoinInfo>> {
+    override fun getTopMarkets(currency: String): Single<List<TopMarket>> {
         return Single.create { emitter ->
             try {
-                val json = apiManager.getJson("$baseUrl/data/top/mktcapfull?limit=100&tsym=${currency}")
+                val json = apiManager.getJson("$baseUrl/data/top/mktcapfull?limit=$topMarketsCount&tsym=${currency}")
                 val data = json["Data"].asArray()
-                val list = mutableListOf<CoinInfo>()
+                val list = mutableListOf<TopMarket>()
 
-                for (item in data) {
+                for (coinData in data) {
                     try {
-                        val coinCode = item.asObject().get("CoinInfo").asObject().get("Name").asString()
-                        val coinName = item.asObject().get("CoinInfo").asObject().get("FullName").asString()
-                        list.add(CoinInfo(coinCode, coinName))
-                    } catch (e: Exception) {
+                        val coinInfo = coinData.asObject().get("CoinInfo").asObject()
+                        val coinCode = coinInfo.get("Name").asString()
+                        val coinName = coinInfo.get("FullName").asString()
+
+                        val raw = coinData.asObject().get("RAW").asObject()
+                        val fiatData = raw.get(currency).asObject()
+                        val rate = fiatData["PRICE"].toString().toBigDecimal()
+                        val rateOpen24Hour = fiatData["OPEN24HOUR"].toString().toBigDecimal()
+                        val diff = fiatData["CHANGEPCT24HOUR"].toString().toBigDecimal()
+                        val volume = fiatData["VOLUME24HOURTO"].asDouble()
+                        val marketCap = fiatData["MKTCAP"].asDouble()
+                        val supply = fiatData["SUPPLY"].asDouble()
+
+                        list.add(factory.createTopMarket(coinCode, coinName, currency, rate, rateOpen24Hour, diff, volume, marketCap, supply))
+                    } catch (ex: Exception) {
+                        logger.warning(ex.message)
                         continue
                     }
                 }
-
                 emitter.onSuccess(list)
-            } catch (e: Exception) {
-                emitter.onError(e)
+
+            } catch (ex: Exception) {
+                logger.severe(ex.message)
+                emitter.onError(ex)
             }
         }
     }
