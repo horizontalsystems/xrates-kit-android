@@ -10,11 +10,11 @@ class ApiManager {
     private val logger = Logger.getLogger("ApiManager")
 
     @Throws
-    fun getJson(uri: String): JsonObject {
-        return getJsonValue(uri).asObject()
+    fun getJson(uri: String, requestProperties: Map<String, String> = mapOf()): JsonObject {
+        return getJsonValue(uri, requestProperties).asObject()
     }
 
-    private fun getJsonValue(uri: String): JsonValue {
+    private fun getJsonValue(uri: String, requestProperties: Map<String, String> = mapOf()): JsonValue {
         logger.info("Fetching $uri")
 
         return URL(uri)
@@ -23,6 +23,9 @@ class ApiManager {
                     connectTimeout = 5000
                     readTimeout = 60000
                     setRequestProperty("Accept", "application/json")
+                    requestProperties.forEach { (key, value) ->
+                        setRequestProperty(key, value)
+                    }
                 }
                 .getInputStream()
                 .use {
