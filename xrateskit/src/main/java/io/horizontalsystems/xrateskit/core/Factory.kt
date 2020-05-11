@@ -21,8 +21,8 @@ class Factory(private val expirationInterval: Long) {
         return MarketInfo(marketInfoEntity, expirationInterval)
     }
 
-    fun createTopMarket(coinCode: String, coinName: String, marketInfoEntity: MarketInfoEntity): TopMarket {
-        return TopMarket(coinCode, coinName, MarketInfo(marketInfoEntity, expirationInterval))
+    fun createTopMarket(topMarketCoin: TopMarketCoin, marketInfoEntity: MarketInfoEntity): TopMarket {
+        return TopMarket(topMarketCoin.code, topMarketCoin.name, MarketInfo(marketInfoEntity, expirationInterval))
     }
 
     fun createTopMarket(coinCode: String, coinName: String, currency: String, rate: BigDecimal, rateOpen24Hour: BigDecimal, diff: BigDecimal, volume: Double, marketCap: Double, supply: Double): TopMarket {
