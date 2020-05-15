@@ -53,8 +53,7 @@ class ChartInfoManager(
         var chartPoints = points.filter { it.timestamp < marketInfo.timestamp }
         if (key.chartType == ChartType.DAILY) {
             firstTimestamp = marketInfo.timestamp - key.chartType.rangeInterval
-            val previousVolume = chartPoints.lastOrNull{ it.timestamp < firstTimestamp }?.volume ?: firstPoint.volume
-            chartPoints = listOf(ChartPoint(marketInfo.rateOpen24Hour, previousVolume, firstTimestamp)) + chartPoints.filter { it.timestamp > firstTimestamp }
+            chartPoints = listOf(ChartPoint(marketInfo.rateOpen24Hour, null, firstTimestamp)) + chartPoints.filter { it.timestamp > firstTimestamp }
         }
 
         val chartPointsWithLatestRate = chartPoints + ChartPoint(marketInfo.rate, null, marketInfo.timestamp)
