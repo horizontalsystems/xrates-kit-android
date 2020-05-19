@@ -29,8 +29,7 @@ class XRatesKit(
         private val chartInfoSyncManager: ChartInfoSyncManager,
         private val historicalRateManager: HistoricalRateManager,
         private val cryptoNewsManager: CryptoNewsManager,
-        private val topMarketsManager: TopMarketsManager
-) {
+        private val topMarketsManager: TopMarketsManager) {
 
     fun set(coins: List<String>) {
         marketInfoSyncManager.set(coins)
@@ -97,9 +96,9 @@ class XRatesKit(
                 marketInfoManager.listener = it
             }
 
-            val chartInfoManager = ChartInfoManager(storage, factory, marketInfoManager)
+            val chartInfoManager = ChartInfoManager(storage, factory)
             val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, cryptoCompareProvider, retryInterval)
-            val chartInfoSyncManager = ChartInfoSyncManager(chartInfoSchedulerFactory, chartInfoManager, marketInfoSyncManager).also {
+            val chartInfoSyncManager = ChartInfoSyncManager(chartInfoSchedulerFactory).also {
                 chartInfoManager.listener = it
             }
 
