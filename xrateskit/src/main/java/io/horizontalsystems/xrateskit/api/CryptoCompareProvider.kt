@@ -104,7 +104,8 @@ class CryptoCompareProvider(
         return Single.create { emitter ->
             try {
                 val stats = fetchChartPoints(mutableListOf(), chartPointKey, chartPointKey.chartType.points + indicatorPointCount, toTimestamp = null)
-                emitter.onSuccess(stats)
+                val sorted = stats.sortedBy { it.timestamp }
+                emitter.onSuccess(sorted)
             } catch (e: Exception) {
                 emitter.onError(e)
             }

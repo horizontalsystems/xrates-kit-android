@@ -24,7 +24,7 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
 
     private fun chartInfo(points: List<ChartPoint>, key: ChartInfoKey): ChartInfo? {
         val lastPoint = points.lastOrNull() ?: return null
-        val startTimestamp = lastPoint.timestamp - key.chartType.expirationInterval
+        val startTimestamp = lastPoint.timestamp - key.chartType.rangeInterval
 
         val currentTimestamp = Date().time / 1000
         val lastPointDiffInterval = currentTimestamp - lastPoint.timestamp
