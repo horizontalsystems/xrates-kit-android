@@ -128,7 +128,7 @@ class CryptoCompareProvider(
 
         for (data in result) {
             val value = valueAverage(data["open"].asDouble() + data["close"].asDouble())
-            val volume = data["volumefrom"].asDouble().toBigDecimal()
+            val volume = data["volumeto"].asDouble().toBigDecimal()
             val timestamp = data["time"].asLong()
 
             stats.add(ChartPointEntity(
