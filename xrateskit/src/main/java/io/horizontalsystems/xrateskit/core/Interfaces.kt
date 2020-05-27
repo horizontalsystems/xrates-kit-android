@@ -9,7 +9,7 @@ interface IStorage {
     fun getHistoricalRate(coin: String, currency: String, timestamp: Long): HistoricalRate?
 
     //  ChartPoint
-    fun getChartPoints(key: ChartInfoKey, fromTimestamp: Long): List<ChartPointEntity>
+    fun getChartPoints(key: ChartInfoKey): List<ChartPointEntity>
     fun saveChartPoints(points: List<ChartPointEntity>)
     fun deleteChartPoints(key: ChartInfoKey)
 

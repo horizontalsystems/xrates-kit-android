@@ -24,8 +24,8 @@ class Storage(
 
     //  ChartPoint
 
-    override fun getChartPoints(key: ChartInfoKey, fromTimestamp: Long): List<ChartPointEntity> {
-        return chartPointDao.getList(key.coin, key.currency, key.chartType, fromTimestamp)
+    override fun getChartPoints(key: ChartInfoKey): List<ChartPointEntity> {
+        return chartPointDao.getList(key.coin, key.currency, key.chartType)
     }
 
     override fun saveChartPoints(points: List<ChartPointEntity>) {

@@ -29,8 +29,7 @@ class XRatesKit(
         private val chartInfoSyncManager: ChartInfoSyncManager,
         private val historicalRateManager: HistoricalRateManager,
         private val cryptoNewsManager: CryptoNewsManager,
-        private val topMarketsManager: TopMarketsManager
-) {
+        private val topMarketsManager: TopMarketsManager) {
 
     fun set(coins: List<String>) {
         marketInfoSyncManager.set(coins)
@@ -81,12 +80,12 @@ class XRatesKit(
     }
 
     companion object {
-        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, topMarketsCount: Int = 100, coinMarketCapApiKey: String = ""): XRatesKit {
+        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, topMarketsCount: Int = 100, indicatorPointCount: Int = 50, coinMarketCapApiKey: String = ""): XRatesKit {
             val factory = Factory(rateExpirationInterval)
             val storage = Storage(Database.create(context))
 
             val apiManager = ApiManager()
-            val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, "https://min-api.cryptocompare.com", topMarketsCount)
+            val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, "https://min-api.cryptocompare.com", topMarketsCount, indicatorPointCount)
 
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
@@ -97,9 +96,9 @@ class XRatesKit(
                 marketInfoManager.listener = it
             }
 
-            val chartInfoManager = ChartInfoManager(storage, factory, marketInfoManager)
+            val chartInfoManager = ChartInfoManager(storage, factory)
             val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, cryptoCompareProvider, retryInterval)
-            val chartInfoSyncManager = ChartInfoSyncManager(chartInfoSchedulerFactory, chartInfoManager, marketInfoSyncManager).also {
+            val chartInfoSyncManager = ChartInfoSyncManager(chartInfoSchedulerFactory).also {
                 chartInfoManager.listener = it
             }
 

@@ -12,8 +12,9 @@ class CryptoCompareProvider(
         private val factory: Factory,
         private val apiManager: ApiManager,
         private val baseUrl: String,
-        private val topMarketsCount: Int
-) : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, ITopMarketsProvider {
+        private val topMarketsCount: Int,
+        private val indicatorPointCount: Int)
+    : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, ITopMarketsProvider {
 
     private val logger = Logger.getLogger("CryptoCompareProvider")
 
@@ -100,36 +101,55 @@ class CryptoCompareProvider(
     //  Chart Points
 
     override fun getChartPoints(chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>> {
-        val coin = chartPointKey.coin
-        val currency = chartPointKey.currency
-        val chartType = chartPointKey.chartType
-
         return Single.create { emitter ->
             try {
-                val response = apiManager.getJson("$baseUrl/data/v2/${chartType.resource}?fsym=$coin&tsym=$currency&aggregate=${chartType.interval}&limit=${chartType.points}")
-                val dataObject = CryptoCompareResponse.parseData(response)
-                val result = dataObject["Data"].asArray().map { it.asObject() }
-                val stats = mutableListOf<ChartPointEntity>()
-
-                for (data in result) {
-                    val value = valueAverage(data["open"].asDouble() + data["close"].asDouble())
-                    val volume = data["volumefrom"].asDouble().toBigDecimal()
-
-                    stats.add(ChartPointEntity(
-                            chartType,
-                            coin,
-                            currency,
-                            value,
-                            volume,
-                            data["time"].asLong())
-                    )
-                }
-
-                emitter.onSuccess(stats)
+                val stats = fetchChartPoints(mutableListOf(), chartPointKey, chartPointKey.chartType.points + indicatorPointCount, toTimestamp = null)
+                val sorted = stats.sortedBy { it.timestamp }
+                emitter.onSuccess(sorted)
             } catch (e: Exception) {
                 emitter.onError(e)
             }
         }
+    }
+
+    private fun fetchChartPoints(stats: MutableList<ChartPointEntity>, chartPointKey: ChartInfoKey, limit: Int, toTimestamp: Long?): MutableList<ChartPointEntity> {
+        val coin = chartPointKey.coin
+        val currency = chartPointKey.currency
+        val chartType = chartPointKey.chartType
+
+        var baseUrl = "$baseUrl/data/v2/${chartType.resource}?fsym=$coin&tsym=$currency&aggregate=${chartType.interval}"
+        if (toTimestamp != null) {
+            baseUrl += "&toTs=${toTimestamp}"
+        }
+
+        val response = apiManager.getJson("$baseUrl&limit=${limit}")
+        val dataObject = CryptoCompareResponse.parseData(response)
+        val result = dataObject["Data"].asArray().map { it.asObject() }
+
+        for (data in result) {
+            val value = valueAverage(data["open"].asDouble() + data["close"].asDouble())
+            val volume = data["volumeto"].asDouble().toBigDecimal()
+            val timestamp = data["time"].asLong()
+
+            stats.add(ChartPointEntity(
+                chartType,
+                coin,
+                currency,
+                value,
+                volume,
+                timestamp)
+            )
+        }
+
+        if (stats.size < limit) {
+            val newLimit = limit - stats.size
+            val timeFrom = dataObject["TimeFrom"].asInt()
+            val newTimestamp = timeFrom - chartType.expirationInterval * newLimit
+
+            return fetchChartPoints(stats, chartPointKey, newLimit, newTimestamp)
+        }
+
+        return stats
     }
 
     private fun valueAverage(vararg value: Double): BigDecimal {

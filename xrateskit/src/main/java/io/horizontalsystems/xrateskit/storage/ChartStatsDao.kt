@@ -18,10 +18,7 @@ interface ChartStatsDao {
     @Query("SELECT * FROM ChartPointEntity WHERE coin = :coin AND currency = :currency AND type = :type ORDER BY timestamp DESC LIMIT 1")
     fun getLast(coin: String, currency: String, type: ChartType): ChartPointEntity?
 
-    @Query("SELECT * FROM ChartPointEntity WHERE coin = :coin AND currency = :currency AND type = :type ORDER BY timestamp")
+    @Query("SELECT * FROM ChartPointEntity WHERE coin = :coin AND currency = :currency AND type = :type ORDER BY timestamp ASC")
     fun getList(coin: String, currency: String, type: ChartType): List<ChartPointEntity>
-
-    @Query("SELECT * FROM ChartPointEntity WHERE coin = :coin AND currency = :currency AND type = :type AND timestamp >= :fromTimestamp ORDER BY timestamp")
-    fun getList(coin: String, currency: String, type: ChartType, fromTimestamp: Long): List<ChartPointEntity>
 
 }
