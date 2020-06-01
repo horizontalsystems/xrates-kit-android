@@ -19,16 +19,21 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
     }
 
     fun getChartInfo(key: ChartInfoKey): ChartInfo? {
-        return chartInfo(storedChartPoints(key), key)
+        return chartInfo(storedChartPoints(key), key.chartType)
     }
 
-    private fun chartInfo(points: List<ChartPoint>, key: ChartInfoKey): ChartInfo? {
+    private fun chartInfo(points: List<ChartPoint>, chartType: ChartType): ChartInfo? {
         val lastPoint = points.lastOrNull() ?: return null
-        val startTimestamp = lastPoint.timestamp - key.chartType.rangeInterval
 
         val currentTimestamp = Date().time / 1000
-        val lastPointDiffInterval = currentTimestamp - lastPoint.timestamp
-        if (lastPointDiffInterval > key.chartType.expirationInterval) {
+
+        if (currentTimestamp - chartType.rangeInterval > lastPoint.timestamp) {
+            return null
+        }
+
+        val startTimestamp = lastPoint.timestamp - chartType.rangeInterval
+
+        if (currentTimestamp - chartType.expirationInterval > lastPoint.timestamp) {
             return ChartInfo(
                 points,
                 startTimestamp,
@@ -47,7 +52,7 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
         storage.deleteChartPoints(key)
         storage.saveChartPoints(points)
 
-        val chartInfo = chartInfo(points.map { ChartPoint(it.value, it.volume, it.timestamp) }, key)
+        val chartInfo = chartInfo(points.map { ChartPoint(it.value, it.volume, it.timestamp) }, key.chartType)
         if (chartInfo == null) {
             listener?.noChartInfo(key)
         } else {
