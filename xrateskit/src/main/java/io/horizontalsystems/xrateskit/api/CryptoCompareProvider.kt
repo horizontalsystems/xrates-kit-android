@@ -36,7 +36,7 @@ class CryptoCompareProvider(
 
                         val rate = dataFiat["PRICE"].toString().toBigDecimal()
                         val rateOpen24Hour = dataFiat["OPEN24HOUR"].toString().toBigDecimal()
-                        val diff = dataFiat["CHANGEPCT24HOUR"].toString().toBigDecimal()
+                        val diff = dataFiat["CHANGEPCTDAY"].toString().toBigDecimal()
                         val volume = dataFiat["VOLUME24HOURTO"].asDouble()
                         val mktcap = dataFiat["MKTCAP"].asDouble()
                         val supply = dataFiat["SUPPLY"].asDouble()

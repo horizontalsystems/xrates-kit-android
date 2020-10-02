@@ -25,26 +25,36 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
     private fun chartInfo(points: List<ChartPoint>, chartType: ChartType): ChartInfo? {
         val lastPoint = points.lastOrNull() ?: return null
 
-        val currentTimestamp = Date().time / 1000
-
-        if (currentTimestamp - chartType.rangeInterval > lastPoint.timestamp) {
+        var endTimestamp = Date().time / 1000
+        if (endTimestamp - chartType.rangeInterval > lastPoint.timestamp) {
             return null
         }
 
-        val startTimestamp = lastPoint.timestamp - chartType.rangeInterval
+        val startTimestamp: Long
+        if (chartType === ChartType.TODAY) {
+            val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
+            startTimestamp = calendar.timeInMillis / 1000
 
-        if (currentTimestamp - chartType.expirationInterval > lastPoint.timestamp) {
+            val day = 24 * 60 * 60
+            endTimestamp = startTimestamp + day
+        } else {
+            startTimestamp = lastPoint.timestamp - chartType.rangeInterval
+        }
+
+        if (endTimestamp - chartType.expirationInterval > lastPoint.timestamp) {
             return ChartInfo(
                 points,
                 startTimestamp,
-                currentTimestamp
+                endTimestamp = endTimestamp,
+                isExpired = true
             )
         }
 
         return ChartInfo(
             points,
             startTimestamp,
-            lastPoint.timestamp
+            endTimestamp = lastPoint.timestamp,
+            isExpired = false
         )
     }
 
