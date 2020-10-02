@@ -6,7 +6,7 @@ import java.util.*
 class MarketInfo(marketInfo: MarketInfoEntity, val expirationInterval: Long) {
     val currency: String = marketInfo.currency
     val rate: BigDecimal = marketInfo.rate
-    val rateOpen24Hour: BigDecimal = marketInfo.rateOpen24Hour
+    val rateOpenDay: BigDecimal = marketInfo.rateOpenDay
     val diff: BigDecimal = marketInfo.diff
     val volume: Double = marketInfo.volume
     val marketCap: Double = marketInfo.marketCap

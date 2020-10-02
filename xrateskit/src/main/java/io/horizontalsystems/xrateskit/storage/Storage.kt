@@ -68,7 +68,7 @@ class Storage(
             marketInfoDao.insertAll(topMarkets.map { topMarket ->
                 val entity: MarketInfoEntity
                 topMarket.marketInfo.apply {
-                    entity = MarketInfoEntity(topMarket.coinCode, currency, rate, rateOpen24Hour, diff, volume, marketCap, supply, timestamp)
+                    entity = MarketInfoEntity(topMarket.coinCode, currency, rate, rateOpenDay, diff, volume, marketCap, supply, timestamp)
                 }
                 entity
             })

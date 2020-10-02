@@ -96,7 +96,7 @@ class XRatesKit(
                 marketInfoManager.listener = it
             }
 
-            val chartInfoManager = ChartInfoManager(storage, factory)
+            val chartInfoManager = ChartInfoManager(storage, factory, marketInfoManager)
             val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, cryptoCompareProvider, retryInterval)
             val chartInfoSyncManager = ChartInfoSyncManager(chartInfoSchedulerFactory).also {
                 chartInfoManager.listener = it

@@ -3,9 +3,10 @@ package io.horizontalsystems.xrateskit.chartpoint
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
+import io.horizontalsystems.xrateskit.marketinfo.MarketInfoManager
 import java.util.*
 
-class ChartInfoManager(private val storage: IStorage, private val factory: Factory) {
+class ChartInfoManager(private val storage: IStorage, private val factory: Factory, private val marketInfoManager: MarketInfoManager) {
 
     var listener: Listener? = null
 
@@ -59,10 +60,30 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
     }
 
     fun update(points: List<ChartPointEntity>, key: ChartInfoKey) {
-        storage.deleteChartPoints(key)
-        storage.saveChartPoints(points)
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
 
-        val chartInfo = chartInfo(points.map { ChartPoint(it.value, it.volume, it.timestamp) }, key.chartType)
+        val startDayTimestamp = calendar.timeInMillis / 1000
+        val entities = points.map { point ->
+            if (point.timestamp == startDayTimestamp) {
+                marketInfoManager.getMarketInfo(point.coin, point.currency)?.let { marketInfo ->
+                    return@map ChartPointEntity(
+                        point.type,
+                        point.coin,
+                        point.currency,
+                        marketInfo.rateOpenDay,
+                        point.volume,
+                        point.timestamp
+                    )
+                }
+            }
+
+            return@map point
+        }
+
+        storage.deleteChartPoints(key)
+        storage.saveChartPoints(entities)
+
+        val chartInfo = chartInfo(entities.map { ChartPoint(it.value, it.volume, it.timestamp) }, key.chartType)
         if (chartInfo == null) {
             listener?.noChartInfo(key)
         } else {
