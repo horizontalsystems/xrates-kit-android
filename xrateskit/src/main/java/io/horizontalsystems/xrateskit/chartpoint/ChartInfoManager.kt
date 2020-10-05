@@ -36,9 +36,8 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
 
         val startTimestamp: Long
         if (chartType === ChartType.TODAY) {
-            val localDate = LocalDate
-                .now(ZoneId.of("GMT"))
-                .atStartOfDay(ZoneId.of("GMT"))
+            val zoneId = ZoneId.of("GMT")
+            val localDate = LocalDate.now(zoneId).atStartOfDay(zoneId)
 
             val timestamp = Timestamp.from(localDate.toInstant())
             startTimestamp = timestamp.time / 1000
@@ -49,11 +48,12 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
             startTimestamp = lastPoint.timestamp - chartType.rangeInterval
         }
 
-        if (endTimestamp - chartType.expirationInterval > lastPoint.timestamp) {
+        val currentTimestamp = Date().time / 1000
+        if (currentTimestamp - chartType.expirationInterval > lastPoint.timestamp) {
             return ChartInfo(
                 points,
                 startTimestamp,
-                endTimestamp = endTimestamp,
+                endTimestamp,
                 isExpired = true
             )
         }
@@ -61,7 +61,7 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
         return ChartInfo(
             points,
             startTimestamp,
-            endTimestamp = lastPoint.timestamp,
+            endTimestamp,
             isExpired = false
         )
     }
@@ -84,7 +84,7 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
                 }
             }
 
-            return@map point
+            point
         }
 
         storage.deleteChartPoints(key)
