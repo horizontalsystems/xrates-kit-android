@@ -3,9 +3,13 @@ package io.horizontalsystems.xrateskit.chartpoint
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
+import io.horizontalsystems.xrateskit.marketinfo.MarketInfoManager
+import java.sql.Timestamp
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 
-class ChartInfoManager(private val storage: IStorage, private val factory: Factory) {
+class ChartInfoManager(private val storage: IStorage, private val factory: Factory, private val marketInfoManager: MarketInfoManager) {
 
     var listener: Listener? = null
 
@@ -25,34 +29,68 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
     private fun chartInfo(points: List<ChartPoint>, chartType: ChartType): ChartInfo? {
         val lastPoint = points.lastOrNull() ?: return null
 
-        val currentTimestamp = Date().time / 1000
-
-        if (currentTimestamp - chartType.rangeInterval > lastPoint.timestamp) {
+        var endTimestamp = Date().time / 1000
+        if (endTimestamp - chartType.rangeInterval > lastPoint.timestamp) {
             return null
         }
 
-        val startTimestamp = lastPoint.timestamp - chartType.rangeInterval
+        val startTimestamp: Long
+        if (chartType === ChartType.TODAY) {
+            val zoneId = ZoneId.of("GMT")
+            val localDate = LocalDate.now(zoneId).atStartOfDay(zoneId)
 
+            val timestamp = Timestamp.from(localDate.toInstant())
+            startTimestamp = timestamp.time / 1000
+
+            val day = 24 * 60 * 60
+            endTimestamp = startTimestamp + day
+        } else {
+            startTimestamp = lastPoint.timestamp - chartType.rangeInterval
+        }
+
+        val currentTimestamp = Date().time / 1000
         if (currentTimestamp - chartType.expirationInterval > lastPoint.timestamp) {
             return ChartInfo(
                 points,
                 startTimestamp,
-                currentTimestamp
+                endTimestamp,
+                isExpired = true
             )
         }
 
         return ChartInfo(
             points,
             startTimestamp,
-            lastPoint.timestamp
+            endTimestamp,
+            isExpired = false
         )
     }
 
     fun update(points: List<ChartPointEntity>, key: ChartInfoKey) {
-        storage.deleteChartPoints(key)
-        storage.saveChartPoints(points)
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
 
-        val chartInfo = chartInfo(points.map { ChartPoint(it.value, it.volume, it.timestamp) }, key.chartType)
+        val startDayTimestamp = calendar.timeInMillis / 1000
+        val entities = points.map { point ->
+            if (point.timestamp == startDayTimestamp) {
+                marketInfoManager.getMarketInfo(point.coin, point.currency)?.let { marketInfo ->
+                    return@map ChartPointEntity(
+                        point.type,
+                        point.coin,
+                        point.currency,
+                        marketInfo.rateOpenDay,
+                        point.volume,
+                        point.timestamp
+                    )
+                }
+            }
+
+            point
+        }
+
+        storage.deleteChartPoints(key)
+        storage.saveChartPoints(entities)
+
+        val chartInfo = chartInfo(entities.map { ChartPoint(it.value, it.volume, it.timestamp) }, key.chartType)
         if (chartInfo == null) {
             listener?.noChartInfo(key)
         } else {

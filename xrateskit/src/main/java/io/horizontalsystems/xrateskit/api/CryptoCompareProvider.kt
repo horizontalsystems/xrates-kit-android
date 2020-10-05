@@ -35,13 +35,13 @@ class CryptoCompareProvider(
                         val dataFiat = dataCoin.get(currency).asObject()
 
                         val rate = dataFiat["PRICE"].toString().toBigDecimal()
-                        val rateOpen24Hour = dataFiat["OPEN24HOUR"].toString().toBigDecimal()
-                        val diff = dataFiat["CHANGEPCT24HOUR"].toString().toBigDecimal()
+                        val rateOpenDay = dataFiat["OPENDAY"].toString().toBigDecimal()
+                        val diff = dataFiat["CHANGEPCTDAY"].toString().toBigDecimal()
                         val volume = dataFiat["VOLUME24HOURTO"].asDouble()
                         val mktcap = dataFiat["MKTCAP"].asDouble()
                         val supply = dataFiat["SUPPLY"].asDouble()
 
-                        list.add(factory.createMarketInfoEntity(coin, currency, rate, rateOpen24Hour, diff, volume, mktcap, supply))
+                        list.add(factory.createMarketInfoEntity(coin, currency, rate, rateOpenDay, diff, volume, mktcap, supply))
                     } catch (e: Exception) {
                         continue
                     }
@@ -127,7 +127,7 @@ class CryptoCompareProvider(
         val result = dataObject["Data"].asArray().map { it.asObject() }
 
         for (data in result) {
-            val value = valueAverage(data["open"].asDouble() + data["close"].asDouble())
+            val value = data["open"].asDouble().toBigDecimal()
             val volume = data["volumeto"].asDouble().toBigDecimal()
             val timestamp = data["time"].asLong()
 
@@ -150,10 +150,6 @@ class CryptoCompareProvider(
         }
 
         return stats
-    }
-
-    private fun valueAverage(vararg value: Double): BigDecimal {
-        return (value.sum() / (value.size * 2)).toBigDecimal()
     }
 
     //  CryptoNews
@@ -206,13 +202,13 @@ class CryptoCompareProvider(
                         val raw = coinData.asObject().get("RAW").asObject()
                         val fiatData = raw.get(currency).asObject()
                         val rate = fiatData["PRICE"].toString().toBigDecimal()
-                        val rateOpen24Hour = fiatData["OPEN24HOUR"].toString().toBigDecimal()
+                        val rateOpenDay = fiatData["OPENDAY"].toString().toBigDecimal()
                         val diff = fiatData["CHANGEPCT24HOUR"].toString().toBigDecimal()
                         val volume = fiatData["VOLUME24HOURTO"].asDouble()
                         val marketCap = fiatData["MKTCAP"].asDouble()
                         val supply = fiatData["SUPPLY"].asDouble()
 
-                        list.add(factory.createTopMarket(coinCode, coinName, currency, rate, rateOpen24Hour, diff, volume, marketCap, supply))
+                        list.add(factory.createTopMarket(coinCode, coinName, currency, rate, rateOpenDay, diff, volume, marketCap, supply))
                     } catch (ex: Exception) {
                         logger.warning(ex.message)
                         continue

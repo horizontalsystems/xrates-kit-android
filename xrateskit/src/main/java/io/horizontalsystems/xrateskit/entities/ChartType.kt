@@ -1,6 +1,7 @@
 package io.horizontalsystems.xrateskit.entities
 
 enum class ChartType(val interval: Long, val points: Int, val resource: String) {
+    TODAY(30, 48, "histominute"),   // minutes
     DAILY(30, 48, "histominute"),   // minutes
     WEEKLY(4, 48, "histohour"),     // hourly
     WEEKLY2(8, 44, "histohour"),     // hourly
@@ -27,6 +28,7 @@ enum class ChartType(val interval: Long, val points: Int, val resource: String) 
 
     val seconds: Long
         get() = when (this) {
+            TODAY -> interval
             DAILY -> interval
             WEEKLY -> interval * 60
             WEEKLY2 -> interval * 60

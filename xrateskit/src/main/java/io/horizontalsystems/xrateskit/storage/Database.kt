@@ -9,7 +9,7 @@ import io.horizontalsystems.xrateskit.entities.HistoricalRate
 import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 import io.horizontalsystems.xrateskit.entities.TopMarketCoin
 
-@androidx.room.Database(version = 3, exportSchema = false, entities = [
+@androidx.room.Database(version = 4, exportSchema = false, entities = [
     HistoricalRate::class,
     ChartPointEntity::class,
     MarketInfoEntity::class,
