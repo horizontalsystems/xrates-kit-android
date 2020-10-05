@@ -4,6 +4,9 @@ import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.marketinfo.MarketInfoManager
+import java.sql.Timestamp
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 
 class ChartInfoManager(private val storage: IStorage, private val factory: Factory, private val marketInfoManager: MarketInfoManager) {
@@ -33,8 +36,12 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
 
         val startTimestamp: Long
         if (chartType === ChartType.TODAY) {
-            val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
-            startTimestamp = calendar.timeInMillis / 1000
+            val localDate = LocalDate
+                .now(ZoneId.of("GMT"))
+                .atStartOfDay(ZoneId.of("GMT"))
+
+            val timestamp = Timestamp.from(localDate.toInstant())
+            startTimestamp = timestamp.time / 1000
 
             val day = 24 * 60 * 60
             endTimestamp = startTimestamp + day
