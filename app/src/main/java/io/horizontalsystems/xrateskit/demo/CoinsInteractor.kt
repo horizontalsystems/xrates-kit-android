@@ -3,6 +3,7 @@ package io.horizontalsystems.xrateskit.demo
 import android.util.Log
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartType
+import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.MarketInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -16,7 +17,7 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
     private var chartInfoDisposables = CompositeDisposable()
     private var topListDisposable: Disposable? = null
 
-    fun set(coins: List<String>) {
+    fun set(coins: List<Coin>) {
         ratesManager.set(coins)
     }
 

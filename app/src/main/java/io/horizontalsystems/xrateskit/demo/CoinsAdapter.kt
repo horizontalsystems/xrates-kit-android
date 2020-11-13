@@ -37,7 +37,7 @@ class RatesAdapter : RecyclerView.Adapter<RatesAdapter.ViewHolderCoin>() {
                 Color.TRANSPARENT
             )
 
-            coinName.text = item.coin
+            coinName.text = item.coin.code
 
             switchView.isChecked = item.isChecked
 
