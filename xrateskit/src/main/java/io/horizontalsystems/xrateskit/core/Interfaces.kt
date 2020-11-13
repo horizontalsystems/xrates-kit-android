@@ -23,8 +23,12 @@ interface IStorage {
     fun saveTopMarkets(topMarkets: List<TopMarket>)
 }
 
+interface IFiatXRatesProvider {
+    fun getLatestFiatXRates(sourceCurrency: String, targetCurrency: String): Double
+}
+
 interface IMarketInfoProvider {
-    fun getMarketInfo(coins: List<String>, currency: String): Single<List<MarketInfoEntity>>
+    fun getMarketInfo(coins: List<Coin>, currency: String): Single<List<MarketInfoEntity>>
 }
 
 interface IChartInfoProvider {
