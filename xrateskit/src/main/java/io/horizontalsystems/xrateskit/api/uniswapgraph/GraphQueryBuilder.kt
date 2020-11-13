@@ -53,7 +53,6 @@ class GraphQueryBuilder {
         }
 
         private fun buildQuery(query: String, variables: String? = null): String {
-            print("************ buildQuery ***************")
             return JsonObject()
                 .add("query", "{ $query }")
                 .add("variables", variables).toString()
