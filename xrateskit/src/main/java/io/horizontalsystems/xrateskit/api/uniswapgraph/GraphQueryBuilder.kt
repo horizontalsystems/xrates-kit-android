@@ -22,11 +22,13 @@ class GraphQueryBuilder {
         private fun buildTokensQuery(coins: List<Coin>): String {
 
             val addresses = coins.joinToString { coin -> "\"${coin.address}\"" }.toLowerCase()
-            return "tokens( " +
-                    " where : " + "{id_in: [" + addresses + "]})" +
-                    " { symbol," +
-                    "   derivedETH," +
-                    " }"
+            return """
+                    tokens( 
+                    where : {id_in: [ $addresses ]})
+                    { symbol,
+                      derivedETH,
+                    }
+                    """
         }
 
         private fun buildBundleQuery(): String {
@@ -37,17 +39,17 @@ class GraphQueryBuilder {
 
             var query = ""
             coins.forEach { coin ->
-                query += " " +
-                        coin.coinId + ":tokenDayDatas( " +
-                        " first:1," +
-                        " orderBy:date," +
-                        " orderDirection:desc," +
-                        " where : " +
-                        "{ date_lte: " + timeStamp + "," +
-                        "  token: \"" + coin.address.toLowerCase() + "\"})" +
-                        " { date," +
-                        "   priceUSD" +
-                        " }"
+                query += """${coin.coinId}:tokenDayDatas(
+                        first:1,
+                        orderBy:date,
+                        orderDirection:desc,
+                        where :{  
+                          date_lte:${timeStamp},
+                          token: "${coin.address.toLowerCase()}"})
+                        { date,
+                          priceUSD
+                        }
+                        """
             }
             return query
         }
