@@ -2,6 +2,8 @@ package io.horizontalsystems.xrateskit.api.uniswapgraph
 
 import com.eclipsesource.json.JsonObject
 import io.horizontalsystems.xrateskit.entities.Coin
+import io.horizontalsystems.xrateskit.entities.CoinType
+import java.util.*
 
 class GraphQueryBuilder {
 
@@ -21,7 +23,8 @@ class GraphQueryBuilder {
 
         private fun buildTokensQuery(coins: List<Coin>): String {
 
-            val addresses = coins.joinToString { coin -> "\"${coin.address}\"" }.toLowerCase()
+            val addresses = coins.joinToString { coin -> "\"${ (coin.type as CoinType.Erc20).address }\"" }
+                .toLowerCase(Locale.getDefault())
             return """
                     tokens( 
                     where : {id_in: [ $addresses ]})
@@ -39,13 +42,13 @@ class GraphQueryBuilder {
 
             var query = ""
             coins.forEach { coin ->
-                query += """${coin.coinId}:tokenDayDatas(
+                    query += """${coin.coinId}:tokenDayDatas(
                         first:1,
                         orderBy:date,
                         orderDirection:desc,
                         where :{  
                           date_lte:${timeStamp},
-                          token: "${coin.address.toLowerCase()}"})
+                          token: "${(coin.type as CoinType.Erc20).address.toLowerCase(Locale.getDefault())}"})
                         { date,
                           priceUSD
                         }

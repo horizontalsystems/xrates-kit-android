@@ -16,7 +16,7 @@ class MarketInfoBaseProvider(
     override fun getMarketInfo(coins: List<Coin>, currency: String): Single<List<MarketInfoEntity>> {
 
         val (ethBasedCoins, baseCoins) = coins.partition {
-                coin -> coin.type == CoinType.ETHEREUM || coin.type == CoinType.ERC20
+                coin -> coin.type is CoinType.Ethereum || coin.type is CoinType.Erc20
         }
 
         return Single.zip(

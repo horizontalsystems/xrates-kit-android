@@ -4,6 +4,4 @@ class Coin(
     val coinId: String,
     val code: String,
     val title: String = "",
-    val address: String = "",
-    val type: CoinType = CoinType.UNDEFINED){
-}
+    var type: CoinType = CoinType.Undefined)

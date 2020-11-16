@@ -19,18 +19,18 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     lateinit var presenter: CoinsPresenter
 
-    private val coins = listOf(Coin("BTC", "BTC","Bitcoin", "", CoinType.BITCOIN),
-                               Coin("ETH", "ETH","WEthereum","0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", CoinType.ETHEREUM),
-                               Coin("BCH", "BCH","Bch", "", CoinType.BITCOIN_CASH),
-                               Coin("DASH","DASH","Dash", "", CoinType.DASH),
-                               Coin("BNB", "BNB","Bnb",  "", CoinType.BINANCE),
-                               Coin("ANKR","ANKR","Ankr", "", CoinType.BINANCE),
-                               Coin("EOS", "EOS","Eos",  "", CoinType.EOS),
-                               Coin("ZRX", "ZRX","Zrx","0xE41d2489571d322189246DaFA5ebDe1F4699F498", CoinType.ERC20),
-                               Coin("ELF", "ELF","Elf", "0xbf2179859fc6D5BEE9Bf9158632Dc51678a4100e", CoinType.ERC20),
-                               Coin("GNT","GNT","Gnt", "0xa74476443119A942dE498590Fe1f2454d7D4aC0d", CoinType.ERC20),
-                               Coin("HOT","HOT","Hot", "0x6c6EE5e31d828De241282B9606C8e98Ea48526E2", CoinType.ERC20),
-                               Coin("BNT","BNT","Bnt", "0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C", CoinType.ERC20))
+    private val coins = listOf(Coin("BTC", "BTC","Bitcoin", CoinType.Bitcoin),
+                               Coin("ETH", "ETH","Ethereum", CoinType.Ethereum),
+                               Coin("BCH", "BCH","Bch", CoinType.BitcoinCash),
+                               Coin("DASH","DASH","Dash", CoinType.Dash),
+                               Coin("BNB", "BNB","Bnb",  CoinType.Binance),
+                               Coin("ANKR","ANKR","Ankr", CoinType.Binance),
+                               Coin("EOS", "EOS","Eos",  CoinType.Eos),
+                               Coin("ZRX", "ZRX","Zrx",CoinType.Erc20("0xE41d2489571d322189246DaFA5ebDe1F4699F498")),
+                               Coin("ELF", "ELF","Elf", CoinType.Erc20("0xbf2179859fc6D5BEE9Bf9158632Dc51678a4100e")),
+                               Coin("GNT","GNT","Gnt", CoinType.Erc20("0xa74476443119A942dE498590Fe1f2454d7D4aC0d")),
+                               Coin("HOT","HOT","Hot", CoinType.Erc20("0x6c6EE5e31d828De241282B9606C8e98Ea48526E2")),
+                               Coin("BNT","BNT","Bnt", CoinType.Erc20("0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C")))
 
     private val coinsAdapter = RatesAdapter()
 

@@ -1,14 +1,15 @@
 package io.horizontalsystems.xrateskit.entities
 
-enum class CoinType  {
-    UNDEFINED,
-    BITCOIN,
-    LITECOIN,
-    BITCOIN_CASH,
-    DASH,
-    ETHEREUM,
-    ERC20,
-    BINANCE,
-    ZCASH,
-    EOS
+
+sealed class CoinType {
+    object Undefined : CoinType()
+    object Bitcoin : CoinType()
+    object Litecoin : CoinType()
+    object BitcoinCash : CoinType()
+    object Dash : CoinType()
+    object Ethereum : CoinType()
+    class  Erc20(val address: String) : CoinType()
+    object Binance : CoinType()
+    object Zcash : CoinType()
+    object Eos : CoinType()
 }
