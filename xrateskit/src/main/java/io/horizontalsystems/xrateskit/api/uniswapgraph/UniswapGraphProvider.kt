@@ -5,6 +5,7 @@ import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IFiatXRatesProvider
 import io.horizontalsystems.xrateskit.entities.Coin
+import io.horizontalsystems.xrateskit.entities.CoinType
 import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 import io.reactivex.Single
 import java.util.*
@@ -17,8 +18,12 @@ class UniswapGraphProvider(
 
     private val logger = Logger.getLogger("UniswapGraphProvider")
     private val GRAPH_NODE_URL = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
-    private val BASE_FIAT_CURRENCY = "USD"
     private val ONE_DAY_SECONDS = 86400 // 1 day in seconds
+
+    private val BASE_FIAT_CURRENCY = "USD"
+    private val BASE_COIN_CODE = "ETH"
+    private val WETH_TOKEN_CODE = "WETH"
+    private val WETH_TOKEN_ADDRESS = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
 
     fun getMarketInfo(coins: List<Coin>, fiatCurrency: String) : Single<List<MarketInfoEntity>> {
 
@@ -35,9 +40,19 @@ class UniswapGraphProvider(
         }
     }
 
+    // Uniswap uses WETH as base. So all requests should be done via WETH.
+    // Check if list coinstains ETH, then change it's address to WETH
+    private fun prepareInputParams(coins: List<Coin>){
+        coins.find { coin -> coin.code.equals(BASE_COIN_CODE) }?.let {
+                it.type = CoinType.Erc20(WETH_TOKEN_ADDRESS)
+        }
+    }
+
     private fun getLatestXRates(coins: List<Coin>, fiatCurrency: String) : List<MarketInfoEntity> {
 
         try {
+
+            prepareInputParams(coins)
 
             val list = mutableListOf<MarketInfoEntity>()
             var fiatRate = 1.0
@@ -59,7 +74,7 @@ class UniswapGraphProvider(
                 it.asObject()["ethPriceUSD"].asString().toDouble()
             }
 
-            if (!fiatCurrency.toUpperCase().contentEquals(BASE_FIAT_CURRENCY)) {
+            if (!fiatCurrency.toUpperCase(Locale.getDefault()).contentEquals(BASE_FIAT_CURRENCY)) {
                 fiatRate = fiatXRatesProvider.getLatestFiatXRates(BASE_FIAT_CURRENCY, fiatCurrency)
                 ethPrice *= fiatRate
             }
@@ -70,28 +85,34 @@ class UniswapGraphProvider(
                 try {
 
                     val coin = coinData.asObject()
-                    val coinCode = if(coin["symbol"].asString().contentEquals("WETH")) "ETH"
-                                   else coin["symbol"].asString()
+                    val coinCode = coin["symbol"].asString()?.let {
+                            if(it.contentEquals(WETH_TOKEN_CODE))
+                                BASE_COIN_CODE
+                            else
+                                coin["symbol"].asString()
+                    }
                     val coinEthRate = coin["derivedETH"].asString().toDouble()
-
                     val coinLatestPrice = coinEthRate * ethPrice
                     val coinOpenDayUSDPrice =
                         dataHistoXRates[coinCode].asArray()[0].asObject()["priceUSD"].asString().toDouble()
                     val coinOpenDayPrice = fiatRate * coinOpenDayUSDPrice
                     val diff = ((coinLatestPrice - coinOpenDayPrice) * 100) / coinOpenDayPrice
 
-                    list.add(
-                        factory.createMarketInfoEntity(
-                            coinCode,
-                            fiatCurrency,
-                            coinLatestPrice.toBigDecimal(),
-                            coinOpenDayPrice.toBigDecimal(),
-                            diff.toBigDecimal(),
-                            0.0,
-                            0.0,
-                            0.0
+                    coinCode?.let {
+                        list.add(
+                            factory.createMarketInfoEntity(
+                                coinCode,
+                                fiatCurrency,
+                                coinLatestPrice.toBigDecimal(),
+                                coinOpenDayPrice.toBigDecimal(),
+                                diff.toBigDecimal(),
+                                0.0,
+                                0.0,
+                                0.0
+                            )
                         )
-                    )
+                    }
+
                 } catch (e: Exception) {
                     print(e)
                     continue
