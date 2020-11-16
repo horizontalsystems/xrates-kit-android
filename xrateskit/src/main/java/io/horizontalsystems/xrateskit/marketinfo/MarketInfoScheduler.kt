@@ -1,7 +1,9 @@
 package io.horizontalsystems.xrateskit.marketinfo
 
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -66,7 +68,8 @@ class MarketInfoScheduler(private val provider: MarketInfoSchedulerProvider) {
 
         syncDisposable?.dispose()
         syncDisposable = provider.syncSingle
-                .subscribe({
+            .subscribeOn(Schedulers.io())
+            .subscribe({
                     autoSchedule(provider.retryInterval)
                     isExpiredRatesNotified = false
                 }, {

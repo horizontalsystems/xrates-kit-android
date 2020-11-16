@@ -9,7 +9,7 @@ import io.reactivex.Single
 class RatesManager(context: Context, currency: String) {
     private val kit = XRatesKit.create(context, currency, 60 * 10)
 
-    fun set(coins: List<String>) {
+    fun set(coins: List<Coin>) {
         kit.set(coins)
     }
 

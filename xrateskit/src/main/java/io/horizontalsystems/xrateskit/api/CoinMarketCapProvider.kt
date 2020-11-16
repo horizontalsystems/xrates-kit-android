@@ -3,6 +3,8 @@ package io.horizontalsystems.xrateskit.api
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IMarketInfoProvider
 import io.horizontalsystems.xrateskit.core.ITopMarketsProvider
+import io.horizontalsystems.xrateskit.entities.Coin
+import io.horizontalsystems.xrateskit.entities.CoinType
 import io.horizontalsystems.xrateskit.entities.TopMarket
 import io.horizontalsystems.xrateskit.entities.TopMarketCoin
 import io.reactivex.Single
@@ -35,7 +37,7 @@ class CoinMarketCapProvider(
                 emitter.onError(ex)
             }
         }.flatMap { topMarketCoins ->
-            marketInfoProvider.getMarketInfo(topMarketCoins.map { it.code }, currency)
+            marketInfoProvider.getMarketInfo(topMarketCoins.map { Coin(it.code, it.name, it.code) }, currency)
                     .map { marketInfos ->
                         topMarketCoins.mapNotNull { coin ->
                             marketInfos.firstOrNull { it.coin == coin.code }?.let { marketInfo ->

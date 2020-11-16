@@ -1,5 +1,6 @@
 package io.horizontalsystems.xrateskit.marketinfo
 
+import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.MarketInfo
 import io.horizontalsystems.xrateskit.entities.MarketInfoKey
 import io.reactivex.Observable
@@ -11,14 +12,14 @@ class MarketInfoSyncManager(
         private val schedulerFactory: MarketInfoSchedulerFactory)
     : MarketInfoManager.Listener {
 
-    private var coins: List<String> = listOf()
+    private var coins: List<Coin> = listOf()
     private val subjects = ConcurrentHashMap<MarketInfoKey, PublishSubject<MarketInfo>>()
     private val currencySubjects = ConcurrentHashMap<String, PublishSubject<Map<String, MarketInfo>>>()
 
     private var scheduler: MarketInfoScheduler? = null
 
-    fun set(coinCodes: List<String>) {
-        coins = coinCodes
+    fun set(coins: List<Coin>) {
+        this.coins = coins
         updateScheduler()
     }
 

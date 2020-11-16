@@ -14,22 +14,27 @@ class CryptoCompareProvider(
         private val baseUrl: String,
         private val topMarketsCount: Int,
         private val indicatorPointCount: Int)
-    : IMarketInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, ITopMarketsProvider {
+    : IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, ITopMarketsProvider, IFiatXRatesProvider {
 
     private val logger = Logger.getLogger("CryptoCompareProvider")
 
     // Market Info
 
-    override fun getMarketInfo(coins: List<String>, currency: String): Single<List<MarketInfoEntity>> {
+    fun getMarketInfo(coins: List<Coin>, currency: String): Single<List<MarketInfoEntity>> {
+
+        if(coins.isEmpty())
+            return Single.just(Collections.emptyList())
+
         return Single.create { emitter ->
             try {
-                val codes = coins.joinToString(",")
+                val coinCodeList = coins.map { coin -> coin.code }
+                val codes = coinCodeList.joinToString(",")
 
                 val json = apiManager.getJson("$baseUrl/data/pricemultifull?fsyms=${codes}&tsyms=${currency}")
                 val data = json["RAW"].asObject()
                 val list = mutableListOf<MarketInfoEntity>()
 
-                for (coin in coins) {
+                for (coin in coinCodeList) {
                     try {
                         val dataCoin = data.get(coin).asObject()
                         val dataFiat = dataCoin.get(currency).asObject()
@@ -48,6 +53,7 @@ class CryptoCompareProvider(
                 }
 
                 emitter.onSuccess(list)
+
             } catch (e: Exception) {
                 logger.severe(e.message)
                 emitter.onError(e)
@@ -223,4 +229,10 @@ class CryptoCompareProvider(
         }
     }
 
+    override fun getLatestFiatXRates(sourceCurrency: String, targetCurrency: String): Double {
+        val response = apiManager.getJson("$baseUrl/data/price?fsym=${sourceCurrency}" +
+                                                  "&tsyms=${targetCurrency}")
+
+        return response.asObject()[targetCurrency].asDouble()
+    }
 }
