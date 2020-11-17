@@ -57,6 +57,7 @@ class UniswapGraphProvider(
             val list = mutableListOf<MarketInfoEntity>()
             var fiatRate = 1.0
 
+            logger.info("Getting XRates from Uniswap for Coins:${coins}")
             val jsonLatestXRates = apiManager.getJson(
                 GRAPH_NODE_URL,
                 GraphQueryBuilder.buildLatestXRatesQuery(coins)

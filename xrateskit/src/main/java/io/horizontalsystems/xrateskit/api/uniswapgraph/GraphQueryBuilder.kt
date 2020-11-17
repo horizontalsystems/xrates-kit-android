@@ -31,11 +31,11 @@ class GraphQueryBuilder {
                     { symbol,
                       derivedETH,
                     }
-                    """
+                    """.trimIndent()
         }
 
         private fun buildBundleQuery(): String {
-            return "bundle( id:1 ) { ethPriceUSD: ethPrice }"
+            return "bundle( id:1 ) { ethPriceUSD: ethPrice }".trimIndent()
         }
 
         private fun buildTokenDayDatasQuery(coins: List<Coin>, timeStamp: Long): String {
@@ -52,7 +52,7 @@ class GraphQueryBuilder {
                         { date,
                           priceUSD
                         }
-                        """
+                        """.trimIndent()
             }
             return query
         }

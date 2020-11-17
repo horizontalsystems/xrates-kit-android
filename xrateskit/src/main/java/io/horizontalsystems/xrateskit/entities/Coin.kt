@@ -1,6 +1,6 @@
 package io.horizontalsystems.xrateskit.entities
 
-class Coin(
+data class Coin(
     val coinId: String,
     val code: String,
     val title: String = "",
