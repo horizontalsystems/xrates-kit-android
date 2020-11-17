@@ -37,48 +37,48 @@ class XRatesKit(
         marketInfoSyncManager.set(coins)
     }
 
-    fun set(currency: String) {
-        marketInfoSyncManager.set(currency)
+    fun set(currencyCode: String) {
+        marketInfoSyncManager.set(currencyCode)
     }
 
     fun refresh() {
         marketInfoSyncManager.refresh()
     }
 
-    fun getMarketInfo(coin: String, currency: String): MarketInfo? {
-        return marketInfoManager.getMarketInfo(coin, currency)
+    fun getMarketInfo(coinCode: String, currencyCode: String): MarketInfo? {
+        return marketInfoManager.getMarketInfo(coinCode, currencyCode)
     }
 
-    fun marketInfoObservable(coin: String, currency: String): Observable<MarketInfo> {
-        return marketInfoSyncManager.marketInfoObservable(MarketInfoKey(coin, currency))
+    fun marketInfoObservable(coinCode: String, currencyCode: String): Observable<MarketInfo> {
+        return marketInfoSyncManager.marketInfoObservable(MarketInfoKey(coinCode, currencyCode))
     }
 
-    fun marketInfoMapObservable(currency: String): Observable<Map<String, MarketInfo>> {
-        return marketInfoSyncManager.marketInfoMapObservable(currency)
+    fun marketInfoMapObservable(currencyCode: String): Observable<Map<String, MarketInfo>> {
+        return marketInfoSyncManager.marketInfoMapObservable(currencyCode)
     }
 
-    fun getChartInfo(coin: String, currency: String, chartType: ChartType): ChartInfo? {
-        return chartInfoManager.getChartInfo(ChartInfoKey(coin, currency, chartType))
+    fun getChartInfo(coinCode: String, currencyCode: String, chartType: ChartType): ChartInfo? {
+        return chartInfoManager.getChartInfo(ChartInfoKey(coinCode, currencyCode, chartType))
     }
 
-    fun chartInfoObservable(coin: String, currency: String, chartType: ChartType): Observable<ChartInfo> {
-        return chartInfoSyncManager.chartInfoObservable(ChartInfoKey(coin, currency, chartType))
+    fun chartInfoObservable(coinCode: String, currencyCode: String, chartType: ChartType): Observable<ChartInfo> {
+        return chartInfoSyncManager.chartInfoObservable(ChartInfoKey(coinCode, currencyCode, chartType))
     }
 
-    fun historicalRate(coin: String, currency: String, timestamp: Long): BigDecimal? {
-        return historicalRateManager.getHistoricalRate(coin, currency, timestamp)
+    fun historicalRate(coinCode: String, currencyCode: String, timestamp: Long): BigDecimal? {
+        return historicalRateManager.getHistoricalRate(coinCode, currencyCode, timestamp)
     }
 
-    fun historicalRateFromApi(coin: String, currency: String, timestamp: Long): Single<BigDecimal> {
-        return historicalRateManager.getHistoricalRateFromApi(coin, currency, timestamp)
+    fun historicalRateFromApi(coinCode: String, currencyCode: String, timestamp: Long): Single<BigDecimal> {
+        return historicalRateManager.getHistoricalRateFromApi(coinCode, currencyCode, timestamp)
     }
 
     fun cryptoNews(coinCode: String): Single<List<CryptoNews>> {
         return cryptoNewsManager.getNews(coinCode)
     }
 
-    fun getTopMarkets(currency: String): Single<List<TopMarket>> {
-        return topMarketsManager.getTopMarkets(currency)
+    fun getTopMarkets(currencyCode: String): Single<List<TopMarket>> {
+        return topMarketsManager.getTopMarkets(currencyCode)
     }
 
     companion object {
