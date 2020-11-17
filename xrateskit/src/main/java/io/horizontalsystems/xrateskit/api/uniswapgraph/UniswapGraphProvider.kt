@@ -119,8 +119,9 @@ class UniswapGraphProvider(
                     continue
                 }
 
-                return list
             }
+            return list
+
         } catch (e: java.lang.Exception){
             logger.severe("Error collecting XRates for ETH/Erc20 tokens: ${e.message}")
         }
