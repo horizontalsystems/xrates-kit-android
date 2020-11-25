@@ -12,6 +12,7 @@ class CryptoCompareProvider(
         private val factory: Factory,
         private val apiManager: ApiManager,
         private val baseUrl: String,
+        private val apiKey: String,
         private val topMarketsCount: Int,
         private val indicatorPointCount: Int)
     : IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, ITopMarketsProvider, IFiatXRatesProvider {
@@ -30,7 +31,7 @@ class CryptoCompareProvider(
                 val coinCodeList = coins.map { coin -> coin.code }
                 val codes = coinCodeList.joinToString(",")
 
-                val json = apiManager.getJson("$baseUrl/data/pricemultifull?fsyms=${codes}&tsyms=${currency}")
+                val json = apiManager.getJson("$baseUrl/data/pricemultifull?api_key=${apiKey}&fsyms=${codes}&tsyms=${currency}")
                 val data = json["RAW"].asObject()
                 val list = mutableListOf<MarketInfoEntity>()
 
@@ -83,14 +84,14 @@ class CryptoCompareProvider(
     }
 
     private fun getByMinute(coin: String, currency: String, timestamp: Long): HistoricalRate {
-        val response = apiManager.getJson("$baseUrl/data/v2/histominute?fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
+        val response = apiManager.getJson("$baseUrl/data/v2/histominute?api_key=${apiKey}&fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
         val value = parseValue(response)
 
         return factory.createHistoricalRate(coin, currency, value, timestamp)
     }
 
     private fun getByHour(coin: String, currency: String, timestamp: Long): HistoricalRate {
-        val response = apiManager.getJson("$baseUrl/data/v2/histohour?fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
+        val response = apiManager.getJson("$baseUrl/data/v2/histohour?api_key=${apiKey}&fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
         val value = parseValue(response)
 
         return factory.createHistoricalRate(coin, currency, value, timestamp)
@@ -123,7 +124,7 @@ class CryptoCompareProvider(
         val currency = chartPointKey.currency
         val chartType = chartPointKey.chartType
 
-        var baseUrl = "$baseUrl/data/v2/${chartType.resource}?fsym=$coin&tsym=$currency&aggregate=${chartType.interval}"
+        var baseUrl = "$baseUrl/data/v2/${chartType.resource}?api_key=${apiKey}&fsym=$coin&tsym=$currency&aggregate=${chartType.interval}"
         if (toTimestamp != null) {
             baseUrl += "&toTs=${toTimestamp}"
         }
@@ -163,7 +164,7 @@ class CryptoCompareProvider(
     override fun getNews(categories: String): Single<List<CryptoNews>> {
         return Single.create { emitter ->
             try {
-                val json = apiManager.getJson("$baseUrl/data/v2/news/?categories=${categories}&excludeCategories=Sponsored")
+                val json = apiManager.getJson("$baseUrl/data/v2/news/?api_key=${apiKey}&categories=${categories}&excludeCategories=Sponsored")
                 val data = json["Data"].asArray()
                 val list = mutableListOf<CryptoNews>()
 
@@ -195,7 +196,7 @@ class CryptoCompareProvider(
     override fun getTopMarkets(currency: String): Single<List<TopMarket>> {
         return Single.create { emitter ->
             try {
-                val json = apiManager.getJson("$baseUrl/data/top/mktcapfull?limit=$topMarketsCount&tsym=${currency}")
+                val json = apiManager.getJson("$baseUrl/data/top/mktcapfull?api_key=${apiKey}&limit=$topMarketsCount&tsym=${currency}")
                 val data = json["Data"].asArray()
                 val list = mutableListOf<TopMarket>()
 
@@ -230,7 +231,7 @@ class CryptoCompareProvider(
     }
 
     override fun getLatestFiatXRates(sourceCurrency: String, targetCurrency: String): Double {
-        val response = apiManager.getJson("$baseUrl/data/price?fsym=${sourceCurrency}" +
+        val response = apiManager.getJson("$baseUrl/data/price?api_key=${apiKey}&fsym=${sourceCurrency}" +
                                                   "&tsyms=${targetCurrency}")
 
         return response.asObject()[targetCurrency].asDouble()
