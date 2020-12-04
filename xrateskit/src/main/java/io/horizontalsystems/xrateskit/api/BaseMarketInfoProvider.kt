@@ -8,7 +8,7 @@ import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
-class MarketInfoBaseProvider(
+class BaseMarketInfoProvider(
     private val cryptoCompareProvider: CryptoCompareProvider,
     private val uniswapGraphProvider: UniswapGraphProvider
 ) : IMarketInfoProvider {
