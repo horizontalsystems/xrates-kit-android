@@ -4,7 +4,7 @@ import android.content.Context
 import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.api.CoinMarketCapProvider
 import io.horizontalsystems.xrateskit.api.CryptoCompareProvider
-import io.horizontalsystems.xrateskit.api.MarketInfoBaseProvider
+import io.horizontalsystems.xrateskit.api.BaseMarketInfoProvider
 import io.horizontalsystems.xrateskit.api.uniswapgraph.UniswapGraphProvider
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoManager
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSchedulerFactory
@@ -82,14 +82,14 @@ class XRatesKit(
     }
 
     companion object {
-        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, topMarketsCount: Int = 100, indicatorPointCount: Int = 50, cryptoCompareApiKey: String = "", coinMarketCapApiKey: String = ""): XRatesKit {
+        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, topMarketsCount: Int = 100, indicatorPointCount: Int = 50, cryptoCompareApiKey: String = "", coinMarketCapApiKey: String = "", uniswapGraphUrl: String): XRatesKit {
             val factory = Factory(rateExpirationInterval)
             val storage = Storage(Database.create(context))
 
             val apiManager = ApiManager()
             val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, "https://min-api.cryptocompare.com", cryptoCompareApiKey, topMarketsCount, indicatorPointCount)
-            val uniswapGraphProvider = UniswapGraphProvider(factory, apiManager, cryptoCompareProvider)
-            val marketInfoProvider = MarketInfoBaseProvider(cryptoCompareProvider, uniswapGraphProvider)
+            val uniswapGraphProvider = UniswapGraphProvider(factory, apiManager, uniswapGraphUrl, cryptoCompareProvider)
+            val marketInfoProvider = BaseMarketInfoProvider(cryptoCompareProvider, uniswapGraphProvider)
 
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
