@@ -2,7 +2,6 @@ package io.horizontalsystems.xrateskit.entities
 
 
 sealed class CoinType {
-    object Undefined : CoinType()
     object Bitcoin : CoinType()
     object Litecoin : CoinType()
     object BitcoinCash : CoinType()
