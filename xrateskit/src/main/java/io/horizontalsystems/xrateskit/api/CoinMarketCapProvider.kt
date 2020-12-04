@@ -3,10 +3,7 @@ package io.horizontalsystems.xrateskit.api
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IMarketInfoProvider
 import io.horizontalsystems.xrateskit.core.ITopMarketsProvider
-import io.horizontalsystems.xrateskit.entities.Coin
-import io.horizontalsystems.xrateskit.entities.CoinType
-import io.horizontalsystems.xrateskit.entities.TopMarket
-import io.horizontalsystems.xrateskit.entities.TopMarketCoin
+import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 import java.lang.Exception
 import java.util.logging.Logger
@@ -23,29 +20,25 @@ class CoinMarketCapProvider(
     private val logger = Logger.getLogger("CoinMarketCapProvider")
 
     override fun getTopMarkets(currency: String): Single<List<TopMarket>> {
-        return Single.create<List<TopMarketCoin>> { emitter ->
+        return Single.create<CoinMarketCapTopMarketsResponse> { emitter ->
             try {
                 val json = apiManager.getJson("$baseUrl/listings/latest?limit=$topMarketsCount", mapOf("X-CMC_PRO_API_KEY" to apiKey))
-                val data = json["data"].asArray()
-                val topMarketCoins = data.map {
-                    val coinData = it.asObject()
-                    TopMarketCoin(coinData["symbol"].asString(), coinData["name"].asString())
-                }
-                emitter.onSuccess(topMarketCoins)
+
+                emitter.onSuccess(CoinMarketCapTopMarketsResponse.parseData(json))
             } catch (ex: Exception) {
-                logger.severe(ex.message)
                 emitter.onError(ex)
             }
-        }.flatMap { topMarketCoins ->
-            marketInfoProvider.getMarketInfo(topMarketCoins.map { Coin(it.code, it.name, it.code) }, currency)
-                    .map { marketInfos ->
-                        topMarketCoins.mapNotNull { coin ->
-                            marketInfos.firstOrNull { it.coin == coin.code }?.let { marketInfo ->
-                                factory.createTopMarket(coin, marketInfo)
-                            }
+        }.flatMap { response ->
+            marketInfoProvider.getMarketInfo(response.values, currency)
+                .map { marketInfos ->
+                    response.values.mapNotNull { coin ->
+                        marketInfos.firstOrNull {
+                            it.coin == coin.code
+                        }?.let { marketInfo ->
+                            factory.createTopMarket(TopMarketCoin(coin.code, coin.title) , marketInfo)
                         }
                     }
+                }
         }
     }
-
 }
