@@ -9,50 +9,33 @@ class GraphQueryBuilder {
 
     companion object {
 
-        fun buildLatestXRatesQuery(coins: List<Coin>): String {
-            return buildQuery(buildTokensQuery(coins))
-        }
-
         fun buildETHPriceQuery(): String {
             return buildQuery(buildBundleQuery())
         }
 
-        fun buildHistoricalXRatesQuery(coins: List<Coin>, timeStamp: Long ): String {
-            return buildQuery(buildTokenDayDatasQuery(coins, timeStamp))
-        }
-
-        private fun buildTokensQuery(coins: List<Coin>): String {
-
-            val addresses = coins.joinToString { coin -> "\"${ (coin.type as CoinType.Erc20).address }\"" }
-                .toLowerCase(Locale.getDefault())
-            return """
-                    tokens( 
-                    where : {id_in: [ $addresses ]})
-                    { symbol,
-                      derivedETH,
-                    }
-                    """.trimIndent()
+        fun buildHistoricalXRatesQuery(tokenAddresses: List<String>, timeStamp: Long ): String {
+            return buildQuery(buildTokenDayDatasQuery(tokenAddresses, timeStamp))
         }
 
         private fun buildBundleQuery(): String {
             return "bundle( id:1 ) { ethPriceUSD: ethPrice }".trimIndent()
         }
 
-        private fun buildTokenDayDatasQuery(coins: List<Coin>, timeStamp: Long): String {
+        private fun buildTokenDayDatasQuery(tokenAddresses: List<String>, timeStamp: Long): String {
 
             var query = ""
-            coins.forEach { coin ->
-                    query += """${coin.coinId}:tokenDayDatas(
+            tokenAddresses.forEachIndexed { index, address ->
+                    query += """o${index}:tokenDayDatas(
                         first:1,
                         orderBy:date,
                         orderDirection:desc,
                         where :{  
                           date_lte:${timeStamp},
-                          token: "${(coin.type as CoinType.Erc20).address.toLowerCase(Locale.getDefault())}"})
-                        { date,
-                          priceUSD
-                        }
-                        """.trimIndent()
+                          token: "${address}"})
+                          { 
+                             token { symbol, derivedETH },
+                             priceUSD
+                          }""".trimIndent()
             }
             return query
         }
