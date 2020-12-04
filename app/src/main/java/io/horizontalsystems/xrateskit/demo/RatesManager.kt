@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 class RatesManager(context: Context, currency: String) {
-    private val kit = XRatesKit.create(context, currency, 60 * 10)
+    private val kit = XRatesKit.create(context, currency, 60 * 10, uniswapGraphUrl = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2")
 
     fun set(coins: List<Coin>) {
         kit.set(coins)
