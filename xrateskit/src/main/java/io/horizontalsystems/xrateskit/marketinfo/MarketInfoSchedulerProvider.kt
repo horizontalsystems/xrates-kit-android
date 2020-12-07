@@ -29,6 +29,13 @@ class MarketInfoSchedulerProvider(
     }
 
     private fun update(list: List<MarketInfoEntity>) {
+
+        list.forEach { marketInfoEntity ->
+            coins.find { it.code.toUpperCase().contentEquals(marketInfoEntity.coin.toUpperCase()) }?.let {
+                marketInfoEntity.coin = it.code
+            }
+        }
+
         coins = coins.filter { coin ->
             list.any { it.coin.contentEquals(coin.code) }
         }

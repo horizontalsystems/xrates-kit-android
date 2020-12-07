@@ -5,7 +5,7 @@ import java.math.BigDecimal
 
 @Entity(primaryKeys = ["coin", "currency"])
 class MarketInfoEntity(
-        val coin: String,
+        var coin: String,
         val currency: String,
         val rate: BigDecimal,
         val rateOpenDay: BigDecimal,
