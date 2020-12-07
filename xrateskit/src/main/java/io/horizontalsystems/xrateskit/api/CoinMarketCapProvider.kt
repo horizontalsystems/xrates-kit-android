@@ -33,7 +33,7 @@ class CoinMarketCapProvider(
                 .map { marketInfos ->
                     response.values.mapNotNull { coin ->
                         marketInfos.firstOrNull {
-                            it.coin == coin.code
+                            it.coin.toUpperCase() == coin.code.toUpperCase()
                         }?.let { marketInfo ->
                             factory.createTopMarket(TopMarketCoin(coin.code, coin.title) , marketInfo)
                         }
