@@ -30,7 +30,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                                Coin("ELF", "Elf", CoinType.Erc20("0xbf2179859fc6D5BEE9Bf9158632Dc51678a4100e")),
                                Coin("GNT", "Gnt", CoinType.Erc20("0xa74476443119A942dE498590Fe1f2454d7D4aC0d")),
                                Coin("HOT", "Hot", CoinType.Erc20("0x6c6EE5e31d828De241282B9606C8e98Ea48526E2")),
+                               Coin("ADAI", "Aave DAI", CoinType.Erc20("0xfC1E690f61EFd961294b3e1Ce3313fBD8aa4f85d")),
                                Coin("BNT", "Bnt", CoinType.Erc20("0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C")))
+
 
     private val coinsAdapter = RatesAdapter()
 
