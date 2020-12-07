@@ -2,6 +2,7 @@ package io.horizontalsystems.xrateskit.entities
 
 import com.eclipsesource.json.JsonObject
 import java.text.ParseException
+import java.util.*
 
 data class UniswapGraphXRatesResponse(
     var coinCode: String,
@@ -20,7 +21,7 @@ data class UniswapGraphXRatesResponse(
 
                         val openingRate = it.asObject().get("priceUSD").asString().toDouble()
                         val tokenData = it.asObject().get("token").asObject()
-                        val coinCode = tokenData.get("symbol").asString()
+                        val coinCode = tokenData.get("symbol").asString().toUpperCase(Locale.getDefault())
                         val latestRate = tokenData.get("derivedETH").asString().toDouble()
 
                         rates.add(UniswapGraphXRatesResponse(coinCode, latestRate, openingRate))
