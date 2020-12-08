@@ -55,32 +55,34 @@ class UniswapGraphProvider(
                 val list = mutableListOf<MarketInfoEntity>()
                 val ethPrice = ethXRateResponse.rateInUSD * ethFiatXRate
 
-                xRatesResponse.forEach{ xRateResponse ->
+                xRatesResponse.forEach { xRateResponse ->
 
-                    val coinCode = xRateResponse.coinCode.let {
-                        if(it.contentEquals(WETH_TOKEN_CODE))
-                            BASE_COIN_CODE
-                        else
-                            it
-                    }
-                    val coinLatestPrice = xRateResponse.latestRateInETH * ethPrice
-                    val coinOpenDayPrice = xRateResponse.dayOpeningRateInUSD * ethFiatXRate
-                    val diff = if (coinOpenDayPrice >0){
-                        ((coinLatestPrice - coinOpenDayPrice) * 100) / coinOpenDayPrice
-                    } else 0.0
+                    if (xRateResponse.latestRateInETH > 0) {
+                        val coinCode = xRateResponse.coinCode.let {
+                            if (it.contentEquals(WETH_TOKEN_CODE))
+                                BASE_COIN_CODE
+                            else
+                                it
+                        }
+                        val coinLatestPrice = xRateResponse.latestRateInETH * ethPrice
+                        val coinOpenDayPrice = xRateResponse.dayOpeningRateInUSD * ethFiatXRate
+                        val diff = if (coinOpenDayPrice > 0) {
+                            ((coinLatestPrice - coinOpenDayPrice) * 100) / coinOpenDayPrice
+                        } else 0.0
 
-                    list.add(
-                        factory.createMarketInfoEntity(
-                            coinCode,
-                            fiatCurrency,
-                            coinLatestPrice.toBigDecimal(),
-                            coinOpenDayPrice.toBigDecimal(),
-                            diff.toBigDecimal(),
-                            0.0,
-                            0.0,
-                            0.0
+                        list.add(
+                            factory.createMarketInfoEntity(
+                                coinCode,
+                                fiatCurrency,
+                                coinLatestPrice.toBigDecimal(),
+                                coinOpenDayPrice.toBigDecimal(),
+                                diff.toBigDecimal(),
+                                0.0,
+                                0.0,
+                                0.0
+                            )
                         )
-                    )
+                    }
                 }
 
                 list
