@@ -13,7 +13,6 @@ class CryptoCompareProvider(
         private val apiManager: ApiManager,
         private val baseUrl: String,
         private val apiKey: String,
-        private val topMarketsCount: Int,
         private val indicatorPointCount: Int)
     : IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, ITopMarketsProvider, IFiatXRatesProvider {
 
@@ -193,10 +192,10 @@ class CryptoCompareProvider(
         }
     }
 
-    override fun getTopMarkets(currency: String): Single<List<TopMarket>> {
+    override fun getTopMarkets(itemsCount: Int, currency: String): Single<List<TopMarket>> {
         return Single.create { emitter ->
             try {
-                val json = apiManager.getJson("$baseUrl/data/top/mktcapfull?api_key=${apiKey}&limit=$topMarketsCount&tsym=${currency}")
+                val json = apiManager.getJson("$baseUrl/data/top/mktcapfull?api_key=${apiKey}&limit=$itemsCount&tsym=${currency}")
                 val data = json["Data"].asArray()
                 val list = mutableListOf<TopMarket>()
 
