@@ -44,5 +44,9 @@ interface ICryptoNewsProvider {
 }
 
 interface ITopMarketsProvider {
-    fun getTopMarkets(currency: String): Single<List<TopMarket>>
+    fun getTopMarkets(itemsCount: Int, currency: String): Single<List<TopMarket>>
+}
+
+interface IGlobalMarketInfoProvider {
+    fun getGlobalMarketInfo(): Single<GlobalMarketInfo>
 }
