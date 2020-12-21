@@ -12,17 +12,16 @@ class CoinMarketCapProvider(
         private val factory: Factory,
         private val apiManager: ApiManager,
         private val baseUrl: String,
-        private val topMarketsCount: Int,
         private val apiKey: String,
         private val marketInfoProvider: IMarketInfoProvider
 ) : ITopMarketsProvider {
 
     private val logger = Logger.getLogger("CoinMarketCapProvider")
 
-    override fun getTopMarkets(currency: String): Single<List<TopMarket>> {
+    override fun getTopMarkets(itemsCount: Int, currency: String): Single<List<TopMarket>> {
         return Single.create<CoinMarketCapTopMarketsResponse> { emitter ->
             try {
-                val json = apiManager.getJson("$baseUrl/listings/latest?limit=$topMarketsCount", mapOf("X-CMC_PRO_API_KEY" to apiKey))
+                val json = apiManager.getJson("$baseUrl/listings/latest?limit=$itemsCount", mapOf("X-CMC_PRO_API_KEY" to apiKey))
 
                 emitter.onSuccess(CoinMarketCapTopMarketsResponse.parseData(json))
             } catch (ex: Exception) {

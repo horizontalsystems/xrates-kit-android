@@ -45,7 +45,8 @@ class ApiManager {
         return getJsonValue(uri, requestProperties).asObject()
     }
 
-    private fun getJsonValue(uri: String, requestProperties: Map<String, String> = mapOf()): JsonValue {
+    @Throws
+    fun getJsonValue(uri: String, requestProperties: Map<String, String> = mapOf()): JsonValue {
         logger.info("Fetching $uri")
 
         return URL(uri)

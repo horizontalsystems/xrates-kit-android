@@ -1,10 +1,7 @@
 package io.horizontalsystems.xrateskit
 
 import android.content.Context
-import io.horizontalsystems.xrateskit.api.ApiManager
-import io.horizontalsystems.xrateskit.api.CoinMarketCapProvider
-import io.horizontalsystems.xrateskit.api.CryptoCompareProvider
-import io.horizontalsystems.xrateskit.api.BaseMarketInfoProvider
+import io.horizontalsystems.xrateskit.api.*
 import io.horizontalsystems.xrateskit.api.uniswapgraph.UniswapGraphProvider
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoManager
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSchedulerFactory
@@ -19,6 +16,7 @@ import io.horizontalsystems.xrateskit.marketinfo.MarketInfoSchedulerFactory
 import io.horizontalsystems.xrateskit.marketinfo.MarketInfoSyncManager
 import io.horizontalsystems.xrateskit.storage.Database
 import io.horizontalsystems.xrateskit.storage.Storage
+import io.horizontalsystems.xrateskit.toplist.GlobalMarketInfoManager
 import io.horizontalsystems.xrateskit.toplist.TopMarketsManager
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -31,7 +29,9 @@ class XRatesKit(
         private val chartInfoSyncManager: ChartInfoSyncManager,
         private val historicalRateManager: HistoricalRateManager,
         private val cryptoNewsManager: CryptoNewsManager,
-        private val topMarketsManager: TopMarketsManager) {
+        private val topMarketsManager: TopMarketsManager,
+        private val globalMarketInfoManager: GlobalMarketInfoManager
+) {
 
     fun set(coins: List<Coin>) {
         marketInfoSyncManager.set(coins)
@@ -81,6 +81,10 @@ class XRatesKit(
         return topMarketsManager.getTopMarkets(currencyCode)
     }
 
+    fun getGlobalMarketInfo(): Single<GlobalMarketInfo> {
+        return globalMarketInfoManager.getGlobalMarketInfo()
+    }
+
     companion object {
         fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, topMarketsCount: Int = 100, indicatorPointCount: Int = 50, cryptoCompareApiKey: String = "", coinMarketCapApiKey: String = "", uniswapGraphUrl: String): XRatesKit {
             val factory = Factory(rateExpirationInterval)
@@ -90,6 +94,8 @@ class XRatesKit(
             val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, "https://min-api.cryptocompare.com", cryptoCompareApiKey, topMarketsCount, indicatorPointCount)
             val uniswapGraphProvider = UniswapGraphProvider(factory, apiManager, uniswapGraphUrl, cryptoCompareProvider)
             val marketInfoProvider = BaseMarketInfoProvider(cryptoCompareProvider, uniswapGraphProvider)
+            val globalMarketInfoProvider = CoinPaprikaProvider(apiManager)
+            val globalMarketInfoManager = GlobalMarketInfoManager(globalMarketInfoProvider, factory, storage)
 
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
@@ -107,7 +113,7 @@ class XRatesKit(
             }
 
             val topMarketsProvider: ITopMarketsProvider = if (coinMarketCapApiKey.isNotBlank()) {
-                CoinMarketCapProvider(factory, apiManager, "https://pro-api.coinmarketcap.com/v1/cryptocurrency", topMarketsCount, coinMarketCapApiKey, marketInfoProvider)
+                CoinMarketCapProvider(factory, apiManager, "https://pro-api.coinmarketcap.com/v1/cryptocurrency", coinMarketCapApiKey, marketInfoProvider)
             } else {
                 cryptoCompareProvider
             }
@@ -120,7 +126,8 @@ class XRatesKit(
                     chartInfoSyncManager,
                     historicalRateManager,
                     cryptoNewsManager,
-                    topMarketsManager
+                    topMarketsManager,
+                    globalMarketInfoManager
             )
         }
     }
