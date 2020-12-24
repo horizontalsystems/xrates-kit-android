@@ -4,16 +4,14 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import io.horizontalsystems.xrateskit.entities.ChartPointEntity
-import io.horizontalsystems.xrateskit.entities.HistoricalRate
-import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
-import io.horizontalsystems.xrateskit.entities.TopMarketCoin
+import io.horizontalsystems.xrateskit.entities.*
 
 @androidx.room.Database(version = 4, exportSchema = false, entities = [
     HistoricalRate::class,
     ChartPointEntity::class,
     MarketInfoEntity::class,
-    TopMarketCoin::class
+    TopMarketCoin::class,
+    GlobalMarketInfo::class
 ])
 
 @TypeConverters(DatabaseConverters::class)
@@ -23,6 +21,7 @@ abstract class Database : RoomDatabase() {
     abstract val chartPointDao: ChartStatsDao
     abstract val marketInfoDao: MarketInfoDao
     abstract val topMarketCoinDao: TopMarketCoinDao
+    abstract val globalMarketInfoDao: GlobalMarketInfoDao
 
     companion object {
         fun create(context: Context): Database {
