@@ -51,4 +51,10 @@
         tools:itemCount="5"
         tools:listitem="@layout/view_holder_rate" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:elevation="5dp"
+        android:layout_height="match_parent"
+        android:id="@+id/fragmentContainer" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

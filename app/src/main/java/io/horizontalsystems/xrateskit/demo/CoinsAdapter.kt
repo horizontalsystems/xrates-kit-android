@@ -56,7 +56,7 @@ class RatesAdapter : RecyclerView.Adapter<RatesAdapter.ViewHolderCoin>() {
 
             val text = """
                 Rate: ${info.rate}
-                Diff: ${info.diff}
+                Diff: ${info.rateDiff}
                 Time: ${Date(info.timestamp * 1000)}
                 Volume: ${info.volume}
                 Supply: ${info.supply}

@@ -59,13 +59,13 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
         }
     }
 
-    fun getTopList(currency: String) {
-        ratesManager.topList(currency)
+    fun getTopList(itemsCount: Int, currency: String) {
+        ratesManager.topList(itemsCount, currency)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 it.forEach { topMarket ->
-                    Log.i("CoinsInteractor", "coinCode: ${topMarket.coinCode} coinName: ${topMarket.coinName} price: ${topMarket.marketInfo.rate} dailyDiff: ${topMarket.marketInfo.diff}")
+                    Log.i("CoinsInteractor", "coinCode: ${topMarket.coin.code} coinName: ${topMarket.coin.code} price: ${topMarket.marketInfo.rate} dailyDiff: ${topMarket.marketInfo.rateDiff}")
                 }
             }, {
                 Log.e("CoinsInteractor", "exception", it)

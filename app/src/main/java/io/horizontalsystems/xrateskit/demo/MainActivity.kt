@@ -8,13 +8,16 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import io.horizontalsystems.xrateskit.demo.chartdemo.ChartActivity
+import io.horizontalsystems.xrateskit.demo.topmarkets.TopMarketsFragment
 import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.CoinType
 import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     lateinit var presenter: CoinsPresenter
@@ -62,6 +65,19 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             R.id.action_chart -> {
                 val intent = Intent(this, ChartActivity::class.java)
                 startActivity(intent)
+                true
+            }
+            R.id.action_topMarkets -> {
+
+                val fragment: Fragment = TopMarketsFragment()
+                this.supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.fragmentContainer,
+                        fragment
+                    )
+                    .addToBackStack("TopMarkets")
+                    .commit()
+
                 true
             }
             else -> super.onOptionsItemSelected(item)
