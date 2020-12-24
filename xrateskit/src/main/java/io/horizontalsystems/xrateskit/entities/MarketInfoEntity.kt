@@ -3,15 +3,21 @@ package io.horizontalsystems.xrateskit.entities
 import androidx.room.Entity
 import java.math.BigDecimal
 
-@Entity(primaryKeys = ["coin", "currency"])
+@Entity(primaryKeys = ["coinCode", "currencyCode"])
 class MarketInfoEntity(
-        var coin: String,
-        val currency: String,
+        var coinCode: String,
+        val currencyCode: String,
         val rate: BigDecimal,
         val rateOpenDay: BigDecimal,
-        val diff: BigDecimal,
-        val volume: Double,
-        val marketCap: Double,
-        val supply: Double,
-        val timestamp: Long
+        val rateDiff: BigDecimal,
+        val volume: BigDecimal,
+        val marketCap: BigDecimal,
+        val supply: BigDecimal,
+        val timestamp: Long,
+        val liquidity: BigDecimal = BigDecimal.ZERO,
+        val rateDiff1h: BigDecimal = BigDecimal.ZERO,
+        val rateDiff24h: BigDecimal = BigDecimal.ZERO,
+        val rateDiff7d: BigDecimal = BigDecimal.ZERO,
+        val rateDiff30d: BigDecimal = BigDecimal.ZERO,
+        val rateDiff1y: BigDecimal = BigDecimal.ZERO
 )
