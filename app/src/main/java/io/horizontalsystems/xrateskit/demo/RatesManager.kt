@@ -41,7 +41,12 @@ class RatesManager(context: Context, currency: String) {
         return kit.chartInfoObservable(coin, currency, chartType)
     }
 
-    fun topList(currency: String): Single<List<TopMarket>>{
-        return kit.getTopMarkets(currency)
+    fun topList(itemsCoint: Int, currency: String): Single<List<TopMarket>>{
+        return kit.getTopMarkets(itemsCoint, currency)
     }
+
+    fun globalMarketInfo(currency: String): Single<GlobalMarketInfo>{
+        return kit.getGlobalMarketInfo(currency)
+    }
+
 }

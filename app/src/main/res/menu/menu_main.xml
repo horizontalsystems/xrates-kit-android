@@ -7,4 +7,9 @@
         android:orderInCategory="100"
         android:title="Chart View"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_topMarkets"
+        android:orderInCategory="100"
+        android:title="Top Markets"
+        app:showAsAction="never" />
 </menu>
