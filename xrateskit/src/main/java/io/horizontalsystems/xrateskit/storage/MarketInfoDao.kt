@@ -11,9 +11,9 @@ interface MarketInfoDao {
     @Delete
     fun delete(stats: MarketInfoEntity)
 
-    @Query("SELECT * FROM MarketInfoEntity WHERE coin = :coin AND currency = :currency ORDER BY timestamp")
+    @Query("SELECT * FROM MarketInfoEntity WHERE coinCode = :coin AND currencyCode = :currency ORDER BY timestamp")
     fun getMarketInfo(coin: String, currency: String): MarketInfoEntity?
 
-    @Query("SELECT * FROM MarketInfoEntity WHERE coin IN(:coins) AND currency = :currency ORDER BY timestamp DESC")
+    @Query("SELECT * FROM MarketInfoEntity WHERE coinCode IN(:coins) AND currencyCode = :currency ORDER BY timestamp DESC")
     fun getOldList(coins: List<String>, currency: String): List<MarketInfoEntity>
 }

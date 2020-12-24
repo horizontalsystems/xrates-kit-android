@@ -1,14 +1,20 @@
 package io.horizontalsystems.xrateskit.entities
 
+import androidx.room.Entity
+import java.math.BigDecimal
 
+
+@Entity(primaryKeys = ["currencyCode"])
 data class GlobalMarketInfo(
-    val volume24h: Double,
-    val volume24hPercentChange24h: Double,
-    val marketCap: Double,
-    val marketCapPercentChange24h: Double,
-    var btcDominance: Double,
-    var btcDominancePercentChange24h: Double = 0.0,
-    var defiMarketCap: Double = 0.0,
-    var defiMarketCapPercentChange24h: Double = 0.0,
-    var defiTvl: Double = 0.0
+    val currencyCode: String,
+    val volume24h: BigDecimal,
+    val volume24hDiff24h: BigDecimal,
+    val marketCap: BigDecimal,
+    val marketCapDiff24h: BigDecimal,
+    var btcDominance: BigDecimal = BigDecimal.ZERO,
+    var btcDominanceDiff24h: BigDecimal = BigDecimal.ZERO,
+    var defiMarketCap: BigDecimal = BigDecimal.ZERO,
+    var defiMarketCapDiff24h: BigDecimal = BigDecimal.ZERO,
+    var defiTvl: BigDecimal = BigDecimal.ZERO,
+    var defiTvlDiff24h: BigDecimal = BigDecimal.ZERO
 )
