@@ -11,6 +11,7 @@ class Storage(
     private val chartPointDao = database.chartPointDao
     private val marketInfoDao = database.marketInfoDao
     private val topMarketCoinDao = database.topMarketCoinDao
+    private val globalMarketInfoDao = database.globalMarketInfoDao
 
     // HistoricalRate
 
@@ -50,6 +51,14 @@ class Storage(
         marketInfoDao.insertAll(marketInfoList)
     }
 
+    // GlobalMarketInfo
+    override fun saveGlobalMarketInfo(globalMarketInfo: GlobalMarketInfo) {
+        globalMarketInfoDao.insert(globalMarketInfo)
+    }
+
+    override fun getGlobalMarketInfo(currencyCode: String): GlobalMarketInfo? {
+        return globalMarketInfoDao.getGlobalMarketInfo(currencyCode)
+    }
     // Top markets
 
     override fun getTopMarketCoins(): List<TopMarketCoin> {
@@ -63,12 +72,26 @@ class Storage(
 
     override fun saveTopMarkets(topMarkets: List<TopMarket>) {
         database.runInTransaction {
-            saveTopMarketCoins(topMarkets.map { TopMarketCoin(it.coinCode, it.coinName) })
+            saveTopMarketCoins(topMarkets.map { TopMarketCoin(it.coin.code, it.coin.title) })
 
             marketInfoDao.insertAll(topMarkets.map { topMarket ->
                 val entity: MarketInfoEntity
                 topMarket.marketInfo.apply {
-                    entity = MarketInfoEntity(topMarket.coinCode, currency, rate, rateOpenDay, diff, volume, marketCap, supply, timestamp)
+                    entity = MarketInfoEntity(topMarket.coin.code,
+                                              currencyCode,
+                                              rate,
+                                              rateOpenDay,
+                                              rateDiff,
+                                              volume,
+                                              marketCap,
+                                              supply,
+                                              timestamp,
+                                              liquidity,
+                                              rateDiff1h,
+                                              rateDiff24h,
+                                              rateDiff7d,
+                                              rateDiff30d,
+                                              rateDiff1y)
                 }
                 entity
             })
