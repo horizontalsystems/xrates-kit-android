@@ -1,11 +1,11 @@
-package io.horizontalsystems.xrateskit.api.uniswapgraph
+package io.horizontalsystems.xrateskit.api.graphprovider
 
 import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IFiatXRatesProvider
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
-import io.reactivex.functions.Function3
+import java.math.BigDecimal
 import java.util.*
 import java.util.logging.Logger
 
@@ -49,7 +49,7 @@ class UniswapGraphProvider(
             getEthXRate(),
             getXRates(tokenAddresses, System.currentTimeMillis() / 1000 - ONE_DAY_SECONDS),
             getLatestFiatXRates(fiatCurrency),
-            Function3<UniswapGraphEthXRateResponse, List<UniswapGraphXRatesResponse>,Double, List<MarketInfoEntity>>{
+            {
                     ethXRateResponse, xRatesResponse, ethFiatXRate ->
 
                 val list = mutableListOf<MarketInfoEntity>()
@@ -77,9 +77,9 @@ class UniswapGraphProvider(
                                 coinLatestPrice.toBigDecimal(),
                                 coinOpenDayPrice.toBigDecimal(),
                                 diff.toBigDecimal(),
-                                0.0,
-                                0.0,
-                                0.0
+                                BigDecimal.ZERO,
+                                BigDecimal.ZERO,
+                                BigDecimal.ZERO
                             )
                         )
                     }
