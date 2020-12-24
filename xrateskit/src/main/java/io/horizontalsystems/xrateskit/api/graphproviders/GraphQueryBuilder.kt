@@ -1,9 +1,6 @@
-package io.horizontalsystems.xrateskit.api.uniswapgraph
+package io.horizontalsystems.xrateskit.api.graphprovider
 
 import com.eclipsesource.json.JsonObject
-import io.horizontalsystems.xrateskit.entities.Coin
-import io.horizontalsystems.xrateskit.entities.CoinType
-import java.util.*
 
 class GraphQueryBuilder {
 
