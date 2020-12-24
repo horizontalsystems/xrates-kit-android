@@ -42,11 +42,11 @@ class MarketInfoManager(private val storage: IStorage, private val factory: Fact
         val marketInfoMap = mutableMapOf<String, MarketInfo>()
 
         entities.forEach { entity ->
-            val rateKey = MarketInfoKey(entity.coin, entity.currency)
+            val rateKey = MarketInfoKey(entity.coinCode, entity.currency)
 
             val marketInfo = factory.createMarketInfo(entity)
             listener?.onUpdate(marketInfo, rateKey)
-            marketInfoMap[entity.coin] = marketInfo
+            marketInfoMap[entity.coinCode] = marketInfo
         }
 
         listener?.onUpdate(marketInfoMap, currency)
