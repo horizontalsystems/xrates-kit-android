@@ -1,6 +1,6 @@
 package io.horizontalsystems.xrateskit.api
 
-import io.horizontalsystems.xrateskit.api.uniswapgraph.UniswapGraphProvider
+import io.horizontalsystems.xrateskit.api.graphproviders.UniswapGraphProvider
 import io.horizontalsystems.xrateskit.core.IMarketInfoProvider
 import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.CoinType
@@ -22,8 +22,7 @@ class BaseMarketInfoProvider(
         return Single.zip(
             cryptoCompareProvider.getMarketInfo(baseCoins, currency),
             uniswapGraphProvider.getMarketInfo(ethBasedCoins, currency),
-            BiFunction<List<MarketInfoEntity>,List<MarketInfoEntity>, List<MarketInfoEntity>> {
-                    t1, t2 -> t1 + t2
+            { t1, t2 -> t1 + t2
             })
     }
 }

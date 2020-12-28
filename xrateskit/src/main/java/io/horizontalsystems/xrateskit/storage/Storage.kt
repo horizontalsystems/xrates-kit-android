@@ -87,11 +87,7 @@ class Storage(
                                               supply,
                                               timestamp,
                                               liquidity,
-                                              rateDiff1h,
-                                              rateDiff24h,
-                                              rateDiff7d,
-                                              rateDiff30d,
-                                              rateDiff1y)
+                                              rateDiffPeriod)
                 }
                 entity
             })

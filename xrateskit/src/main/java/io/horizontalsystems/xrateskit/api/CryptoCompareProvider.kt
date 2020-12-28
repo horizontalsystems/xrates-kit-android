@@ -42,9 +42,9 @@ class CryptoCompareProvider(
                         val rate = dataFiat["PRICE"].toString().toBigDecimal()
                         val rateOpenDay = dataFiat["OPENDAY"].toString().toBigDecimal()
                         val diff = dataFiat["CHANGEPCTDAY"].toString().toBigDecimal()
-                        val volume = dataFiat["VOLUME24HOURTO"].asDouble()
-                        val mktcap = dataFiat["MKTCAP"].asDouble()
-                        val supply = dataFiat["SUPPLY"].asDouble()
+                        val volume = dataFiat["VOLUME24HOURTO"].asDouble().toBigDecimal()
+                        val mktcap = dataFiat["MKTCAP"].asDouble().toBigDecimal()
+                        val supply = dataFiat["SUPPLY"].asDouble().toBigDecimal()
 
                         list.add(factory.createMarketInfoEntity(coin, currency, rate, rateOpenDay, diff, volume, mktcap, supply))
                     } catch (e: Exception) {
@@ -192,7 +192,7 @@ class CryptoCompareProvider(
         }
     }
 
-    override fun getTopMarkets(itemsCount: Int, currency: String): Single<List<TopMarket>> {
+    override fun getTopMarketsAsync(itemsCount: Int, currency: String, rateDiffPeriod: TimePeriod): Single<List<TopMarket>> {
         return Single.create { emitter ->
             try {
                 val json = apiManager.getJson("$baseUrl/data/top/mktcapfull?api_key=${apiKey}&limit=$itemsCount&tsym=${currency}")
@@ -210,11 +210,11 @@ class CryptoCompareProvider(
                         val rate = fiatData["PRICE"].toString().toBigDecimal()
                         val rateOpenDay = fiatData["OPENDAY"].toString().toBigDecimal()
                         val diff = fiatData["CHANGEPCT24HOUR"].toString().toBigDecimal()
-                        val volume = fiatData["VOLUME24HOURTO"].asDouble()
-                        val marketCap = fiatData["MKTCAP"].asDouble()
-                        val supply = fiatData["SUPPLY"].asDouble()
+                        val volume = fiatData["VOLUME24HOURTO"].asDouble().toBigDecimal()
+                        val marketCap = fiatData["MKTCAP"].asDouble().toBigDecimal()
+                        val supply = fiatData["SUPPLY"].asDouble().toBigDecimal()
 
-                        list.add(factory.createTopMarket(coinCode, coinName, currency, rate, rateOpenDay, diff, volume, marketCap, supply))
+                        list.add(factory.createTopMarket(Coin(coinCode, coinName), currency, rate, rateOpenDay, diff, volume, marketCap, supply))
                     } catch (ex: Exception) {
                         logger.warning(ex.message)
                         continue
