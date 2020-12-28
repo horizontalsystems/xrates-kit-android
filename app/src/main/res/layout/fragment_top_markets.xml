@@ -7,11 +7,46 @@
     android:background="@color/white">
 
     <Button
-        android:id="@+id/btnRefresh"
+        android:id="@+id/btnLoadGLobalMarkets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Load Market Data"
+        android:layout_marginStart="5dp"
+        android:textSize="12sp"
+        android:text="Global-Markets"
+        app:layout_constraintEnd_toStartOf="@+id/btnLoadMarkets"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnLoadMarkets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:text="Top Markets"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/btnLoadDefiMarkets"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnLoadDefiMarkets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:text="Top Defi"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/btnFavorites"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnFavorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:textSize="12sp"
+        android:text="Favorites"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,9 +54,20 @@
         android:id="@+id/rviewInfo"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnRefresh"
+        app:layout_constraintTop_toBottomOf="@+id/btnLoadMarkets"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rviewInfo2"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLoadMarkets"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

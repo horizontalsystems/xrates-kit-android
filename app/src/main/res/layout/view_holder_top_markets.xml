@@ -7,18 +7,34 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/txtCoinCode"
-        android:layout_width="wrap_content"
+        android:id="@+id/txtIndex"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        tools:text="1" />
+
+    <TextView
+        android:id="@+id/txtCoinCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/txtIndex"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="BTC" />
+
+    <TextView
+        android:id="@+id/txtCoinTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        app:layout_constraintStart_toEndOf="@id/txtIndex"
+        app:layout_constraintTop_toBottomOf="@+id/txtCoinCode"
+        tools:text="Bitcoin" />
 
     <TextView
         android:id="@+id/txtPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
         android:textStyle="bold"
         android:textColor="@color/black_50"
         app:layout_constraintEnd_toEndOf="parent"

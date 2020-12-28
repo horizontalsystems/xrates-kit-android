@@ -1,5 +1,6 @@
 package io.horizontalsystems.xrateskit.demo.topmarkets
 
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,12 +26,26 @@ class TopMarketsFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnRefresh.setOnClickListener {
+        btnLoadMarkets.setOnClickListener {
             viewModel.loadTopMarkets()
-            viewModel.loadGlobalMarketInfo()
+            rviewInfo2.visibility = View.GONE
+            rviewInfo.visibility = View.VISIBLE
         }
 
-        rviewInfo.adapter = ConcatAdapter(globalMarketInfoAdapter, topMarketsAdapter)
+        btnLoadGLobalMarkets.setOnClickListener {
+            viewModel.loadGlobalMarketInfo()
+            rviewInfo.visibility = View.GONE
+            rviewInfo2.visibility = View.VISIBLE
+        }
+        btnLoadDefiMarkets.setOnClickListener {
+            viewModel.loadTopDefiMarkets()
+            rviewInfo2.visibility = View.GONE
+            rviewInfo.visibility = View.VISIBLE
+        }
+
+        rviewInfo.adapter = topMarketsAdapter
+        rviewInfo2.adapter = globalMarketInfoAdapter
+        //ConcatAdapter(globalMarketInfoAdapter, topMarketsAdapter)
 
         observeLiveData()
     }
@@ -45,6 +60,5 @@ class TopMarketsFragment() : Fragment() {
             globalMarketInfoAdapter.items = it
             globalMarketInfoAdapter.notifyDataSetChanged()
         })
-
     }
 }
