@@ -2,7 +2,7 @@ package io.horizontalsystems.xrateskit
 
 import android.content.Context
 import io.horizontalsystems.xrateskit.api.*
-import io.horizontalsystems.xrateskit.api.uniswapgraph.UniswapGraphProvider
+import io.horizontalsystems.xrateskit.api.graphproviders.UniswapGraphProvider
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoManager
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSchedulerFactory
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSyncManager
@@ -76,11 +76,15 @@ class XRatesKit(
         return cryptoNewsManager.getNews(coinCode)
     }
 
-    fun getTopMarkets(itemsCount: Int, currencyCode: String): Single<List<TopMarket>> {
-        return topMarketsManager.getTopMarkets(itemsCount, currencyCode)
+    fun getTopMarketsAsync(itemsCount: Int = 200, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<TopMarket>> {
+        return topMarketsManager.getTopMarkets(itemsCount, currencyCode, fetchDiffPeriod)
     }
 
-    fun getGlobalMarketInfo(currencyCode: String): Single<GlobalMarketInfo> {
+    fun getTopDefiMarketsAsync(itemsCount: Int = 200, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<TopMarket>> {
+        return topMarketsManager.getTopDefiMarkets(itemsCount, currencyCode, fetchDiffPeriod)
+    }
+
+    fun getGlobalMarketInfoAsync(currencyCode: String): Single<GlobalMarketInfo> {
         return globalMarketInfoManager.getGlobalMarketInfo(currencyCode)
     }
 
@@ -112,7 +116,8 @@ class XRatesKit(
             }
 
             val topMarketsProvider = CoinGeckoProvider(factory, apiManager)
-            val topMarketsManager = TopMarketsManager(topMarketsProvider, factory, storage)
+            val topDefiMarketsProvider = uniswapGraphProvider
+            val topMarketsManager = TopMarketsManager(topMarketsProvider,topDefiMarketsProvider, factory, storage)
 
             return XRatesKit(
                     marketInfoManager,

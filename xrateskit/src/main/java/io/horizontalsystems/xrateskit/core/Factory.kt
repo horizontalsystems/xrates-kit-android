@@ -13,8 +13,8 @@ class Factory(private val expirationInterval: Long) {
         return ChartPoint(value, volume, timestamp)
     }
 
-    fun createMarketInfoEntity(coin: String, currency: String, rate: BigDecimal, rateOpen24Hour: BigDecimal, diff: BigDecimal, volume: BigDecimal, marketCap: BigDecimal, supply: BigDecimal): MarketInfoEntity {
-        return MarketInfoEntity(coin, currency, rate, rateOpen24Hour, diff, volume, marketCap, supply, Date().time / 1000)
+    fun createMarketInfoEntity(coin: String, currency: String, rate: BigDecimal, rateOpen24Hour: BigDecimal, rateDiff: BigDecimal, volume: BigDecimal, marketCap: BigDecimal, supply: BigDecimal): MarketInfoEntity {
+        return MarketInfoEntity(coin, currency, rate, rateOpen24Hour, rateDiff, volume, marketCap, supply, Date().time / 1000)
     }
 
     fun createMarketInfo(marketInfoEntity: MarketInfoEntity): MarketInfo {
@@ -33,18 +33,14 @@ class Factory(private val expirationInterval: Long) {
                         currency: String,
                         rate: BigDecimal,
                         rateOpenDay: BigDecimal,
-                        diff: BigDecimal,
+                        rateDiff: BigDecimal,
                         volume: BigDecimal,
                         marketCap: BigDecimal,
                         supply: BigDecimal,
                         liquidity: BigDecimal = BigDecimal.ZERO,
-                        rateDiff1h: BigDecimal = BigDecimal.ZERO,
-                        rateDiff24h: BigDecimal = BigDecimal.ZERO,
-                        rateDiff7d: BigDecimal = BigDecimal.ZERO,
-                        rateDiff30d: BigDecimal = BigDecimal.ZERO,
-                        rateDiff1y: BigDecimal = BigDecimal.ZERO): TopMarket {
-        val marketInfoEntity = MarketInfoEntity(coin.code, currency, rate, rateOpenDay, diff, volume, marketCap, supply, Date().time / 1000,
-                                                liquidity, rateDiff1h, rateDiff24h, rateDiff7d, rateDiff30d, rateDiff1y)
+                        rateDiffPeriod: BigDecimal = BigDecimal.ZERO): TopMarket {
+        val marketInfoEntity = MarketInfoEntity(coin.code, currency, rate, rateOpenDay, rateDiff, volume, marketCap, supply, Date().time / 1000,
+                                                liquidity, rateDiffPeriod)
         val marketInfo = MarketInfo(marketInfoEntity, expirationInterval)
         return TopMarket(coin, marketInfo)
     }

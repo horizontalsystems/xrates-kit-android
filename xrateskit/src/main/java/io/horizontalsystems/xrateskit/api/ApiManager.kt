@@ -20,7 +20,7 @@ class ApiManager {
         conn.requestMethod = "POST"
         return conn
             .apply {
-                connectTimeout = 18000
+                connectTimeout = 30000
                 readTimeout = 60000
 
                 setRequestProperty("Content-Type", "application/json");

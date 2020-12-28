@@ -18,6 +18,10 @@ interface IStorage {
     fun getOldMarketInfo(coins: List<String>, currency: String): List<MarketInfoEntity>
     fun saveMarketInfo(marketInfoList: List<MarketInfoEntity>)
 
+    //  GlobalMarketInfo
+    fun getGlobalMarketInfo(currency: String): GlobalMarketInfo?
+    fun saveGlobalMarketInfo(globalMarketInfo: GlobalMarketInfo)
+
     // Top markets
     fun getTopMarketCoins(): List<TopMarketCoin>
     fun saveTopMarkets(topMarkets: List<TopMarket>)
@@ -44,9 +48,16 @@ interface ICryptoNewsProvider {
 }
 
 interface ITopMarketsProvider {
-    fun getTopMarkets(itemsCount: Int, currency: String): Single<List<TopMarket>>
+    fun getTopMarketsAsync(itemsCount: Int, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<TopMarket>>
+}
+
+interface ITopDefiMarketsProvider: ITopMarketsProvider {
 }
 
 interface IGlobalMarketInfoProvider {
-    fun getGlobalMarketInfo(): Single<GlobalMarketInfo>
+    fun getGlobalMarketInfoAsync(currency: String): Single<GlobalMarketInfo>
+}
+
+interface ICoinInfoProvider {
+    fun getGlobalMarketInfo(currency: String): Single<GlobalMarketInfo>
 }
