@@ -35,7 +35,9 @@ class TopMarketsAdapter: RecyclerView.Adapter<TopMarketsAdapter.ViewHolderTopMar
     inner class ViewHolderTopMarkets(override val containerView: View) : RecyclerView.ViewHolder(containerView),
                                                                          LayoutContainer {
         private val txtCoinCode = containerView.txtCoinCode
+        private val txtCoinTitle = containerView.txtCoinTitle
         private val txtPrice = containerView.txtPrice
+        private val txtIndex = containerView.txtIndex
         private val txtPriceChange = containerView.txtPriceChange
 
         fun bind(item: TopMarket, index: Int) {
@@ -44,11 +46,13 @@ class TopMarketsAdapter: RecyclerView.Adapter<TopMarketsAdapter.ViewHolderTopMar
                                                  Color.TRANSPARENT
             )
             val dec = DecimalFormat("#,###.00")
+            txtIndex.text = "${itemCount - index + 1}"
             txtCoinCode.text = item.coin.code
+            txtCoinTitle.text = item.coin.title
             txtPrice.text = dec.format(item.marketInfo.rate)
-            if(item.marketInfo.rateDiff24h < BigDecimal.ZERO)
+            if(item.marketInfo.rateDiffPeriod < BigDecimal.ZERO)
                     txtPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red_d))
-            txtPriceChange.text = "%.2f".format(item.marketInfo.rateDiff24h)
+            txtPriceChange.text = "%.2f".format(item.marketInfo.rateDiffPeriod)
         }
     }
 }
