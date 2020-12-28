@@ -64,7 +64,8 @@ data class UniswapGraphXRatesResponse(
                 if(!data.get(recordName).asArray().isEmpty){
                     data.get(recordName)?.asArray()?.get(0)?.let { it ->
 
-                        val openingRate = it.asObject().get("priceUSD").asString().toDouble()
+                        val openingRate = if(it.asObject().get("priceUSD").isNull) 0.0
+                                          else it.asObject().get("priceUSD").asString().toDouble()
                         val tokenData = it.asObject().get("token").asObject()
                         val coinCode = tokenData.get("symbol").asString().toUpperCase(Locale.getDefault())
                         val latestRate = tokenData.get("derivedETH").asString().toDouble()
