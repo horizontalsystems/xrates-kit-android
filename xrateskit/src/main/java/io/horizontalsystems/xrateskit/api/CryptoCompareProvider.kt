@@ -192,7 +192,7 @@ class CryptoCompareProvider(
         }
     }
 
-    override fun getTopMarketsAsync(itemsCount: Int, currency: String, rateDiffPeriod: TimePeriod): Single<List<TopMarket>> {
+    override fun getTopMarketsAsync(currency: String, rateDiffPeriod: TimePeriod, itemsCount: Int): Single<List<TopMarket>> {
         return Single.create { emitter ->
             try {
                 val json = apiManager.getJson("$baseUrl/data/top/mktcapfull?api_key=${apiKey}&limit=$itemsCount&tsym=${currency}")

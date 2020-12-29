@@ -42,11 +42,11 @@ class RatesManager(context: Context, currency: String) {
     }
 
     fun topList(itemsCount:Int, currency: String, period: TimePeriod): Single<List<TopMarket>>{
-        return kit.getTopMarketsAsync(itemsCount, currencyCode = currency, period)
+        return kit.getTopMarketsAsync(currency, period, itemsCount)
     }
 
     fun topDefiList(itemsCount:Int, currency: String, period: TimePeriod): Single<List<TopMarket>>{
-        return kit.getTopDefiMarketsAsync(itemsCount, currencyCode = currency, period)
+        return kit.getTopDefiMarketsAsync(currency, period, itemsCount)
     }
 
     fun globalMarketInfo(currency: String): Single<GlobalMarketInfo>{

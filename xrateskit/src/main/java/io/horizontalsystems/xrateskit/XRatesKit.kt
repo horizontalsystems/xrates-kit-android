@@ -76,12 +76,12 @@ class XRatesKit(
         return cryptoNewsManager.getNews(coinCode)
     }
 
-    fun getTopMarketsAsync(itemsCount: Int = 200, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<TopMarket>> {
-        return topMarketsManager.getTopMarkets(itemsCount, currencyCode, fetchDiffPeriod)
+    fun getTopMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24, itemsCount: Int = 200, ): Single<List<TopMarket>> {
+        return topMarketsManager.getTopMarkets(currencyCode, fetchDiffPeriod, itemsCount)
     }
 
-    fun getTopDefiMarketsAsync(itemsCount: Int = 200, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<TopMarket>> {
-        return topMarketsManager.getTopDefiMarkets(itemsCount, currencyCode, fetchDiffPeriod)
+    fun getTopDefiMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24, itemsCount: Int = 200): Single<List<TopMarket>> {
+        return topMarketsManager.getTopDefiMarkets(currencyCode, fetchDiffPeriod, itemsCount)
     }
 
     fun getGlobalMarketInfoAsync(currencyCode: String): Single<GlobalMarketInfo> {

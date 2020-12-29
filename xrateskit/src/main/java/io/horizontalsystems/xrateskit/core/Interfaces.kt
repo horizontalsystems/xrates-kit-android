@@ -48,7 +48,7 @@ interface ICryptoNewsProvider {
 }
 
 interface ITopMarketsProvider {
-    fun getTopMarketsAsync(itemsCount: Int, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<TopMarket>>
+    fun getTopMarketsAsync( currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<TopMarket>>
 }
 
 interface ITopDefiMarketsProvider: ITopMarketsProvider {

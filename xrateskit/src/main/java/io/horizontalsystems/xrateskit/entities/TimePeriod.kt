@@ -7,5 +7,5 @@ enum class TimePeriod(val id: Int, val seconds: Long, val title: String) {
     HOUR_24(3, 86400, "24h"),
     DAY_7(4, 604800,"7d"),
     DAY_30(5, 2592000, "30d"),
-    YEAY_1(6, 31104000,"1y");
+    YEAR_1(6, 31104000, "1y");
 }

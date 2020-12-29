@@ -15,9 +15,9 @@ class TopMarketsManager(
     private val factory: Factory,
     private val storage: Storage
 ) {
-    fun getTopMarkets(itemsCout: Int, currency: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<TopMarket>> {
+    fun getTopMarkets( currency: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24, itemsCout: Int): Single<List<TopMarket>> {
         return topMarketsProvider
-                .getTopMarketsAsync(itemsCout, currency, fetchDiffPeriod)
+                .getTopMarketsAsync( currency, fetchDiffPeriod, itemsCout)
                 .map { topMarkets ->
                     //storage.saveTopMarkets(topMarkets)
                     topMarkets
@@ -34,8 +34,8 @@ class TopMarketsManager(
                 }
     }
 
-    fun getTopDefiMarkets(itemsCout: Int, currency: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<TopMarket>> {
-        return topDefiMarketsProvider.getTopMarketsAsync(itemsCout, currency, fetchDiffPeriod)
+    fun getTopDefiMarkets(currency: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24, itemsCout: Int): Single<List<TopMarket>> {
+        return topDefiMarketsProvider.getTopMarketsAsync(currency, fetchDiffPeriod, itemsCout)
     }
 
 }

@@ -42,7 +42,7 @@ class UniswapGraphProvider(
         }
     }
 
-    override fun getTopMarketsAsync(itemsCount: Int, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<TopMarket>> {
+    override fun getTopMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<TopMarket>> {
 
         val periods = mutableMapOf<TimePeriod, Long>()
         periods[TimePeriod.HOUR_24] = (System.currentTimeMillis()/1000) - fetchDiffPeriod.seconds
