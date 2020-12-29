@@ -22,7 +22,7 @@ class CoinGeckoProvider(
                 try {
                     val json = apiManager.getJsonValue("$BASE_URL/coins/markets?vs_currency=${currencyCode}&price_change_percentage=1h,7d,30d,1y&order=market_cap_desc&per_page=${itemsCount}")
                     val topMarkets = mutableListOf<TopMarket>()
-                    json.asArray()?.forEachIndexed { index, marketData ->
+                    json.asArray()?.forEach {  marketData ->
                         marketData?.asObject()?.let { element ->
                             val coinCode = element.get("symbol").asString()
                             val title = element.get("name").asString()
