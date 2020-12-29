@@ -34,11 +34,10 @@ class GraphQueryBuilder {
         }
 
         private fun buildBlocksQuery(tag: String, timeStamp: Long): String {
+            val timeStampLowRange = timeStamp - 60 // timeStamp minus 1 min
             return """${tag}:blocks(  
                         first: 1, 
-                        orderBy: number, 
-                        orderDirection: desc,
-                        where:{timestamp_lte:"${timeStamp}"}) 
+                        where:{timestamp_lte:${timeStamp},timestamp_gte:${timeStampLowRange}}) 
                         {
                            number
                         }""".trimIndent()
