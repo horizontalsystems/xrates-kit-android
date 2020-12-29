@@ -17,7 +17,7 @@ class CoinGeckoProvider(
         private val logger = Logger.getLogger("CoinGeckoProvider")
         private val BASE_URL = "https://api.coingecko.com/api/v3"
 
-        override fun getTopMarketsAsync(itemsCount: Int, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<TopMarket>> {
+        override fun getTopMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<TopMarket>> {
             return Single.create { emitter ->
                 try {
                     val json = apiManager.getJsonValue("$BASE_URL/coins/markets?vs_currency=${currencyCode}&price_change_percentage=1h,7d,30d,1y&order=market_cap_desc&per_page=${itemsCount}")
@@ -47,7 +47,7 @@ class CoinGeckoProvider(
                                     TimePeriod.HOUR_1 -> "price_change_percentage_1h_in_currency"
                                     TimePeriod.HOUR_24 -> "price_change_percentage_24h"
                                     TimePeriod.DAY_30 -> "price_change_percentage_30d_in_currency"
-                                    TimePeriod.YEAY_1 -> "price_change_percentage_1y_in_currency"
+                                    TimePeriod.YEAR_1 -> "price_change_percentage_1y_in_currency"
                                     else ->  "price_change_percentage_24h"
                                 }
 
