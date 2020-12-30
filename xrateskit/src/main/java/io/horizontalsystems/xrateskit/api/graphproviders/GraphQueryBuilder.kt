@@ -80,6 +80,7 @@ class GraphQueryBuilder {
                 .toLowerCase(Locale.getDefault())
 
             return """tokens(
+                       first:${tokenAddresses.size}, 
                        where:{id_in:[$addresses]}
                        ${blockNumberFilter})
                        {  id,
