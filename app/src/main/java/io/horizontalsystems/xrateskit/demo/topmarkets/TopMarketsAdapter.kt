@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import io.horizontalsystems.xrateskit.demo.R
+import io.horizontalsystems.xrateskit.entities.CoinType
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_holder_top_markets.view.*
 import java.math.BigDecimal
@@ -49,10 +50,10 @@ class TopMarketsAdapter: RecyclerView.Adapter<TopMarketsAdapter.ViewHolderTopMar
             txtIndex.text = "${itemCount - index + 1}"
             txtCoinCode.text = item.coin.code
             txtCoinTitle.text = item.coin.title
-            txtPrice.text = dec.format(item.marketInfo.rate)
+            txtPrice.text = "${dec.format(item.marketInfo.rate)} $"
             if(item.marketInfo.rateDiffPeriod < BigDecimal.ZERO)
                     txtPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red_d))
-            txtPriceChange.text = "%.2f".format(item.marketInfo.rateDiffPeriod)
+            txtPriceChange.text = "% " + "%.2f".format(item.marketInfo.rateDiffPeriod)
         }
     }
 }

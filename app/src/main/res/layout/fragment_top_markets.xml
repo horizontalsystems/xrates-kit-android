@@ -6,6 +6,34 @@
     android:id="@+id/topMarketsFrameLayout"
     android:background="@color/white">
 
+    <TextView
+        android:id="@+id/txtPeriod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="Period : "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spPeriod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/txtPeriod"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_height="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
     <Button
         android:id="@+id/btnLoadGLobalMarkets"
         android:layout_width="wrap_content"
@@ -15,7 +43,7 @@
         android:textSize="12sp"
         android:text="Global-Markets"
         app:layout_constraintEnd_toStartOf="@+id/btnLoadMarkets"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/spPeriod"/>
 
     <Button
         android:id="@+id/btnLoadMarkets"
@@ -26,7 +54,7 @@
         android:text="Top Markets"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/btnLoadDefiMarkets"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/spPeriod"/>
 
     <Button
         android:id="@+id/btnLoadDefiMarkets"
@@ -37,7 +65,7 @@
         android:text="Top Defi"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/btnFavorites"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/spPeriod" />
 
     <Button
         android:id="@+id/btnFavorites"
@@ -48,7 +76,7 @@
         android:textSize="12sp"
         android:text="Favorites"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/spPeriod" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rviewInfo"
@@ -69,5 +97,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLoadMarkets"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
