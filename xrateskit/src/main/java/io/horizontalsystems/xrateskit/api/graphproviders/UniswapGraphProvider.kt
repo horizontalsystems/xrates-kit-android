@@ -75,7 +75,7 @@ class UniswapGraphProvider(
 
                     token24hResponse.tokens.find { it.tokenAddress.contentEquals(latestTokenInfo.tokenAddress) }?.let {
                         rateOpenDay = it.latestRateInETH * token24hResponse.ethPriceInUSD
-                        volume24h = it.volumeInUSD - latestTokenInfo.volumeInUSD
+                        volume24h = latestTokenInfo.volumeInUSD - it.volumeInUSD
 
                         val token24hRate = it.latestRateInETH * token24hResponse.ethPriceInUSD
                         rateDiff24h = ((latestRate - token24hRate) * 100.toBigDecimal())/token24hRate
