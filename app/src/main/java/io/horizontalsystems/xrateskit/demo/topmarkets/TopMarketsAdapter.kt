@@ -50,10 +50,10 @@ class TopMarketsAdapter: RecyclerView.Adapter<TopMarketsAdapter.ViewHolderTopMar
             txtIndex.text = "${itemCount - index + 1}"
             txtCoinCode.text = item.coin.code
             txtCoinTitle.text = item.coin.title
-            txtPrice.text = "${dec.format(item.marketInfo.rate)} $"
+            txtPrice.text = "Volume24h : ${dec.format(item.marketInfo.volume)} - Price:${dec.format(item.marketInfo.rate)} $"
             if(item.marketInfo.rateDiffPeriod < BigDecimal.ZERO)
                     txtPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red_d))
-            txtPriceChange.text = "% " + "%.2f".format(item.marketInfo.rateDiffPeriod)
+            txtPriceChange.text = "PriceChange: % " + "%.2f".format(item.marketInfo.rateDiffPeriod)
         }
     }
 }
