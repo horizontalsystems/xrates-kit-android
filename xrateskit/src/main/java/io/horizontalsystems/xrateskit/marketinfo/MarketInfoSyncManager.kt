@@ -40,7 +40,7 @@ class MarketInfoSyncManager(
     fun marketInfoObservable(key: MarketInfoKey): Observable<MarketInfo> {
         var subject = subjects[key]
         if (subject == null) {
-            subject = PublishSubject.create<MarketInfo>()
+            subject = PublishSubject.create()
             subjects[key] = subject
         }
 
@@ -50,7 +50,7 @@ class MarketInfoSyncManager(
     fun marketInfoMapObservable(currency: String): Observable<Map<String, MarketInfo>> {
         var subject = currencySubjects[currency]
         if (subject == null) {
-            subject = PublishSubject.create<Map<String, MarketInfo>>()
+            subject = PublishSubject.create()
             currencySubjects[currency] = subject
         }
 
