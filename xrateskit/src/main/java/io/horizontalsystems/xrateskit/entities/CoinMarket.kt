@@ -1,6 +1,6 @@
 package io.horizontalsystems.xrateskit.entities
 
-class TopMarket(
+class CoinMarket(
     val coin: Coin,
     val marketInfo: MarketInfo
 )
