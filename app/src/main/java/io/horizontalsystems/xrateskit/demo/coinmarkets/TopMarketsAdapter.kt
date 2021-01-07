@@ -1,7 +1,7 @@
-package io.horizontalsystems.xrateskit.demo.topmarkets
+package io.horizontalsystems.xrateskit.demo.coinmarkets
 
 import android.content.Context
-import io.horizontalsystems.xrateskit.entities.TopMarket
+import io.horizontalsystems.xrateskit.entities.CoinMarket
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import io.horizontalsystems.xrateskit.demo.R
-import io.horizontalsystems.xrateskit.entities.CoinType
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_holder_top_markets.view.*
 import java.math.BigDecimal
@@ -17,7 +16,7 @@ import java.text.DecimalFormat
 
 class TopMarketsAdapter: RecyclerView.Adapter<TopMarketsAdapter.ViewHolderTopMarkets>(){
 
-    var items = listOf<TopMarket>()
+    var items = listOf<CoinMarket>()
     lateinit var context : Context
 
     override fun getItemCount(): Int {
@@ -41,15 +40,15 @@ class TopMarketsAdapter: RecyclerView.Adapter<TopMarketsAdapter.ViewHolderTopMar
         private val txtIndex = containerView.txtIndex
         private val txtPriceChange = containerView.txtPriceChange
 
-        fun bind(item: TopMarket, index: Int) {
+        fun bind(item: CoinMarket, index: Int) {
             containerView.setBackgroundColor(if (index % 2 == 0)
                                                  Color.parseColor("#dddddd") else
                                                  Color.TRANSPARENT
             )
             val dec = DecimalFormat("#,###.00")
             txtIndex.text = "${itemCount - index + 1}"
-            txtCoinCode.text = item.coin.code
-            txtCoinTitle.text = item.coin.title
+            txtCoinCode.text = "${item.coin.code}"
+            txtCoinTitle.text = "${item.coin.title} (${item.coin.type?.let { it::class.simpleName}})"
             txtPrice.text = "Volume24h : ${dec.format(item.marketInfo.volume)} - Price:${dec.format(item.marketInfo.rate)} $"
             if(item.marketInfo.rateDiffPeriod < BigDecimal.ZERO)
                     txtPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red_d))

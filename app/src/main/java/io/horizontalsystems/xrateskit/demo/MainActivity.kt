@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import io.horizontalsystems.xrateskit.demo.chartdemo.ChartActivity
-import io.horizontalsystems.xrateskit.demo.topmarkets.TopMarketsFragment
+import io.horizontalsystems.xrateskit.demo.coinmarkets.TopMarketsFragment
 import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.CoinType
 import io.reactivex.plugins.RxJavaPlugins

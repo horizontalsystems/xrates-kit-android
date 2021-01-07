@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 class RatesManager(context: Context, currency: String) {
-    private val kit = XRatesKit.create(context, currency, 60 * 10, uniswapGraphUrl = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2")
+    private val kit = XRatesKit.create(context, currency, 60 * 10)
 
     fun set(coins: List<Coin>) {
         kit.set(coins)
@@ -41,16 +41,20 @@ class RatesManager(context: Context, currency: String) {
         return kit.chartInfoObservable(coin, currency, chartType)
     }
 
-    fun topList(itemsCount:Int, currency: String, period: TimePeriod): Single<List<TopMarket>>{
-        return kit.getTopMarketsAsync(currency, period, itemsCount)
+    fun topList(itemsCount:Int, currency: String, period: TimePeriod): Single<List<CoinMarket>>{
+        return kit.getTopCoinMarketsAsync(currency, period, itemsCount)
     }
 
-    fun topDefiList(itemsCount:Int, currency: String, period: TimePeriod): Single<List<TopMarket>>{
+    fun favorites(coins: List<Coin>, currency: String, period: TimePeriod): Single<List<CoinMarket>>{
+        return kit.getCoinMarketsAsync(coins, currency, period)
+    }
+
+    fun topDefiList(itemsCount:Int, currency: String, period: TimePeriod): Single<List<CoinMarket>>{
         return kit.getTopDefiMarketsAsync(currency, period, itemsCount)
     }
 
-    fun globalMarketInfo(currency: String): Single<GlobalMarketInfo>{
-        return kit.getGlobalMarketInfoAsync(currency)
+    fun globalMarketInfo(currency: String): Single<GlobalCoinMarket>{
+        return kit.getGlobalCoinMarketsAsync(currency)
     }
 
 }
