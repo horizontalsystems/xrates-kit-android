@@ -88,10 +88,10 @@ class CoinGeckoProvider(
                         when (fetchDiffPeriod) {
                             TimePeriod.DAY_7 -> "price_change_percentage_7d_in_currency"
                             TimePeriod.HOUR_1 -> "price_change_percentage_1h_in_currency"
-                            TimePeriod.HOUR_24 -> "price_change_24h"
+                            TimePeriod.HOUR_24 -> "price_change_percentage_24h"
                             TimePeriod.DAY_30 -> "price_change_percentage_30d_in_currency"
                             TimePeriod.YEAR_1 -> "price_change_percentage_1y_in_currency"
-                            else -> "price_change_24h"
+                            else -> "price_change_percentage_24h"
                         }
 
                 val rateDiffPeriod =
