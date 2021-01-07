@@ -7,11 +7,21 @@ class Storage(
         private val database: Database
 ) : IStorage {
 
+    private val coinDao = database.coinDao
     private val historicalRateDao = database.historicalRateDao
     private val chartPointDao = database.chartPointDao
     private val marketInfoDao = database.marketInfoDao
-    private val topMarketCoinDao = database.topMarketCoinDao
     private val globalMarketInfoDao = database.globalMarketInfoDao
+
+    // Coins
+
+    override fun saveCoins(coins: List<CoinEntity>) {
+        coinDao.insertAll(coins)
+    }
+
+    override fun getCoinsByCodes(coinCodes: List<String>): List<CoinEntity> {
+        return coinDao.getCoinsByCodes(coinCodes)
+    }
 
     // HistoricalRate
 
@@ -19,8 +29,8 @@ class Storage(
         historicalRateDao.insert(rate)
     }
 
-    override fun getHistoricalRate(coin: String, currency: String, timestamp: Long): HistoricalRate? {
-        return historicalRateDao.getRate(coin, currency, timestamp)
+    override fun getHistoricalRate(coinCode: String, currencyCode: String, timestamp: Long): HistoricalRate? {
+        return historicalRateDao.getRate(coinCode, currencyCode, timestamp)
     }
 
     //  ChartPoint
@@ -39,12 +49,12 @@ class Storage(
 
     //  MarketStats
 
-    override fun getMarketInfo(coin: String, currency: String): MarketInfoEntity? {
-        return marketInfoDao.getMarketInfo(coin, currency)
+    override fun getMarketInfo(coinCode: String, currencyCode: String): MarketInfoEntity? {
+        return marketInfoDao.getMarketInfo(coinCode, currencyCode)
     }
 
-    override fun getOldMarketInfo(coins: List<String>, currency: String): List<MarketInfoEntity> {
-        return marketInfoDao.getOldList(coins, currency)
+    override fun getOldMarketInfo(coinCodes: List<String>, currencyCode: String): List<MarketInfoEntity> {
+        return marketInfoDao.getOldList(coinCodes, currencyCode)
     }
 
     override fun saveMarketInfo(marketInfoList: List<MarketInfoEntity>) {
@@ -52,46 +62,12 @@ class Storage(
     }
 
     // GlobalMarketInfo
-    override fun saveGlobalMarketInfo(globalMarketInfo: GlobalMarketInfo) {
-        globalMarketInfoDao.insert(globalMarketInfo)
+    override fun saveGlobalMarketInfo(globalCoinMarket: GlobalCoinMarket) {
+        globalMarketInfoDao.insert(globalCoinMarket)
     }
 
-    override fun getGlobalMarketInfo(currencyCode: String): GlobalMarketInfo? {
+    override fun getGlobalMarketInfo(currencyCode: String): GlobalCoinMarket? {
         return globalMarketInfoDao.getGlobalMarketInfo(currencyCode)
-    }
-    // Top markets
-
-    override fun getTopMarketCoins(): List<TopMarketCoin> {
-        return topMarketCoinDao.getAll()
-    }
-
-    private fun saveTopMarketCoins(list: List<TopMarketCoin>) {
-        topMarketCoinDao.deleteAll()
-        topMarketCoinDao.insertAll(list)
-    }
-
-    override fun saveTopMarkets(topMarkets: List<TopMarket>) {
-        database.runInTransaction {
-            saveTopMarketCoins(topMarkets.map { TopMarketCoin(it.coin.code, it.coin.title) })
-
-            marketInfoDao.insertAll(topMarkets.map { topMarket ->
-                val entity: MarketInfoEntity
-                topMarket.marketInfo.apply {
-                    entity = MarketInfoEntity(topMarket.coin.code,
-                                              currencyCode,
-                                              rate,
-                                              rateOpenDay,
-                                              rateDiff,
-                                              volume,
-                                              marketCap,
-                                              supply,
-                                              timestamp,
-                                              liquidity,
-                                              rateDiffPeriod)
-                }
-                entity
-            })
-        }
     }
 
 }
