@@ -1,17 +1,16 @@
 package io.horizontalsystems.xrateskit.storage
 
 import androidx.room.*
-import io.horizontalsystems.xrateskit.entities.GlobalMarketInfo
-import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
+import io.horizontalsystems.xrateskit.entities.GlobalCoinMarket
 
 @Dao
 interface GlobalMarketInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(globalMarketInfo: GlobalMarketInfo)
+    fun insert(globalCoinMarket: GlobalCoinMarket)
 
     @Delete
-    fun delete(globalMarketInfo: GlobalMarketInfo)
+    fun delete(globalCoinMarket: GlobalCoinMarket)
 
-    @Query("SELECT * FROM GlobalMarketInfo WHERE currencyCode = :currency")
-    fun getGlobalMarketInfo(currency: String): GlobalMarketInfo?
+    @Query("SELECT * FROM GlobalCoinMarket WHERE currencyCode = :currency")
+    fun getGlobalMarketInfo(currency: String): GlobalCoinMarket?
 }
