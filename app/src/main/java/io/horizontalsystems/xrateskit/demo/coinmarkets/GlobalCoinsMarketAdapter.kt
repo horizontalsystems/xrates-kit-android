@@ -1,4 +1,4 @@
-package io.horizontalsystems.xrateskit.demo.topmarkets
+package io.horizontalsystems.xrateskit.demo.coinmarkets
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import io.horizontalsystems.xrateskit.demo.R
-import io.horizontalsystems.xrateskit.entities.GlobalMarketInfo
+import io.horizontalsystems.xrateskit.entities.GlobalCoinMarket
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_holder_global_markets.view.*
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
-class GlobalMarketInfoAdapter: RecyclerView.Adapter<GlobalMarketInfoAdapter.ViewHolderGlobalMarketInfo>(){
+class GlobalCoinsMarketAdapter: RecyclerView.Adapter<GlobalCoinsMarketAdapter.ViewHolderGlobalMarketInfo>(){
 
     var items = listOf<GlobalMarketInfoItem>()
     lateinit var context : Context
@@ -27,7 +27,7 @@ class GlobalMarketInfoAdapter: RecyclerView.Adapter<GlobalMarketInfoAdapter.View
         return ViewHolderGlobalMarketInfo(LayoutInflater.from(parent.context).inflate(R.layout.view_holder_global_markets, parent, false))
     }
 
-    override fun onBindViewHolder(holder: GlobalMarketInfoAdapter.ViewHolderGlobalMarketInfo, position: Int) {
+    override fun onBindViewHolder(holder: GlobalCoinsMarketAdapter.ViewHolderGlobalMarketInfo, position: Int) {
         holder.bind(items[position])
     }
 
@@ -52,13 +52,13 @@ class GlobalMarketInfoAdapter: RecyclerView.Adapter<GlobalMarketInfoAdapter.View
 
 data class GlobalMarketInfoItem(val infoTitle: String, val value: BigDecimal, val valueChange: BigDecimal ){
     companion object {
-        fun getList(globalMarketInfo: GlobalMarketInfo): List<GlobalMarketInfoItem> {
+        fun getList(globalCoinMarket: GlobalCoinMarket): List<GlobalMarketInfoItem> {
             val list = mutableListOf<GlobalMarketInfoItem>()
-            list.add(GlobalMarketInfoItem("Top Market cap:", globalMarketInfo.marketCap, globalMarketInfo.marketCapDiff24h))
-            list.add(GlobalMarketInfoItem("Volume 24h:", globalMarketInfo.volume24h, globalMarketInfo.volume24hDiff24h))
-            list.add(GlobalMarketInfoItem("BTC Dominance:", globalMarketInfo.btcDominance, globalMarketInfo.btcDominanceDiff24h))
-            list.add(GlobalMarketInfoItem("Defi market cap:", globalMarketInfo.defiMarketCap, globalMarketInfo.defiMarketCapDiff24h))
-            list.add(GlobalMarketInfoItem("Defi Tvl:", globalMarketInfo.defiTvl, globalMarketInfo.defiTvlDiff24h))
+            list.add(GlobalMarketInfoItem("Top Market cap:", globalCoinMarket.marketCap, globalCoinMarket.marketCapDiff24h))
+            list.add(GlobalMarketInfoItem("Volume 24h:", globalCoinMarket.volume24h, globalCoinMarket.volume24hDiff24h))
+            list.add(GlobalMarketInfoItem("BTC Dominance:", globalCoinMarket.btcDominance, globalCoinMarket.btcDominanceDiff24h))
+            list.add(GlobalMarketInfoItem("Defi market cap:", globalCoinMarket.defiMarketCap, globalCoinMarket.defiMarketCapDiff24h))
+            list.add(GlobalMarketInfoItem("Defi Tvl:", globalCoinMarket.defiTvl, globalCoinMarket.defiTvlDiff24h))
             return list
         }
     }

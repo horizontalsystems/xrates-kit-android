@@ -1,4 +1,4 @@
-package io.horizontalsystems.xrateskit.demo.topmarkets
+package io.horizontalsystems.xrateskit.demo.coinmarkets
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
