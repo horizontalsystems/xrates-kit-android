@@ -1,20 +1,23 @@
 package io.horizontalsystems.xrateskit.api
 
-import io.horizontalsystems.xrateskit.core.IGlobalMarketInfoProvider
-import io.horizontalsystems.xrateskit.entities.GlobalMarketInfo
+import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
+import io.horizontalsystems.xrateskit.core.IInfoProvider
+import io.horizontalsystems.xrateskit.entities.GlobalCoinMarket
 import io.reactivex.Single
 import java.util.logging.Logger
 
 class CoinPaprikaProvider(
     private val apiManager: ApiManager
-): IGlobalMarketInfoProvider {
+): IInfoProvider, IGlobalCoinMarketProvider {
 
+    override val provider: InfoProvider = InfoProvider.CoinPaprika()
     private val logger = Logger.getLogger("CoinPaprikaProvider")
-    private val BASE_URL = "https://api.coinpaprika.com/v1"
     private val BTC_ID = "btc-bitcoin"
     private val HOURS_24_IN_SECONDS = 86400
 
-    override fun getGlobalMarketInfoAsync(currencyCode: String): Single<GlobalMarketInfo> {
+    override fun initProvider() {}
+
+    override fun getGlobalCoinMarketsAsync(currencyCode: String): Single<GlobalCoinMarket> {
 
         return Single.zip(
             getMarketOverviewData(currencyCode),
@@ -28,11 +31,11 @@ class CoinPaprikaProvider(
             })
     }
 
-    private fun getMarketOverviewData(currency: String): Single<GlobalMarketInfo> {
+    private fun getMarketOverviewData(currency: String): Single<GlobalCoinMarket> {
         return Single.create { emitter ->
             try {
-                val json = apiManager.getJson("$BASE_URL/global")
-                val marketInfo = GlobalMarketInfo(
+                val json = apiManager.getJson("${provider.baseUrl}/global")
+                val marketInfo = GlobalCoinMarket(
                     currency,
                     json.get("volume_24h_usd").asDouble().toBigDecimal(),
                     json.get("volume_24h_change_24h").asDouble().toBigDecimal(),
@@ -52,7 +55,7 @@ class CoinPaprikaProvider(
     private fun getMarketCap(coinId: String = BTC_ID, timeStamp: Long): Single<Double> {
         return Single.create { emitter ->
             try {
-                val json = apiManager.getJsonValue("$BASE_URL/coins/${coinId}/ohlcv/historical?start=${timeStamp}")
+                val json = apiManager.getJsonValue("${provider.baseUrl}/coins/${coinId}/ohlcv/historical?start=${timeStamp}")
                 val marketCap = json.asArray()[0].asObject().get("market_cap").asDouble()
 
                 emitter.onSuccess(marketCap)

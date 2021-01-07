@@ -5,7 +5,7 @@ import java.math.BigDecimal
 
 
 @Entity(primaryKeys = ["currencyCode"])
-data class GlobalMarketInfo(
+data class GlobalCoinMarket(
     val currencyCode: String,
     val volume24h: BigDecimal,
     val volume24hDiff24h: BigDecimal,

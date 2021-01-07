@@ -16,7 +16,7 @@ class GraphQueryBuilder {
             return buildQuery("${buildBundlesQuery(blockHeight)}, ${buildTokensQuery(itemsCount, blockHeight)}")
         }
 
-        fun buildMarketInfoQuery(tokenAddresses: List<String>, blockHeight: Long? = null): String {
+        fun buildCoinMarketsQuery(tokenAddresses: List<String>, blockHeight: Long? = null): String {
             return buildQuery("${buildBundlesQuery(blockHeight)}, ${buildTokensQuery(tokenAddresses, blockHeight)}")
         }
 
