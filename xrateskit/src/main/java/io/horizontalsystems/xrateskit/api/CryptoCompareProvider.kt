@@ -11,16 +11,16 @@ import java.util.logging.Logger
 class CryptoCompareProvider(
         private val factory: Factory,
         private val apiManager: ApiManager,
-        private val baseUrl: String,
         private val apiKey: String,
         private val indicatorPointCount: Int)
-    : IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, ITopMarketsProvider, IFiatXRatesProvider {
+    : IInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, IMarketInfoProvider, IFiatXRatesProvider {
 
     private val logger = Logger.getLogger("CryptoCompareProvider")
+    override val provider: InfoProvider = InfoProvider.CryptoCompare()
 
-    // Market Info
+    override fun initProvider() {}
 
-    fun getMarketInfo(coins: List<Coin>, currency: String): Single<List<MarketInfoEntity>> {
+    override fun getMarketInfo(coins: List<Coin>, currency: String): Single<List<MarketInfoEntity>> {
 
         if(coins.isEmpty())
             return Single.just(Collections.emptyList())
@@ -30,7 +30,7 @@ class CryptoCompareProvider(
                 val coinCodeList = coins.map { coin -> coin.code }
                 val codes = coinCodeList.joinToString(",")
 
-                val json = apiManager.getJson("$baseUrl/data/pricemultifull?api_key=${apiKey}&fsyms=${codes}&tsyms=${currency}")
+                val json = apiManager.getJson("${provider.baseUrl}/data/pricemultifull?api_key=${apiKey}&fsyms=${codes}&tsyms=${currency}")
                 val data = json["RAW"].asObject()
                 val list = mutableListOf<MarketInfoEntity>()
 
@@ -83,14 +83,15 @@ class CryptoCompareProvider(
     }
 
     private fun getByMinute(coin: String, currency: String, timestamp: Long): HistoricalRate {
-        val response = apiManager.getJson("$baseUrl/data/v2/histominute?api_key=${apiKey}&fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
+        val response = apiManager.getJson("$provider.baseUrl}/data/v2/histominute?api_key=${apiKey}&fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
         val value = parseValue(response)
 
         return factory.createHistoricalRate(coin, currency, value, timestamp)
     }
 
     private fun getByHour(coin: String, currency: String, timestamp: Long): HistoricalRate {
-        val response = apiManager.getJson("$baseUrl/data/v2/histohour?api_key=${apiKey}&fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
+        val response = apiManager.getJson(
+                "${provider.baseUrl}/data/v2/histohour?api_key=${apiKey}&fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
         val value = parseValue(response)
 
         return factory.createHistoricalRate(coin, currency, value, timestamp)
@@ -123,7 +124,7 @@ class CryptoCompareProvider(
         val currency = chartPointKey.currency
         val chartType = chartPointKey.chartType
 
-        var baseUrl = "$baseUrl/data/v2/${chartType.resource}?api_key=${apiKey}&fsym=$coin&tsym=$currency&aggregate=${chartType.interval}"
+        var baseUrl = "${provider.baseUrl}/data/v2/${chartType.resource}?api_key=${apiKey}&fsym=$coin&tsym=$currency&aggregate=${chartType.interval}"
         if (toTimestamp != null) {
             baseUrl += "&toTs=${toTimestamp}"
         }
@@ -163,7 +164,8 @@ class CryptoCompareProvider(
     override fun getNews(categories: String): Single<List<CryptoNews>> {
         return Single.create { emitter ->
             try {
-                val json = apiManager.getJson("$baseUrl/data/v2/news/?api_key=${apiKey}&categories=${categories}&excludeCategories=Sponsored")
+                val json = apiManager.getJson(
+                        "${provider.baseUrl}/data/v2/news/?api_key=${apiKey}&categories=${categories}&excludeCategories=Sponsored")
                 val data = json["Data"].asArray()
                 val list = mutableListOf<CryptoNews>()
 
@@ -192,45 +194,8 @@ class CryptoCompareProvider(
         }
     }
 
-    override fun getTopMarketsAsync(currency: String, rateDiffPeriod: TimePeriod, itemsCount: Int): Single<List<TopMarket>> {
-        return Single.create { emitter ->
-            try {
-                val json = apiManager.getJson("$baseUrl/data/top/mktcapfull?api_key=${apiKey}&limit=$itemsCount&tsym=${currency}")
-                val data = json["Data"].asArray()
-                val list = mutableListOf<TopMarket>()
-
-                for (coinData in data) {
-                    try {
-                        val coinInfo = coinData.asObject().get("CoinInfo").asObject()
-                        val coinCode = coinInfo.get("Name").asString()
-                        val coinName = coinInfo.get("FullName").asString()
-
-                        val raw = coinData.asObject().get("RAW").asObject()
-                        val fiatData = raw.get(currency).asObject()
-                        val rate = fiatData["PRICE"].toString().toBigDecimal()
-                        val rateOpenDay = fiatData["OPENDAY"].toString().toBigDecimal()
-                        val diff = fiatData["CHANGEPCT24HOUR"].toString().toBigDecimal()
-                        val volume = fiatData["VOLUME24HOURTO"].asDouble().toBigDecimal()
-                        val marketCap = fiatData["MKTCAP"].asDouble().toBigDecimal()
-                        val supply = fiatData["SUPPLY"].asDouble().toBigDecimal()
-
-                        list.add(factory.createTopMarket(Coin(coinCode, coinName), currency, rate, rateOpenDay, diff, volume, marketCap, supply))
-                    } catch (ex: Exception) {
-                        logger.warning(ex.message)
-                        continue
-                    }
-                }
-                emitter.onSuccess(list)
-
-            } catch (ex: Exception) {
-                logger.severe(ex.message)
-                emitter.onError(ex)
-            }
-        }
-    }
-
     override fun getLatestFiatXRates(sourceCurrency: String, targetCurrency: String): Double {
-        val response = apiManager.getJson("$baseUrl/data/price?api_key=${apiKey}&fsym=${sourceCurrency}" +
+        val response = apiManager.getJson("${provider.baseUrl}/data/price?api_key=${apiKey}&fsym=${sourceCurrency}" +
                                                   "&tsyms=${targetCurrency}")
 
         return response.asObject()[targetCurrency].asDouble()

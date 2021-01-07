@@ -1,9 +1,8 @@
 package io.horizontalsystems.xrateskit.api.graphproviders
 
 import io.horizontalsystems.xrateskit.api.ApiManager
-import io.horizontalsystems.xrateskit.core.Factory
-import io.horizontalsystems.xrateskit.core.ITopDefiMarketsProvider
-import io.horizontalsystems.xrateskit.core.IFiatXRatesProvider
+import io.horizontalsystems.xrateskit.api.InfoProvider
+import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 import java.math.BigDecimal
@@ -13,9 +12,10 @@ import java.util.logging.Logger
 class UniswapGraphProvider(
     private val factory: Factory,
     private val apiManager: ApiManager,
-    private val uniswapGraphUrl: String,
-    private val fiatXRatesProvider: IFiatXRatesProvider)
-    : ITopDefiMarketsProvider {
+    private val fiatXRatesProvider: IFiatXRatesProvider
+): IInfoProvider, IMarketInfoProvider, ICoinMarketProvider {
+
+    override val provider: InfoProvider = InfoProvider.GraphNetwork()
 
     private val logger = Logger.getLogger("UniswapGraphProvider")
     private val ONE_DAY_SECONDS = 86400 // 1 day in seconds
@@ -25,7 +25,13 @@ class UniswapGraphProvider(
     private val WETH_TOKEN_CODE = "WETH"
     private val WETH_TOKEN_ADDRESS = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
     private val ethBlocksGraphProvider = EthBlocksGraphProvider(apiManager)
+    private val SUB_URL = "/uniswap/uniswap-v2"
 
+    init {
+        provider.baseUrl += SUB_URL
+    }
+
+    override fun initProvider() {}
 
     // Uniswap uses WETH as base. So all requests should be done via WETH.
     // Check if list coinstains ETH, then change it's address to WETH
@@ -42,7 +48,7 @@ class UniswapGraphProvider(
         }
     }
 
-    override fun getTopMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<TopMarket>> {
+    override fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>> {
 
         val periods = mutableMapOf<TimePeriod, Long>()
         periods[TimePeriod.HOUR_24] = (System.currentTimeMillis()/1000) - TimePeriod.HOUR_24.seconds
@@ -52,62 +58,93 @@ class UniswapGraphProvider(
                 ethBlocksGraphProvider.getBlockHeight(periods),
                 getTopTokensAsync(itemsCount),
                 { blockInfoForPeriod, topTokensResponse ->
-                val topMarkets = mutableListOf<TopMarket>()
-                val tokensPeriodResponse: UniswapGraphTokensResponse
-                var volume24h = BigDecimal.ZERO
-                var rateDiff24h = BigDecimal.ZERO
-                var rateOpenDay = BigDecimal.ZERO
-                var rateDiffPeriod = BigDecimal.ZERO
-                val token24hResponse = getTopTokens(itemsCount, blockInfoForPeriod[TimePeriod.HOUR_24])
 
-                logger.info("Completed loading TopDefi tokens:${topTokensResponse.tokens.size}.Fetching market data ... ")
+                    val token24hResponse = getTopTokens(itemsCount, blockInfoForPeriod[TimePeriod.HOUR_24])
+                    val tokensPeriodResponse =
+                            if(fetchDiffPeriod == TimePeriod.HOUR_24)
+                                token24hResponse
+                            else
+                                getTopTokens(itemsCount, blockInfoForPeriod[fetchDiffPeriod])
 
-                tokensPeriodResponse =
-                    if(fetchDiffPeriod == TimePeriod.HOUR_24)
-                        token24hResponse
-                    else
-                        getTopTokens(itemsCount, blockInfoForPeriod[fetchDiffPeriod])
-
-                logger.info("Completed loading MarketInfo for:${fetchDiffPeriod}.Parsing data ... ")
-
-                topTokensResponse.tokens.forEach { latestTokenInfo ->
-                    val latestRate = latestTokenInfo.latestRateInETH * topTokensResponse.ethPriceInUSD
-
-                    token24hResponse.tokens.find { it.tokenAddress.contentEquals(latestTokenInfo.tokenAddress) }?.let {
-                        rateOpenDay = it.latestRateInETH * token24hResponse.ethPriceInUSD
-                        volume24h = latestTokenInfo.volumeInUSD - it.volumeInUSD
-
-                        val token24hRate = it.latestRateInETH * token24hResponse.ethPriceInUSD
-                        rateDiff24h = ((latestRate - token24hRate) * 100.toBigDecimal())/token24hRate
-                    }
-
-                    tokensPeriodResponse.tokens.find { it.tokenAddress.contentEquals(latestTokenInfo.tokenAddress) }?.let {
-                        val tokenPeriodRate = it.latestRateInETH * token24hResponse.ethPriceInUSD
-                        rateDiffPeriod = ((latestRate - tokenPeriodRate) * 100.toBigDecimal())/tokenPeriodRate
-                    }
-
-                        topMarkets.add(factory.createTopMarket(
-                            Coin(latestTokenInfo.coinCode, latestTokenInfo.coinTitle, CoinType.Erc20(latestTokenInfo.tokenAddress)),
-                            currencyCode,
-                            rate = latestRate,
-                            rateOpenDay = rateOpenDay,
-                            rateDiff = rateDiff24h,
-                            marketCap = BigDecimal.ZERO,
-                            volume = volume24h,
-                            supply = BigDecimal.ZERO,
-                            liquidity = latestRate * latestTokenInfo.totalLiquidity,
-                            rateDiffPeriod = rateDiffPeriod))
-                }
-
-                logger.info("Completed parsing data !")
-
-                topMarkets.sortByDescending { it.marketInfo.liquidity }
-                topMarkets
+                    parseMarketsData(currencyCode, fetchDiffPeriod, topTokensResponse, token24hResponse, tokensPeriodResponse)
             })
 
     }
 
-    fun getMarketInfo(coins: List<Coin>, fiatCurrency: String) : Single<List<MarketInfoEntity>>{
+    override fun getCoinMarketsAsync(coins: List<Coin>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
+
+        val tokenAddresses = tokenAddresses(coins)
+        val periods = mutableMapOf<TimePeriod, Long>()
+        periods[TimePeriod.HOUR_24] = (System.currentTimeMillis()/1000) - TimePeriod.HOUR_24.seconds
+        periods[fetchDiffPeriod] = (System.currentTimeMillis()/1000) - fetchDiffPeriod.seconds
+
+        return Single.zip(
+                ethBlocksGraphProvider.getBlockHeight(periods),
+                getCoinMarketsAsync(tokenAddresses),
+                { blockInfoForPeriod, topTokensResponse ->
+
+                    val token24hResponse = getCoinMarkets(tokenAddresses, blockInfoForPeriod[TimePeriod.HOUR_24])
+                    val tokensPeriodResponse =
+                            if(fetchDiffPeriod == TimePeriod.HOUR_24)
+                                token24hResponse
+                            else
+                                getCoinMarkets(tokenAddresses, blockInfoForPeriod[fetchDiffPeriod])
+
+                    parseMarketsData(currencyCode, fetchDiffPeriod, topTokensResponse, token24hResponse, tokensPeriodResponse)
+                })
+
+    }
+
+    private fun parseMarketsData(currencyCode: String, fetchDiffPeriod: TimePeriod,
+                                 topTokensResponse: UniswapGraphTokensResponse,
+                                 token24hResponse: UniswapGraphTokensResponse,
+                                 tokensPeriodResponse: UniswapGraphTokensResponse) : List<CoinMarket>{
+
+        val topMarkets = mutableListOf<CoinMarket>()
+        var volume24h = BigDecimal.ZERO
+        var rateDiff24h = BigDecimal.ZERO
+        var rateOpenDay = BigDecimal.ZERO
+        var rateDiffPeriod = BigDecimal.ZERO
+
+        logger.info("Completed loading MarketInfo for:${fetchDiffPeriod}.Parsing data ... ")
+
+        topTokensResponse.tokens.forEach { latestTokenInfo ->
+            val latestRate = latestTokenInfo.latestRateInETH * topTokensResponse.ethPriceInUSD
+
+            token24hResponse.tokens.find { it.tokenAddress.contentEquals(latestTokenInfo.tokenAddress) }?.let {
+                rateOpenDay = it.latestRateInETH * token24hResponse.ethPriceInUSD
+                volume24h = latestTokenInfo.volumeInUSD - it.volumeInUSD
+
+                val token24hRate = it.latestRateInETH * token24hResponse.ethPriceInUSD
+                rateDiff24h = ((latestRate - token24hRate) * 100.toBigDecimal())/token24hRate
+            }
+
+            tokensPeriodResponse.tokens.find { it.tokenAddress.contentEquals(latestTokenInfo.tokenAddress) }?.let {
+                val tokenPeriodRate = it.latestRateInETH * token24hResponse.ethPriceInUSD
+                rateDiffPeriod = ((latestRate - tokenPeriodRate) * 100.toBigDecimal())/tokenPeriodRate
+            }
+
+            topMarkets.add(factory.createCoinMarket(
+                    Coin(latestTokenInfo.coinCode.toUpperCase(), latestTokenInfo.coinTitle, CoinType.Erc20(latestTokenInfo.tokenAddress)),
+                    currencyCode,
+                    rate = latestRate,
+                    rateOpenDay = rateOpenDay,
+                    rateDiff = rateDiff24h,
+                    marketCap = BigDecimal.ZERO,
+                    volume = volume24h,
+                    supply = BigDecimal.ZERO,
+                    liquidity = latestRate * latestTokenInfo.totalLiquidity,
+                    rateDiffPeriod = rateDiffPeriod))
+        }
+
+        logger.info("Completed parsing data !")
+
+        topMarkets.sortByDescending { it.marketInfo.liquidity }
+        return topMarkets
+
+    }
+
+    override fun getMarketInfo(coins: List<Coin>, fiatCurrency: String) : Single<List<MarketInfoEntity>>{
         val tokenAddresses = tokenAddresses(coins)
 
         if(tokenAddresses.isEmpty())
@@ -162,7 +199,7 @@ class UniswapGraphProvider(
         return Single.create { emitter ->
             try {
 
-                val responseData = apiManager.getJson(uniswapGraphUrl, GraphQueryBuilder.buildETHPriceQuery())
+                val responseData = apiManager.getJson(provider.baseUrl, GraphQueryBuilder.buildETHPriceQuery())
 
                 emitter.onSuccess(UniswapGraphEthXRateResponse.parseData(responseData))
 
@@ -178,7 +215,7 @@ class UniswapGraphProvider(
             try {
 
                 val responseData = apiManager.getJson(
-                    uniswapGraphUrl,
+                        provider.baseUrl,
                     GraphQueryBuilder.buildHistoricalXRatesQuery(tokenAddresses, timeStamp)
                 )
 
@@ -205,17 +242,29 @@ class UniswapGraphProvider(
     private fun getTopTokens(itemsCount: Int, blockHeight: Long? = null ) : UniswapGraphTokensResponse {
 
         val responseData = apiManager.getJson(
-                uniswapGraphUrl,
+                provider.baseUrl,
                 GraphQueryBuilder.buildTopTokensQuery(itemsCount, blockHeight)
         )
 
         return UniswapGraphTokensResponse.parseData(responseData)
     }
 
-    private fun getMarketInfo(tokenAddresses: List<String>, blockHeight: Long?) : UniswapGraphTokensResponse {
+    private fun getCoinMarketsAsync(tokenAddresses: List<String>, blockHeight: Long? = null) : Single<UniswapGraphTokensResponse> {
+
+        return Single.create { emitter ->
+            try {
+                emitter.onSuccess(getCoinMarkets(tokenAddresses, blockHeight))
+
+            } catch (e: Exception) {
+                emitter.onError(e)
+            }
+        }
+    }
+
+    private fun getCoinMarkets(tokenAddresses: List<String>, blockHeight: Long? = null) : UniswapGraphTokensResponse {
         val responseData = apiManager.getJson(
-            uniswapGraphUrl,
-            GraphQueryBuilder.buildMarketInfoQuery(tokenAddresses, blockHeight)
+                provider.baseUrl,
+            GraphQueryBuilder.buildCoinMarketsQuery(tokenAddresses, blockHeight)
         )
 
         return UniswapGraphTokensResponse.parseData(responseData)

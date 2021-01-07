@@ -1,17 +1,17 @@
-package io.horizontalsystems.xrateskit.toplist
+package io.horizontalsystems.xrateskit.coinmarkets
 
-import io.horizontalsystems.xrateskit.core.IGlobalMarketInfoProvider
-import io.horizontalsystems.xrateskit.entities.GlobalMarketInfo
+import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
+import io.horizontalsystems.xrateskit.entities.GlobalCoinMarket
 import io.horizontalsystems.xrateskit.storage.Storage
 import io.reactivex.Single
 
 class GlobalMarketInfoManager(
-        private val globalMarketInfoProvider: IGlobalMarketInfoProvider,
+        private val globalMarketInfoProvider: IGlobalCoinMarketProvider,
         private val storage: Storage
 ) {
-    fun getGlobalMarketInfo(currencyCode: String): Single<GlobalMarketInfo> {
+    fun getGlobalMarketInfo(currencyCode: String): Single<GlobalCoinMarket> {
         return globalMarketInfoProvider
-            .getGlobalMarketInfoAsync(currencyCode)
+            .getGlobalCoinMarketsAsync(currencyCode)
                 .map { globalMarketInfo ->
                     storage.saveGlobalMarketInfo(globalMarketInfo)
                     globalMarketInfo

@@ -21,28 +21,20 @@ class Factory(private val expirationInterval: Long) {
         return MarketInfo(marketInfoEntity, expirationInterval)
     }
 
-    fun createTopMarket(coin: Coin, marketInfoEntity: MarketInfoEntity): TopMarket {
-        return TopMarket(coin, MarketInfo(marketInfoEntity, expirationInterval))
-    }
-
-    fun createTopMarket(topMarketCoin: TopMarketCoin, marketInfoEntity: MarketInfoEntity): TopMarket {
-        return TopMarket(Coin(topMarketCoin.code, topMarketCoin.name), MarketInfo(marketInfoEntity, expirationInterval))
-    }
-
-    fun createTopMarket(coin: Coin,
-                        currency: String,
-                        rate: BigDecimal,
-                        rateOpenDay: BigDecimal,
-                        rateDiff: BigDecimal,
-                        volume: BigDecimal,
-                        marketCap: BigDecimal,
-                        supply: BigDecimal,
-                        liquidity: BigDecimal = BigDecimal.ZERO,
-                        rateDiffPeriod: BigDecimal = BigDecimal.ZERO): TopMarket {
+    fun createCoinMarket(coin: Coin,
+                         currency: String,
+                         rate: BigDecimal,
+                         rateOpenDay: BigDecimal,
+                         rateDiff: BigDecimal,
+                         volume: BigDecimal,
+                         marketCap: BigDecimal,
+                         supply: BigDecimal,
+                         liquidity: BigDecimal = BigDecimal.ZERO,
+                         rateDiffPeriod: BigDecimal = BigDecimal.ZERO): CoinMarket {
         val marketInfoEntity = MarketInfoEntity(coin.code, currency, rate, rateOpenDay, rateDiff, volume, marketCap, supply, Date().time / 1000,
                                                 liquidity, rateDiffPeriod)
         val marketInfo = MarketInfo(marketInfoEntity, expirationInterval)
-        return TopMarket(coin, marketInfo)
+        return CoinMarket(coin, marketInfo)
     }
 
     fun createCryptoNews(id: Int, time: Long, imageUrl: String, title: String, url: String, body: String, types: List<String>): CryptoNews {
