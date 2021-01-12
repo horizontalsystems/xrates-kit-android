@@ -61,10 +61,8 @@ class CoinInfoManager (
         val coinCodes = coins.map { it.code }
         val savedCoins = storage.getCoinInfoByCodes(coinCodes)
 
-        savedCoins.forEach {
-            savedCoin ->
-            coins.find { it.code.contentEquals(savedCoin.code) }?.let {
-                coin ->
+        savedCoins.forEach { savedCoin ->
+            coins.find { it.code.contentEquals(savedCoin.code) }?.let { coin ->
                 val type = CoinType.getTypeById(savedCoin.type)
                 if(type is CoinType.Erc20){
                     coin.type = CoinType.Erc20(savedCoin.contractAddress)
