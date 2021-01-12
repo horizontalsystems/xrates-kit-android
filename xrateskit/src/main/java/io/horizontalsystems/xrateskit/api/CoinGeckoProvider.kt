@@ -159,7 +159,7 @@ class CoinGeckoProvider(
                 topMarkets.add(factory.createCoinMarket(
                         Coin(coinCode, title), currencyCode, rate,
                         rateOpenDay, rateDiff24h,
-                        volume, marketCap, supply, BigDecimal.ZERO, rateDiffPeriod))
+                        volume,  supply, BigDecimal.ZERO, rateDiffPeriod, marketCap))
             }
         }
 

@@ -11,9 +11,9 @@ class MarketInfoEntity(
         val rateOpenDay: BigDecimal,
         val rateDiff: BigDecimal,
         val volume: BigDecimal,
-        val marketCap: BigDecimal,
         val supply: BigDecimal,
         val timestamp: Long,
-        val liquidity: BigDecimal = BigDecimal.ZERO,
         val rateDiffPeriod: BigDecimal = BigDecimal.ZERO,
+        val marketCap: BigDecimal? = null,
+        val liquidity: BigDecimal? = null,
 )

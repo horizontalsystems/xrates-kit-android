@@ -14,7 +14,7 @@ class Factory(private val expirationInterval: Long) {
     }
 
     fun createMarketInfoEntity(coin: String, currency: String, rate: BigDecimal, rateOpen24Hour: BigDecimal, rateDiff: BigDecimal, volume: BigDecimal, marketCap: BigDecimal, supply: BigDecimal): MarketInfoEntity {
-        return MarketInfoEntity(coin, currency, rate, rateOpen24Hour, rateDiff, volume, marketCap, supply, Date().time / 1000)
+        return MarketInfoEntity(coin, currency, rate, rateOpen24Hour, rateDiff, volume, supply, Date().time / 1000, BigDecimal.ZERO, marketCap)
     }
 
     fun createMarketInfo(marketInfoEntity: MarketInfoEntity): MarketInfo {
@@ -27,12 +27,12 @@ class Factory(private val expirationInterval: Long) {
                          rateOpenDay: BigDecimal,
                          rateDiff: BigDecimal,
                          volume: BigDecimal,
-                         marketCap: BigDecimal,
                          supply: BigDecimal,
-                         liquidity: BigDecimal = BigDecimal.ZERO,
-                         rateDiffPeriod: BigDecimal = BigDecimal.ZERO): CoinMarket {
-        val marketInfoEntity = MarketInfoEntity(coin.code, currency, rate, rateOpenDay, rateDiff, volume, marketCap, supply, Date().time / 1000,
-                                                liquidity, rateDiffPeriod)
+                         rateDiffPeriod: BigDecimal = BigDecimal.ZERO,
+                         marketCap: BigDecimal? = null,
+                         liquidity: BigDecimal? = null): CoinMarket {
+        val marketInfoEntity = MarketInfoEntity(coin.code, currency, rate, rateOpenDay, rateDiff, volume, supply,
+                                                Date().time / 1000, rateDiffPeriod, marketCap, liquidity)
         val marketInfo = MarketInfo(marketInfoEntity, expirationInterval)
         return CoinMarket(coin, marketInfo)
     }
