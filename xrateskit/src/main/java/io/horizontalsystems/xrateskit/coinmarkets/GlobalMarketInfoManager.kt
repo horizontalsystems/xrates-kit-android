@@ -1,6 +1,7 @@
 package io.horizontalsystems.xrateskit.coinmarkets
 
 import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
+import io.horizontalsystems.xrateskit.core.IInfoManager
 import io.horizontalsystems.xrateskit.entities.GlobalCoinMarket
 import io.horizontalsystems.xrateskit.storage.Storage
 import io.reactivex.Single
@@ -8,7 +9,7 @@ import io.reactivex.Single
 class GlobalMarketInfoManager(
         private val globalMarketInfoProvider: IGlobalCoinMarketProvider,
         private val storage: Storage
-) {
+): IInfoManager {
     fun getGlobalMarketInfo(currencyCode: String): Single<GlobalCoinMarket> {
         return globalMarketInfoProvider
             .getGlobalCoinMarketsAsync(currencyCode)
@@ -21,4 +22,7 @@ class GlobalMarketInfoManager(
                 }
     }
 
+    override fun destroy() {
+        globalMarketInfoProvider.destroy()
+    }
 }

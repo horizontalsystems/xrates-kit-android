@@ -13,7 +13,7 @@ class UniswapGraphProvider(
     private val factory: Factory,
     private val apiManager: ApiManager,
     private val fiatXRatesProvider: IFiatXRatesProvider
-): IInfoProvider, IMarketInfoProvider, ICoinMarketProvider {
+): IMarketInfoProvider, ICoinMarketProvider {
 
     override val provider: InfoProvider = InfoProvider.GraphNetwork()
 
@@ -32,6 +32,7 @@ class UniswapGraphProvider(
     }
 
     override fun initProvider() {}
+    override fun destroy() {}
 
     // Uniswap uses WETH as base. So all requests should be done via WETH.
     // Check if list coinstains ETH, then change it's address to WETH

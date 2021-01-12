@@ -6,9 +6,15 @@ import io.reactivex.Single
 
 interface IStorage {
 
+    //  Provider Coin Info
+    fun saveProviderCoinInfo(providerCoinInfos: List<ProviderCoinInfo>)
+    fun getProviderCoinInfoByCodes(providerId:Int, coinCodes: List<String>): List<ProviderCoinInfo>
+    fun getProviderCoinsInfoCount(providerId:Int): Int
+
     //  Coins
-    fun saveCoins(coins: List<CoinEntity>)
-    fun getCoinsByCodes(coinCodes: List<String>): List<CoinEntity>
+    fun saveCoinInfo(coinInfos: List<CoinInfoEntity>)
+    fun getCoinInfoByCodes(coinCodes: List<String>): List<CoinInfoEntity>
+    fun getCoinInfoCount(): Int
 
     //  HistoricalRate
     fun saveHistoricalRate(rate: HistoricalRate)
@@ -30,9 +36,18 @@ interface IStorage {
 
 }
 
+interface IInfoManager {
+    fun destroy()
+}
+
 interface IInfoProvider {
     val provider: InfoProvider
     fun initProvider()
+    fun destroy()
+}
+
+interface ICoinInfoProvider {
+    fun getCoinInfoAsync(platform: CoinType):Single<List<Coin>>
 }
 
 interface IFiatXRatesProvider {
@@ -55,11 +70,11 @@ interface ICryptoNewsProvider {
     fun getNews(categories: String): Single<List<CryptoNews>>
 }
 
-interface ICoinMarketProvider {
+interface ICoinMarketProvider : IInfoProvider {
     fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>>
     fun getCoinMarketsAsync(coins: List<Coin>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>>
 }
 
-interface IGlobalCoinMarketProvider {
+interface IGlobalCoinMarketProvider : IInfoProvider {
     fun getGlobalCoinMarketsAsync(currency: String): Single<GlobalCoinMarket>
 }
