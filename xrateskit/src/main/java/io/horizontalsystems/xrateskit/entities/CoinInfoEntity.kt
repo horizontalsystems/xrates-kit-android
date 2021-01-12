@@ -4,7 +4,7 @@ import androidx.room.Entity
 import java.math.BigDecimal
 
 @Entity(primaryKeys = ["code", "title"])
-class CoinEntity(
+class CoinInfoEntity(
         var code: String,
         val title: String,
         val type: Int?,

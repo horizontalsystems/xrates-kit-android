@@ -7,17 +7,19 @@ import androidx.room.TypeConverters
 import io.horizontalsystems.xrateskit.entities.*
 
 @androidx.room.Database(version = 4, exportSchema = false, entities = [
-    CoinEntity::class,
+    CoinInfoEntity::class,
     HistoricalRate::class,
     ChartPointEntity::class,
     MarketInfoEntity::class,
-    GlobalCoinMarket::class
+    GlobalCoinMarket::class,
+    ProviderCoinInfo::class
 ])
 
 @TypeConverters(DatabaseConverters::class)
 
 abstract class Database : RoomDatabase() {
     abstract val coinDao: CoinDao
+    abstract val providerCoinInfoDao: ProviderCoinInfoDao
     abstract val historicalRateDao: HistoricalRateDao
     abstract val chartPointDao: ChartStatsDao
     abstract val marketInfoDao: MarketInfoDao

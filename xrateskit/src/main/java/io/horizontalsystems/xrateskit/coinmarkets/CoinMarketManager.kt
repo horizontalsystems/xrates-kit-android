@@ -1,8 +1,9 @@
 package io.horizontalsystems.xrateskit.coinmarkets
 
-import io.horizontalsystems.xrateskit.coins.CoinManager
+import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.ICoinMarketProvider
+import io.horizontalsystems.xrateskit.core.IInfoManager
 import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.TimePeriod
 import io.horizontalsystems.xrateskit.entities.CoinMarket
@@ -11,17 +12,15 @@ import io.horizontalsystems.xrateskit.storage.Storage
 import io.reactivex.Single
 
 class CoinMarketManager(
-        private val coinMarketProvider: ICoinMarketProvider,
-        private val defiMarketProvider: ICoinMarketProvider,
-        private val coinManager: CoinManager,
-        private val factory: Factory,
-        private val storage: Storage
-) {
+    private val coinMarketProvider: ICoinMarketProvider,
+    private val defiMarketProvider: ICoinMarketProvider,
+    private val coinInfoManager: CoinInfoManager
+): IInfoManager {
     fun getTopCoinMarketsAsync(currency: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24, itemsCount: Int): Single<List<CoinMarket>> {
         return coinMarketProvider
                 .getTopCoinMarketsAsync(currency, fetchDiffPeriod, itemsCount)
                 .map { topMarkets ->
-                    coinManager.identifyCoins(topMarkets.map { it.coin })
+                    coinInfoManager.identifyCoins(topMarkets.map { it.coin })
                     topMarkets
                 }
     }
@@ -29,8 +28,6 @@ class CoinMarketManager(
     fun getTopDefiMarketsAsync(currency: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24, itemsCount: Int): Single<List<CoinMarket>> {
         return defiMarketProvider.getTopCoinMarketsAsync(currency, fetchDiffPeriod, itemsCount)
                 .map { topDefiMarkets ->
-
-                    coinManager.saveCoin(topDefiMarkets.map { it.coin })
                     topDefiMarkets
                 }
     }
@@ -46,5 +43,10 @@ class CoinMarketManager(
                 { t1, t2 -> t1 + t2
                 })
 
+    }
+
+    override fun destroy() {
+        coinMarketProvider.destroy()
+        defiMarketProvider.destroy()
     }
 }

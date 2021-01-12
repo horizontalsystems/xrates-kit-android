@@ -8,20 +8,40 @@ class Storage(
 ) : IStorage {
 
     private val coinDao = database.coinDao
+    private val providerCoinInfoDao = database.providerCoinInfoDao
     private val historicalRateDao = database.historicalRateDao
     private val chartPointDao = database.chartPointDao
     private val marketInfoDao = database.marketInfoDao
     private val globalMarketInfoDao = database.globalMarketInfoDao
 
+    // Provider Coin Info
+
+    override fun saveProviderCoinInfo(providerCoinInfos: List<ProviderCoinInfo>) {
+        providerCoinInfoDao.insertAll(providerCoinInfos)
+    }
+
+    override fun getProviderCoinInfoByCodes(providerId:Int, coinCodes: List<String>): List<ProviderCoinInfo> {
+        return providerCoinInfoDao.getCoinsByCodes(providerId, coinCodes)
+    }
+
+    override fun getProviderCoinsInfoCount(providerId:Int): Int {
+        return providerCoinInfoDao.getRecordCount(providerId)
+    }
+
     // Coins
 
-    override fun saveCoins(coins: List<CoinEntity>) {
-        coinDao.insertAll(coins)
+    override fun saveCoinInfo(coinInfos: List<CoinInfoEntity>) {
+        coinDao.insertAll(coinInfos)
     }
 
-    override fun getCoinsByCodes(coinCodes: List<String>): List<CoinEntity> {
+    override fun getCoinInfoByCodes(coinCodes: List<String>): List<CoinInfoEntity> {
         return coinDao.getCoinsByCodes(coinCodes)
     }
+
+    override fun getCoinInfoCount(): Int {
+        return coinDao.getRecordCount()
+    }
+
 
     // HistoricalRate
 
