@@ -1,23 +1,76 @@
 package io.horizontalsystems.xrateskit.api
 
+import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.ICoinMarketProvider
 import io.horizontalsystems.xrateskit.core.IInfoProvider
 import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.TimePeriod
 import io.horizontalsystems.xrateskit.entities.CoinMarket
+import io.horizontalsystems.xrateskit.entities.ProviderCoinInfo
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import java.math.BigDecimal
 import java.util.logging.Logger
 
 class CoinGeckoProvider(
-        private val factory: Factory,
-        private val apiManager: ApiManager
-) : IInfoProvider, ICoinMarketProvider {
+    private val factory: Factory,
+    private val coinInfoManager: CoinInfoManager,
+    private val apiManager: ApiManager
+) : ICoinMarketProvider {
     private val logger = Logger.getLogger("CoinGeckoProvider")
     override val provider: InfoProvider = InfoProvider.CoinGecko()
 
-    override fun initProvider() {}
+    private var providerDisposables = CompositeDisposable()
+
+    init {
+        initProvider()
+    }
+
+    override fun initProvider() {
+
+        if(!coinInfoManager.isProviderCoinInfoExists(provider.id)){
+            getProviderCoinInfoAsync()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe({ coinInfos ->
+                               coinInfoManager.saveProviderCoinInfo(coinInfos)
+                           }, {
+                           })
+                .let {
+                    providerDisposables.add(it)
+                }
+        }
+    }
+
+    override fun destroy() {
+        providerDisposables.clear()
+    }
+
+    private fun getProviderCoinInfoAsync(): Single<List<ProviderCoinInfo>>{
+        val providerCoinInfos = mutableListOf<ProviderCoinInfo>()
+
+        return Single.create { emitter ->
+            try {
+                val json = apiManager.getJsonValue("${provider.baseUrl}/coins/list")
+
+                json.asArray()?.forEach { coinInfo ->
+                    coinInfo?.asObject()?.let { element ->
+                        val coinId = element.get("id").asString()
+                        val coinCode = element.get("symbol").asString().toUpperCase()
+                        providerCoinInfos.add(ProviderCoinInfo(provider.id, coinCode, coinId))
+                    }
+                }
+
+                emitter.onSuccess(providerCoinInfos)
+
+            } catch (e: Exception) {
+                logger.severe(e.message)
+            }
+        }
+    }
 
     override fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>> {
         return Single.create { emitter ->
@@ -45,7 +98,10 @@ class CoinGeckoProvider(
 
     private fun getCoinIds(coins: List<Coin>? = null): String{
         coins?.let {
-            val coinIds = it.map { it.title.toLowerCase() }
+            val coinCodes = it.map { coin -> coin.code }
+            val coinInfos = coinInfoManager.getProviderCoinInfo(provider.id, coinCodes)
+
+            val coinIds = coinInfos.map { coinInfo -> coinInfo.providerCoinId }
             return "&ids=${coinIds.joinToString(separator = ",")}"
         }
 
