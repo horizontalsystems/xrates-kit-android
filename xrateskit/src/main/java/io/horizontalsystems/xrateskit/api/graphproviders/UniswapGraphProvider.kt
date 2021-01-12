@@ -131,11 +131,11 @@ class UniswapGraphProvider(
                     rate = latestRate,
                     rateOpenDay = rateOpenDay,
                     rateDiff = rateDiff24h,
-                    marketCap = BigDecimal.ZERO,
                     volume = volume24h,
                     supply = BigDecimal.ZERO,
-                    liquidity = latestRate * latestTokenInfo.totalLiquidity,
-                    rateDiffPeriod = rateDiffPeriod))
+                    rateDiffPeriod = rateDiffPeriod,
+                    liquidity = latestRate * latestTokenInfo.totalLiquidity)
+            )
         }
 
         logger.info("Completed parsing data !")

@@ -9,11 +9,11 @@ class MarketInfo(marketInfo: MarketInfoEntity, val expirationInterval: Long) {
     val rateOpenDay: BigDecimal = marketInfo.rateOpenDay
     val rateDiff: BigDecimal = marketInfo.rateDiff
     val volume: BigDecimal = marketInfo.volume
-    val marketCap: BigDecimal = marketInfo.marketCap
     val supply: BigDecimal = marketInfo.supply
-    val liquidity: BigDecimal = marketInfo.liquidity
     val rateDiffPeriod: BigDecimal = marketInfo.rateDiffPeriod
     val timestamp: Long = marketInfo.timestamp
+    val liquidity: BigDecimal? = marketInfo.liquidity
+    val marketCap: BigDecimal? = marketInfo.marketCap
 
     fun isExpired(): Boolean {
         return Date().time / 1000 - expirationInterval > timestamp

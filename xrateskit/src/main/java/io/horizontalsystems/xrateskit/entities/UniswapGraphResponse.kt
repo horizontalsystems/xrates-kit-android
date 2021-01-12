@@ -12,7 +12,7 @@ data class EthBlocksGraphResponse(val timePeriod: TimePeriod, val blockHeight: L
             val blockData = mutableMapOf<TimePeriod, Long>()
             jsonObject.asObject().get("data").asObject()?.let { data ->
 
-                data?.asObject()?.let {  periodData ->
+                data.asObject()?.let {  periodData ->
                     periodData.names().forEach { periodName ->
                         periodData.get(periodName).let {
                             blockData[TimePeriod.valueOf(periodName)] = it.asArray().get(0).asObject().get("number").asString().toLong()
