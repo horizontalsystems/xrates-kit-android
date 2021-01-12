@@ -67,7 +67,7 @@ class CoinGeckoProvider(
                 emitter.onSuccess(providerCoinInfos)
 
             } catch (e: Exception) {
-                logger.severe(e.message)
+                emitter.onError(e)
             }
         }
     }
@@ -78,7 +78,6 @@ class CoinGeckoProvider(
                 emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, itemsCount = itemsCount))
 
             } catch (ex: Exception) {
-                logger.severe(ex.message)
                 emitter.onError(ex)
             }
         }
@@ -90,7 +89,6 @@ class CoinGeckoProvider(
                 emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, coins = coins))
 
             } catch (ex: Exception) {
-                logger.severe(ex.message)
                 emitter.onError(ex)
             }
         }
