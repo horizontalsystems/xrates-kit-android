@@ -19,6 +19,7 @@ class CryptoCompareProvider(
     override val provider: InfoProvider = InfoProvider.CryptoCompare()
 
     override fun initProvider() {}
+    override fun destroy() {}
 
     override fun getMarketInfo(coins: List<Coin>, currency: String): Single<List<MarketInfoEntity>> {
 

@@ -19,6 +19,7 @@ class EthBlocksGraphProvider(
     }
 
     override fun initProvider() {}
+    override fun destroy() {}
 
     fun getBlockHeight(data: Map<TimePeriod, Long>) :Single<Map<TimePeriod,Long>> {
         return Single.create { emitter ->
@@ -32,5 +33,4 @@ class EthBlocksGraphProvider(
             }
         }
     }
-
 }
