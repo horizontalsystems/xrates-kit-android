@@ -2,12 +2,10 @@ package io.horizontalsystems.xrateskit.api
 
 import io.horizontalsystems.xrateskit.core.ICoinInfoProvider
 import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
-import io.horizontalsystems.xrateskit.core.IInfoProvider
 import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.CoinType
 import io.horizontalsystems.xrateskit.entities.GlobalCoinMarket
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
 import java.util.logging.Logger
 
 class CoinPaprikaProvider(

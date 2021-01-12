@@ -6,7 +6,6 @@ import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.CoinType
 import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 
 class BaseMarketInfoProvider(
     private val cryptoCompareProvider: CryptoCompareProvider,
