@@ -54,7 +54,7 @@ class CoinPaprikaProvider(
                 emitter.onSuccess(coins)
 
             } catch (e: Exception) {
-                logger.severe(e.message)
+                emitter.onError(e)
             }
         }
     }
@@ -88,7 +88,6 @@ class CoinPaprikaProvider(
                 emitter.onSuccess(marketInfo)
 
             } catch (ex: Exception) {
-                logger.severe(ex.message)
                 emitter.onError(ex)
             }
         }
@@ -103,7 +102,6 @@ class CoinPaprikaProvider(
                 emitter.onSuccess(marketCap)
 
             } catch (ex: Exception) {
-                logger.severe(ex.message)
                 emitter.onError(ex)
             }
         }
