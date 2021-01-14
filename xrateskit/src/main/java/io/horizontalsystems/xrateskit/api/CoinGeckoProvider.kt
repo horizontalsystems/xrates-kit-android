@@ -156,10 +156,19 @@ class CoinGeckoProvider(
                         if (element.get("price_change_percentage_24h").isNull) BigDecimal.ZERO
                         else element.get("price_change_percentage_24h").asDouble().toBigDecimal()
 
-                topMarkets.add(factory.createCoinMarket(
-                        Coin(coinCode, title), currencyCode, rate,
-                        rateOpenDay, rateDiff24h,
-                        volume,  supply, BigDecimal.ZERO, rateDiffPeriod, marketCap))
+                topMarkets.add(
+                    factory.createCoinMarket(
+                        coin = Coin(coinCode, title),
+                        currency = currencyCode,
+                        rate = rate,
+                        rateOpenDay = rateOpenDay,
+                        rateDiff = rateDiff24h,
+                        volume = volume,
+                        supply = supply,
+                        rateDiffPeriod = rateDiffPeriod,
+                        marketCap = marketCap
+                    )
+                )
             }
         }
 
