@@ -3,14 +3,10 @@ package io.horizontalsystems.xrateskit.api
 import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.ICoinMarketProvider
-import io.horizontalsystems.xrateskit.core.IInfoProvider
-import io.horizontalsystems.xrateskit.entities.Coin
-import io.horizontalsystems.xrateskit.entities.TimePeriod
-import io.horizontalsystems.xrateskit.entities.CoinMarket
-import io.horizontalsystems.xrateskit.entities.ProviderCoinInfo
+import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
+import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.math.BigDecimal
 import java.util.logging.Logger
@@ -19,8 +15,9 @@ class CoinGeckoProvider(
     private val factory: Factory,
     private val coinInfoManager: CoinInfoManager,
     private val apiManager: ApiManager
-) : ICoinMarketProvider {
+) : ICoinMarketProvider, IGlobalCoinMarketProvider {
     private val logger = Logger.getLogger("CoinGeckoProvider")
+
     override val provider: InfoProvider = InfoProvider.CoinGecko()
 
     private var providerDisposables = CompositeDisposable()
@@ -72,6 +69,17 @@ class CoinGeckoProvider(
         }
     }
 
+    override fun getGlobalCoinMarketsAsync(currencyCode: String): Single<GlobalCoinMarket> {
+        return Single.create { emitter ->
+            try {
+                emitter.onSuccess(getGlobalDefiCoinMarkets(currencyCode))
+
+            } catch (ex: Exception) {
+                emitter.onError(ex)
+            }
+        }
+    }
+
     override fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>> {
         return Single.create { emitter ->
             try {
@@ -105,6 +113,21 @@ class CoinGeckoProvider(
 
         return ""
     }
+
+    private fun getGlobalDefiCoinMarkets(currencyCode: String): GlobalCoinMarket {
+
+        val json = apiManager.getJsonValue("${provider.baseUrl}/global/decentralized_finance_defi")
+        var defiMarketCap: BigDecimal = BigDecimal.ZERO
+        json.asObject()?.let { marketData ->
+            marketData.get("data")?.asObject()?.let {
+                defiMarketCap = if ( it.get("defi_market_cap").isNull) BigDecimal.ZERO
+                else it.get("defi_market_cap").asString().toBigDecimal()
+            }
+        }
+
+        return GlobalCoinMarket(currencyCode, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, defiMarketCap = defiMarketCap)
+    }
+
 
     private fun getCoinMarkets(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int? = null, coins: List<Coin>? = null): List<CoinMarket> {
 
