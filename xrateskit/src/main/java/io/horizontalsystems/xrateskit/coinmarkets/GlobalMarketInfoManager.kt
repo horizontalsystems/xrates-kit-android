@@ -7,22 +7,27 @@ import io.horizontalsystems.xrateskit.storage.Storage
 import io.reactivex.Single
 
 class GlobalMarketInfoManager(
-        private val globalMarketInfoProvider: IGlobalCoinMarketProvider,
-        private val storage: Storage
-): IInfoManager {
+    private val globalMarketsProvider: IGlobalCoinMarketProvider,
+    private val defiMarketsProvider: IGlobalCoinMarketProvider,
+    private val storage: Storage
+) : IInfoManager {
     fun getGlobalMarketInfo(currencyCode: String): Single<GlobalCoinMarket> {
-        return globalMarketInfoProvider
-            .getGlobalCoinMarketsAsync(currencyCode)
-                .map { globalMarketInfo ->
-                    storage.saveGlobalMarketInfo(globalMarketInfo)
-                    globalMarketInfo
-                }
-                .onErrorReturn {
-                    storage.getGlobalMarketInfo(currencyCode)
-                }
+        return Single.zip(
+            globalMarketsProvider.getGlobalCoinMarketsAsync(currencyCode),
+            defiMarketsProvider.getGlobalCoinMarketsAsync(currencyCode),
+            { globalMarket, defiMarket ->
+                globalMarket.defiMarketCap = defiMarket.defiMarketCap
+                globalMarket.defiMarketCapDiff24h = defiMarket.defiMarketCapDiff24h
+                globalMarket
+            }).map { globalMarketInfo ->
+            storage.saveGlobalMarketInfo(globalMarketInfo)
+                globalMarketInfo
+            }.onErrorReturn {
+                storage.getGlobalMarketInfo(currencyCode)
+            }
     }
 
     override fun destroy() {
-        globalMarketInfoProvider.destroy()
+        globalMarketsProvider.destroy()
     }
 }

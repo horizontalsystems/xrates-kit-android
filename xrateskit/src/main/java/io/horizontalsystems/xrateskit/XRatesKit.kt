@@ -106,13 +106,14 @@ class XRatesKit(
             val storage = Storage(Database.create(context))
 
             val apiManager = ApiManager()
+            val coinPaprikaProvider = CoinPaprikaProvider(apiManager)
+            val coinInfoManager = CoinInfoManager(coinPaprikaProvider, storage)
+            val topMarketsProvider = CoinGeckoProvider(factory,coinInfoManager, apiManager)
             val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, cryptoCompareApiKey, indicatorPointCount)
             val uniswapGraphProvider = UniswapGraphProvider(factory, apiManager, cryptoCompareProvider)
             val marketInfoProvider = BaseMarketInfoProvider(cryptoCompareProvider, uniswapGraphProvider)
-            val coinPaprikaProvider = CoinPaprikaProvider(apiManager)
-            val globalMarketInfoManager = GlobalMarketInfoManager(coinPaprikaProvider, storage)
+            val globalMarketInfoManager = GlobalMarketInfoManager(coinPaprikaProvider,topMarketsProvider, storage)
 
-            val coinInfoManager = CoinInfoManager(coinPaprikaProvider, storage)
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
 
@@ -128,7 +129,6 @@ class XRatesKit(
                 chartInfoManager.listener = it
             }
 
-            val topMarketsProvider = CoinGeckoProvider(factory,coinInfoManager, apiManager)
             val topDefiMarketsProvider = uniswapGraphProvider
             val topMarketsManager = CoinMarketManager(topMarketsProvider, topDefiMarketsProvider, coinInfoManager)
 
