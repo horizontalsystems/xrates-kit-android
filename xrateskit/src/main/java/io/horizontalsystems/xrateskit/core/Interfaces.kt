@@ -11,11 +11,6 @@ interface IStorage {
     fun getProviderCoinInfoByCodes(providerId:Int, coinCodes: List<String>): List<ProviderCoinInfo>
     fun getProviderCoinsInfoCount(providerId:Int): Int
 
-    //  Coins
-    fun saveCoinInfo(coinInfos: List<CoinInfoEntity>)
-    fun getCoinInfoByCodes(coinCodes: List<String>): List<CoinInfoEntity>
-    fun getCoinInfoCount(): Int
-
     //  HistoricalRate
     fun saveHistoricalRate(rate: HistoricalRate)
     fun getHistoricalRate(coinCode: String, currencyCode: String, timestamp: Long): HistoricalRate?

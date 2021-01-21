@@ -3,11 +3,8 @@ package io.horizontalsystems.xrateskit.storage
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
 
-class Storage(
-        private val database: Database
-) : IStorage {
+class Storage(private val database: Database) : IStorage {
 
-    private val coinDao = database.coinDao
     private val providerCoinInfoDao = database.providerCoinInfoDao
     private val historicalRateDao = database.historicalRateDao
     private val chartPointDao = database.chartPointDao
@@ -27,21 +24,6 @@ class Storage(
     override fun getProviderCoinsInfoCount(providerId:Int): Int {
         return providerCoinInfoDao.getRecordCount(providerId)
     }
-
-    // Coins
-
-    override fun saveCoinInfo(coinInfos: List<CoinInfoEntity>) {
-        coinDao.insertAll(coinInfos)
-    }
-
-    override fun getCoinInfoByCodes(coinCodes: List<String>): List<CoinInfoEntity> {
-        return coinDao.getCoinsByCodes(coinCodes)
-    }
-
-    override fun getCoinInfoCount(): Int {
-        return coinDao.getRecordCount()
-    }
-
 
     // HistoricalRate
 

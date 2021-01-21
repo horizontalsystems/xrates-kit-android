@@ -8,9 +8,7 @@ import io.horizontalsystems.xrateskit.entities.GlobalCoinMarket
 import io.reactivex.Single
 import java.util.logging.Logger
 
-class CoinPaprikaProvider(
-    private val apiManager: ApiManager
-): IGlobalCoinMarketProvider, ICoinInfoProvider {
+class CoinPaprikaProvider(private val apiManager: ApiManager): IGlobalCoinMarketProvider, ICoinInfoProvider {
 
     override val provider: InfoProvider = InfoProvider.CoinPaprika()
     private val logger = Logger.getLogger("CoinPaprikaProvider")

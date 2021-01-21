@@ -1,9 +1,9 @@
 package io.horizontalsystems.xrateskit.api
 
-import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.ICoinMarketProvider
 import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
+import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
@@ -13,7 +13,7 @@ import java.util.logging.Logger
 
 class CoinGeckoProvider(
     private val factory: Factory,
-    private val coinInfoManager: CoinInfoManager,
+    private val storage: IStorage,
     private val apiManager: ApiManager
 ) : ICoinMarketProvider, IGlobalCoinMarketProvider {
     private val logger = Logger.getLogger("CoinGeckoProvider")
@@ -28,12 +28,12 @@ class CoinGeckoProvider(
 
     override fun initProvider() {
 
-        if(!coinInfoManager.isProviderCoinInfoExists(provider.id)){
+        if(storage.getProviderCoinsInfoCount(provider.id) < 1){
             getProviderCoinInfoAsync()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe({ coinInfos ->
-                               coinInfoManager.saveProviderCoinInfo(coinInfos)
+                               storage.saveProviderCoinInfo(coinInfos)
                            }, {
                            })
                 .let {
@@ -105,7 +105,7 @@ class CoinGeckoProvider(
     private fun getCoinIds(coins: List<Coin>? = null): String{
         coins?.let {
             val coinCodes = it.map { coin -> coin.code }
-            val coinInfos = coinInfoManager.getProviderCoinInfo(provider.id, coinCodes)
+            val coinInfos = storage.getProviderCoinInfoByCodes(provider.id, coinCodes)
 
             val coinIds = coinInfos.map { coinInfo -> coinInfo.providerCoinId }
             return "&ids=${coinIds.joinToString(separator = ",")}"
