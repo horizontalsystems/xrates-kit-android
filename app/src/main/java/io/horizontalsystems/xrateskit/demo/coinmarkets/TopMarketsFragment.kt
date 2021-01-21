@@ -90,7 +90,6 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo2.visibility = View.VISIBLE
         }
         btnLoadDefiMarkets.setOnClickListener {
-            viewModel.loadTopDefiMarkets(spAct.timePeriod)
             rviewInfo2.visibility = View.GONE
             rviewInfo.visibility = View.VISIBLE
         }

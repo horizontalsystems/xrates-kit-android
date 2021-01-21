@@ -52,23 +52,6 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
                 }
     }
 
-    fun loadTopDefiMarkets(timePeriod: TimePeriod) {
-        progressState.postValue(true)
-        ratesManager.topDefiList(200, "USD", timePeriod)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
-            .subscribe({ topMarketList ->
-                           progressState.postValue(false)
-                           topMarkets.postValue(topMarketList)
-                       }, {
-                            println("Error !!! ${it.message}")
-                            progressState.postValue(false)
-                       })
-            .let {
-                disposables.add(it)
-            }
-    }
-
     fun loadGlobalMarketInfo() {
         progressState.postValue(true)
         ratesManager.globalMarketInfo("USD")
