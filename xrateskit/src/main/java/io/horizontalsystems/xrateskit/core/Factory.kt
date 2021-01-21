@@ -17,6 +17,20 @@ class Factory(private val expirationInterval: Long) {
         return MarketInfoEntity(coin, currency, rate, rateOpen24Hour, rateDiff, volume, supply, Date().time / 1000, BigDecimal.ZERO, marketCap)
     }
 
+    fun createMarketInfoEntity(coin: Coin, marketInfo: MarketInfo): MarketInfoEntity {
+        return MarketInfoEntity(  coinCode = coin.code,
+                                  currencyCode = marketInfo.currencyCode,
+                                  rate = marketInfo.rate,
+                                  rateOpenDay = marketInfo.rateOpenDay,
+                                  rateDiff = marketInfo.rateDiff,
+                                  volume =  marketInfo.volume,
+                                  supply = marketInfo.supply,
+                                  timestamp = marketInfo.timestamp,
+                                  rateDiffPeriod =  marketInfo.rateDiffPeriod,
+                                  marketCap = marketInfo.marketCap,
+                                  liquidity = marketInfo.liquidity)
+    }
+
     fun createMarketInfo(marketInfoEntity: MarketInfoEntity): MarketInfo {
         return MarketInfo(marketInfoEntity, expirationInterval)
     }
