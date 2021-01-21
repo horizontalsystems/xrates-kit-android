@@ -121,7 +121,7 @@ class XRatesKit(
                 chartInfoManager.listener = it
             }
 
-            val topMarketsManager = CoinMarketManager(coinGeckoProvider)
+            val topMarketsManager = CoinMarketManager(coinGeckoProvider, storage, factory)
 
             return XRatesKit(
                     marketInfoManager,
