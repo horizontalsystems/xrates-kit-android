@@ -9,6 +9,7 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.math.BigDecimal
+import java.util.*
 import java.util.logging.Logger
 
 class CoinGeckoProvider(
@@ -92,6 +93,10 @@ class CoinGeckoProvider(
     }
 
     override fun getCoinMarketsAsync(coins: List<Coin>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
+
+        if(coins.isEmpty())
+            return Single.just(Collections.emptyList())
+        
         return Single.create { emitter ->
             try {
                 emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, coins = coins))
