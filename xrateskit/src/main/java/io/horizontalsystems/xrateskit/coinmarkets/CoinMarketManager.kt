@@ -32,6 +32,9 @@ class CoinMarketManager(
                 val marketEntityList = markets.map { factory.createMarketInfoEntity(it.coin, it.marketInfo) }
                 storage.saveMarketInfo(marketEntityList)
                 markets
+            }.onErrorReturn {
+                val marketEntities = storage.getOldMarketInfo(coins.map { it.code }, currencyCode)
+                marketEntities.map { CoinMarket(Coin(it.coinCode),factory.createMarketInfo(it)) }
             }
     }
 
