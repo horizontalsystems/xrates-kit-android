@@ -13,7 +13,7 @@ class UniswapGraphProvider(
     private val factory: Factory,
     private val apiManager: ApiManager,
     private val fiatXRatesProvider: IFiatXRatesProvider
-): IMarketInfoProvider, ICoinMarketProvider {
+): IMarketInfoProvider, IInfoProvider {
 
     override val provider: InfoProvider = InfoProvider.GraphNetwork()
 
@@ -24,7 +24,6 @@ class UniswapGraphProvider(
     private val BASE_COIN_CODE = "ETH"
     private val WETH_TOKEN_CODE = "WETH"
     private val WETH_TOKEN_ADDRESS = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
-    private val ethBlocksGraphProvider = EthBlocksGraphProvider(apiManager)
     private val SUB_URL = "/uniswap/uniswap-v2"
 
     init {
@@ -49,52 +48,6 @@ class UniswapGraphProvider(
         }
     }
 
-    override fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>> {
-
-        val periods = mutableMapOf<TimePeriod, Long>()
-        periods[TimePeriod.HOUR_24] = (System.currentTimeMillis()/1000) - TimePeriod.HOUR_24.seconds
-        periods[fetchDiffPeriod] = (System.currentTimeMillis()/1000) - fetchDiffPeriod.seconds
-
-        return Single.zip(
-                ethBlocksGraphProvider.getBlockHeight(periods),
-                getTopTokensAsync(itemsCount),
-                { blockInfoForPeriod, topTokensResponse ->
-
-                    val token24hResponse = getTopTokens(itemsCount, blockInfoForPeriod[TimePeriod.HOUR_24])
-                    val tokensPeriodResponse =
-                            if(fetchDiffPeriod == TimePeriod.HOUR_24)
-                                token24hResponse
-                            else
-                                getTopTokens(itemsCount, blockInfoForPeriod[fetchDiffPeriod])
-
-                    parseMarketsData(currencyCode, fetchDiffPeriod, topTokensResponse, token24hResponse, tokensPeriodResponse)
-            })
-
-    }
-
-    override fun getCoinMarketsAsync(coins: List<Coin>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
-
-        val tokenAddresses = tokenAddresses(coins)
-        val periods = mutableMapOf<TimePeriod, Long>()
-        periods[TimePeriod.HOUR_24] = (System.currentTimeMillis()/1000) - TimePeriod.HOUR_24.seconds
-        periods[fetchDiffPeriod] = (System.currentTimeMillis()/1000) - fetchDiffPeriod.seconds
-
-        return Single.zip(
-                ethBlocksGraphProvider.getBlockHeight(periods),
-                getCoinMarketsAsync(tokenAddresses),
-                { blockInfoForPeriod, topTokensResponse ->
-
-                    val token24hResponse = getCoinMarkets(tokenAddresses, blockInfoForPeriod[TimePeriod.HOUR_24])
-                    val tokensPeriodResponse =
-                            if(fetchDiffPeriod == TimePeriod.HOUR_24)
-                                token24hResponse
-                            else
-                                getCoinMarkets(tokenAddresses, blockInfoForPeriod[fetchDiffPeriod])
-
-                    parseMarketsData(currencyCode, fetchDiffPeriod, topTokensResponse, token24hResponse, tokensPeriodResponse)
-                })
-
-    }
 
     private fun parseMarketsData(currencyCode: String, fetchDiffPeriod: TimePeriod,
                                  topTokensResponse: UniswapGraphTokensResponse,
@@ -226,49 +179,6 @@ class UniswapGraphProvider(
                 emitter.onError(e)
             }
         }
-    }
-
-    private fun getTopTokensAsync(itemsCount: Int, blockHeight: Long? = null ) : Single<UniswapGraphTokensResponse> {
-
-        return Single.create { emitter ->
-            try {
-                emitter.onSuccess(getTopTokens(itemsCount, blockHeight))
-
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
-        }
-    }
-
-    private fun getTopTokens(itemsCount: Int, blockHeight: Long? = null ) : UniswapGraphTokensResponse {
-
-        val responseData = apiManager.getJson(
-                provider.baseUrl,
-                GraphQueryBuilder.buildTopTokensQuery(itemsCount, blockHeight)
-        )
-
-        return UniswapGraphTokensResponse.parseData(responseData)
-    }
-
-    private fun getCoinMarketsAsync(tokenAddresses: List<String>, blockHeight: Long? = null) : Single<UniswapGraphTokensResponse> {
-
-        return Single.create { emitter ->
-            try {
-                emitter.onSuccess(getCoinMarkets(tokenAddresses, blockHeight))
-
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
-        }
-    }
-
-    private fun getCoinMarkets(tokenAddresses: List<String>, blockHeight: Long? = null) : UniswapGraphTokensResponse {
-        val responseData = apiManager.getJson(
-                provider.baseUrl,
-            GraphQueryBuilder.buildCoinMarketsQuery(tokenAddresses, blockHeight)
-        )
-
-        return UniswapGraphTokensResponse.parseData(responseData)
     }
 
     private fun getLatestFiatXRatesAsync(targetCurrency: String) : Single<Double> {
