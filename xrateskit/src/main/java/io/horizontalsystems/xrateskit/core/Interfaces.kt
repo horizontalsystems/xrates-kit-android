@@ -35,6 +35,11 @@ interface IInfoManager {
     fun destroy()
 }
 
+interface ICoinMarketManager {
+    fun getTopCoinMarketsAsync(currency: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>>
+    fun getCoinMarketsAsync(coins:List<Coin>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>>
+}
+
 interface IInfoProvider {
     val provider: InfoProvider
     fun initProvider()
@@ -67,7 +72,7 @@ interface ICryptoNewsProvider {
 
 interface ICoinMarketProvider : IInfoProvider {
     fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>>
-    fun getCoinMarketsAsync(coins: List<Coin>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>>
+    fun getCoinMarketsAsync(coinIds: List<String>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>>
 }
 
 interface IGlobalCoinMarketProvider : IInfoProvider {

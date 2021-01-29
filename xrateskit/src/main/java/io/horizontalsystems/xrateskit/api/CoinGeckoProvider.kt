@@ -14,40 +14,21 @@ import java.util.logging.Logger
 
 class CoinGeckoProvider(
     private val factory: Factory,
-    private val storage: IStorage,
     private val apiManager: ApiManager
 ) : ICoinMarketProvider, IGlobalCoinMarketProvider {
     private val logger = Logger.getLogger("CoinGeckoProvider")
 
     override val provider: InfoProvider = InfoProvider.CoinGecko()
 
-    private var providerDisposables = CompositeDisposable()
-
     init {
         initProvider()
     }
 
-    override fun initProvider() {
+    override fun initProvider() {}
 
-        if(storage.getProviderCoinsInfoCount(provider.id) < 1){
-            getProviderCoinInfoAsync()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe({ coinInfos ->
-                               storage.saveProviderCoinInfo(coinInfos)
-                           }, {
-                           })
-                .let {
-                    providerDisposables.add(it)
-                }
-        }
-    }
+    override fun destroy() {}
 
-    override fun destroy() {
-        providerDisposables.clear()
-    }
-
-    private fun getProviderCoinInfoAsync(): Single<List<ProviderCoinInfo>>{
+    fun getProviderCoinInfoAsync(): Single<List<ProviderCoinInfo>>{
         val providerCoinInfos = mutableListOf<ProviderCoinInfo>()
 
         return Single.create { emitter ->
@@ -92,31 +73,19 @@ class CoinGeckoProvider(
         }
     }
 
-    override fun getCoinMarketsAsync(coins: List<Coin>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
+    override fun getCoinMarketsAsync(coinIds: List<String>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
 
-        if(coins.isEmpty())
+        if(coinIds.isEmpty())
             return Single.just(Collections.emptyList())
         
         return Single.create { emitter ->
             try {
-                emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, coins = coins))
+                emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, coinIds = coinIds))
 
             } catch (ex: Exception) {
                 emitter.onError(ex)
             }
         }
-    }
-
-    private fun getCoinIds(coins: List<Coin>? = null): String{
-        coins?.let {
-            val coinCodes = it.map { coin -> coin.code }
-            val coinInfos = storage.getProviderCoinInfoByCodes(provider.id, coinCodes)
-
-            val coinIds = coinInfos.map { coinInfo -> coinInfo.providerCoinId }
-            return "&ids=${coinIds.joinToString(separator = ",")}"
-        }
-
-        return ""
     }
 
     private fun getGlobalDefiCoinMarkets(currencyCode: String): GlobalCoinMarket {
@@ -134,9 +103,11 @@ class CoinGeckoProvider(
     }
 
 
-    private fun getCoinMarkets(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int? = null, coins: List<Coin>? = null): List<CoinMarket> {
+    private fun getCoinMarkets(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int? = null, coinIds: List<String>? = null): List<CoinMarket> {
 
-        val coinIds = getCoinIds(coins)
+        val coinIdsParams = if(!coinIds.isNullOrEmpty())
+                                "&ids=${coinIds.joinToString(separator = ",")}"
+                            else ""
         val perPage = if(itemsCount != null) "&per_page=${itemsCount}" else ""
 
         val priceChangePercentage =
@@ -145,7 +116,7 @@ class CoinGeckoProvider(
                 else ""
 
         val json = apiManager.getJsonValue(
-                "${provider.baseUrl}/coins/markets?${coinIds}&vs_currency=${currencyCode}${priceChangePercentage}&order=market_cap_desc${perPage}")
+                "${provider.baseUrl}/coins/markets?${coinIdsParams}&vs_currency=${currencyCode}${priceChangePercentage}&order=market_cap_desc${perPage}")
         val topMarkets = mutableListOf<CoinMarket>()
         json.asArray()?.forEach { marketData ->
             marketData?.asObject()?.let { element ->
