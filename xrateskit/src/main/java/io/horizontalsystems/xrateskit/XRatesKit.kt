@@ -80,8 +80,8 @@ class XRatesKit(
         return coinMarketManager.getTopCoinMarketsAsync(currencyCode, fetchDiffPeriod, itemsCount)
     }
 
-    fun getCoinMarketsAsync(coins: List<Coin>, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<CoinMarket>> {
-        return coinMarketManager.getCoinMarketsAsync(coins , currencyCode, fetchDiffPeriod)
+    fun getCoinMarketsAsync(coinCodes: List<String>, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<CoinMarket>> {
+        return coinMarketManager.getCoinMarketsAsync(coinCodes , currencyCode, fetchDiffPeriod)
     }
 
     fun getGlobalCoinMarketsAsync(currencyCode: String): Single<GlobalCoinMarket> {
