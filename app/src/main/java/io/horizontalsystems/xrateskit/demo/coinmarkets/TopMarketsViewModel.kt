@@ -34,10 +34,10 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
             }
     }
 
-    fun loadFavorites(coins:List<Coin>, timePeriod: TimePeriod) {
+    fun loadFavorites(coinCodes:List<String>, timePeriod: TimePeriod) {
 
         progressState.postValue(true)
-        ratesManager.favorites(coins, "USD", timePeriod)
+        ratesManager.favorites(coinCodes, "USD", timePeriod)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe({ favorites ->

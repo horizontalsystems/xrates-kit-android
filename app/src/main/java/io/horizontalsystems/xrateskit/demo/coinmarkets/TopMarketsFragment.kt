@@ -73,7 +73,7 @@ class TopMarketsFragment() : Fragment() {
         }
 
         btnFavorites.setOnClickListener {
-            viewModel.loadFavorites(coins, spAct.timePeriod)
+            viewModel.loadFavorites(coins.map { it.code }, spAct.timePeriod)
             rviewInfo2.visibility = View.GONE
             rviewInfo.visibility = View.VISIBLE
         }
