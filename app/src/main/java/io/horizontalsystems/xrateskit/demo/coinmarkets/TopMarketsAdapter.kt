@@ -48,7 +48,7 @@ class TopMarketsAdapter: RecyclerView.Adapter<TopMarketsAdapter.ViewHolderTopMar
             val dec = DecimalFormat("#,###.00")
             txtIndex.text = "${itemCount - index + 1}"
             txtCoinCode.text = "${item.coin.code}"
-            txtCoinTitle.text = "${item.coin.title} (${item.coin.type?.let { it::class.simpleName}})"
+            txtCoinTitle.text = "${item.coin.title}"
             txtPrice.text = "Volume24h : ${dec.format(item.marketInfo.volume)} - Price:${dec.format(item.marketInfo.rate)} $"
             if(item.marketInfo.rateDiffPeriod < BigDecimal.ZERO)
                     txtPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red_d))

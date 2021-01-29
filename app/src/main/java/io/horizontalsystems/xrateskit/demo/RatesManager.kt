@@ -45,8 +45,8 @@ class RatesManager(context: Context, currency: String) {
         return kit.getTopCoinMarketsAsync(currency, period, itemsCount)
     }
 
-    fun favorites(coins: List<Coin>, currency: String, period: TimePeriod): Single<List<CoinMarket>>{
-        return kit.getCoinMarketsAsync(coins, currency, period)
+    fun favorites(coinCodes: List<String>, currency: String, period: TimePeriod): Single<List<CoinMarket>>{
+        return kit.getCoinMarketsAsync(coinCodes, currency, period)
     }
 
     fun globalMarketInfo(currency: String): Single<GlobalCoinMarket>{
