@@ -16,19 +16,19 @@ class CoinGeckoManager(
     private val factory: Factory
 ): IInfoManager, ICoinMarketManager {
 
-    private fun getCoinIds(coins: List<Coin>): Single<List<String>> {
+    private fun getCoinIds(coinCodes: List<String>): Single<List<String>> {
 
         val coinInfosSingle: Single<List<ProviderCoinInfo>>
 
         if(storage.getProviderCoinsInfoCount(coinGeckoProvider.provider.id) != 0)
-            coinInfosSingle = Single.just(storage.getProviderCoinInfoByCodes(coinGeckoProvider.provider.id, coins.map { it.code }))
+            coinInfosSingle = Single.just(storage.getProviderCoinInfoByCodes(coinGeckoProvider.provider.id, coinCodes))
         else{
             coinInfosSingle = coinGeckoProvider.getProviderCoinInfoAsync()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .map {
                     storage.saveProviderCoinInfo(it)
-                    storage.getProviderCoinInfoByCodes(coinGeckoProvider.provider.id, coins.map { it.code })
+                    storage.getProviderCoinInfoByCodes(coinGeckoProvider.provider.id, coinCodes)
                 }
         }
 
@@ -48,8 +48,8 @@ class CoinGeckoManager(
             }
     }
 
-    override fun getCoinMarketsAsync(coins: List<Coin>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
-        return getCoinIds(coins).flatMap { coinIds ->
+    override fun getCoinMarketsAsync(coinCodes: List<String>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
+        return getCoinIds(coinCodes).flatMap { coinIds ->
             coinGeckoProvider
                 .getCoinMarketsAsync(coinIds, currencyCode, fetchDiffPeriod)
                 .map { markets ->
@@ -57,7 +57,7 @@ class CoinGeckoManager(
                     storage.saveMarketInfo(marketEntityList)
                     markets
                 }.onErrorReturn {
-                    val marketEntities = storage.getOldMarketInfo(coins.map { it.code }, currencyCode)
+                    val marketEntities = storage.getOldMarketInfo(coinCodes, currencyCode)
                     marketEntities.map { CoinMarket(Coin(it.coinCode), factory.createMarketInfo(it)) }
                 }
         }

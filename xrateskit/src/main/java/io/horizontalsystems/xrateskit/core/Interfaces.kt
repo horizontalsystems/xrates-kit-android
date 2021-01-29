@@ -37,7 +37,7 @@ interface IInfoManager {
 
 interface ICoinMarketManager {
     fun getTopCoinMarketsAsync(currency: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>>
-    fun getCoinMarketsAsync(coins:List<Coin>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>>
+    fun getCoinMarketsAsync(coinCodes:List<String>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>>
 }
 
 interface IInfoProvider {
