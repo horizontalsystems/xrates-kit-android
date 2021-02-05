@@ -17,6 +17,15 @@ class CoinGeckoProvider(
     private val apiManager: ApiManager
 ) : ICoinMarketProvider, IGlobalCoinMarketProvider {
     private val logger = Logger.getLogger("CoinGeckoProvider")
+    private val coinIdsExcluded = listOf("bowl-a-coin", "blockidcoin", "bifi", "bitcoin-file", "cactus-finance",
+                                       "coin-artist","stake-coin-2", "derogold", "daily-funds", "deipool", "dipper",
+                                       "dipper-network", "demos", "defi-nation-signals-dao", "digitalusd", "seed2need",
+                                       "fin-token", "funkeypay", "freetip", "golden-ratio-token", "gdac-token",
+                                       "bonded-finance", "compound-coin", "hydro-protocol", "thorchain", "holy-trinity",
+                                       "wrapped-terra", "memetic", "mir-coin", "morpher", "master-usd", "payperex",
+                                       "baby-power-index-pool-token", "san-diego-coin", "siambitcoin", "soft-bitcoin",
+                                       "super-bitcoin", "socketfinance", "unicorn-token", "universe-token", "dollars",
+                                       "usdx-stablecoin", "usdx-wallet")
 
     override val provider: InfoProvider = InfoProvider.CoinGecko()
 
@@ -37,9 +46,12 @@ class CoinGeckoProvider(
 
                 json.asArray()?.forEach { coinInfo ->
                     coinInfo?.asObject()?.let { element ->
+
                         val coinId = element.get("id").asString()
-                        val coinCode = element.get("symbol").asString().toUpperCase()
-                        providerCoinInfos.add(ProviderCoinInfo(provider.id, coinCode, coinId))
+                        if(!coinIdsExcluded.contains(coinId)){
+                            val coinCode = element.get("symbol").asString().toUpperCase()
+                            providerCoinInfos.add(ProviderCoinInfo(provider.id, coinCode, coinId))
+                        }
                     }
                 }
 
@@ -120,24 +132,27 @@ class CoinGeckoProvider(
         val topMarkets = mutableListOf<CoinMarket>()
         json.asArray()?.forEach { marketData ->
             marketData?.asObject()?.let { element ->
-                val coinCode = element.get("symbol").asString().toUpperCase()
-                val title = element.get("name").asString()
+                val coinId = element.get("id").asString().toUpperCase()
 
-                val rate = if (element.get("current_price").isNull) BigDecimal.ZERO
-                else element.get("current_price").asDouble().toBigDecimal()
+                if(!coinIdsExcluded.contains(coinId)) {
+                    val coinCode = element.get("symbol").asString().toUpperCase()
+                    val title = element.get("name").asString()
 
-                val rateOpenDay = if (element.get("price_change_24h").isNull) BigDecimal.ZERO
-                else rate + element.get("price_change_24h").asDouble().toBigDecimal()
+                    val rate = if (element.get("current_price").isNull) BigDecimal.ZERO
+                    else element.get("current_price").asDouble().toBigDecimal()
 
-                val supply = if (element.get("circulating_supply").isNull) BigDecimal.ZERO
-                else element.get("circulating_supply").asDouble().toBigDecimal()
+                    val rateOpenDay = if (element.get("price_change_24h").isNull) BigDecimal.ZERO
+                    else rate + element.get("price_change_24h").asDouble().toBigDecimal()
 
-                val volume = if (element.get("total_volume").isNull) BigDecimal.ZERO
-                else element.get("total_volume").asDouble().toBigDecimal()
-                val marketCap = if (element.get("market_cap").isNull) BigDecimal.ZERO
-                else element.get("market_cap").asDouble().toBigDecimal()
+                    val supply = if (element.get("circulating_supply").isNull) BigDecimal.ZERO
+                    else element.get("circulating_supply").asDouble().toBigDecimal()
 
-                val priceDiffFieldName =
+                    val volume = if (element.get("total_volume").isNull) BigDecimal.ZERO
+                    else element.get("total_volume").asDouble().toBigDecimal()
+                    val marketCap = if (element.get("market_cap").isNull) BigDecimal.ZERO
+                    else element.get("market_cap").asDouble().toBigDecimal()
+
+                    val priceDiffFieldName =
                         when (fetchDiffPeriod) {
                             TimePeriod.DAY_7 -> "price_change_percentage_7d_in_currency"
                             TimePeriod.HOUR_1 -> "price_change_percentage_1h_in_currency"
@@ -147,27 +162,28 @@ class CoinGeckoProvider(
                             else -> "price_change_percentage_24h"
                         }
 
-                val rateDiffPeriod =
+                    val rateDiffPeriod =
                         if (element.get(priceDiffFieldName).isNull) BigDecimal.ZERO
                         else element.get(priceDiffFieldName).asDouble().toBigDecimal()
 
-                val rateDiff24h =
+                    val rateDiff24h =
                         if (element.get("price_change_percentage_24h").isNull) BigDecimal.ZERO
                         else element.get("price_change_percentage_24h").asDouble().toBigDecimal()
 
-                topMarkets.add(
-                    factory.createCoinMarket(
-                        coin = Coin(coinCode, title),
-                        currency = currencyCode,
-                        rate = rate,
-                        rateOpenDay = rateOpenDay,
-                        rateDiff = rateDiff24h,
-                        volume = volume,
-                        supply = supply,
-                        rateDiffPeriod = rateDiffPeriod,
-                        marketCap = marketCap
+                    topMarkets.add(
+                        factory.createCoinMarket(
+                            coin = Coin(coinCode, title),
+                            currency = currencyCode,
+                            rate = rate,
+                            rateOpenDay = rateOpenDay,
+                            rateDiff = rateDiff24h,
+                            volume = volume,
+                            supply = supply,
+                            rateDiffPeriod = rateDiffPeriod,
+                            marketCap = marketCap
+                        )
                     )
-                )
+                }
             }
         }
 
