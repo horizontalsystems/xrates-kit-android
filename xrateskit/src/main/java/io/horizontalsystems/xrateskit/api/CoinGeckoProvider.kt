@@ -25,7 +25,7 @@ class CoinGeckoProvider(
                                        "wrapped-terra", "memetic", "mir-coin", "morpher", "master-usd", "payperex",
                                        "baby-power-index-pool-token", "san-diego-coin", "siambitcoin", "soft-bitcoin",
                                        "super-bitcoin", "socketfinance", "unicorn-token", "universe-token", "dollars",
-                                       "usdx-stablecoin", "usdx-wallet")
+                                       "usdx-stablecoin", "usdx-wallet", "stakehound-staked-ether")
 
     override val provider: InfoProvider = InfoProvider.CoinGecko()
 
