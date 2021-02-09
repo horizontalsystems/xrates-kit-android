@@ -26,8 +26,8 @@ class CoinGeckoManager(
             coinInfosSingle = coinGeckoProvider.getProviderCoinInfoAsync()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .map {
-                    storage.saveProviderCoinInfo(it)
+                .map { providerCoins ->
+                    storage.saveProviderCoinInfo(providerCoins)
                     storage.getProviderCoinInfoByCodes(coinGeckoProvider.provider.id, coinCodes.map { it.toUpperCase() })
                 }
         }
