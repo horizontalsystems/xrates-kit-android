@@ -17,15 +17,17 @@ class CoinGeckoProvider(
     private val apiManager: ApiManager
 ) : ICoinMarketProvider, IGlobalCoinMarketProvider {
     private val logger = Logger.getLogger("CoinGeckoProvider")
-    private val coinIdsExcluded = listOf("bowl-a-coin", "blockidcoin", "bifi", "bitcoin-file", "cactus-finance",
-                                       "coin-artist","stake-coin-2", "derogold", "daily-funds", "deipool", "dipper",
-                                       "dipper-network", "demos", "defi-nation-signals-dao", "digitalusd", "seed2need",
-                                       "fin-token", "funkeypay", "freetip", "golden-ratio-token", "gdac-token",
-                                       "bonded-finance", "compound-coin", "hydro-protocol", "thorchain", "holy-trinity",
-                                       "wrapped-terra", "memetic", "mir-coin", "morpher", "master-usd", "payperex",
-                                       "baby-power-index-pool-token", "san-diego-coin", "siambitcoin", "soft-bitcoin",
-                                       "super-bitcoin", "socketfinance", "unicorn-token", "universe-token", "dollars",
-                                       "usdx-stablecoin", "usdx-wallet", "stakehound-staked-ether")
+    private val coinIdsExcluded = listOf("ankreth", "baby-power-index-pool-token", "bifi", "bitcoin-file", "blockidcoin",
+                                         "bonded-finance", "bowl-a-coin", "btc-alpha-token", "cactus-finance", "coin-artist",
+                                         "compound-coin", "daily-funds", "defi-bids", "defi-nation-signals-dao",
+                                         "deipool", "demos", "derogold", "digitalusd", "dipper", "dipper-network",
+                                         "dollars", "fin-token", "freetip", "funkeypay", "gdac-token",
+                                         "golden-ratio-token", "holy-trinity", "hotnow", "hydro-protocol", "lition",
+                                         "master-usd", "memetic", "mir-coin", "morpher", "name-changing-token", "payperex",
+                                         "radium", "san-diego-coin", "seed2need", "shardus", "siambitcoin", "socketfinance",
+                                         "soft-bitcoin", "spacechain", "stake-coin-2", "stakehound-staked-ether", "super-bitcoin",
+                                         "thorchain-erc20", "unicorn-token", "universe-token", "unit-protocol-duck", "usdx-stablecoin",
+                                         "usdx-wallet", "wrapped-terra", "yield")
 
     override val provider: InfoProvider = InfoProvider.CoinGecko()
 
