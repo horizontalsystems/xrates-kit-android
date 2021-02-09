@@ -21,14 +21,14 @@ class CoinGeckoManager(
         val coinInfosSingle: Single<List<ProviderCoinInfo>>
 
         if(storage.getProviderCoinsInfoCount(coinGeckoProvider.provider.id) != 0)
-            coinInfosSingle = Single.just(storage.getProviderCoinInfoByCodes(coinGeckoProvider.provider.id, coinCodes))
+            coinInfosSingle = Single.just(storage.getProviderCoinInfoByCodes(coinGeckoProvider.provider.id, coinCodes.map { it.toUpperCase() }))
         else{
             coinInfosSingle = coinGeckoProvider.getProviderCoinInfoAsync()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .map {
                     storage.saveProviderCoinInfo(it)
-                    storage.getProviderCoinInfoByCodes(coinGeckoProvider.provider.id, coinCodes)
+                    storage.getProviderCoinInfoByCodes(coinGeckoProvider.provider.id, coinCodes.map { it.toUpperCase() })
                 }
         }
 
