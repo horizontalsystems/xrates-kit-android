@@ -15,7 +15,7 @@ import java.util.logging.Logger
 class CoinGeckoProvider(
     private val factory: Factory,
     private val apiManager: ApiManager
-) : ICoinMarketProvider, IGlobalCoinMarketProvider {
+) : ICoinMarketProvider {
     private val logger = Logger.getLogger("CoinGeckoProvider")
     private val coinIdsExcluded = listOf("ankreth", "baby-power-index-pool-token", "bifi", "bitcoin-file", "blockidcoin",
                                          "bonded-finance", "bowl-a-coin", "btc-alpha-token", "cactus-finance", "coin-artist",
@@ -61,17 +61,6 @@ class CoinGeckoProvider(
 
             } catch (e: Exception) {
                 emitter.onError(e)
-            }
-        }
-    }
-
-    override fun getGlobalCoinMarketsAsync(currencyCode: String): Single<GlobalCoinMarket> {
-        return Single.create { emitter ->
-            try {
-                emitter.onSuccess(getGlobalDefiCoinMarkets(currencyCode))
-
-            } catch (ex: Exception) {
-                emitter.onError(ex)
             }
         }
     }

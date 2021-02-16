@@ -18,6 +18,8 @@ class GlobalMarketInfoManager(
             { globalMarket, defiMarket ->
                 globalMarket.defiMarketCap = defiMarket.defiMarketCap
                 globalMarket.defiMarketCapDiff24h = defiMarket.defiMarketCapDiff24h
+                globalMarket.defiTvl = defiMarket.defiTvl
+                globalMarket.defiTvlDiff24h = defiMarket.defiTvlDiff24h
                 globalMarket
             }).map { globalMarketInfo ->
             storage.saveGlobalMarketInfo(globalMarketInfo)

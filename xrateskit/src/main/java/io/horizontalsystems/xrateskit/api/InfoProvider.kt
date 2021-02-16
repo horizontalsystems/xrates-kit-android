@@ -6,5 +6,6 @@ sealed class InfoProvider(val id: Int, var baseUrl: String = "", var accessKey: 
     class CoinPaprika : InfoProvider(3, "https://api.coinpaprika.com/v1")
     class CoinGecko : InfoProvider(4, "https://api.coingecko.com/api/v3")
     class GraphNetwork : InfoProvider(5, "https://api.thegraph.com/subgraphs/name")
+    class HorSys : InfoProvider(6, "https://info.horizontalsystems.xyz/api/v1")
 
 }
