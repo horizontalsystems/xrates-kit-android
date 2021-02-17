@@ -84,7 +84,7 @@ class CryptoCompareProvider(
     }
 
     private fun getByMinute(coin: String, currency: String, timestamp: Long): HistoricalRate {
-        val response = apiManager.getJson("$provider.baseUrl}/data/v2/histominute?api_key=${apiKey}&fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
+        val response = apiManager.getJson("${provider.baseUrl}/data/v2/histominute?api_key=${apiKey}&fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
         val value = parseValue(response)
 
         return factory.createHistoricalRate(coin, currency, value, timestamp)
