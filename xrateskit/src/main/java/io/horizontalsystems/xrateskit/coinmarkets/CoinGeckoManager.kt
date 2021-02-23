@@ -2,10 +2,7 @@ package io.horizontalsystems.xrateskit.coinmarkets
 
 import io.horizontalsystems.xrateskit.api.CoinGeckoProvider
 import io.horizontalsystems.xrateskit.core.*
-import io.horizontalsystems.xrateskit.entities.Coin
-import io.horizontalsystems.xrateskit.entities.TimePeriod
-import io.horizontalsystems.xrateskit.entities.CoinMarket
-import io.horizontalsystems.xrateskit.entities.ProviderCoinInfo
+import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -57,6 +54,12 @@ class CoinGeckoManager(
                     storage.saveMarketInfo(marketEntityList)
                     markets
                 }
+        }
+    }
+
+    override fun getCoinMarketDetailsAsync(coinCode: String, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
+        return getCoinIds(listOf(coinCode)).flatMap { coinIdList ->
+                coinGeckoProvider.getCoinMarketDetailsAsync(coinIdList.get(0), currencyCode, rateDiffCoinCodes, rateDiffPeriods)
         }
     }
 

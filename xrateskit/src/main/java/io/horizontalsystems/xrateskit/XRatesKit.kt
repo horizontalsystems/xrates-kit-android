@@ -84,6 +84,10 @@ class XRatesKit(
         return coinMarketManager.getCoinMarketsAsync(coinCodes , currencyCode, fetchDiffPeriod)
     }
 
+    fun getCoinMarketDetailsAsync(coinCode: String, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
+        return coinMarketManager.getCoinMarketDetailsAsync(coinCode, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
+    }
+
     fun getGlobalCoinMarketsAsync(currencyCode: String): Single<GlobalCoinMarket> {
         return globalMarketInfoManager.getGlobalMarketInfo(currencyCode)
     }
