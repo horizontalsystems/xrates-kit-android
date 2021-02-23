@@ -91,13 +91,14 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo2.visibility = View.VISIBLE
         }
         btnLoadCoinInfo.setOnClickListener {
-            viewModel.loadCoinInfo()
+            viewModel.loadCoinInfo("BTC")
             rviewInfo.visibility = View.GONE
             rviewInfo2.visibility = View.VISIBLE
         }
 
         rviewInfo.adapter = topMarketsAdapter
         rviewInfo2.adapter = globalMarketInfoAdapter
+        rviewInfo3.adapter = coinMarketDetailsAdapter
 
         observeLiveData()
     }

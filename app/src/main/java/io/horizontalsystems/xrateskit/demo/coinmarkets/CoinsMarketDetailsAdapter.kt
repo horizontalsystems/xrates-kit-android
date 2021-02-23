@@ -41,10 +41,10 @@ class CoinsMarketDetailsAdapter: RecyclerView.Adapter<CoinsMarketDetailsAdapter.
             val dec = DecimalFormat("#,###.00")
 
             txtTitle.text = item.infoTitle
-            if(item.value > BigDecimal.ZERO)
+            if(item.value != BigDecimal.ZERO)
                 txtValue.text = dec.format(item.value)
 
-            if(item.valueChange > BigDecimal.ZERO){
+            if(item.valueChange != BigDecimal.ZERO){
                 txtChangeValue.text = "%.2f".format(item.valueChange)
                 if(item.valueChange < BigDecimal.ZERO)
                     txtChangeValue.setTextColor(ContextCompat.getColor(context, R.color.red_d))
@@ -61,6 +61,18 @@ data class CoinMarketDetailsItem(val infoTitle: String, val value: BigDecimal, v
             list.add(CoinMarketDetailsItem("Price 24h High/Low :", coinMarketDetails.rateHigh24h, coinMarketDetails.rateLow24h))
             list.add(CoinMarketDetailsItem("Volume 24h:", coinMarketDetails.volume24h, BigDecimal.ZERO))
             list.add(CoinMarketDetailsItem("MarketCap:", coinMarketDetails.marketCap, coinMarketDetails.marketCapDiff24h))
+            list.add(CoinMarketDetailsItem("--------------- Diff ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
+            coinMarketDetails.rateDiffs.forEach { periodDiff ->
+                list.add(CoinMarketDetailsItem("TimePeriod:${periodDiff.key}", BigDecimal.ZERO, BigDecimal.ZERO))
+                periodDiff.value.forEach{ coinDiff ->
+                    list.add(CoinMarketDetailsItem("${coinDiff.key} :", coinDiff.value ,BigDecimal.ZERO))
+
+                }
+            }
+            list.add(CoinMarketDetailsItem("--------------- Info ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
+            coinMarketDetails.coinInfo.links.forEach{
+                list.add(CoinMarketDetailsItem("${ it.key } : ${it.value}", BigDecimal.ZERO, BigDecimal.ZERO))
+            }
 
             return list
         }
