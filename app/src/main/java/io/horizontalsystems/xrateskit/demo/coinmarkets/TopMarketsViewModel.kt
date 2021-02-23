@@ -6,12 +6,14 @@ import io.horizontalsystems.xrateskit.demo.RatesManager
 import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.TimePeriod
 import io.horizontalsystems.xrateskit.entities.CoinMarket
+import io.horizontalsystems.xrateskit.entities.CoinMarketDetails
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
 
     val topMarkets = MutableLiveData<List<CoinMarket>>()
+    val coinMarketDetails = MutableLiveData<List<CoinMarketDetailsItem>>()
     val progressState = MutableLiveData<Boolean>()
     val globalMarketInfo = MutableLiveData<List<GlobalMarketInfoItem>>()
 
@@ -28,6 +30,23 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
                        }, {
                             println("Error !!! ${it.message}")
                             progressState.postValue(false)
+                       })
+            .let {
+                disposables.add(it)
+            }
+    }
+
+    fun loadCoinInfo(coinCode: String = "AAVE") {
+        progressState.postValue(true)
+        ratesManager.getCoinMarketDetailsAsync(coinCode, "USD", listOf("USD","ETH","BTC"), listOf(TimePeriod.HOUR_24, TimePeriod.DAY_30))
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .subscribe({
+                           coinMarketDetails.postValue(CoinMarketDetailsItem.getList(it))
+                           progressState.postValue(false)
+                       }, {
+                           println("Error !!! ${it.message}")
+                           progressState.postValue(false)
                        })
             .let {
                 disposables.add(it)

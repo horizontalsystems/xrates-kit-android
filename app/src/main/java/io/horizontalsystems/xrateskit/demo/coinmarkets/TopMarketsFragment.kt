@@ -22,6 +22,7 @@ class TopMarketsFragment() : Fragment() {
     private val viewModel by viewModels<TopMarketsViewModel> { TopMarketsModule.Factory() }
     private val globalMarketInfoAdapter = GlobalCoinsMarketAdapter()
     private val topMarketsAdapter = TopMarketsAdapter()
+    private val coinMarketDetailsAdapter = CoinsMarketDetailsAdapter()
 
     private val coins = listOf(Coin("BTC", "Bitcoin", CoinType.Bitcoin),
                                Coin("ETH", "Ethereum", CoinType.Ethereum),
@@ -89,9 +90,10 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo.visibility = View.GONE
             rviewInfo2.visibility = View.VISIBLE
         }
-        btnLoadDefiMarkets.setOnClickListener {
-            rviewInfo2.visibility = View.GONE
-            rviewInfo.visibility = View.VISIBLE
+        btnLoadCoinInfo.setOnClickListener {
+            viewModel.loadCoinInfo()
+            rviewInfo.visibility = View.GONE
+            rviewInfo2.visibility = View.VISIBLE
         }
 
         rviewInfo.adapter = topMarketsAdapter
@@ -109,6 +111,11 @@ class TopMarketsFragment() : Fragment() {
         viewModel.globalMarketInfo.observe(viewLifecycleOwner, Observer {
             globalMarketInfoAdapter.items = it
             globalMarketInfoAdapter.notifyDataSetChanged()
+        })
+
+        viewModel.coinMarketDetails.observe(viewLifecycleOwner, Observer {
+            coinMarketDetailsAdapter.items = it
+            coinMarketDetailsAdapter.notifyDataSetChanged()
         })
 
         viewModel.progressState.observe(viewLifecycleOwner, Observer {
