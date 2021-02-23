@@ -1,6 +1,7 @@
 package io.horizontalsystems.xrateskit.entities
 
 import com.eclipsesource.json.JsonValue
+import java.lang.Exception
 import java.math.BigDecimal
 
 class CoinGeckoCoinMarkets(
@@ -59,25 +60,28 @@ data class CoinGeckoCoinMarketsResponse(
 
                     val rateDiffPeriod = mutableMapOf<TimePeriod, BigDecimal>()
                     if (element.get("price_change_percentage_24h") != null) {
-                        rateDiffPeriod.put(
-                            TimePeriod.HOUR_24,
-                            element.get("price_change_percentage_24h").asDouble().toBigDecimal()
-                        )
+                        if (!element.get("price_change_percentage_24h").isNull)
+                            rateDiffPeriod.put(
+                                TimePeriod.HOUR_24,
+                                element.get("price_change_percentage_24h").asDouble().toBigDecimal()
+                            )
                     }
-
                     if (element.get("price_change_percentage_1h_in_currency") != null) {
+                        if (!element.get("price_change_percentage_1h_in_currency").isNull)
                         rateDiffPeriod.put(
                             TimePeriod.HOUR_1,
                             element.get("price_change_percentage_1h_in_currency").asDouble().toBigDecimal()
                         )
                     }
                     if (element.get("price_change_percentage_7d_in_currency") != null) {
+                        if (!element.get("price_change_percentage_7d_in_currency").isNull)
                         rateDiffPeriod.put(
                             TimePeriod.DAY_7,
                             element.get("price_change_percentage_7d_in_currency").asDouble().toBigDecimal()
                         )
                     }
                     if (element.get("price_change_percentage_14d_in_currency") != null) {
+                        if (!element.get("price_change_percentage_14d_in_currency").isNull)
                         rateDiffPeriod.put(
                             TimePeriod.DAY_14,
                             element.get("price_change_percentage_14d_in_currency").asDouble().toBigDecimal()
@@ -85,18 +89,21 @@ data class CoinGeckoCoinMarketsResponse(
                     }
 
                     if (element.get("price_change_percentage_30d_in_currency") != null) {
+                        if (!element.get("price_change_percentage_30d_in_currency").isNull)
                         rateDiffPeriod.put(
                             TimePeriod.DAY_30,
                             element.get("price_change_percentage_30d_in_currency").asDouble().toBigDecimal()
                         )
                     }
                     if (element.get("price_change_percentage_200d_in_currency") != null) {
+                        if (!element.get("price_change_percentage_200d_in_currency").isNull)
                         rateDiffPeriod.put(
                             TimePeriod.DAY_200,
                             element.get("price_change_percentage_200d_in_currency").asDouble().toBigDecimal()
                         )
                     }
                     if (element.get("price_change_percentage_1y_in_currency") != null) {
+                        if (!element.get("price_change_percentage_1y_in_currency").isNull)
                         rateDiffPeriod.put(
                             TimePeriod.YEAR_1,
                             element.get("price_change_percentage_1y_in_currency").asDouble().toBigDecimal()
@@ -140,16 +147,46 @@ data class CoinGeckoCoinInfo(
             val coinId = element.get("id").asString().toUpperCase()
             val coinCode = element.get("symbol").asString().toUpperCase()
             val title = element.get("name").asString()
-            val description = if(element.get("description") != null){
-                                element.get("description").asObject().get("en").asString()
-                              } else ""
+            val description = if (element.get("description") != null) {
+                element.get("description").asObject().get("en").asString()
+            } else ""
 
-            if(linksElement.get("homepage") != null) {
-                if (!linksElement.get("homepage").asArray().isNull) {
-                    links.put("Website", linksElement.get("homepage").asArray()[0].asString())
+            try {
+
+                if (linksElement.get("homepage") != null) {
+                    if (!linksElement.get("homepage").asArray().isNull) {
+                        links["Website"] = linksElement.get("homepage").asArray()[0].asString()
+                    }
                 }
-            }
 
+                if (linksElement.get("twitter_screen_name") != null) {
+                    if (!linksElement.get("twitter_screen_name").isNull) {
+                        links["Twitter"] = "https://twitter.com/${linksElement.get("twitter_screen_name").asString()}"
+                    }
+                }
+
+                if (linksElement.get("telegram_channel_identifier") != null) {
+                    if (!linksElement.get("telegram_channel_identifier").isNull) {
+                        links["Telegram"] = "https://t.me/${linksElement.get("telegram_channel_identifier").asString()}"
+                    }
+                }
+
+                if (linksElement.get("subreddit_url") != null) {
+                    if (!linksElement.get("subreddit_url").isNull) {
+                        links["Reddit"] = linksElement.get("subreddit_url").asString()
+                    }
+                }
+
+                if (linksElement.get("repos_url") != null) {
+                    val gitHub = linksElement.get("repos_url").asObject().get("github")
+                    if (gitHub != null) {
+                        if (!gitHub.asArray().isNull)
+                            links["Github"] = gitHub.asArray()[0].asString()
+                    }
+                }
+            }catch (e: Exception){
+                //ignore error
+            }
 
             return CoinGeckoCoinInfo(
                 coinId = coinId,
@@ -177,7 +214,6 @@ data class CoinGeckoCoinMarketDetailsResponse(
 
             val element = jsonValue.asObject().get("market_data").asObject()
             val rateDiffsPeriod = mutableMapOf<TimePeriod, Map<String, BigDecimal>>()
-            val rateDiffs = mutableMapOf<String, BigDecimal>()
 
             val rate = if (element.get("current_price").isNull) BigDecimal.ZERO
             else{
@@ -229,15 +265,16 @@ data class CoinGeckoCoinMarketDetailsResponse(
 
             rateDiffPeriods.forEach { period ->
 
+                val rateDiffs = mutableMapOf<String, BigDecimal>()
                 val diffPeriod = when(period) {
-                    TimePeriod.HOUR_1 -> "price_change_1h_in_currency"
-                    TimePeriod.HOUR_24 -> "price_change_24h_in_currency"
-                    TimePeriod.DAY_7 -> "price_change_7d_in_currency"
-                    TimePeriod.DAY_14 -> "price_change_14d_in_currency"
-                    TimePeriod.DAY_30 -> "price_change_30d_in_currency"
-                    TimePeriod.DAY_200 -> "price_change_200d_in_currency"
-                    TimePeriod.YEAR_1 -> "price_change_1y_in_currency"
-                    else -> "price_change_24h_in_currency"
+                    TimePeriod.HOUR_1 -> "price_change_percentage_1h_in_currency"
+                    TimePeriod.HOUR_24 -> "price_change_percentage_24h_in_currency"
+                    TimePeriod.DAY_7 -> "price_change_percentage_7d_in_currency"
+                    TimePeriod.DAY_14 -> "price_change_percentage_14d_in_currency"
+                    TimePeriod.DAY_30 -> "price_change_percentage_30d_in_currency"
+                    TimePeriod.DAY_200 -> "price_change_percentage_200d_in_currency"
+                    TimePeriod.YEAR_1 -> "price_change_percentage_1y_in_currency"
+                    else -> "price_change_percentage_24h_in_currency"
                 }
 
                 rateDiffCoinCodes.forEach { coinCode ->
@@ -249,10 +286,10 @@ data class CoinGeckoCoinMarketDetailsResponse(
                                     else element.get(diffPeriod).asObject().get(coinCode.toLowerCase()).asDouble().toBigDecimal()
                                 }
                            } else BigDecimal.ZERO
-                    rateDiffs.put(coinCode, diff)
+                    rateDiffs[coinCode] = diff
 
                 }
-                rateDiffsPeriod.put(period, rateDiffs)
+                rateDiffsPeriod[period] = rateDiffs
             }
 
             return CoinGeckoCoinMarketDetailsResponse(
