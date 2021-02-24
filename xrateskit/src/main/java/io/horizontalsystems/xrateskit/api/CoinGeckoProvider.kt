@@ -133,7 +133,8 @@ class CoinGeckoProvider(
                     totalSupply = coinMarketDetailsResponse.coinGeckoMarkets.totalSupply,
                     coinInfo = CoinInfo(
                         coinMarketDetailsResponse.coinInfo.description ?: "",
-                        coinMarketDetailsResponse.coinInfo.links ?: emptyMap()),
+                        coinMarketDetailsResponse.coinInfo.links ?: emptyMap(),
+                        null),
                     rateDiffs = coinMarketDetailsResponse.rateDiffs
                 ))
 
