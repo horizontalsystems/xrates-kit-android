@@ -136,12 +136,12 @@ data class CoinGeckoCoinInfo(
     val coinCode: String,
     val title: String,
     val description: String? = null,
-    val links: Map<String, String>? = null
+    val links: Map<LinkType, String>? = null
 ) {
     companion object {
         fun parseData(jsonValue: JsonValue): CoinGeckoCoinInfo {
 
-            val links = mutableMapOf<String, String>()
+            val links = mutableMapOf<LinkType, String>()
             val element = jsonValue.asObject()
             val linksElement = element.get("links").asObject()
             val coinId = element.get("id").asString().toUpperCase()
@@ -155,25 +155,25 @@ data class CoinGeckoCoinInfo(
 
                 if (linksElement.get("homepage") != null) {
                     if (!linksElement.get("homepage").asArray().isNull) {
-                        links["Website"] = linksElement.get("homepage").asArray()[0].asString()
+                        links[LinkType.WEBSITE] = linksElement.get("homepage").asArray()[0].asString()
                     }
                 }
 
                 if (linksElement.get("twitter_screen_name") != null) {
                     if (!linksElement.get("twitter_screen_name").isNull) {
-                        links["Twitter"] = "https://twitter.com/${linksElement.get("twitter_screen_name").asString()}"
+                        links[LinkType.TWITTER] = "https://twitter.com/${linksElement.get("twitter_screen_name").asString()}"
                     }
                 }
 
                 if (linksElement.get("telegram_channel_identifier") != null) {
                     if (!linksElement.get("telegram_channel_identifier").isNull) {
-                        links["Telegram"] = "https://t.me/${linksElement.get("telegram_channel_identifier").asString()}"
+                        links[LinkType.TELEGRAM] = "https://t.me/${linksElement.get("telegram_channel_identifier").asString()}"
                     }
                 }
 
                 if (linksElement.get("subreddit_url") != null) {
                     if (!linksElement.get("subreddit_url").isNull) {
-                        links["Reddit"] = linksElement.get("subreddit_url").asString()
+                        links[LinkType.REDDIT] = linksElement.get("subreddit_url").asString()
                     }
                 }
 
@@ -181,7 +181,7 @@ data class CoinGeckoCoinInfo(
                     val gitHub = linksElement.get("repos_url").asObject().get("github")
                     if (gitHub != null) {
                         if (!gitHub.asArray().isNull)
-                            links["Github"] = gitHub.asArray()[0].asString()
+                            links[LinkType.GITHUB] = gitHub.asArray()[0].asString()
                     }
                 }
             }catch (e: Exception){

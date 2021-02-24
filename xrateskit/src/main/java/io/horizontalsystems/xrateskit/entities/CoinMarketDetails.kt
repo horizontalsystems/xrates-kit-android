@@ -2,6 +2,16 @@ package io.horizontalsystems.xrateskit.entities
 
 import java.math.BigDecimal
 
+enum class LinkType{
+    GUIDE,
+    WEBSITE,
+    WHITEPAPER,
+    TWITTER,
+    TELEGRAM,
+    REDDIT,
+    GITHUB
+}
+
 class CoinMarketDetails(
     val coin: Coin,
     val currencyCode: String,
@@ -24,4 +34,4 @@ class CoinMarketDetails(
 
 class CoinInfo(
     val description: String,
-    val links: Map<String, String>)
+    val links: Map<LinkType, String>)
