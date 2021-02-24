@@ -34,4 +34,5 @@ class CoinMarketDetails(
 
 class CoinInfo(
     val description: String,
-    val links: Map<LinkType, String>)
+    val links: Map<LinkType, String>,
+    val categories: List<String>?)
