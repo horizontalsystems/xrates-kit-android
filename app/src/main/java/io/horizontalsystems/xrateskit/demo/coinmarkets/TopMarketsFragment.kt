@@ -91,7 +91,7 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo2.visibility = View.VISIBLE
         }
         btnLoadCoinInfo.setOnClickListener {
-            viewModel.loadCoinInfo("BTC")
+            viewModel.loadCoinInfo("UNI")
             rviewInfo.visibility = View.GONE
             rviewInfo2.visibility = View.VISIBLE
         }
