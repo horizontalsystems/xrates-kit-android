@@ -30,7 +30,8 @@ class XRatesKit(
     private val historicalRateManager: HistoricalRateManager,
     private val cryptoNewsManager: CryptoNewsManager,
     private val coinMarketManager: CoinMarketsManager,
-    private val globalMarketInfoManager: GlobalMarketInfoManager
+    private val globalMarketInfoManager: GlobalMarketInfoManager,
+    private val coinInfoManager: CoinInfoManager
 ) {
 
     fun set(coins: List<Coin>) {
@@ -85,6 +86,11 @@ class XRatesKit(
         return coinMarketManager.getCoinMarketsAsync(coinCodes , currencyCode, fetchDiffPeriod)
     }
 
+    fun getCoinMarketsByCategoryAsync(categoryId: String, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<CoinMarket>> {
+        val coinCodes = coinInfoManager.getCoinCodesByCategory(categoryId)
+        return coinMarketManager.getCoinMarketsAsync(coinCodes , currencyCode, fetchDiffPeriod)
+    }
+
     fun getCoinMarketDetailsAsync(coinCode: String, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
         return coinMarketManager.getCoinMarketDetailsAsync(coinCode, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
     }
@@ -128,7 +134,8 @@ class XRatesKit(
             }
 
             val topMarketsManager = CoinMarketsManager(coinGeckoProvider, storage, factory)
-            CoinInfoManager(storage, context).loadCoinInfo()
+            val coinInfoManager = CoinInfoManager(storage, context)
+            coinInfoManager.loadCoinInfo()
 
             return XRatesKit(
                     marketInfoManager,
@@ -138,7 +145,8 @@ class XRatesKit(
                     historicalRateManager,
                     cryptoNewsManager,
                     topMarketsManager,
-                    globalMarketInfoManager
+                    globalMarketInfoManager,
+                    coinInfoManager
             )
         }
     }

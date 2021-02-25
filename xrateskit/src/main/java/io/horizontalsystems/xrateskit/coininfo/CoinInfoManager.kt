@@ -5,6 +5,7 @@ import com.eclipsesource.json.Json
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.CoinCategoriesEntity
 import io.horizontalsystems.xrateskit.entities.CoinCategory
+import io.horizontalsystems.xrateskit.entities.CoinInfo
 import io.horizontalsystems.xrateskit.entities.CoinInfoEntity
 import java.io.InputStreamReader
 
@@ -40,7 +41,7 @@ class CoinInfoManager(
             val coinId = coinInfo.asObject().get("id").asString()
             val code = coinInfo.asObject().get("code").asString()
             val name = coinInfo.asObject().get("name").asString()
-            val description = coinInfo.asObject().get("name").asString()
+            val description = coinInfo.asObject().get("description").asString()
 
             coinInfos.add(CoinInfoEntity(coinId, code, name, description))
 
@@ -55,4 +56,10 @@ class CoinInfoManager(
         storage.saveCoinCategories(coinCategories)
         storage.saveCoinCategory(categories)
     }
+
+    fun getCoinCodesByCategory(categoryId: String): List<String> {
+        val coinInfoEntity = storage.getCoinInfo(categoryId)
+        return coinInfoEntity.map { it.code }
+    }
+
 }
