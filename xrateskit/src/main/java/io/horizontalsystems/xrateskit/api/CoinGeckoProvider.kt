@@ -97,7 +97,7 @@ class CoinGeckoProvider(
             if(!coinIdsExcluded.contains(response.coinInfo.coinId)) {
                 topMarkets.add(
                     factory.createCoinMarket(
-                        coin = Coin(response.coinInfo.coinId, response.coinInfo.title),
+                        coin = Coin(response.coinInfo.coinCode, response.coinInfo.title),
                         currency = currencyCode,
                         rate = response.coinGeckoMarkets.rate,
                         rateOpenDay = response.coinGeckoMarkets.rateOpenDay,
