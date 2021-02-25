@@ -36,6 +36,23 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
             }
     }
 
+    fun loadMarketsByCategory(categoryId: String, timePeriod: TimePeriod) {
+        progressState.postValue(true)
+        ratesManager.getMarketsByCategory(categoryId, "USD", timePeriod)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .subscribe({ topMarketList ->
+                           topMarkets.postValue(topMarketList)
+                           progressState.postValue(false)
+                       }, {
+                           println("Error !!! ${it.message}")
+                           progressState.postValue(false)
+                       })
+            .let {
+                disposables.add(it)
+            }
+    }
+
     fun loadCoinInfo(coinCode: String = "AAVE") {
         progressState.postValue(true)
         ratesManager.getCoinMarketDetailsAsync(coinCode, "USD", listOf("USD","ETH","BTC"), listOf(TimePeriod.HOUR_24, TimePeriod.DAY_30))

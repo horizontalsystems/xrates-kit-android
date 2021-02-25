@@ -85,6 +85,18 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo.visibility = View.VISIBLE
         }
 
+        btnCategoryDex.setOnClickListener {
+            viewModel.loadMarketsByCategory("dexes",spAct.timePeriod)
+            rviewInfo2.visibility = View.GONE
+            rviewInfo.visibility = View.VISIBLE
+        }
+
+        btnCategoryBlockchain.setOnClickListener {
+            viewModel.loadMarketsByCategory("blockchain",spAct.timePeriod)
+            rviewInfo2.visibility = View.GONE
+            rviewInfo.visibility = View.VISIBLE
+        }
+
         btnLoadGLobalMarkets.setOnClickListener {
             viewModel.loadGlobalMarketInfo()
             rviewInfo.visibility = View.GONE
