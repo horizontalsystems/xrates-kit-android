@@ -7,7 +7,7 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class CoinGeckoManager(
+class CoinMarketsManager(
     private val coinGeckoProvider: CoinGeckoProvider,
     private val storage: IStorage,
     private val factory: Factory
@@ -59,7 +59,7 @@ class CoinGeckoManager(
 
     override fun getCoinMarketDetailsAsync(coinCode: String, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
         return getCoinIds(listOf(coinCode)).flatMap { coinIdList ->
-                coinGeckoProvider.getCoinMarketDetailsAsync(coinIdList.get(0), currencyCode, rateDiffCoinCodes, rateDiffPeriods)
+            coinGeckoProvider.getCoinMarketDetailsAsync(coinIdList[0], currencyCode, rateDiffCoinCodes, rateDiffPeriods)
         }
     }
 

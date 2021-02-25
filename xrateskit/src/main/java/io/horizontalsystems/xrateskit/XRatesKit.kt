@@ -6,6 +6,7 @@ import io.horizontalsystems.xrateskit.api.graphproviders.UniswapGraphProvider
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoManager
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSchedulerFactory
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSyncManager
+import io.horizontalsystems.xrateskit.coininfo.CoinInfoManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.cryptonews.CryptoNewsManager
 import io.horizontalsystems.xrateskit.entities.*
@@ -16,7 +17,7 @@ import io.horizontalsystems.xrateskit.marketinfo.MarketInfoSyncManager
 import io.horizontalsystems.xrateskit.storage.Database
 import io.horizontalsystems.xrateskit.storage.Storage
 import io.horizontalsystems.xrateskit.coinmarkets.GlobalMarketInfoManager
-import io.horizontalsystems.xrateskit.coinmarkets.CoinGeckoManager
+import io.horizontalsystems.xrateskit.coinmarkets.CoinMarketsManager
 import io.reactivex.Observable
 import io.reactivex.Single
 import java.math.BigDecimal
@@ -28,7 +29,7 @@ class XRatesKit(
     private val chartInfoSyncManager: ChartInfoSyncManager,
     private val historicalRateManager: HistoricalRateManager,
     private val cryptoNewsManager: CryptoNewsManager,
-    private val coinMarketManager: CoinGeckoManager,
+    private val coinMarketManager: CoinMarketsManager,
     private val globalMarketInfoManager: GlobalMarketInfoManager
 ) {
 
@@ -126,7 +127,8 @@ class XRatesKit(
                 chartInfoManager.listener = it
             }
 
-            val topMarketsManager = CoinGeckoManager(coinGeckoProvider, storage, factory)
+            val topMarketsManager = CoinMarketsManager(coinGeckoProvider, storage, factory)
+            CoinInfoManager(storage, context).loadCoinInfo()
 
             return XRatesKit(
                     marketInfoManager,
