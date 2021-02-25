@@ -20,6 +20,9 @@ interface CoinInfoDao {
     @Query("SELECT * FROM CoinCategory WHERE id in (select categoryId from CoinCategoriesEntity where coinId =:coinId)")
     fun getCoinCategories(coinId: String): List<CoinCategory>
 
+    @Query("SELECT * FROM CoinInfoEntity WHERE id in (select coinId from CoinCategoriesEntity where categoryId =:categoryId)")
+    fun getCoinInfoByCategory(categoryId: String): List<CoinInfoEntity>
+
     @Query("SELECT count(*) FROM CoinInfoEntity")
     fun getCoinInfoCount(): Int
 }

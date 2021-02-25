@@ -21,6 +21,10 @@ class Storage(private val database: Database) : IStorage {
         return coinInfoDao.getCoinCategories(coinId)
     }
 
+    override fun getCoinInfo(categoryId: String): List<CoinInfoEntity> {
+        return coinInfoDao.getCoinInfoByCategory(categoryId)
+    }
+
     override fun saveCoinInfo(coinInfos: List<CoinInfoEntity>) {
         coinInfoDao.insertCoinInfo(coinInfos)
     }
