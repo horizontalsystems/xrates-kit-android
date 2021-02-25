@@ -17,10 +17,10 @@ interface CoinInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCoinCategory(all: List<CoinCategory>)
 
-    @Query("SELECT * FROM CoinCategory WHERE id in (select categoryId from CoinCategoriesEntity where coinId =:coinId)")
+    @Query("SELECT * FROM CoinCategory WHERE id IN (SELECT categoryId FROM CoinCategoriesEntity WHERE coinId =:coinId)")
     fun getCoinCategories(coinId: String): List<CoinCategory>
 
-    @Query("SELECT * FROM CoinInfoEntity WHERE id in (select coinId from CoinCategoriesEntity where categoryId =:categoryId)")
+    @Query("SELECT * FROM CoinInfoEntity WHERE id IN (SELECT coinId FROM CoinCategoriesEntity WHERE categoryId =:categoryId)")
     fun getCoinInfoByCategory(categoryId: String): List<CoinInfoEntity>
 
     @Query("SELECT count(*) FROM CoinInfoEntity")
