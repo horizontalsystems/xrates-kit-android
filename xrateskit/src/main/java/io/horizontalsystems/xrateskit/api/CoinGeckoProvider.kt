@@ -2,6 +2,7 @@ package io.horizontalsystems.xrateskit.api
 
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.ICoinMarketProvider
+import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 import java.math.BigDecimal
@@ -134,7 +135,8 @@ class CoinGeckoProvider(
                     coinInfo = CoinInfo(
                         coinMarketDetailsResponse.coinInfo.description ?: "",
                         coinMarketDetailsResponse.coinInfo.links ?: emptyMap(),
-                        null),
+                        null,
+                        coinMarketDetailsResponse.coinInfo.platforms),
                     rateDiffs = coinMarketDetailsResponse.rateDiffs
                 ))
 
