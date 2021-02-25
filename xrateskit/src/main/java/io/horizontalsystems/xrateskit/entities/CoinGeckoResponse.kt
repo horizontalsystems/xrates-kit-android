@@ -136,12 +136,15 @@ data class CoinGeckoCoinInfo(
     val coinCode: String,
     val title: String,
     val description: String? = null,
-    val links: Map<LinkType, String>? = null
+    val links: Map<LinkType, String>? = null,
+    val categories: List<CoinCategory>? = null,
+    val platforms: Map<CoinPlatformType, String>? = null
 ) {
     companion object {
         fun parseData(jsonValue: JsonValue): CoinGeckoCoinInfo {
 
             val links = mutableMapOf<LinkType, String>()
+            val platforms = mutableMapOf<CoinPlatformType, String>()
             val element = jsonValue.asObject()
             val linksElement = element.get("links").asObject()
             val coinId = element.get("id").asString().toUpperCase()
@@ -180,12 +183,35 @@ data class CoinGeckoCoinInfo(
                 if (linksElement.get("repos_url") != null) {
                     val gitHub = linksElement.get("repos_url").asObject().get("github")
                     if (gitHub != null) {
-                        if (!gitHub.asArray().isNull)
+                        if (!gitHub.asArray().isEmpty)
                             links[LinkType.GITHUB] = gitHub.asArray()[0].asString()
                     }
                 }
+
+                if (element.get("asset_platform_id") != null) {
+                    if (!element.get("asset_platform_id").isNull) {
+                        val platformId = element.get("asset_platform_id").asString()
+                        val platformType = when(platformId.toLowerCase()){
+                            "tron" ->  CoinPlatformType.TRON
+                            "ethereum" ->  CoinPlatformType.ETHEREUM
+                            "eos" ->  CoinPlatformType.EOS
+                            "binance-smart-chain" ->  CoinPlatformType.BINANCE_SMART_CHAIN
+                            "binancecoin" ->  CoinPlatformType.BINANCE
+                            else -> null
+                        }
+
+                        platformType?.let {
+                            if (element.get("contract_address") != null) {
+                                if (!element.get("contract_address").isNull) {
+                                    platforms[it] = element.get("contract_address").asString()
+                                }
+                            }
+                        }
+                    }
+                }
+
             }catch (e: Exception){
-                //ignore error
+                print(e.getLocalizedMessage())    //ignore error
             }
 
             return CoinGeckoCoinInfo(

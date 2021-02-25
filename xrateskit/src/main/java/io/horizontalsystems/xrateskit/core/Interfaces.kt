@@ -6,6 +6,13 @@ import io.reactivex.Single
 
 interface IStorage {
 
+    // coinINfo
+    fun getCoinInfoCount(): Int
+    fun getCoinCategories(coinId: String): List<CoinCategory>
+    fun saveCoinInfo(coinInfos: List<CoinInfoEntity>)
+    fun saveCoinCategories(coinCategoryEntities: List<CoinCategoriesEntity>)
+    fun saveCoinCategory(coinCategories: List<CoinCategory>)
+
     //  Provider Coin Info
     fun saveProviderCoinInfo(providerCoinInfos: List<ProviderCoinInfo>)
     fun getProviderCoinInfoByCodes(providerId:Int, coinCodes: List<String>): List<ProviderCoinInfo>

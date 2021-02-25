@@ -1,5 +1,6 @@
 package io.horizontalsystems.xrateskit.entities
 
+import androidx.room.Entity
 import java.math.BigDecimal
 
 enum class LinkType{
@@ -11,6 +12,23 @@ enum class LinkType{
     REDDIT,
     GITHUB
 }
+
+enum class CoinPlatformType{
+    ETHEREUM,
+    BINANCE,
+    BINANCE_SMART_CHAIN,
+    TRON,
+    EOS,
+}
+
+@Entity(primaryKeys = ["id"])
+data class CoinInfoEntity(val id: String, val code: String, val name: String, val description: String)
+
+@Entity(primaryKeys = ["id"])
+data class CoinCategory(val id: String, val name: String)
+
+@Entity(primaryKeys = ["coinId", "categoryId"])
+data class CoinCategoriesEntity(val coinId: String, val categoryId: String)
 
 class CoinMarketDetails(
     val coin: Coin,
@@ -35,4 +53,6 @@ class CoinMarketDetails(
 class CoinInfo(
     val description: String,
     val links: Map<LinkType, String>,
-    val categories: List<String>?)
+    var categories: List<CoinCategory>?,
+    val platforms: Map<CoinPlatformType, String>?
+)
