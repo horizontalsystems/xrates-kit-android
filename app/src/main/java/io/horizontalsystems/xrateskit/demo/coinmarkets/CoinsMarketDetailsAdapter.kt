@@ -69,6 +69,8 @@ data class CoinMarketDetailsItem(val infoTitle: String, val value: BigDecimal, v
 
                 }
             }
+            list.add(CoinMarketDetailsItem("--------------- Rating ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
+            list.add(CoinMarketDetailsItem("${coinMarketDetails.coinInfo.rating}", BigDecimal.ZERO, BigDecimal.ZERO))
             list.add(CoinMarketDetailsItem("--------------- Categories ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
             list.add(CoinMarketDetailsItem("${coinMarketDetails.coinInfo.categories?.joinToString(",")}", BigDecimal.ZERO, BigDecimal.ZERO))
             coinMarketDetails.coinInfo.platforms?.let {
