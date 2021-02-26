@@ -86,6 +86,10 @@ class XRatesKit(
         return coinMarketManager.getCoinMarketsAsync(coinCodes , currencyCode, fetchDiffPeriod)
     }
 
+    fun getCoinRatingsAsync(): Single<Map<String, String>> {
+        return coinInfoManager.getCoinRatingsAsync()
+    }
+
     fun getCoinMarketsByCategoryAsync(categoryId: String, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<CoinMarket>> {
         val coinCodes = coinInfoManager.getCoinCodesByCategory(categoryId)
         return coinMarketManager.getCoinMarketsAsync(coinCodes , currencyCode, fetchDiffPeriod)
@@ -108,11 +112,13 @@ class XRatesKit(
         fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, indicatorPointCount: Int = 50, cryptoCompareApiKey: String = ""): XRatesKit {
             val factory = Factory(rateExpirationInterval)
             val storage = Storage(Database.create(context))
+            val coinInfoManager = CoinInfoManager(storage, context)
+            coinInfoManager.loadCoinInfo()
 
             val apiManager = ApiManager()
             val coinPaprikaProvider = CoinPaprikaProvider(apiManager)
             val horsysProvider = HorsysProvider(apiManager)
-            val coinGeckoProvider = CoinGeckoProvider(factory, apiManager)
+            val coinGeckoProvider = CoinGeckoProvider(factory, apiManager, coinInfoManager)
             val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, cryptoCompareApiKey, indicatorPointCount)
             val uniswapGraphProvider = UniswapGraphProvider(factory, apiManager, cryptoCompareProvider)
             val marketInfoProvider = BaseMarketInfoProvider(cryptoCompareProvider, uniswapGraphProvider)
@@ -134,8 +140,6 @@ class XRatesKit(
             }
 
             val topMarketsManager = CoinMarketsManager(coinGeckoProvider, storage, factory)
-            val coinInfoManager = CoinInfoManager(storage, context)
-            coinInfoManager.loadCoinInfo()
 
             return XRatesKit(
                     marketInfoManager,

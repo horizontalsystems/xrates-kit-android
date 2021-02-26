@@ -8,9 +8,11 @@ interface IStorage {
 
     // coinINfo
     fun getCoinInfoCount(): Int
+    fun getCoinInfos(): List<CoinInfoEntity>
     fun getCoinCategories(coinId: String): List<CoinCategory>
-    fun getCoinInfo(categoryId: String): List<CoinInfoEntity>
-    fun saveCoinInfo(coinInfos: List<CoinInfoEntity>)
+    fun getCoinInfosByCategory(categoryId: String): List<CoinInfoEntity>
+    fun getCoinInfo(coinCode: String): CoinInfoEntity?
+    fun saveCoinInfos(coinInfos: List<CoinInfoEntity>)
     fun saveCoinCategories(coinCategoryEntities: List<CoinCategoriesEntity>)
     fun saveCoinCategory(coinCategories: List<CoinCategory>)
 
