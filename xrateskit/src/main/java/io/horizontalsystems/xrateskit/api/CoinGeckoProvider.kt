@@ -1,5 +1,6 @@
 package io.horizontalsystems.xrateskit.api
 
+import io.horizontalsystems.xrateskit.coininfo.CoinInfoManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.ICoinMarketProvider
 import io.horizontalsystems.xrateskit.core.IStorage
@@ -11,7 +12,8 @@ import java.util.logging.Logger
 
 class CoinGeckoProvider(
     private val factory: Factory,
-    private val apiManager: ApiManager
+    private val apiManager: ApiManager,
+    private val coinInfoManager: CoinInfoManager
 ) : ICoinMarketProvider {
     private val logger = Logger.getLogger("CoinGeckoProvider")
     private val coinIdsExcluded = listOf("ankreth", "baby-power-index-pool-token", "bifi", "bitcoin-file", "blockidcoin",
@@ -120,6 +122,8 @@ class CoinGeckoProvider(
             try {
 
                 val coinMarketDetailsResponse = doCoinMarketDetailsRequest(coinId, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
+                val rating = coinInfoManager.getCoinRating(coinMarketDetailsResponse.coinInfo.coinCode)
+                val categories = coinInfoManager.getCoinCategories(coinMarketDetailsResponse.coinInfo.coinCode)
 
                 emitter.onSuccess(CoinMarketDetails(
                     coin = Coin(coinMarketDetailsResponse.coinInfo.coinCode, coinMarketDetailsResponse.coinInfo.title),
@@ -135,7 +139,8 @@ class CoinGeckoProvider(
                     coinInfo = CoinInfo(
                         coinMarketDetailsResponse.coinInfo.description ?: "",
                         coinMarketDetailsResponse.coinInfo.links ?: emptyMap(),
-                        null,
+                        rating,
+                        categories,
                         coinMarketDetailsResponse.coinInfo.platforms),
                     rateDiffs = coinMarketDetailsResponse.rateDiffs
                 ))

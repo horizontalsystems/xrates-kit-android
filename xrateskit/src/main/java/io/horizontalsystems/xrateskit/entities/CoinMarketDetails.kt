@@ -22,7 +22,12 @@ enum class CoinPlatformType{
 }
 
 @Entity(primaryKeys = ["id"])
-data class CoinInfoEntity(val id: String, val code: String, val name: String, val description: String)
+data class CoinInfoEntity(
+    val id: String,
+    val code: String,
+    val name: String,
+    val rating: String,
+    val description: String)
 
 @Entity(primaryKeys = ["id"])
 data class CoinCategory(val id: String, val name: String)
@@ -53,6 +58,7 @@ class CoinMarketDetails(
 class CoinInfo(
     val description: String,
     val links: Map<LinkType, String>,
+    val rating: String?,
     var categories: List<CoinCategory>?,
     val platforms: Map<CoinPlatformType, String>?
 )

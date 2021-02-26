@@ -16,16 +16,24 @@ class Storage(private val database: Database) : IStorage {
     override fun getCoinInfoCount(): Int {
         return coinInfoDao.getCoinInfoCount()
     }
+    
+    override fun getCoinInfo(coinCode: String): CoinInfoEntity? {
+        return coinInfoDao.getCoinInfo(coinCode)
+    }
+
+    override fun getCoinInfos(): List<CoinInfoEntity> {
+        return coinInfoDao.getCoinInfos()
+    }
 
     override fun getCoinCategories(coinId: String): List<CoinCategory> {
         return coinInfoDao.getCoinCategories(coinId)
     }
 
-    override fun getCoinInfo(categoryId: String): List<CoinInfoEntity> {
+    override fun getCoinInfosByCategory(categoryId: String): List<CoinInfoEntity> {
         return coinInfoDao.getCoinInfoByCategory(categoryId)
     }
 
-    override fun saveCoinInfo(coinInfos: List<CoinInfoEntity>) {
+    override fun saveCoinInfos(coinInfos: List<CoinInfoEntity>) {
         coinInfoDao.insertCoinInfo(coinInfos)
     }
 

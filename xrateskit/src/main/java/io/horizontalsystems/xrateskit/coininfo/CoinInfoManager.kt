@@ -5,8 +5,8 @@ import com.eclipsesource.json.Json
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.CoinCategoriesEntity
 import io.horizontalsystems.xrateskit.entities.CoinCategory
-import io.horizontalsystems.xrateskit.entities.CoinInfo
 import io.horizontalsystems.xrateskit.entities.CoinInfoEntity
+import io.reactivex.Single
 import java.io.InputStreamReader
 
 
@@ -41,9 +41,18 @@ class CoinInfoManager(
             val coinId = coinInfo.asObject().get("id").asString()
             val code = coinInfo.asObject().get("code").asString()
             val name = coinInfo.asObject().get("name").asString()
-            val description = coinInfo.asObject().get("description").asString()
+            val rating = if(coinInfo.asObject().get("rating") != null){
+                            if(!coinInfo.asObject().get("rating").isNull)
+                                coinInfo.asObject().get("rating").asString()
+                            else ""
+                         } else ""
+            val description = if(coinInfo.asObject().get("description") != null){
+                                  if(!coinInfo.asObject().get("description").isNull)
+                                      coinInfo.asObject().get("description").asString()
+                                  else ""
+                              } else ""
 
-            coinInfos.add(CoinInfoEntity(coinId, code, name, description))
+            coinInfos.add(CoinInfoEntity(coinId, code, name, rating, description))
 
             coinInfo.asObject().get("categories")?.let {
                 it.asArray().forEach {  categoryId ->
@@ -52,14 +61,40 @@ class CoinInfoManager(
             }
         }
 
-        storage.saveCoinInfo(coinInfos)
+        storage.saveCoinInfos(coinInfos)
         storage.saveCoinCategories(coinCategories)
         storage.saveCoinCategory(categories)
     }
 
+    fun getCoinRating(coinCode: String): String? {
+        return storage.getCoinInfo(coinCode.toUpperCase())?.rating
+    }
+
+    fun getCoinCategories(coinCode: String): List<CoinCategory>? {
+        return storage.getCoinInfo(coinCode.toUpperCase())?.let {
+            storage.getCoinCategories(it.id)
+        }
+    }
+
     fun getCoinCodesByCategory(categoryId: String): List<String> {
-        val coinInfoEntity = storage.getCoinInfo(categoryId)
+        val coinInfoEntity = storage.getCoinInfosByCategory(categoryId)
         return coinInfoEntity.map { it.code }
     }
+
+    fun getCoinRatingsAsync(): Single<Map<String, String>> =
+        Single.create { emitter ->
+            try {
+                val coinRatingsMap = mutableMapOf<String, String>()
+
+                storage.getCoinInfos().forEach { coin ->
+                    if (coin.rating.isNotEmpty()) {
+                        coinRatingsMap[coin.code] = coin.rating
+                    }
+                }
+                emitter.onSuccess(coinRatingsMap)
+            } catch (error: Throwable) {
+                emitter.onError(error)
+            }
+        }
 
 }
