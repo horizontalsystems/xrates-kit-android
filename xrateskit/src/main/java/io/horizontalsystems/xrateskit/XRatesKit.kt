@@ -89,7 +89,7 @@ class XRatesKit(
         return coinMarketManager.getCoinMarketsAsync(coinTypes , currencyCode, fetchDiffPeriod)
     }
 
-    fun getCoinRatingsAsync(): Single<Map<String, String>> {
+    fun getCoinRatingsAsync(): Single<Map<CoinType, String>> {
         return coinInfoManager.getCoinRatingsAsync()
     }
 
