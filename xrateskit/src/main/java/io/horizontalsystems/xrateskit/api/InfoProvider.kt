@@ -1,11 +1,11 @@
 package io.horizontalsystems.xrateskit.api
 
-sealed class InfoProvider(val id: Int, var baseUrl: String = "", var accessKey: String? = null) {
+sealed class InfoProvider(val id: String, var baseUrl: String = "", var accessKey: String? = null) {
 
-    class CryptoCompare : InfoProvider(1, "https://min-api.cryptocompare.com")
-    class CoinPaprika : InfoProvider(3, "https://api.coinpaprika.com/v1")
-    class CoinGecko : InfoProvider(4, "https://api.coingecko.com/api/v3")
-    class GraphNetwork : InfoProvider(5, "https://api.thegraph.com/subgraphs/name")
-    class HorSys : InfoProvider(6, "https://info.horizontalsystems.xyz/api/v1")
+    class CryptoCompare : InfoProvider("cryptocompare", "https://min-api.cryptocompare.com")
+    class CoinPaprika : InfoProvider("coinpaprika", "https://api.coinpaprika.com/v1")
+    class CoinGecko : InfoProvider("coingecko", "https://api.coingecko.com/api/v3")
+    class GraphNetwork : InfoProvider("graphnetwork", "https://api.thegraph.com/subgraphs/name")
+    class HorSys : InfoProvider("horsys", "https://info.horizontalsystems.xyz/api/v1")
 
 }
