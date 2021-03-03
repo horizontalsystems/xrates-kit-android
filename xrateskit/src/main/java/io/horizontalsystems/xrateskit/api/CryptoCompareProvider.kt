@@ -1,6 +1,9 @@
 package io.horizontalsystems.xrateskit.api
 
 import com.eclipsesource.json.JsonObject
+import io.horizontalsystems.coinkit.models.CoinType
+import io.horizontalsystems.xrateskit.coins.ProviderCoinError
+import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
@@ -12,7 +15,8 @@ class CryptoCompareProvider(
         private val factory: Factory,
         private val apiManager: ApiManager,
         private val apiKey: String,
-        private val indicatorPointCount: Int)
+        private val indicatorPointCount: Int,
+        private val providerCoinsManager: ProviderCoinsManager)
     : IInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, IMarketInfoProvider, IFiatXRatesProvider {
 
     private val logger = Logger.getLogger("CryptoCompareProvider")
@@ -21,22 +25,45 @@ class CryptoCompareProvider(
     override fun initProvider() {}
     override fun destroy() {}
 
-    override fun getMarketInfo(coins: List<Coin>, currency: String): Single<List<MarketInfoEntity>> {
+    private fun getProviderCoinId(coinType: CoinType): String {
+        providerCoinsManager.getProviderIds(listOf(coinType), this.provider).let {
+            if(it.isNotEmpty()){
+                it[0]?.let {
+                    return it
+                }
+            }
+        }
+        throw ProviderCoinError.NoMatchingExternalId()
+    }
 
-        if(coins.isEmpty())
+    private fun getCoinType(providerCoinId: String?): CoinType {
+
+        providerCoinId?.let {
+            providerCoinsManager.getCoinTypes(it.toLowerCase(), this.provider).let { coinTypes ->
+                if (coinTypes.isNotEmpty()) {
+                    return coinTypes[0]
+                }
+            }
+        }
+
+        throw ProviderCoinError.NoMatchingExternalId()
+    }
+    override fun getMarketInfo(coinTypes: List<CoinType>, currency: String): Single<List<MarketInfoEntity>> {
+
+        val coinCodeList = providerCoinsManager.getProviderIds(coinTypes, this.provider)
+        if(coinCodeList.isEmpty())
             return Single.just(Collections.emptyList())
 
         return Single.create { emitter ->
             try {
-                val coinCodeList = coins.map { coin -> coin.code }
                 val codes = coinCodeList.joinToString(",")
-
                 val json = apiManager.getJson("${provider.baseUrl}/data/pricemultifull?api_key=${apiKey}&fsyms=${codes}&tsyms=${currency}")
                 val data = json["RAW"].asObject()
                 val list = mutableListOf<MarketInfoEntity>()
 
                 for (coin in coinCodeList) {
                     try {
+                        val coinType = getCoinType(coin)
                         val dataCoin = data.get(coin).asObject()
                         val dataFiat = dataCoin.get(currency).asObject()
 
@@ -47,7 +74,7 @@ class CryptoCompareProvider(
                         val mktcap = dataFiat["MKTCAP"].asDouble().toBigDecimal()
                         val supply = dataFiat["SUPPLY"].asDouble().toBigDecimal()
 
-                        list.add(factory.createMarketInfoEntity(coin, currency, rate, rateOpenDay, diff, volume, mktcap, supply))
+                        list.add(factory.createMarketInfoEntity(coinType, currency, rate, rateOpenDay, diff, volume, mktcap, supply))
                     } catch (e: Exception) {
                         continue
                     }
@@ -64,7 +91,7 @@ class CryptoCompareProvider(
 
     //  Historical Rate
 
-    override fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<HistoricalRate> {
+    override fun getHistoricalRate(coinType: CoinType, currency: String, timestamp: Long): Single<HistoricalRate> {
         val todayInSeconds = Date().time / 1000
         val sevenDaysInSeconds = 604800
 
@@ -72,9 +99,9 @@ class CryptoCompareProvider(
             try {
                 //API has records by minutes only for the last 7 days
                 val rate = if (todayInSeconds - timestamp < sevenDaysInSeconds) {
-                    getByMinute(coin, currency, timestamp)
+                    getByMinute(coinType, currency, timestamp)
                 } else {
-                    getByHour(coin, currency, timestamp)
+                    getByHour(coinType, currency, timestamp)
                 }
                 emitter.onSuccess(rate)
             } catch (e: Exception) {
@@ -83,19 +110,21 @@ class CryptoCompareProvider(
         }
     }
 
-    private fun getByMinute(coin: String, currency: String, timestamp: Long): HistoricalRate {
-        val response = apiManager.getJson("${provider.baseUrl}/data/v2/histominute?api_key=${apiKey}&fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
+    private fun getByMinute(coinType: CoinType, currency: String, timestamp: Long): HistoricalRate {
+        val providerCoinId = getProviderCoinId(coinType)
+        val response = apiManager.getJson("${provider.baseUrl}/data/v2/histominute?api_key=${apiKey}&fsym=${providerCoinId}&tsym=${currency}&limit=1&toTs=$timestamp")
         val value = parseValue(response)
 
-        return factory.createHistoricalRate(coin, currency, value, timestamp)
+        return factory.createHistoricalRate(coinType, currency, value, timestamp)
     }
 
-    private fun getByHour(coin: String, currency: String, timestamp: Long): HistoricalRate {
+    private fun getByHour(coinType: CoinType, currency: String, timestamp: Long): HistoricalRate {
+        val providerCoinId = getProviderCoinId(coinType)
         val response = apiManager.getJson(
-                "${provider.baseUrl}/data/v2/histohour?api_key=${apiKey}&fsym=${coin}&tsym=${currency}&limit=1&toTs=$timestamp")
+                "${provider.baseUrl}/data/v2/histohour?api_key=${apiKey}&fsym=${providerCoinId}&tsym=${currency}&limit=1&toTs=$timestamp")
         val value = parseValue(response)
 
-        return factory.createHistoricalRate(coin, currency, value, timestamp)
+        return factory.createHistoricalRate(coinType, currency, value, timestamp)
     }
 
     private fun parseValue(jsonObject: JsonObject): BigDecimal {
@@ -121,11 +150,13 @@ class CryptoCompareProvider(
     }
 
     private fun fetchChartPoints(stats: MutableList<ChartPointEntity>, chartPointKey: ChartInfoKey, limit: Int, toTimestamp: Long?): MutableList<ChartPointEntity> {
-        val coin = chartPointKey.coin
+        //val coin = chartPointKey.coinType
+        val providerCoinId = getProviderCoinId(chartPointKey.coinType)
+
         val currency = chartPointKey.currency
         val chartType = chartPointKey.chartType
 
-        var baseUrl = "${provider.baseUrl}/data/v2/${chartType.resource}?api_key=${apiKey}&fsym=$coin&tsym=$currency&aggregate=${chartType.interval}"
+        var baseUrl = "${provider.baseUrl}/data/v2/${chartType.resource}?api_key=${apiKey}&fsym=$providerCoinId&tsym=$currency&aggregate=${chartType.interval}"
         if (toTimestamp != null) {
             baseUrl += "&toTs=${toTimestamp}"
         }
@@ -141,7 +172,7 @@ class CryptoCompareProvider(
 
             stats.add(ChartPointEntity(
                 chartType,
-                coin,
+                chartPointKey.coinType,
                 currency,
                 value,
                 volume,

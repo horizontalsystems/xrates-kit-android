@@ -1,7 +1,7 @@
 package io.horizontalsystems.xrateskit.marketinfo
 
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.core.IMarketInfoProvider
-import io.horizontalsystems.xrateskit.entities.Coin
 
 class MarketInfoSchedulerFactory(
         private val manager: MarketInfoManager,
@@ -9,11 +9,11 @@ class MarketInfoSchedulerFactory(
         private val expirationInterval: Long,
         private val retryInterval: Long) {
 
-    fun getScheduler(coins: List<Coin>, currency: String): MarketInfoScheduler {
+    fun getScheduler(coinType: List<CoinType>, currency: String): MarketInfoScheduler {
         return MarketInfoScheduler(MarketInfoSchedulerProvider(
                 retryInterval,
                 expirationInterval,
-                coins,
+                coinType,
                 currency,
                 manager,
                 provider

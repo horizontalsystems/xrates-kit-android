@@ -1,9 +1,11 @@
 package io.horizontalsystems.xrateskit.api
 
-import io.horizontalsystems.xrateskit.coininfo.CoinInfoManager
+import io.horizontalsystems.coinkit.models.CoinType
+import io.horizontalsystems.xrateskit.coins.CoinInfoManager
+import io.horizontalsystems.xrateskit.coins.ProviderCoinError
+import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.ICoinMarketProvider
-import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 import java.math.BigDecimal
@@ -13,76 +15,95 @@ import java.util.logging.Logger
 class CoinGeckoProvider(
     private val factory: Factory,
     private val apiManager: ApiManager,
-    private val coinInfoManager: CoinInfoManager
+    private val coinInfoManager: CoinInfoManager,
+    private val providerCoinsManager: ProviderCoinsManager
 ) : ICoinMarketProvider {
     private val logger = Logger.getLogger("CoinGeckoProvider")
-    private val coinIdsExcluded = listOf("ankreth", "baby-power-index-pool-token", "bifi", "bitcoin-file", "blockidcoin",
-                                         "bonded-finance", "bowl-a-coin", "btc-alpha-token", "cactus-finance", "coin-artist",
-                                         "compound-coin", "daily-funds", "defi-bids", "defi-nation-signals-dao",
-                                         "deipool", "demos", "derogold", "digitalusd", "dipper", "dipper-network",
-                                         "dollars", "fin-token", "freetip", "funkeypay", "gdac-token",
-                                         "golden-ratio-token", "holy-trinity", "hotnow", "hydro-protocol", "lition",
-                                         "master-usd", "memetic", "mir-coin", "morpher", "name-changing-token", "payperex",
-                                         "radium", "san-diego-coin", "seed2need", "shardus", "siambitcoin", "socketfinance",
-                                         "soft-bitcoin", "spacechain", "stake-coin-2", "stakehound-staked-ether", "super-bitcoin",
-                                         "thorchain-erc20", "unicorn-token", "universe-token", "unit-protocol-duck", "usdx-stablecoin",
-                                         "usdx-wallet", "wrapped-terra", "yield")
-
     override val provider: InfoProvider = InfoProvider.CoinGecko()
+    private val MAX_ITEM_PER_PAGE = 250
+    private val REQUEST_DELAY = 600 // Millis
 
     init {
         initProvider()
     }
 
     override fun initProvider() {}
-
     override fun destroy() {}
 
-    fun getProviderCoinInfoAsync(): Single<List<ProviderCoinInfo>>{
-        val providerCoinInfos = mutableListOf<ProviderCoinInfo>()
-
-        return Single.create { emitter ->
-            try {
-                val json = apiManager.getJsonValue("${provider.baseUrl}/coins/list")
-
-                json.asArray()?.forEach { coinInfo ->
-                    coinInfo?.asObject()?.let { element ->
-
-                        val coinId = element.get("id").asString()
-                        if(!coinIdsExcluded.contains(coinId)){
-                            val coinCode = element.get("symbol").asString().toUpperCase()
-                            providerCoinInfos.add(ProviderCoinInfo(provider.id, coinCode, coinId))
-                        }
-                    }
+    private fun getProviderCoinId(coinType: CoinType): String {
+        providerCoinsManager.getProviderIds(listOf(coinType), this.provider).let {
+            if(it.isNotEmpty()){
+                it[0]?.let {
+                    return it
                 }
-
-                emitter.onSuccess(providerCoinInfos)
-
-            } catch (e: Exception) {
-                emitter.onError(e)
             }
         }
+        throw ProviderCoinError.NoMatchingExternalId()
+    }
+
+    private fun getCoinType(providerCoinId: String?): CoinType {
+
+        providerCoinId?.let {
+            providerCoinsManager.getCoinTypes(it.toLowerCase(), this.provider).let { coinTypes ->
+                if (coinTypes.isNotEmpty()) {
+                    return coinTypes[0]
+                }
+            }
+        }
+
+        throw ProviderCoinError.NoMatchingExternalId()
     }
 
     override fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>> {
-        return Single.create { emitter ->
-            try {
-                emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, itemsCount = itemsCount))
+        try {
+            var pageNumber = 1
+            val singles = mutableListOf<Single<List<CoinMarket>>>()
+            var delay = 0L
+            var requestItems = itemsCount
 
-            } catch (ex: Exception) {
-                emitter.onError(ex)
+            do{
+                singles.add(getCoinMarketsDelayed(
+                    delay = delay,
+                    currencyCode = currencyCode,
+                    fetchDiffPeriod = fetchDiffPeriod,
+                    itemsCount = if(requestItems > MAX_ITEM_PER_PAGE) MAX_ITEM_PER_PAGE else requestItems,
+                    pageNumber = pageNumber)
+                )
+
+                delay += REQUEST_DELAY
+                requestItems -= MAX_ITEM_PER_PAGE
+                pageNumber ++
+
+            } while (requestItems > 0)
+
+
+            return Single.zip(singles) { zippedObject ->
+                zippedObject.toList().flatMap { it as List<CoinMarket>}
             }
+
+        } catch (ex: Exception) {
+            logger.warning(ex.localizedMessage)
+        }
+
+        return Single.just(emptyList())
+    }
+
+    private fun getCoinMarketsDelayed(delay: Long, currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int, pageNumber: Int): Single<List<CoinMarket>> {
+        return Single.create { emitter->
+            Thread.sleep(delay)
+            emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, itemsCount = itemsCount, pageNumber = pageNumber))
         }
     }
 
-    override fun getCoinMarketsAsync(coinIds: List<String>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
+    override fun getCoinMarketsAsync(coinTypes: List<CoinType>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
 
-        if(coinIds.isEmpty())
+        val providerCoinIds = providerCoinsManager.getProviderIds(coinTypes, this.provider).mapNotNull { it }
+        if(providerCoinIds.isEmpty())
             return Single.just(Collections.emptyList())
         
         return Single.create { emitter ->
             try {
-                emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, coinIds = coinIds))
+                emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, coinIds = providerCoinIds))
 
             } catch (ex: Exception) {
                 emitter.onError(ex)
@@ -90,60 +111,83 @@ class CoinGeckoProvider(
         }
     }
 
-    private fun getCoinMarkets(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int? = null, coinIds: List<String>? = null): List<CoinMarket> {
+    private fun getCoinMarkets(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int? = null, coinIds: List<String>? = null, pageNumber: Int = 1): List<CoinMarket> {
 
         val topMarkets = mutableListOf<CoinMarket>()
-        val coinGeckoMarketsResponses = doCoinMarketsRequest(currencyCode, listOf(fetchDiffPeriod), itemsCount, coinIds)
+        val coinGeckoMarketsResponses = doCoinMarketsRequest(currencyCode, listOf(fetchDiffPeriod), itemsCount, coinIds, pageNumber)
+        var coinId = ""
 
-        coinGeckoMarketsResponses.forEach{ response ->
-            if(!coinIdsExcluded.contains(response.coinInfo.coinId)) {
+        coinGeckoMarketsResponses.forEach { response ->
+
+            try{
+                coinId = response.coinInfo.coinId
+
                 topMarkets.add(
                     factory.createCoinMarket(
-                        coin = Coin(response.coinInfo.coinCode, response.coinInfo.title),
+                        coinData = CoinData(
+                            getCoinType(response.coinInfo.coinId),
+                            response.coinInfo.coinCode,
+                            response.coinInfo.title
+                        ),
                         currency = currencyCode,
                         rate = response.coinGeckoMarkets.rate,
                         rateOpenDay = response.coinGeckoMarkets.rateOpenDay,
                         rateDiff = response.coinGeckoMarkets.rateDiffPeriod?.get(TimePeriod.HOUR_24) ?: BigDecimal.ZERO,
                         volume = response.coinGeckoMarkets.volume24h,
                         supply = response.coinGeckoMarkets.circulatingSupply,
-                        rateDiffPeriod = response.coinGeckoMarkets.rateDiffPeriod?.get(fetchDiffPeriod) ?: BigDecimal.ZERO,
+                        rateDiffPeriod = response.coinGeckoMarkets.rateDiffPeriod?.get(fetchDiffPeriod)
+                            ?: BigDecimal.ZERO,
                         marketCap = response.coinGeckoMarkets.marketCap
                     )
                 )
+            } catch(e: ProviderCoinError.NoMatchingExternalId){
+                println(" No provider record for CoinId: ${coinId}")
             }
         }
 
         return topMarkets
     }
 
-    override fun getCoinMarketDetailsAsync(coinId: String, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
+    override fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
 
         return Single.create { emitter ->
             try {
 
-                val coinMarketDetailsResponse = doCoinMarketDetailsRequest(coinId, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
-                val rating = coinInfoManager.getCoinRating(coinMarketDetailsResponse.coinInfo.coinCode)
-                val categories = coinInfoManager.getCoinCategories(coinMarketDetailsResponse.coinInfo.coinCode)
+                val providerCoinId = getProviderCoinId(coinType)
+                val coinMarketDetailsResponse =
+                    doCoinMarketDetailsRequest(providerCoinId, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
+                val coinRating = coinInfoManager.getCoinRating(coinType)
+                val categories = coinInfoManager.getCoinCategories(coinType)
+                val links = coinInfoManager.getLinks(coinType, coinMarketDetailsResponse.coinInfo.links)
 
-                emitter.onSuccess(CoinMarketDetails(
-                    coin = Coin(coinMarketDetailsResponse.coinInfo.coinCode, coinMarketDetailsResponse.coinInfo.title),
-                    currencyCode = currencyCode,
-                    rate = coinMarketDetailsResponse.coinGeckoMarkets.rate,
-                    rateHigh24h = coinMarketDetailsResponse.coinGeckoMarkets.rateHigh24h,
-                    rateLow24h = coinMarketDetailsResponse.coinGeckoMarkets.rateLow24h,
-                    marketCap = coinMarketDetailsResponse.coinGeckoMarkets.marketCap,
-                    marketCapDiff24h = coinMarketDetailsResponse.coinGeckoMarkets.marketCapDiff24h,
-                    volume24h = coinMarketDetailsResponse.coinGeckoMarkets.volume24h,
-                    circulatingSupply = coinMarketDetailsResponse.coinGeckoMarkets.circulatingSupply,
-                    totalSupply = coinMarketDetailsResponse.coinGeckoMarkets.totalSupply,
-                    coinInfo = CoinInfo(
-                        coinMarketDetailsResponse.coinInfo.description ?: "",
-                        coinMarketDetailsResponse.coinInfo.links ?: emptyMap(),
-                        rating,
-                        categories,
-                        coinMarketDetailsResponse.coinInfo.platforms),
-                    rateDiffs = coinMarketDetailsResponse.rateDiffs
-                ))
+                emitter.onSuccess(
+                    CoinMarketDetails(
+                        data = CoinData(
+                            coinType,
+                            coinMarketDetailsResponse.coinInfo.coinCode,
+                            coinMarketDetailsResponse.coinInfo.title
+                        ),
+                        currencyCode = currencyCode,
+                        rate = coinMarketDetailsResponse.coinGeckoMarkets.rate,
+                        rateHigh24h = coinMarketDetailsResponse.coinGeckoMarkets.rateHigh24h,
+                        rateLow24h = coinMarketDetailsResponse.coinGeckoMarkets.rateLow24h,
+                        marketCap = coinMarketDetailsResponse.coinGeckoMarkets.marketCap,
+                        marketCapDiff24h = coinMarketDetailsResponse.coinGeckoMarkets.marketCapDiff24h,
+                        volume24h = coinMarketDetailsResponse.coinGeckoMarkets.volume24h,
+                        circulatingSupply = coinMarketDetailsResponse.coinGeckoMarkets.circulatingSupply,
+                        totalSupply = coinMarketDetailsResponse.coinGeckoMarkets.totalSupply,
+                        meta = CoinMeta(
+                            coinMarketDetailsResponse.coinInfo.description ?: "",
+                            links,
+                            coinRating,
+                            categories,
+                            coinMarketDetailsResponse.coinInfo.platforms
+                        ),
+
+                        rateDiffs = coinMarketDetailsResponse.rateDiffs,
+                        tickers = coinMarketDetailsResponse.coinInfo.tickers.map { MarketTicker(it.base, it.target, it.marketName, it.rate, it.volume) }
+                    )
+                )
 
             } catch (ex: Exception) {
                 emitter.onError(ex)
@@ -151,12 +195,12 @@ class CoinGeckoProvider(
         }
     }
 
-    private fun doCoinMarketsRequest(currencyCode: String, fetchDiffPeriods: List<TimePeriod>, itemsCount: Int? = null, coinIds: List<String>? = null): List<CoinGeckoCoinMarketsResponse> {
+    private fun doCoinMarketsRequest(currencyCode: String, fetchDiffPeriods: List<TimePeriod>, itemsCount: Int? = null, coinIds: List<String>? = null, pageNumber: Int = 1): List<CoinGeckoCoinMarketsResponse> {
 
         val coinIdsParams = if(!coinIds.isNullOrEmpty()) "&ids=${coinIds.joinToString(separator = ",")}"
                             else ""
 
-        val perPage = if(itemsCount != null) "&per_page=${itemsCount}"
+        val perPage = if(itemsCount != null) "&page=${pageNumber}&per_page=${itemsCount}"
                       else ""
 
         val priceChangePercentage = fetchDiffPeriods.map { period ->
@@ -176,7 +220,7 @@ class CoinGeckoProvider(
     private fun doCoinMarketDetailsRequest(coinId: String, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): CoinGeckoCoinMarketDetailsResponse {
 
         val json = apiManager.getJsonValue(
-            "${provider.baseUrl}/coins/${coinId}?tickers=false&localization=false&sparkline=false")
+            "${provider.baseUrl}/coins/${coinId}?tickers=true&localization=false&sparkline=false")
 
         return CoinGeckoCoinMarketDetailsResponse.parseData(json, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
     }

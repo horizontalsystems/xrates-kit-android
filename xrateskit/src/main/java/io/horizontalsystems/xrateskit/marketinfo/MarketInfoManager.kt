@@ -1,5 +1,6 @@
 package io.horizontalsystems.xrateskit.marketinfo
 
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.MarketInfoKey
@@ -12,24 +13,24 @@ class MarketInfoManager(private val storage: IStorage, private val factory: Fact
 
     interface Listener {
         fun onUpdate(marketInfo: MarketInfo, key: MarketInfoKey)
-        fun onUpdate(marketInfoMap: Map<String, MarketInfo>, currency: String)
+        fun onUpdate(marketInfoMap: Map<CoinType, MarketInfo>, currency: String)
     }
 
-    fun getLastSyncTimestamp(coins: List<String>, currency: String): Long? {
-        val rates = storage.getOldMarketInfo(coins, currency)
-        if (rates.size != coins.size) {
+    fun getLastSyncTimestamp(coinTypes: List<CoinType>, currency: String): Long? {
+        val rates = storage.getOldMarketInfo(coinTypes, currency)
+        if (rates.size != coinTypes.size) {
             return null
         }
 
         return rates.lastOrNull()?.timestamp
     }
 
-    fun getMarketInfo(coin: String, currency: String): MarketInfo? {
-        return storage.getMarketInfo(coin, currency)?.let { factory.createMarketInfo(it) }
+    fun getMarketInfo(coinType: CoinType, currency: String): MarketInfo? {
+        return storage.getMarketInfo(coinType, currency)?.let { factory.createMarketInfo(it) }
     }
 
-    fun notifyExpired(coins: List<String>, currency: String) {
-        val entities = storage.getOldMarketInfo(coins, currency)
+    fun notifyExpired(coinTypes: List<CoinType>, currency: String) {
+        val entities = storage.getOldMarketInfo(coinTypes, currency)
         notify(entities, currency)
     }
 
@@ -39,14 +40,14 @@ class MarketInfoManager(private val storage: IStorage, private val factory: Fact
     }
 
     private fun notify(entities: List<MarketInfoEntity>, currency: String) {
-        val marketInfoMap = mutableMapOf<String, MarketInfo>()
+        val marketInfoMap = mutableMapOf<CoinType, MarketInfo>()
 
         entities.forEach { entity ->
-            val rateKey = MarketInfoKey(entity.coinCode, entity.currencyCode)
+            val rateKey = MarketInfoKey(entity.coinType, entity.currencyCode)
 
             val marketInfo = factory.createMarketInfo(entity)
             listener?.onUpdate(marketInfo, rateKey)
-            marketInfoMap[entity.coinCode] = marketInfo
+            marketInfoMap[entity.coinType] = marketInfo
         }
 
         listener?.onUpdate(marketInfoMap, currency)

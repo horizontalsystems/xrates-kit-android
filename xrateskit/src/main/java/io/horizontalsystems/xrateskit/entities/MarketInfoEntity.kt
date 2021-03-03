@@ -1,11 +1,12 @@
 package io.horizontalsystems.xrateskit.entities
 
 import androidx.room.Entity
+import io.horizontalsystems.coinkit.models.CoinType
 import java.math.BigDecimal
 
-@Entity(primaryKeys = ["coinCode", "currencyCode"])
+@Entity(primaryKeys = ["coinType", "currencyCode"])
 class MarketInfoEntity(
-        var coinCode: String,
+        var coinType: CoinType,
         val currencyCode: String,
         val rate: BigDecimal,
         val rateOpenDay: BigDecimal,

@@ -1,6 +1,6 @@
 package io.horizontalsystems.xrateskit.marketinfo
 
-import io.horizontalsystems.xrateskit.entities.Coin
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.entities.MarketInfo
 import io.horizontalsystems.xrateskit.entities.MarketInfoKey
 import io.reactivex.Observable
@@ -12,14 +12,14 @@ class MarketInfoSyncManager(
         private val schedulerFactory: MarketInfoSchedulerFactory)
     : MarketInfoManager.Listener {
 
-    private var coins: List<Coin> = listOf()
+    private var coinTypes: List<CoinType> = listOf()
     private val subjects = ConcurrentHashMap<MarketInfoKey, PublishSubject<MarketInfo>>()
-    private val currencySubjects = ConcurrentHashMap<String, PublishSubject<Map<String, MarketInfo>>>()
+    private val currencySubjects = ConcurrentHashMap<String, PublishSubject<Map<CoinType, MarketInfo>>>()
 
     private var scheduler: MarketInfoScheduler? = null
 
-    fun set(coins: List<Coin>) {
-        this.coins = coins
+    fun set(coinTypes: List<CoinType>) {
+        this.coinTypes = coinTypes
         updateScheduler()
     }
 
@@ -47,7 +47,7 @@ class MarketInfoSyncManager(
         return subject
     }
 
-    fun marketInfoMapObservable(currency: String): Observable<Map<String, MarketInfo>> {
+    fun marketInfoMapObservable(currency: String): Observable<Map<CoinType, MarketInfo>> {
         var subject = currencySubjects[currency]
         if (subject == null) {
             subject = PublishSubject.create()
@@ -66,11 +66,11 @@ class MarketInfoSyncManager(
             subjects.remove(key)
         }
 
-        if (coins.isEmpty()) {
+        if (coinTypes.isEmpty()) {
             return
         }
 
-        scheduler = schedulerFactory.getScheduler(coins, currency)
+        scheduler = schedulerFactory.getScheduler(coinTypes, currency)
         scheduler?.start()
     }
 
@@ -80,7 +80,7 @@ class MarketInfoSyncManager(
         subjects[key]?.onNext(marketInfo)
     }
 
-    override fun onUpdate(marketInfoMap: Map<String, MarketInfo>, currency: String) {
+    override fun onUpdate(marketInfoMap: Map<CoinType, MarketInfo>, currency: String) {
         currencySubjects[currency]?.onNext(marketInfoMap)
     }
 }

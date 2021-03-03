@@ -1,43 +1,42 @@
 package io.horizontalsystems.xrateskit.marketinfo
 
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.core.IMarketInfoProvider
-import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 import io.reactivex.Single
 
 class MarketInfoSchedulerProvider(
     val retryInterval: Long,
     val expirationInterval: Long,
-    private var coins: List<Coin>,
+    private var coinTypes: List<CoinType>,
     private val currency: String,
     private val manager: MarketInfoManager,
     private val provider: IMarketInfoProvider) {
-    private val coinCodeList = coins.map { coin -> coin.code }
 
     val lastSyncTimestamp: Long?
-        get() = manager.getLastSyncTimestamp(coinCodeList, currency)
+        get() = manager.getLastSyncTimestamp(coinTypes, currency)
 
     val syncSingle: Single<Unit>
-        get() = provider.getMarketInfo(coins, currency)
+        get() = provider.getMarketInfo(coinTypes, currency)
                 .doOnSuccess { rates ->
                     update(rates)
                 }
                 .map { Unit }
 
     fun notifyExpiredRates() {
-        manager.notifyExpired(coinCodeList, currency)
+        manager.notifyExpired(coinTypes, currency)
     }
 
     private fun update(list: List<MarketInfoEntity>) {
 
         list.forEach { marketInfoEntity ->
-            coins.find { it.code.toUpperCase().contentEquals(marketInfoEntity.coinCode.toUpperCase()) }?.let {
-                marketInfoEntity.coinCode = it.code
+            coinTypes.find { it.ID.toUpperCase().contentEquals(marketInfoEntity.coinType.ID.toUpperCase()) }?.let {
+                marketInfoEntity.coinType = it
             }
         }
 
-        coins = coins.filter { coin ->
-            list.any { it.coinCode.contentEquals(coin.code) }
+        coinTypes = coinTypes.filter { coinType ->
+            list.any { it.coinType.ID.contentEquals(coinType.ID) }
         }
 
         manager.update(list, currency)

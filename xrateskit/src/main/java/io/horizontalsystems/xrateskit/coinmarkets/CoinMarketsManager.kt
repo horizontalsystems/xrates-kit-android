@@ -1,10 +1,10 @@
 package io.horizontalsystems.xrateskit.coinmarkets
 
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.api.CoinGeckoProvider
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class CoinMarketsManager(
@@ -13,54 +13,30 @@ class CoinMarketsManager(
     private val factory: Factory
 ): IInfoManager, ICoinMarketManager {
 
-    private fun getCoinIds(coinCodes: List<String>): Single<List<String>> {
-
-        val coinInfosSingle: Single<List<ProviderCoinInfo>>
-
-        if(storage.getProviderCoinsInfoCount(coinGeckoProvider.provider.id) != 0)
-            coinInfosSingle = Single.just(storage.getProviderCoinInfoByCodes(coinGeckoProvider.provider.id, coinCodes.map { it.toUpperCase() }))
-        else{
-            coinInfosSingle = coinGeckoProvider.getProviderCoinInfoAsync()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .map { providerCoins ->
-                    storage.saveProviderCoinInfo(providerCoins)
-                    storage.getProviderCoinInfoByCodes(coinGeckoProvider.provider.id, coinCodes.map { it.toUpperCase() })
-                }
-        }
-
-        return coinInfosSingle.map {
-            it.map { coinInfo -> coinInfo.providerCoinId }
-        }
-
-    }
-
     override fun getTopCoinMarketsAsync(currency: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>> {
         return coinGeckoProvider
             .getTopCoinMarketsAsync(currency, fetchDiffPeriod, itemsCount)
             .map { topMarkets ->
-                val marketEntityList = topMarkets.map { factory.createMarketInfoEntity(it.coin, it.marketInfo) }
+                val marketEntityList = topMarkets.map {
+                    factory.createMarketInfoEntity(it.data.type, it.marketInfo)
+                }
                 storage.saveMarketInfo(marketEntityList)
                 topMarkets
             }
     }
 
-    override fun getCoinMarketsAsync(coinCodes: List<String>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
-        return getCoinIds(coinCodes).flatMap { coinIds ->
-            coinGeckoProvider
-                .getCoinMarketsAsync(coinIds, currencyCode, fetchDiffPeriod)
+    override fun getCoinMarketsAsync(coinTypes: List<CoinType>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
+        return coinGeckoProvider
+                .getCoinMarketsAsync(coinTypes, currencyCode, fetchDiffPeriod)
                 .map { markets ->
-                    val marketEntityList = markets.map { factory.createMarketInfoEntity(it.coin, it.marketInfo) }
+                    val marketEntityList = markets.map { factory.createMarketInfoEntity(it.data.type, it.marketInfo) }
                     storage.saveMarketInfo(marketEntityList)
                     markets
-                }
         }
     }
 
-    override fun getCoinMarketDetailsAsync(coinCode: String, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
-        return getCoinIds(listOf(coinCode)).flatMap { coinIdList ->
-            coinGeckoProvider.getCoinMarketDetailsAsync(coinIdList[0], currencyCode, rateDiffCoinCodes, rateDiffPeriods)
-        }
+    override fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
+        return coinGeckoProvider.getCoinMarketDetailsAsync(coinType, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
     }
 
     override fun destroy() {

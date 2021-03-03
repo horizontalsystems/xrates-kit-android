@@ -1,29 +1,40 @@
 package io.horizontalsystems.xrateskit.core
 
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.api.InfoProvider
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 
 interface IStorage {
 
-    // coinINfo
+    //ResourceInfo
+    fun getResourceInfo(resourceType: ResourceType): ResourceInfo?
+    fun saveResourceInfo(resourceInfo: ResourceInfo)
+
+        // coinInfo
     fun getCoinInfoCount(): Int
     fun getCoinInfos(): List<CoinInfoEntity>
-    fun getCoinCategories(coinId: String): List<CoinCategory>
+    fun getCoinCategories(coinType: CoinType): List<CoinCategory>
     fun getCoinInfosByCategory(categoryId: String): List<CoinInfoEntity>
-    fun getCoinInfo(coinCode: String): CoinInfoEntity?
+    fun getCoinInfo(coinType: CoinType): CoinInfoEntity?
+    fun getCoinLinks(coinType: CoinType): List<CoinLinksEntity>
     fun saveCoinInfos(coinInfos: List<CoinInfoEntity>)
     fun saveCoinCategories(coinCategoryEntities: List<CoinCategoriesEntity>)
     fun saveCoinCategory(coinCategories: List<CoinCategory>)
+    fun saveCoinLinks(coinLinks: List<CoinLinksEntity>)
+    fun deleteAllCoinCategories()
+    fun deleteAllCoinsCategories()
+    fun deleteAllCoinLinks()
 
-    //  Provider Coin Info
-    fun saveProviderCoinInfo(providerCoinInfos: List<ProviderCoinInfo>)
-    fun getProviderCoinInfoByCodes(providerId:Int, coinCodes: List<String>): List<ProviderCoinInfo>
-    fun getProviderCoinsInfoCount(providerId:Int): Int
+        //Provider Coins
+    fun saveProviderCoins(providerCoins: List<ProviderCoinEntity>)
+    fun getProviderCoins(coinTypes: List<CoinType>): List<ProviderCoinEntity>
+    fun getCoinTypesByProviderCoinId(providerCoinId: String, provider: InfoProvider): List<CoinType>
+    fun searchCoins(searchText: String): List<ProviderCoinEntity>
 
     //  HistoricalRate
     fun saveHistoricalRate(rate: HistoricalRate)
-    fun getHistoricalRate(coinCode: String, currencyCode: String, timestamp: Long): HistoricalRate?
+    fun getHistoricalRate(coinType: CoinType, currencyCode: String, timestamp: Long): HistoricalRate?
 
     //  ChartPoint
     fun getChartPoints(key: ChartInfoKey): List<ChartPointEntity>
@@ -31,8 +42,8 @@ interface IStorage {
     fun deleteChartPoints(key: ChartInfoKey)
 
     //  MarketInfo
-    fun getMarketInfo(coinCode: String, currencyCode: String): MarketInfoEntity?
-    fun getOldMarketInfo(coinCodes: List<String>, currencyCode: String): List<MarketInfoEntity>
+    fun getMarketInfo(coinType: CoinType, currencyCode: String): MarketInfoEntity?
+    fun getOldMarketInfo(coinTypes: List<CoinType>, currencyCode: String): List<MarketInfoEntity>
     fun saveMarketInfo(marketInfoList: List<MarketInfoEntity>)
 
     //  GlobalMarketInfo
@@ -47,8 +58,8 @@ interface IInfoManager {
 
 interface ICoinMarketManager {
     fun getTopCoinMarketsAsync(currency: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>>
-    fun getCoinMarketsAsync(coinCodes:List<String>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>>
-    fun getCoinMarketDetailsAsync(coinCode: String, currencyCode: String, rateDiffCoinCodes: List<String>, coinDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails>
+    fun getCoinMarketsAsync(coinTypes: List<CoinType>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>>
+    fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinCodes: List<String>, coinDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails>
 }
 
 interface IInfoProvider {
@@ -57,16 +68,12 @@ interface IInfoProvider {
     fun destroy()
 }
 
-interface ICoinInfoProvider {
-    fun getCoinInfoAsync(platform: CoinType):Single<List<Coin>>
-}
-
 interface IFiatXRatesProvider {
     fun getLatestFiatXRates(sourceCurrency: String, targetCurrency: String): Double
 }
 
 interface IMarketInfoProvider {
-    fun getMarketInfo(coins: List<Coin>, currency: String): Single<List<MarketInfoEntity>>
+    fun getMarketInfo(coinTypes: List<CoinType>, currency: String): Single<List<MarketInfoEntity>>
 }
 
 interface IChartInfoProvider {
@@ -74,7 +81,7 @@ interface IChartInfoProvider {
 }
 
 interface IHistoricalRateProvider {
-    fun getHistoricalRate(coin: String, currency: String, timestamp: Long): Single<HistoricalRate>
+    fun getHistoricalRate(coinType: CoinType, currency: String, timestamp: Long): Single<HistoricalRate>
 }
 
 interface ICryptoNewsProvider {
@@ -83,8 +90,8 @@ interface ICryptoNewsProvider {
 
 interface ICoinMarketProvider : IInfoProvider {
     fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>>
-    fun getCoinMarketsAsync(coinIds: List<String>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>>
-    fun getCoinMarketDetailsAsync(coinId: String, currencyCode: String, rateDiffCoinIds: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails>
+    fun getCoinMarketsAsync(coinTypes: List<CoinType>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>>
+    fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinIds: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails>
 }
 
 interface IGlobalCoinMarketProvider : IInfoProvider {

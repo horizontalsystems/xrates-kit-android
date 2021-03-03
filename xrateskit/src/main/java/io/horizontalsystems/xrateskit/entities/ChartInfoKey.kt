@@ -1,7 +1,9 @@
 package io.horizontalsystems.xrateskit.entities
 
+import io.horizontalsystems.coinkit.models.CoinType
+
 data class ChartInfoKey(
-        val coin: String,
+        val coinType: CoinType,
         val currency: String,
         val chartType: ChartType
 )
