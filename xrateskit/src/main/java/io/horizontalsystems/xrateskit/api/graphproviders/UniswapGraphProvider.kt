@@ -1,5 +1,6 @@
 package io.horizontalsystems.xrateskit.api.graphproviders
 
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.api.InfoProvider
 import io.horizontalsystems.xrateskit.core.*
@@ -35,13 +36,13 @@ class UniswapGraphProvider(
 
     // Uniswap uses WETH as base. So all requests should be done via WETH.
     // Check if list coinstains ETH, then change it's address to WETH
-    private fun tokenAddresses(coins: List<Coin>): List<String>{
+    private fun tokenAddresses(coinTypes: List<CoinType>): List<String>{
 
-        logger.info("Getting XRate from UniswapGraph for:${coins}")
-        return coins.mapNotNull {  coin ->
+        logger.info("Getting XRate from UniswapGraph for:${coinTypes}")
+        return coinTypes.mapNotNull { type ->
 
-            when (coin.type) {
-                is CoinType.Erc20 -> (coin.type as CoinType.Erc20).address.toLowerCase(Locale.getDefault())
+            when (type) {
+                is CoinType.Erc20 -> type.address.toLowerCase(Locale.getDefault())
                 is CoinType.Ethereum -> WETH_TOKEN_ADDRESS
                 else -> null
             }
@@ -79,7 +80,7 @@ class UniswapGraphProvider(
             }
 
             topMarkets.add(factory.createCoinMarket(
-                    Coin(latestTokenInfo.coinCode.toUpperCase(), latestTokenInfo.coinTitle, CoinType.Erc20(latestTokenInfo.tokenAddress)),
+                    CoinData(CoinType.Erc20(latestTokenInfo.tokenAddress), latestTokenInfo.coinCode.toUpperCase(), latestTokenInfo.coinTitle),
                     currencyCode,
                     rate = latestRate,
                     rateOpenDay = rateOpenDay,
@@ -98,18 +99,17 @@ class UniswapGraphProvider(
 
     }
 
-    override fun getMarketInfo(coins: List<Coin>, fiatCurrency: String) : Single<List<MarketInfoEntity>>{
-        val tokenAddresses = tokenAddresses(coins)
+    override fun getMarketInfo(coinTypes: List<CoinType>, fiatCurrency: String): Single<List<MarketInfoEntity>> {
+        val tokenAddresses = tokenAddresses(coinTypes)
 
-        if(tokenAddresses.isEmpty())
+        if (tokenAddresses.isEmpty())
             return Single.just(Collections.emptyList())
 
         return Single.zip(
-                getEthXRateAsync(),
-                getXRatesAsync(tokenAddresses, System.currentTimeMillis() / 1000 - ONE_DAY_SECONDS),
-                getLatestFiatXRatesAsync(fiatCurrency),
-                {
-                    ethXRateResponse, xRatesResponse, ethFiatXRate ->
+            getEthXRateAsync(),
+            getXRatesAsync(tokenAddresses, System.currentTimeMillis() / 1000 - ONE_DAY_SECONDS),
+            getLatestFiatXRatesAsync(fiatCurrency),
+            { ethXRateResponse, xRatesResponse, ethFiatXRate ->
 
                 val list = mutableListOf<MarketInfoEntity>()
                 val ethPrice = ethXRateResponse.rateInUSD * ethFiatXRate.toBigDecimal()
@@ -131,7 +131,7 @@ class UniswapGraphProvider(
 
                         list.add(
                             factory.createMarketInfoEntity(
-                                coinCode,
+                                CoinType.fromString("erc20|${xRateResponse.address}"),
                                 fiatCurrency,
                                 coinLatestPrice.toBigDecimal(),
                                 coinOpenDayPrice.toBigDecimal(),

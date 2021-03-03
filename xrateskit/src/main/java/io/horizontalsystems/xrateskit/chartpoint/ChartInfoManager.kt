@@ -72,10 +72,10 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
         val startDayTimestamp = calendar.timeInMillis / 1000
         val entities = points.map { point ->
             if (point.timestamp == startDayTimestamp) {
-                marketInfoManager.getMarketInfo(point.coin, point.currency)?.let { marketInfo ->
+                marketInfoManager.getMarketInfo(point.coinType, point.currency)?.let { marketInfo ->
                     return@map ChartPointEntity(
                         point.type,
-                        point.coin,
+                        point.coinType,
                         point.currency,
                         marketInfo.rateOpenDay,
                         point.volume,

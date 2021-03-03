@@ -1,14 +1,11 @@
 package io.horizontalsystems.xrateskit.api
 
-import io.horizontalsystems.xrateskit.core.ICoinInfoProvider
 import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
-import io.horizontalsystems.xrateskit.entities.Coin
-import io.horizontalsystems.xrateskit.entities.CoinType
 import io.horizontalsystems.xrateskit.entities.GlobalCoinMarket
 import io.reactivex.Single
 import java.util.logging.Logger
 
-class CoinPaprikaProvider(private val apiManager: ApiManager): IGlobalCoinMarketProvider, ICoinInfoProvider {
+class CoinPaprikaProvider(private val apiManager: ApiManager): IGlobalCoinMarketProvider {
 
     override val provider: InfoProvider = InfoProvider.CoinPaprika()
     private val logger = Logger.getLogger("CoinPaprikaProvider")
@@ -18,42 +15,6 @@ class CoinPaprikaProvider(private val apiManager: ApiManager): IGlobalCoinMarket
     override fun initProvider() {}
     override fun destroy() {}
 
-    override fun getCoinInfoAsync(platform: CoinType): Single<List<Coin>>{
-        val coins = mutableListOf<Coin>()
-        val platformId = getCoinId(platform)
-
-        return Single.create { emitter ->
-            try {
-                val json = apiManager.getJsonValue("${provider.baseUrl}/contracts/${platformId}")
-
-                json.asArray()?.forEach { coinInfo ->
-                    coinInfo?.asObject()?.let { element ->
-                        if(element.get("active").asBoolean()){
-                            val coinId = element.get("id").asString()
-
-                            val splitIndex = if(coinId.indexOf("-") != -1) coinId.indexOf("-") else coinId.length
-                            val code = coinId.substring(0, splitIndex)
-                            val title = coinId.substring(splitIndex, coinId.length).replace("-", " ").trim()
-
-                            var coinType: CoinType? = null
-
-                            if(platformId.contentEquals("eth-ethereum")){
-                                val address = element.get("address").asString()
-                                coinType = CoinType.Erc20(address)
-                            }
-
-                            coins.add(Coin(code.toUpperCase(), title, coinType))
-                        }
-                    }
-                }
-
-                emitter.onSuccess(coins)
-
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
-        }
-    }
 
     override fun getGlobalCoinMarketsAsync(currencyCode: String): Single<GlobalCoinMarket> {
 
@@ -100,20 +61,6 @@ class CoinPaprikaProvider(private val apiManager: ApiManager): IGlobalCoinMarket
             } catch (ex: Exception) {
                 emitter.onError(ex)
             }
-        }
-    }
-
-    private fun getCoinId(coinType: CoinType): String{
-        return when(coinType){
-            CoinType.Bitcoin -> "btc-bitcoin"
-            CoinType.BitcoinCash -> "bch-bitcoin-cash"
-            CoinType.Litecoin -> "ltc-litecoin"
-            CoinType.Ethereum -> "eth-ethereum"
-            CoinType.Binance -> "bnb-binance-coin"
-            CoinType.Eos -> "eos-eos"
-            CoinType.Dash -> "dash-dash"
-            CoinType.Zcash -> "zec-zcash"
-            else -> "eth-ethereum"
         }
     }
 }

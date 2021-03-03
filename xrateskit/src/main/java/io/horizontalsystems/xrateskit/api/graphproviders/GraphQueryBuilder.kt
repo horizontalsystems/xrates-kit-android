@@ -104,7 +104,7 @@ class GraphQueryBuilder {
                           date_lte:${timeStamp},
                           token: "${address}"})
                           { 
-                             token { symbol, derivedETH },
+                             token { id, symbol, derivedETH },
                              priceUSD
                           }""".trimIndent()
             }

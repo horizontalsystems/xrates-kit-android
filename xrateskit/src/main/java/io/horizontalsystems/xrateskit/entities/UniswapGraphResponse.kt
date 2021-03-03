@@ -51,6 +51,7 @@ data class UniswapGraphToken(
 
 data class UniswapGraphXRatesResponse(
     var coinCode: String,
+    var address: String,
     var latestRateInETH: Double,
     var dayOpeningRateInUSD: Double){
 
@@ -68,9 +69,10 @@ data class UniswapGraphXRatesResponse(
                                           else it.asObject().get("priceUSD").asString().toDouble()
                         val tokenData = it.asObject().get("token").asObject()
                         val coinCode = tokenData.get("symbol").asString().toUpperCase(Locale.getDefault())
+                        val tokenId = tokenData.get("id").asString()
                         val latestRate = tokenData.get("derivedETH").asString().toDouble()
 
-                        rates.add(UniswapGraphXRatesResponse(coinCode, latestRate, openingRate))
+                        rates.add(UniswapGraphXRatesResponse(coinCode, tokenId, latestRate, openingRate))
                     }
                 }
             }

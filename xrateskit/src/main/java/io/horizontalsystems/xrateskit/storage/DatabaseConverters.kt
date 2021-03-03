@@ -1,7 +1,10 @@
 package io.horizontalsystems.xrateskit.storage
 
 import androidx.room.TypeConverter
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.entities.ChartType
+import io.horizontalsystems.xrateskit.entities.LinkType
+import io.horizontalsystems.xrateskit.entities.ResourceType
 import java.math.BigDecimal
 
 class DatabaseConverters {
@@ -18,6 +21,29 @@ class DatabaseConverters {
         return bigDecimal?.toPlainString()
     }
 
+    // CoinType
+    @TypeConverter
+    fun toString(chartType: CoinType): String {
+        return chartType.getCoinId()
+    }
+
+    @TypeConverter
+    fun toCoinType(value: String): CoinType {
+        return CoinType.fromString(value)
+    }
+
+    // LinkType
+    @TypeConverter
+    fun toString(linkType: LinkType): String {
+        return linkType.name
+    }
+
+    @TypeConverter
+    fun toLinkType(value: String): LinkType {
+        return LinkType.valueOf(value)
+    }
+
+
     // ChartType
 
     @TypeConverter
@@ -28,6 +54,16 @@ class DatabaseConverters {
     @TypeConverter
     fun toChartType(string: String?): ChartType? {
         return ChartType.fromString(string)
+    }
+
+    @TypeConverter
+    fun toString(resourceType: ResourceType): String {
+        return resourceType.name
+    }
+
+    @TypeConverter
+    fun toResourceType(value: String): ResourceType {
+        return ResourceType.valueOf(value)
     }
 
 }

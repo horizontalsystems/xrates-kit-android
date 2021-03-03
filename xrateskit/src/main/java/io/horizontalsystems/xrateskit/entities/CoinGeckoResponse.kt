@@ -33,7 +33,7 @@ data class CoinGeckoCoinMarketsResponse(
             jsonValue.asArray().forEach { marketData ->
                 marketData?.asObject()?.let { element ->
 
-                    val coinId = element.get("id").asString().toUpperCase()
+                    val coinId = element.get("id").asString()
                     val coinCode = element.get("symbol").asString().toUpperCase()
                     val title = element.get("name").asString()
 
@@ -135,10 +135,10 @@ data class CoinGeckoCoinInfo(
     val coinId: String,
     val coinCode: String,
     val title: String,
-    val description: String? = null,
-    val links: Map<LinkType, String>? = null,
-    val categories: List<CoinCategory>? = null,
-    val platforms: Map<CoinPlatformType, String>? = null
+    val description: String = "",
+    val links: Map<LinkType, String> = emptyMap(),
+    val platforms: Map<CoinPlatformType, String> = emptyMap(),
+    val tickers: List<CoinGeckoTickersResponse> = emptyList()
 ) {
     companion object {
         fun parseData(jsonValue: JsonValue): CoinGeckoCoinInfo {
@@ -147,7 +147,7 @@ data class CoinGeckoCoinInfo(
             val platforms = mutableMapOf<CoinPlatformType, String>()
             val element = jsonValue.asObject()
             val linksElement = element.get("links").asObject()
-            val coinId = element.get("id").asString().toUpperCase()
+            val coinId = element.get("id").asString()
             val coinCode = element.get("symbol").asString().toUpperCase()
             val title = element.get("name").asString()
             val description = if (element.get("description") != null) {
@@ -219,8 +219,57 @@ data class CoinGeckoCoinInfo(
                 coinCode = coinCode,
                 title = title,
                 description = description,
-                links = links
+                links = links,
+                platforms = platforms,
+                tickers = CoinGeckoTickersResponse.parseData(jsonValue)
             )
+        }
+    }
+}
+
+data class CoinGeckoTickersResponse(
+    val base: String,
+    val target: String,
+    val marketName: String,
+    val rate: BigDecimal = BigDecimal.ZERO,
+    val volume: BigDecimal = BigDecimal.ZERO){
+
+    companion object {
+        fun parseData(jsonValue: JsonValue): List<CoinGeckoTickersResponse> {
+            val tickers = mutableListOf<CoinGeckoTickersResponse>()
+            try{
+
+                if (jsonValue.asObject().get("tickers") != null) {
+
+                    jsonValue.asObject().get("tickers").asArray().forEach { tickerData ->
+                        tickerData?.asObject()?.let { element ->
+                            val base = element.get("base").asString()
+                            val target = element.get("target").asString()
+                            val marketName =
+                                if(element.get("market") != null){
+                                    element.get("market").asObject().get("name").asString()
+                                } else ""
+
+                            val rate =
+                                if(!element.get("last").isNull)
+                                    element.get("last").asDouble().toBigDecimal()
+                                else BigDecimal.ZERO
+
+                            val volume =
+                                if(!element.get("volume").isNull)
+                                    element.get("volume").asDouble().toBigDecimal()
+                                else BigDecimal.ZERO
+
+                            tickers.add(CoinGeckoTickersResponse(base, target, marketName, rate, volume))
+                        }
+                    }
+                }
+
+            } catch(e: Exception){
+                //ignore
+            }
+
+            return tickers
         }
     }
 }

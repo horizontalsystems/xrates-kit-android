@@ -1,6 +1,7 @@
 package io.horizontalsystems.xrateskit.storage
 
 import androidx.room.*
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.entities.HistoricalRate
 
 @Dao
@@ -11,6 +12,6 @@ interface HistoricalRateDao {
     @Delete
     fun delete(rate: HistoricalRate)
 
-    @Query("SELECT * FROM HistoricalRate WHERE coin = :coin AND currency = :currency AND timestamp = :timestamp LIMIT 1")
-    fun getRate(coin: String, currency: String, timestamp: Long): HistoricalRate?
+    @Query("SELECT * FROM HistoricalRate WHERE coinType = :coinType AND currency = :currency AND timestamp = :timestamp LIMIT 1")
+    fun getRate(coinType: CoinType, currency: String, timestamp: Long): HistoricalRate?
 }
