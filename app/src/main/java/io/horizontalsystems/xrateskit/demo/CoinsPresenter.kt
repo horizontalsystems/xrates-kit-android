@@ -2,8 +2,9 @@ package io.horizontalsystems.xrateskit.demo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.entities.ChartInfo
-import io.horizontalsystems.xrateskit.entities.Coin
+import io.horizontalsystems.xrateskit.entities.CoinData
 import io.horizontalsystems.xrateskit.entities.MarketInfo
 import java.util.concurrent.Executors
 
@@ -17,9 +18,9 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
     private val enabledCoins: List<CoinViewItem>
         get() = items.filter { it.isChecked }
 
-    fun onLoad(coins: List<Coin>) {
+    fun onLoad(coinDatas: List<CoinData>) {
         executor.submit {
-            items = coins.map { CoinViewItem(it) }
+            items = coinDatas.map { CoinViewItem(it) }
 
             interactor.subscribeToMarketInfo(currency)
 
@@ -34,11 +35,10 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
         executor.execute {
             item.isChecked = isChecked
 
-            val coins = enabledCoins.map { it.coin }
-            val coinCodes = enabledCoins.map { it.coin.code }
+            val coinTypes = enabledCoins.map { it.coinData.type }
 
-            interactor.set(coins)
-            interactor.subscribeToChartInfo(coinCodes, currency)
+            interactor.set(coinTypes)
+            interactor.subscribeToChartInfo(coinTypes, currency)
 
             syncMarketInfo()
             syncChartInfo()
@@ -65,10 +65,10 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
         }
     }
 
-    fun onUpdateMarketInfo(marketInfo: Map<String, MarketInfo>) {
+    fun onUpdateMarketInfo(marketInfo: Map<CoinType, MarketInfo>) {
         executor.submit {
             items.forEach { item ->
-                marketInfo[item.coin.code]?.let {
+                marketInfo[item.coinData.code]?.let {
                     item.marketInfo = it
                 }
             }
@@ -77,33 +77,33 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
         }
     }
 
-    fun onUpdateChartInfo(chartInfo: ChartInfo, coin: String) {
+    fun onUpdateChartInfo(chartInfo: ChartInfo, coinType: CoinType) {
         executor.submit {
-            updateChartInfo(ChartInfoState.Loaded(chartInfo), coin)
+            updateChartInfo(ChartInfoState.Loaded(chartInfo), coinType)
         }
     }
 
-    fun onFailChartInfo(coin: String) {
+    fun onFailChartInfo(coinType: CoinType) {
         executor.submit {
-            updateChartInfo(ChartInfoState.Failed, coin)
+            updateChartInfo(ChartInfoState.Failed, coinType)
         }
     }
 
     private fun syncMarketInfo() {
         enabledCoins.forEach { item ->
-            item.marketInfo = interactor.marketInfo(item.coin.code, currency)
+            item.marketInfo = interactor.marketInfo(item.coinData.type, currency)
         }
     }
 
     private fun syncChartInfo() {
         enabledCoins.forEach { item ->
-            val chartInfo = interactor.chartInfo(item.coin.code, currency)
+            val chartInfo = interactor.chartInfo(item.coinData.type, currency)
             item.chartInfoState = chartInfo?.let { ChartInfoState.Loaded(it) } ?: ChartInfoState.Loading
         }
     }
 
-    private fun updateChartInfo(chartInfoState: ChartInfoState, coinCode: String) {
-        items.find { it.coin.code == coinCode }?.let { item ->
+    private fun updateChartInfo(chartInfoState: ChartInfoState, coinType: CoinType) {
+        items.find { it.coinData.type == coinType }?.let { item ->
             item.chartInfoState = chartInfoState
         }
 
@@ -125,7 +125,7 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
 }
 
 class CoinViewItem(
-    val coin: Coin,
+    val coinData: CoinData,
     var isChecked: Boolean = false,
     var marketInfo: MarketInfo? = null,
     var chartInfoState: ChartInfoState = ChartInfoState.Loading

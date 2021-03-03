@@ -1,6 +1,7 @@
 package io.horizontalsystems.xrateskit.demo.chartdemo
 
 import android.util.Log
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.demo.RatesManager
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartType
@@ -12,10 +13,10 @@ class ChartInteractor(private val ratesManager: RatesManager) {
 
     private var chartInfoDisposables = CompositeDisposable()
 
-    fun subscribeToChartInfo(coin: String, currency: String) {
+    fun subscribeToChartInfo(coinType: CoinType, currency: String) {
         chartInfoDisposables.clear()
 
-        ratesManager.chartInfoObservable(coin, currency, ChartType.DAILY)
+        ratesManager.chartInfoObservable(coinType, currency, ChartType.DAILY)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .subscribe({
@@ -27,7 +28,7 @@ class ChartInteractor(private val ratesManager: RatesManager) {
             }
     }
 
-    fun chartInfo(coin: String, currency: String): ChartInfo? {
-        return ratesManager.chartInfo(coin, currency, ChartType.DAILY)
+    fun chartInfo(coinType: CoinType, currency: String): ChartInfo? {
+        return ratesManager.chartInfo(coinType, currency, ChartType.DAILY)
     }
 }

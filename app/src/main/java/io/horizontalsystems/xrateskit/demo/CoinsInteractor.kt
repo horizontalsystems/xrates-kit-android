@@ -1,8 +1,8 @@
 package io.horizontalsystems.xrateskit.demo
 
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartType
-import io.horizontalsystems.xrateskit.entities.Coin
 import io.horizontalsystems.xrateskit.entities.MarketInfo
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -15,8 +15,8 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
     private var chartInfoDisposables = CompositeDisposable()
     private var topListDisposable: Disposable? = null
 
-    fun set(coins: List<Coin>) {
-        ratesManager.set(coins)
+    fun set(coinTypes: List<CoinType>) {
+        ratesManager.set(coinTypes)
     }
 
     fun set(currency: String) {
@@ -40,28 +40,28 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
                 }
     }
 
-    fun subscribeToChartInfo(coins: List<String>, currency: String) {
+    fun subscribeToChartInfo(coinTypes: List<CoinType>, currency: String) {
         chartInfoDisposables.clear()
 
-        coins.forEach { coin ->
-            ratesManager.chartInfoObservable(coin, currency, ChartType.DAILY)
+        coinTypes.forEach { type ->
+            ratesManager.chartInfoObservable(type, currency, ChartType.DAILY)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
                     .subscribe({
-                        presenter?.onUpdateChartInfo(it, coin)
+                        presenter?.onUpdateChartInfo(it, type)
                     }, {
-                        presenter?.onFailChartInfo(coin)
+                        presenter?.onFailChartInfo(type)
                     }).let {
                         chartInfoDisposables.add(it)
                     }
         }
     }
 
-    fun marketInfo(coin: String, currency: String): MarketInfo? {
-        return ratesManager.marketInfo(coin, currency)
+    fun marketInfo(coinType: CoinType, currency: String): MarketInfo? {
+        return ratesManager.marketInfo(coinType, currency)
     }
 
-    fun chartInfo(coin: String, currency: String): ChartInfo? {
-        return ratesManager.chartInfo(coin, currency, ChartType.DAILY)
+    fun chartInfo(coinType: CoinType, currency: String): ChartInfo? {
+        return ratesManager.chartInfo(coinType, currency, ChartType.DAILY)
     }
 }

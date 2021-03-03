@@ -10,9 +10,9 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.demo.R
-import io.horizontalsystems.xrateskit.entities.Coin
-import io.horizontalsystems.xrateskit.entities.CoinType
+import io.horizontalsystems.xrateskit.entities.CoinData
 import io.horizontalsystems.xrateskit.entities.TimePeriod
 import kotlinx.android.synthetic.main.fragment_top_markets.*
 
@@ -23,19 +23,22 @@ class TopMarketsFragment() : Fragment() {
     private val globalMarketInfoAdapter = GlobalCoinsMarketAdapter()
     private val topMarketsAdapter = TopMarketsAdapter()
     private val coinMarketDetailsAdapter = CoinsMarketDetailsAdapter()
+    private val coinSearchAdapter = CoinSearchAdapter()
 
-    private val coins = listOf(Coin("BTC", "Bitcoin", CoinType.Bitcoin),
-                               Coin("ETH", "Ethereum", CoinType.Ethereum),
-                               Coin("BCH", "Bitcoin-Cash", CoinType.BitcoinCash),
-                               Coin("DASH","Dash", CoinType.Dash),
-                               Coin("BNB", "BinanceChain",  CoinType.Binance),
-                               Coin("EOS", "Eos",  CoinType.Eos),
-                               Coin("ZRX", "Zrx", CoinType.Erc20("0xE41d2489571d322189246DaFA5ebDe1F4699F498")),
-                               Coin("ELF", "Elf", CoinType.Erc20("0xbf2179859fc6D5BEE9Bf9158632Dc51678a4100e")),
-                               Coin("GNT", "Gnt", CoinType.Erc20("0xa74476443119A942dE498590Fe1f2454d7D4aC0d")),
-                               Coin("HOT", "Hot", CoinType.Erc20("0x6c6EE5e31d828De241282B9606C8e98Ea48526E2")),
-                               Coin("ADAI", "Aave DAI", CoinType.Erc20("0xfC1E690f61EFd961294b3e1Ce3313fBD8aa4f85d")),
-                               Coin("BNT", "Bnt", CoinType.Erc20("0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C")))
+    private val coinDatas = listOf(
+        CoinData(CoinType.Bitcoin, "BTC", "Bitcoin"),
+        CoinData(CoinType.Ethereum, "ETH", "Ethereum",),
+        CoinData(CoinType.BitcoinCash, "BCH", "Bch"),
+        CoinData(CoinType.Dash, "DASH","Dash"),
+        CoinData(CoinType.fromString("bep2|BNB"), "BNB", "Bnb"),
+        CoinData(CoinType.fromString("unsupprted|eos"),"EOS", "Eos"),
+        CoinData(CoinType.Erc20("0xE41d2489571d322189246DaFA5ebDe1F4699F498"),"ZRX", "Zrx"),
+        CoinData(CoinType.Erc20("0xbf2179859fc6D5BEE9Bf9158632Dc51678a4100e"),"ELF", "Elf"),
+        CoinData(CoinType.Erc20("0xa74476443119A942dE498590Fe1f2454d7D4aC0d"), "GNT", "Gnt"),
+        CoinData(CoinType.Erc20("0x6c6EE5e31d828De241282B9606C8e98Ea48526E2"),"HOT", "Hot"),
+        CoinData(CoinType.Erc20("0xfC1E690f61EFd961294b3e1Ce3313fBD8aa4f85d"),"ADAI", "Aave DAI"),
+        CoinData(CoinType.Erc20("0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C"),"BNT", "Bnt")
+    )
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -74,43 +77,64 @@ class TopMarketsFragment() : Fragment() {
         }
 
         btnFavorites.setOnClickListener {
-            viewModel.loadFavorites(coins.map { it.code }, spAct.timePeriod)
+            viewModel.loadFavorites(coinDatas.map { it.type }, spAct.timePeriod)
+            rviewInfo4.visibility = View.GONE
             rviewInfo2.visibility = View.GONE
             rviewInfo.visibility = View.VISIBLE
+            rviewInfo3.visibility = View.GONE
         }
 
         btnLoadMarkets.setOnClickListener {
             viewModel.loadTopMarkets(spAct.timePeriod)
+            rviewInfo4.visibility = View.GONE
             rviewInfo2.visibility = View.GONE
             rviewInfo.visibility = View.VISIBLE
+            rviewInfo3.visibility = View.GONE
         }
 
         btnCategoryDex.setOnClickListener {
             viewModel.loadMarketsByCategory("dexes",spAct.timePeriod)
+            rviewInfo4.visibility = View.GONE
             rviewInfo2.visibility = View.GONE
             rviewInfo.visibility = View.VISIBLE
+            rviewInfo3.visibility = View.GONE
         }
 
         btnCategoryBlockchain.setOnClickListener {
             viewModel.loadMarketsByCategory("blockchain",spAct.timePeriod)
+            rviewInfo4.visibility = View.GONE
             rviewInfo2.visibility = View.GONE
             rviewInfo.visibility = View.VISIBLE
+            rviewInfo3.visibility = View.GONE
         }
 
         btnLoadGLobalMarkets.setOnClickListener {
             viewModel.loadGlobalMarketInfo()
+            rviewInfo4.visibility = View.GONE
             rviewInfo.visibility = View.GONE
             rviewInfo2.visibility = View.VISIBLE
+            rviewInfo3.visibility = View.GONE
         }
         btnLoadCoinInfo.setOnClickListener {
-            viewModel.loadCoinInfo("UNI")
+            viewModel.loadCoinInfo(CoinType.fromString("erc20|0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"))
+            rviewInfo4.visibility = View.GONE
             rviewInfo.visibility = View.GONE
-            rviewInfo2.visibility = View.VISIBLE
+            rviewInfo2.visibility = View.GONE
+            rviewInfo3.visibility = View.VISIBLE
+        }
+
+        btnSearch.setOnClickListener {
+            viewModel.searchCoin(eTxtSearch.text.toString())
+            rviewInfo3.visibility = View.GONE
+            rviewInfo.visibility = View.GONE
+            rviewInfo2.visibility = View.GONE
+            rviewInfo4.visibility = View.VISIBLE
         }
 
         rviewInfo.adapter = topMarketsAdapter
         rviewInfo2.adapter = globalMarketInfoAdapter
         rviewInfo3.adapter = coinMarketDetailsAdapter
+        rviewInfo4.adapter = coinSearchAdapter
 
         observeLiveData()
     }
@@ -129,6 +153,11 @@ class TopMarketsFragment() : Fragment() {
         viewModel.coinMarketDetails.observe(viewLifecycleOwner, Observer {
             coinMarketDetailsAdapter.items = it
             coinMarketDetailsAdapter.notifyDataSetChanged()
+        })
+
+        viewModel.searchCoinsLiveData.observe(viewLifecycleOwner, Observer {
+            coinSearchAdapter.items = it
+            coinSearchAdapter.notifyDataSetChanged()
         })
 
         viewModel.progressState.observe(viewLifecycleOwner, Observer {
