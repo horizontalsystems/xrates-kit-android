@@ -57,7 +57,7 @@ data class CoinMarketDetailsItem(val infoTitle: String, val value: BigDecimal, v
     companion object {
         fun getList(coinMarketDetails: CoinMarketDetails): List<CoinMarketDetailsItem> {
             val list = mutableListOf<CoinMarketDetailsItem>()
-            list.add(CoinMarketDetailsItem("Coin/Price :${coinMarketDetails.coin.code}:", coinMarketDetails.rate, BigDecimal.ZERO))
+            list.add(CoinMarketDetailsItem("Coin/Price :${coinMarketDetails.data.code}:", coinMarketDetails.rate, BigDecimal.ZERO))
             list.add(CoinMarketDetailsItem("Price 24h High/Low :", coinMarketDetails.rateHigh24h, coinMarketDetails.rateLow24h))
             list.add(CoinMarketDetailsItem("Volume 24h:", coinMarketDetails.volume24h, BigDecimal.ZERO))
             list.add(CoinMarketDetailsItem("MarketCap:", coinMarketDetails.marketCap, coinMarketDetails.marketCapDiff24h))
@@ -70,10 +70,10 @@ data class CoinMarketDetailsItem(val infoTitle: String, val value: BigDecimal, v
                 }
             }
             list.add(CoinMarketDetailsItem("--------------- Rating ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
-            list.add(CoinMarketDetailsItem("${coinMarketDetails.coinInfo.rating}", BigDecimal.ZERO, BigDecimal.ZERO))
+            list.add(CoinMarketDetailsItem("${coinMarketDetails.meta.rating}", BigDecimal.ZERO, BigDecimal.ZERO))
             list.add(CoinMarketDetailsItem("--------------- Categories ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
-            list.add(CoinMarketDetailsItem("${coinMarketDetails.coinInfo.categories?.joinToString(",")}", BigDecimal.ZERO, BigDecimal.ZERO))
-            coinMarketDetails.coinInfo.platforms?.let {
+            list.add(CoinMarketDetailsItem("${coinMarketDetails.meta.categories?.joinToString(",")}", BigDecimal.ZERO, BigDecimal.ZERO))
+            coinMarketDetails.meta.platforms?.let {
                 if(!it.isEmpty()){
                     list.add(CoinMarketDetailsItem("--------------- Platform ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
                     it.forEach {
@@ -83,8 +83,15 @@ data class CoinMarketDetailsItem(val infoTitle: String, val value: BigDecimal, v
             }
 
             list.add(CoinMarketDetailsItem("--------------- Info ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
-            coinMarketDetails.coinInfo.links.forEach{
+            coinMarketDetails.meta.links.forEach{
                 list.add(CoinMarketDetailsItem("${ it.key } : ${it.value}", BigDecimal.ZERO, BigDecimal.ZERO))
+            }
+
+            if(!coinMarketDetails.tickers.isEmpty()){
+                list.add(CoinMarketDetailsItem("--------------- Tickers ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
+                coinMarketDetails.tickers.forEach {
+                    list.add(CoinMarketDetailsItem("${it.base} / ${it.target} - ${it.marketName}", it.rate, it.volume))
+                }
             }
 
             return list

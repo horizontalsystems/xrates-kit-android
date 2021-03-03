@@ -1,6 +1,7 @@
 package io.horizontalsystems.xrateskit.demo
 
 import android.content.Context
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.XRatesKit
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Observable
@@ -9,8 +10,8 @@ import io.reactivex.Single
 class RatesManager(context: Context, currency: String) {
     private val kit = XRatesKit.create(context, currency, 60 * 10)
 
-    fun set(coins: List<Coin>) {
-        kit.set(coins)
+    fun set(coinTypes: List<CoinType>) {
+        kit.set(coinTypes)
     }
 
     fun set(currency: String) {
@@ -21,36 +22,36 @@ class RatesManager(context: Context, currency: String) {
         kit.refresh()
     }
 
-    fun marketInfoObservable(coinCode: String, currencyCode: String): Observable<MarketInfo> {
-        return kit.marketInfoObservable(coinCode, currencyCode)
+    fun marketInfoObservable(coinType: CoinType, currencyCode: String): Observable<MarketInfo> {
+        return kit.marketInfoObservable(coinType, currencyCode)
     }
 
-    fun marketInfoObservable(currencyCode: String): Observable<Map<String, MarketInfo>> {
+    fun marketInfoObservable(currencyCode: String): Observable<Map<CoinType, MarketInfo>> {
         return kit.marketInfoMapObservable(currencyCode)
     }
 
-    fun marketInfo(coin: String, currency: String): MarketInfo? {
-        return kit.getMarketInfo(coin, currency)
+    fun marketInfo(coinType: CoinType, currency: String): MarketInfo? {
+        return kit.getMarketInfo(coinType, currency)
     }
 
-    fun chartInfo(coin: String, currency: String, chartType: ChartType): ChartInfo? {
-        return kit.getChartInfo(coin, currency, chartType)
+    fun chartInfo(coinType: CoinType, currency: String, chartType: ChartType): ChartInfo? {
+        return kit.getChartInfo(coinType, currency, chartType)
     }
 
-    fun chartInfoObservable(coin: String, currency: String, chartType: ChartType): Observable<ChartInfo> {
-        return kit.chartInfoObservable(coin, currency, chartType)
+    fun chartInfoObservable(coinType: CoinType, currency: String, chartType: ChartType): Observable<ChartInfo> {
+        return kit.chartInfoObservable(coinType, currency, chartType)
     }
 
     fun topList(itemsCount:Int, currency: String, period: TimePeriod): Single<List<CoinMarket>>{
         return kit.getTopCoinMarketsAsync(currency, period, itemsCount)
     }
 
-    fun getCoinMarketDetailsAsync(coinCode: String, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
-        return kit.getCoinMarketDetailsAsync(coinCode, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
+    fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
+        return kit.getCoinMarketDetailsAsync(coinType, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
     }
 
-    fun favorites(coinCodes: List<String>, currency: String, period: TimePeriod): Single<List<CoinMarket>>{
-        return kit.getCoinMarketsAsync(coinCodes, currency, period)
+    fun favorites(coinTypes: List<CoinType>, currency: String, period: TimePeriod): Single<List<CoinMarket>>{
+        return kit.getCoinMarketsAsync(coinTypes, currency, period)
     }
 
     fun getMarketsByCategory(categoryId: String, currency: String, period: TimePeriod): Single<List<CoinMarket>>{
@@ -61,5 +62,7 @@ class RatesManager(context: Context, currency: String) {
         return kit.getGlobalCoinMarketsAsync(currency)
     }
 
-
+    fun searchCoins(text: String): List<CoinData>{
+        return kit.searchCoins(text)
+    }
 }

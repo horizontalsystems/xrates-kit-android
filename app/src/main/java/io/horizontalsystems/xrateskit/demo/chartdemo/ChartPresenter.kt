@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.horizontalsystems.chartview.ChartView
 import io.horizontalsystems.chartview.models.ChartPoint
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.demo.App
 import io.horizontalsystems.xrateskit.demo.chartdemo.entities.Currency
 import io.horizontalsystems.xrateskit.demo.chartdemo.entities.CurrencyValue
@@ -17,17 +18,17 @@ class ChartPresenter(
         private val interactor: ChartInteractor)
     : ViewModel() {
 
-    private val coinCode = "BTC"
+    private val coinType = CoinType.Bitcoin
 
     private val executor = Executors.newSingleThreadExecutor()
 
     fun onLoad() {
         executor.submit {
-            interactor.chartInfo(coinCode, currency.code)?.let {
+            interactor.chartInfo(coinType, currency.code)?.let {
                 view.updateChart(it)
             }
 
-            interactor.subscribeToChartInfo(coinCode, currency.code)
+            interactor.subscribeToChartInfo(coinType, currency.code)
         }
     }
 

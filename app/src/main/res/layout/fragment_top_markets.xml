@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/topMarketsFrameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -100,6 +101,32 @@
         app:layout_constraintEnd_toStartOf="@id/btnCategoryBlockchain"
         app:layout_constraintTop_toBottomOf="@+id/btnLoadCoinInfo" />
 
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="Search"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@id/btnCategoryDex"
+        app:layout_constraintTop_toBottomOf="@+id/btnLoadCoinInfo" />
+
+    <EditText
+        android:id="@+id/eTxtSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="4dp"
+        android:ems="5"
+        android:inputType="textPersonName"
+        android:text=""
+        tools:layout_editor_absoluteX="5dp"
+        tools:layout_editor_absoluteY="84dp"
+        app:layout_constraintEnd_toStartOf="@id/btnSearch"
+        app:layout_constraintTop_toBottomOf="@+id/btnLoadGLobalMarkets"/>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rviewInfo"
         android:layout_width="match_parent"
@@ -122,6 +149,16 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rviewInfo3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCategoryBlockchain" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rviewInfo4"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
