@@ -53,15 +53,15 @@ class CoinInfoManager(
         return coinInfoEntity.map { it.coinType }
     }
 
-    fun getCoinRatingsAsync(): Single<Map<String, String>> =
+    fun getCoinRatingsAsync(): Single<Map<CoinType, String>> =
         Single.create { emitter ->
             try {
-                val coinRatingsMap = mutableMapOf<String, String>()
+                val coinRatingsMap = mutableMapOf<CoinType, String>()
 
                 storage.getCoinInfos().forEach { coin ->
                     coin.rating?.let {
                         if (it.isNotEmpty()) {
-                            coinRatingsMap[coin.code] = it
+                            coinRatingsMap[coin.coinType] = it
                         }
                     }
                 }
