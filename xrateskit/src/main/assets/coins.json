@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 1,
   "categories": [
     { "id": "blockchain", "name": "Blockchain" },
     { "id": "dexes", "name": "DEXes" },
