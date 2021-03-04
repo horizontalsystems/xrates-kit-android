@@ -1,19 +1,48 @@
 package io.horizontalsystems.xrateskit.demo.chartdemo
 
 import androidx.lifecycle.MutableLiveData
-import io.horizontalsystems.chartview.ChartView
-import io.horizontalsystems.xrateskit.demo.chartdemo.entities.CurrencyValue
-import io.horizontalsystems.xrateskit.entities.ChartInfo
+import io.horizontalsystems.xrateskit.entities.ChartType
 
 class ChartActivityView {
-    val chartInfoLiveData = MutableLiveData<ChartInfo>()
-    val setSelectedPoint = MutableLiveData<Triple<Long, CurrencyValue, ChartView.ChartType>>()
+    val showSpinner = MutableLiveData<Unit>()
+    val hideSpinner = MutableLiveData<Unit>()
+    val setSelectedPoint = MutableLiveData<ChartPointViewItem>()
+    val showChartInfo = MutableLiveData<ChartInfoViewItem>()
+    val setDefaultMode = MutableLiveData<ChartType>()
 
-    fun updateChart(chartInfo: ChartInfo) {
-        chartInfoLiveData.postValue(chartInfo)
+    val showEma = MutableLiveData<Boolean>()
+    val showMacd = MutableLiveData<Boolean>()
+    val showRsi = MutableLiveData<Boolean>()
+
+    fun showSpinner() {
+        showSpinner.postValue(Unit)
     }
 
-    fun showSelectedPoint(data: Triple<Long, CurrencyValue, ChartView.ChartType>) {
-        setSelectedPoint.postValue(data)
+    fun hideSpinner() {
+        hideSpinner.postValue(Unit)
+    }
+
+    fun setChartType(type: ChartType) {
+        setDefaultMode.postValue(type)
+    }
+
+    fun showChartInfo(viewItem: ChartInfoViewItem) {
+        showChartInfo.postValue(viewItem)
+    }
+
+    fun showSelectedPointInfo(item: ChartPointViewItem) {
+        setSelectedPoint.postValue(item)
+    }
+
+    fun setEmaEnabled(enabled: Boolean) {
+        showEma.postValue(enabled)
+    }
+
+    fun setMacdEnabled(enabled: Boolean) {
+        showMacd.postValue(enabled)
+    }
+
+    fun setRsiEnabled(enabled: Boolean) {
+        showRsi.postValue(enabled)
     }
 }

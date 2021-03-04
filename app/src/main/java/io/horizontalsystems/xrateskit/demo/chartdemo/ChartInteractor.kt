@@ -5,30 +5,39 @@ import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.demo.RatesManager
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartType
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class ChartInteractor(private val ratesManager: RatesManager) {
     var presenter: ChartPresenter? = null
+    var defaultChartType: ChartType? = ChartType.WEEKLY
 
-    private var chartInfoDisposables = CompositeDisposable()
+    private var cInfoDisposable: Disposable? = null
 
-    fun subscribeToChartInfo(coinType: CoinType, currency: String) {
-        chartInfoDisposables.clear()
 
-        ratesManager.chartInfoObservable(coinType, currency, ChartType.DAILY)
+    fun observeChartInfo(coinType: CoinType, currencyCode: String, chartType: ChartType) {
+        cInfoDisposable?.dispose()
+        cInfoDisposable = ratesManager.chartInfoObservable(coinType, currencyCode, chartType)
+            .delay(600, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
-            .subscribe({
-                presenter?.onUpdateChartInfo(it)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ chartInfo ->
+                presenter?.onUpdate(chartInfo)
             }, {
                 Log.e("ChartInteractor", "exception", it)
-            }).let {
-                chartInfoDisposables.add(it)
-            }
+            })
     }
 
-    fun chartInfo(coinType: CoinType, currency: String): ChartInfo? {
-        return ratesManager.chartInfo(coinType, currency, ChartType.DAILY)
+    fun getChartInfo(coinType: CoinType, currencyCode: String, chartType: ChartType): ChartInfo? {
+        return ratesManager.chartInfo(coinType, currencyCode, chartType)
     }
+
+
+    fun clear() {
+        cInfoDisposable?.dispose()
+    }
+
 }
