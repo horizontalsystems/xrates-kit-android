@@ -1,6 +1,7 @@
 package io.horizontalsystems.xrateskit.entities
 
 import com.eclipsesource.json.JsonObject
+import io.horizontalsystems.xrateskit.api.ProviderError
 
 class CryptoCompareResponse {
 
@@ -8,17 +9,11 @@ class CryptoCompareResponse {
         fun parseData(response: JsonObject): JsonObject {
             val type = response["Type"].asInt()
             when {
-                type == 99 -> throw CryptoCompareError.ApiRequestLimitExceeded()
-                type == 2 -> throw CryptoCompareError.NoDataForCoin()
-                type != 100 -> throw CryptoCompareError.UnknownTypeError()
+                type == 99 -> throw ProviderError.ApiRequestLimitExceeded()
+                type == 2 -> throw ProviderError.NoDataForCoin()
+                type != 100 -> throw ProviderError.UnknownTypeError()
                 else -> return response["Data"].asObject()
             }
         }
     }
-}
-
-sealed class CryptoCompareError: Exception() {
-    class ApiRequestLimitExceeded : CryptoCompareError()
-    class NoDataForCoin : CryptoCompareError()
-    class UnknownTypeError : CryptoCompareError()
 }

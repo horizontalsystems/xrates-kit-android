@@ -9,3 +9,9 @@ sealed class InfoProvider(val id: String, var baseUrl: String = "", var accessKe
     class HorSys : InfoProvider("horsys", "https://info.horizontalsystems.xyz/api/v1")
 
 }
+
+sealed class ProviderError: Exception() {
+    class ApiRequestLimitExceeded : ProviderError()
+    class NoDataForCoin : ProviderError()
+    class UnknownTypeError : ProviderError()
+}

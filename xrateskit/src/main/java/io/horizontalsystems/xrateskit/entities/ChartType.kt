@@ -39,6 +39,19 @@ enum class ChartType(val interval: Long, val points: Int, val resource: String) 
             MONTHLY24 -> interval * 24 * 60
         } * 60
 
+    val days: Int
+        get() = when (this) {
+            TODAY -> 1
+            DAILY -> 1
+            WEEKLY -> 7
+            WEEKLY2 -> 14
+            MONTHLY -> 30
+            MONTHLY3 -> 90
+            MONTHLY6 -> 180
+            MONTHLY12 -> 360
+            MONTHLY24 -> 720
+        }
+
     companion object {
         private val map = values().associateBy(ChartType::name)
 
