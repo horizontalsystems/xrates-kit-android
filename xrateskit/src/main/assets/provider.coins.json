@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 1,
   "providers": [
     { "id": "cryptocompare", "url": "https://min-api.cryptocompare.com" },
     { "id": "coingecko", "url": "https://api.coingecko.com/api/v3" }
