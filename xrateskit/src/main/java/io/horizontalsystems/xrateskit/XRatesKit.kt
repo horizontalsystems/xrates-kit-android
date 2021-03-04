@@ -129,6 +129,7 @@ class XRatesKit(
             val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, cryptoCompareApiKey, indicatorPointCount, providerCoinsManager)
             val uniswapGraphProvider = UniswapGraphProvider(factory, apiManager, cryptoCompareProvider)
             val marketInfoProvider = BaseMarketInfoProvider(cryptoCompareProvider, uniswapGraphProvider)
+            val chartInfoProvider = BaseChartInfoProvider(providerCoinsManager, cryptoCompareProvider, coinGeckoProvider)
             val globalMarketInfoManager = GlobalMarketInfoManager(coinPaprikaProvider, horsysProvider, storage)
 
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
@@ -141,7 +142,7 @@ class XRatesKit(
             }
 
             val chartInfoManager = ChartInfoManager(storage, factory, marketInfoManager)
-            val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, cryptoCompareProvider, retryInterval)
+            val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, chartInfoProvider, retryInterval)
             val chartInfoSyncManager = ChartInfoSyncManager(chartInfoSchedulerFactory).also {
                 chartInfoManager.listener = it
             }

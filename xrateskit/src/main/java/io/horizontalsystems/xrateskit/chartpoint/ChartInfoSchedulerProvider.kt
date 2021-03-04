@@ -1,8 +1,8 @@
 package io.horizontalsystems.xrateskit.chartpoint
 
+import io.horizontalsystems.xrateskit.api.ProviderError
 import io.horizontalsystems.xrateskit.core.IChartInfoProvider
 import io.horizontalsystems.xrateskit.entities.ChartInfoKey
-import io.horizontalsystems.xrateskit.entities.CryptoCompareError
 import io.reactivex.Single
 
 class ChartInfoSchedulerProvider(
@@ -23,7 +23,7 @@ class ChartInfoSchedulerProvider(
                     manager.update(points, key)
                 }
                 .doOnError {
-                    if (it is CryptoCompareError.NoDataForCoin) {
+                    if (it is ProviderError.NoDataForCoin) {
                         manager.handleNoChartPoints(key)
                     }
                 }

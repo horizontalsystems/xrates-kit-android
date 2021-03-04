@@ -5,6 +5,7 @@ import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.coins.ProviderCoinError
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.core.Factory
+import io.horizontalsystems.xrateskit.core.IChartInfoProvider
 import io.horizontalsystems.xrateskit.core.ICoinMarketProvider
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
@@ -17,7 +18,7 @@ class CoinGeckoProvider(
     private val apiManager: ApiManager,
     private val coinInfoManager: CoinInfoManager,
     private val providerCoinsManager: ProviderCoinsManager
-) : ICoinMarketProvider {
+) : ICoinMarketProvider, IChartInfoProvider {
     private val logger = Logger.getLogger("CoinGeckoProvider")
     override val provider: InfoProvider = InfoProvider.CoinGecko()
     private val MAX_ITEM_PER_PAGE = 250
@@ -100,7 +101,7 @@ class CoinGeckoProvider(
         val providerCoinIds = providerCoinsManager.getProviderIds(coinTypes, this.provider).mapNotNull { it }
         if(providerCoinIds.isEmpty())
             return Single.just(Collections.emptyList())
-        
+
         return Single.create { emitter ->
             try {
                 emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, coinIds = providerCoinIds))
@@ -198,10 +199,10 @@ class CoinGeckoProvider(
     private fun doCoinMarketsRequest(currencyCode: String, fetchDiffPeriods: List<TimePeriod>, itemsCount: Int? = null, coinIds: List<String>? = null, pageNumber: Int = 1): List<CoinGeckoCoinMarketsResponse> {
 
         val coinIdsParams = if(!coinIds.isNullOrEmpty()) "&ids=${coinIds.joinToString(separator = ",")}"
-                            else ""
+        else ""
 
         val perPage = if(itemsCount != null) "&page=${pageNumber}&per_page=${itemsCount}"
-                      else ""
+        else ""
 
         val priceChangePercentage = fetchDiffPeriods.map { period ->
             if(period != TimePeriod.ALL && period != TimePeriod.HOUR_24) period.title
@@ -225,4 +226,31 @@ class CoinGeckoProvider(
         return CoinGeckoCoinMarketDetailsResponse.parseData(json, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
     }
 
+    override fun getChartPoints(chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>> {
+        val providerCoinId = getProviderCoinId(chartPointKey.coinType)
+
+        return Single.create { emitter ->
+            try {
+                emitter.onSuccess(getCoinMarketCharts(providerCoinId, chartPointKey))
+
+            } catch (ex: Exception) {
+                emitter.onError(ex)
+            }
+        }
+    }
+
+    private fun getCoinMarketCharts(providerCoinId: String, chartPointKey: ChartInfoKey): List<ChartPointEntity> {
+        val json = apiManager.getJsonValue(
+            "${provider.baseUrl}/coins/${providerCoinId}/market_chart?vs_currency=${chartPointKey.currency}&days=${chartPointKey.chartType.days}")
+
+        return CoinGeckoMarketChartsResponse.parseData(json).map { response ->
+            ChartPointEntity(
+                chartPointKey.chartType,
+                chartPointKey.coinType,
+                chartPointKey.currency,
+                response.rate,
+                response.volume,
+                response.timestamp)
+        }
+    }
 }

@@ -384,3 +384,31 @@ data class CoinGeckoCoinMarketDetailsResponse(
         }
     }
 }
+
+class CoinGeckoMarketChartsResponse(
+    val rate: BigDecimal,
+    val volume: BigDecimal,
+    val timestamp: Long
+) {
+    companion object{
+        fun parseData(jsonValue: JsonValue): List<CoinGeckoMarketChartsResponse> {
+            val charts = mutableListOf<CoinGeckoMarketChartsResponse>()
+
+            val rates = jsonValue.asObject().get("prices").asArray()
+            val volumes = jsonValue.asObject().get("total_volumes").asArray()
+
+            rates.forEachIndexed { index, rateData ->
+                try {
+                    val rate = rateData.asArray()[1].asDouble().toBigDecimal()
+                    val timestamp = rateData.asArray()[0].asLong()
+                    val volume = volumes[index].asArray()[1].asDouble().toBigDecimal()
+                    charts.add(CoinGeckoMarketChartsResponse(rate, volume, timestamp/1000))
+                } catch (e: Exception){
+                    //ignore
+                }
+            }
+
+            return charts
+        }
+    }
+}
