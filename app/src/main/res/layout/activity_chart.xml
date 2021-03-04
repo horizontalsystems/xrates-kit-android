@@ -5,65 +5,231 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_grey"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/rootView">
 
-    <LinearLayout
-        android:id="@+id/chartPointsInfo"
-        android:layout_width="match_parent"
-        android:layout_height="49dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingTop="2dp"
-        android:paddingBottom="8dp">
-
-        <TextView
-            android:id="@+id/pointInfoPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textColor="@color/steel_dark"
-            android:textSize="14sp"
-            tools:text="3,867.50" />
-
-        <TextView
-            android:id="@+id/pointInfoDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textColor="@color/grey"
-            android:textSize="12sp"
-            tools:text="June 18, 2019 at 1:45 PM" />
-
-    </LinearLayout>
-
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/coinChartView"
         android:layout_width="match_parent"
-        android:layout_height="213dp"
+        android:layout_height="4200dp"
         android:background="@color/white"
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
-        <io.horizontalsystems.chartview.ChartIndicator
-            android:id="@+id/chartViewIndicator"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible" />
+        <HorizontalScrollView
+            android:id="@+id/chartActionsWrap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/coinChartView">
 
-        <io.horizontalsystems.chartview.ChartView
-            android:id="@+id/chartView"
+            <LinearLayout
+                android:id="@+id/chartActions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/buttonToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="T" />
+
+                <Button
+                    android:id="@+id/button24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1D" />
+
+                <Button
+                    android:id="@+id/button1W"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1W" />
+
+                <Button
+                    android:id="@+id/button2W"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2W" />
+
+                <TextView
+                    android:id="@+id/button1M"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1M" />
+
+                <TextView
+                    android:id="@+id/button3M"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3M" />
+
+                <TextView
+                    android:id="@+id/button6M"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6M" />
+
+                <TextView
+                    android:id="@+id/button1Y"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1Y" />
+
+                <TextView
+                    android:id="@+id/button2Y"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2Y" />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/chartPointsInfo"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:fallColor="@color/red_d"
-            app:gridDottedColor="@color/black_50"
-            app:growColor="@color/green_d"
-            app:indicatorColor="@color/dark"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="16dp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chartActionsWrap">
+
+            <!--Price and Date info-->
+
+            <TextView
+                android:id="@+id/pointInfoPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="$9530.12" />
+
+            <TextView
+                android:id="@+id/pointInfoDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Jun 12, 12:30" />
+
+            <!--Volume info-->
+
+            <TextView
+                android:id="@+id/pointInfoVolumeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Volume"
+                android:textColor="@color/grey"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/pointInfoPrice" />
+
+            <TextView
+                android:id="@+id/pointInfoVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="$36,166B" />
+
+            <!--MACD info-->
+
+            <TextView
+                android:id="@+id/macdHistogram"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/yellow_d"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/pointInfoPrice"
+                tools:text="-163.24" />
+
+            <TextView
+                android:id="@+id/macdSignal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/yellow_d"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="-123" />
+
+            <TextView
+                android:id="@+id/macdValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:textColor="@color/yellow_d"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/macdSignal"
+                tools:text="-286.61" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <io.horizontalsystems.chartview.Chart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="232dp"
+            android:layout_marginTop="4dp"
+            app:cursorColor="@color/grey"
+            app:curvePressedColor="@color/grey"
+            app:gridDashColor="@color/green_d"
+            app:gridTextColor="@color/green_d"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chartPointsInfo"
             app:partialChartColor="@color/grey_50"
-            app:textColor="@color/grey"
-            app:textPriceColor="@color/steel_dark"
-            app:touchColor="@color/dark" />
+            app:trendDownColor="@color/red_d"
+            app:trendUpColor="@color/green_d" />
 
-    </RelativeLayout>
+        <View
+            android:id="@+id/border3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chart" />
+
+        <io.horizontalsystems.chartview.extensions.ChartIndicatorView
+            android:id="@+id/emaChartIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/border3"
+            app:title="EMA" />
+
+        <io.horizontalsystems.chartview.extensions.ChartIndicatorView
+            android:id="@+id/macdChartIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emaChartIndicator"
+            app:title="MACD" />
+
+        <io.horizontalsystems.chartview.extensions.ChartIndicatorView
+            android:id="@+id/rsiChartIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/macdChartIndicator"
+            app:title="RSI" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

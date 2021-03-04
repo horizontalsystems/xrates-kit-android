@@ -50,7 +50,7 @@ dependencies {
     implementation 'com.github.horizontalsystems:coin-kit-android:a876cf2'
 
     implementation project(':xrateskit')
-    implementation 'com.github.horizontalsystems.unstoppable-wallet-android:chartview:2532ed9'
+    implementation 'com.github.horizontalsystems.unstoppable-wallet-android:chartview:4b93e6f9'
 
     //  For debugging
     implementation 'com.facebook.stetho:stetho:1.5.1'

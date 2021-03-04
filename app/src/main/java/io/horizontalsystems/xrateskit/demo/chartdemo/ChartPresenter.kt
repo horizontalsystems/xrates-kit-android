@@ -2,45 +2,110 @@ package io.horizontalsystems.xrateskit.demo.chartdemo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import io.horizontalsystems.chartview.ChartView
-import io.horizontalsystems.chartview.models.ChartPoint
+import io.horizontalsystems.chartview.Chart
+import io.horizontalsystems.chartview.models.PointInfo
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.demo.App
 import io.horizontalsystems.xrateskit.demo.chartdemo.entities.Currency
 import io.horizontalsystems.xrateskit.demo.chartdemo.entities.CurrencyValue
 import io.horizontalsystems.xrateskit.entities.ChartInfo
+import io.horizontalsystems.xrateskit.entities.ChartType
 import java.util.concurrent.Executors
 
 class ChartPresenter(
-        val view: ChartActivityView,
-        val rateFormatter: ChartView.RateFormatter,
-        private val currency: Currency,
-        private val interactor: ChartInteractor)
+    val view: ChartActivityView,
+    val rateFormatter: Chart.RateFormatter,
+    private val currency: Currency,
+    private val interactor: ChartInteractor,
+    private val factory: ChartViewFactory)
     : ViewModel() {
 
     private val coinType = CoinType.Bitcoin
-
     private val executor = Executors.newSingleThreadExecutor()
+    private var chartType = ChartType.WEEKLY
+    private var emaIsEnabled = false
+    private var macdIsEnabled = false
+    private var rsiIsEnabled = false
 
     fun onLoad() {
         executor.submit {
-            interactor.chartInfo(coinType, currency.code)?.let {
-                view.updateChart(it)
+            view.setChartType(chartType)
+            fetchChartInfo()
+        }
+    }
+
+    private var chartInfo: ChartInfo? = null
+        set(value) {
+            field = value
+            updateChartInfo()
+        }
+
+    fun onTouchSelect(point: PointInfo) {
+        val price = CurrencyValue(currency, point.value.toBigDecimal())
+
+        if (macdIsEnabled){
+            view.showSelectedPointInfo(ChartPointViewItem(point.timestamp, price, null, point.macdInfo))
+        } else {
+            val volume = point.volume?.let { volume ->
+                CurrencyValue(currency, volume.toBigDecimal())
             }
-
-            interactor.subscribeToChartInfo(coinType, currency.code)
+            view.showSelectedPointInfo(ChartPointViewItem(point.timestamp, price, volume, null))
         }
     }
 
-    fun onUpdateChartInfo(chartInfo: ChartInfo) {
-        executor.submit {
-            view.updateChart(chartInfo)
+    private fun updateChartInfo() {
+        val info = chartInfo ?: return
+
+        view.hideSpinner()
+
+        try {
+            view.showChartInfo(factory.createChartInfo(chartType, info, null))
+        } catch (e: Exception) {
         }
     }
 
-    fun onTouchSelect(point: ChartPoint) {
-        val currencyValue = CurrencyValue(currency, point.value.toBigDecimal())
-        view.showSelectedPoint(Triple(point.timestamp, currencyValue, ChartView.ChartType.DAILY))
+    fun onSelect(type: ChartType) {
+        if (chartType == type)
+            return
+
+        chartType = type
+        interactor.defaultChartType = type
+
+        fetchChartInfo()
+    }
+
+    fun toggleEma() {
+        emaIsEnabled = !emaIsEnabled
+        view.setEmaEnabled(emaIsEnabled)
+    }
+
+    fun toggleMacd() {
+        if (rsiIsEnabled){
+            toggleRsi()
+        }
+
+        macdIsEnabled = !macdIsEnabled
+        view.setMacdEnabled(macdIsEnabled)
+    }
+
+    fun toggleRsi() {
+        if (macdIsEnabled){
+            toggleMacd()
+        }
+
+        rsiIsEnabled = !rsiIsEnabled
+        view.setRsiEnabled(rsiIsEnabled)
+    }
+
+    private fun fetchChartInfo() {
+        view.showSpinner()
+
+        chartInfo = interactor.getChartInfo(coinType, currency.code, chartType)
+        interactor.observeChartInfo(coinType, currency.code, chartType)
+    }
+
+    fun onUpdate(chartInfo: ChartInfo) {
+        this.chartInfo = chartInfo
     }
 
     // -------------------------
@@ -53,7 +118,7 @@ class ChartPresenter(
             val formatter = RateFormatter(currency)
 
             val interactor = ChartInteractor(App.ratesManager)
-            val presenter = ChartPresenter(view, formatter, currency, interactor)
+            val presenter = ChartPresenter(view, formatter, currency, interactor, ChartViewFactory())
 
             interactor.presenter = presenter
 
