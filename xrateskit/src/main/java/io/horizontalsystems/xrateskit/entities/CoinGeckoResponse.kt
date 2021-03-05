@@ -68,46 +68,46 @@ data class CoinGeckoCoinMarketsResponse(
                     }
                     if (element.get("price_change_percentage_1h_in_currency") != null) {
                         if (!element.get("price_change_percentage_1h_in_currency").isNull)
-                        rateDiffPeriod.put(
-                            TimePeriod.HOUR_1,
-                            element.get("price_change_percentage_1h_in_currency").asDouble().toBigDecimal()
-                        )
+                            rateDiffPeriod.put(
+                                TimePeriod.HOUR_1,
+                                element.get("price_change_percentage_1h_in_currency").asDouble().toBigDecimal()
+                            )
                     }
                     if (element.get("price_change_percentage_7d_in_currency") != null) {
                         if (!element.get("price_change_percentage_7d_in_currency").isNull)
-                        rateDiffPeriod.put(
-                            TimePeriod.DAY_7,
-                            element.get("price_change_percentage_7d_in_currency").asDouble().toBigDecimal()
-                        )
+                            rateDiffPeriod.put(
+                                TimePeriod.DAY_7,
+                                element.get("price_change_percentage_7d_in_currency").asDouble().toBigDecimal()
+                            )
                     }
                     if (element.get("price_change_percentage_14d_in_currency") != null) {
                         if (!element.get("price_change_percentage_14d_in_currency").isNull)
-                        rateDiffPeriod.put(
-                            TimePeriod.DAY_14,
-                            element.get("price_change_percentage_14d_in_currency").asDouble().toBigDecimal()
-                        )
+                            rateDiffPeriod.put(
+                                TimePeriod.DAY_14,
+                                element.get("price_change_percentage_14d_in_currency").asDouble().toBigDecimal()
+                            )
                     }
 
                     if (element.get("price_change_percentage_30d_in_currency") != null) {
                         if (!element.get("price_change_percentage_30d_in_currency").isNull)
-                        rateDiffPeriod.put(
-                            TimePeriod.DAY_30,
-                            element.get("price_change_percentage_30d_in_currency").asDouble().toBigDecimal()
-                        )
+                            rateDiffPeriod.put(
+                                TimePeriod.DAY_30,
+                                element.get("price_change_percentage_30d_in_currency").asDouble().toBigDecimal()
+                            )
                     }
                     if (element.get("price_change_percentage_200d_in_currency") != null) {
                         if (!element.get("price_change_percentage_200d_in_currency").isNull)
-                        rateDiffPeriod.put(
-                            TimePeriod.DAY_200,
-                            element.get("price_change_percentage_200d_in_currency").asDouble().toBigDecimal()
-                        )
+                            rateDiffPeriod.put(
+                                TimePeriod.DAY_200,
+                                element.get("price_change_percentage_200d_in_currency").asDouble().toBigDecimal()
+                            )
                     }
                     if (element.get("price_change_percentage_1y_in_currency") != null) {
                         if (!element.get("price_change_percentage_1y_in_currency").isNull)
-                        rateDiffPeriod.put(
-                            TimePeriod.YEAR_1,
-                            element.get("price_change_percentage_1y_in_currency").asDouble().toBigDecimal()
-                        )
+                            rateDiffPeriod.put(
+                                TimePeriod.YEAR_1,
+                                element.get("price_change_percentage_1y_in_currency").asDouble().toBigDecimal()
+                            )
                     }
 
                     coinGeckoMarketsResponses.add(
@@ -146,7 +146,6 @@ data class CoinGeckoCoinInfo(
             val links = mutableMapOf<LinkType, String>()
             val platforms = mutableMapOf<CoinPlatformType, String>()
             val element = jsonValue.asObject()
-            val linksElement = element.get("links").asObject()
             val coinId = element.get("id").asString()
             val coinCode = element.get("symbol").asString().toUpperCase()
             val title = element.get("name").asString()
@@ -156,41 +155,42 @@ data class CoinGeckoCoinInfo(
 
             try {
 
-                if (linksElement.get("homepage") != null) {
-                    if (!linksElement.get("homepage").asArray().isNull) {
-                        links[LinkType.WEBSITE] = linksElement.get("homepage").asArray()[0].asString()
+                element.get("links")?.let {
+                    it.asObject().get("homepage")?.let {
+                        if (!it.asArray().isNull) {
+                            links[LinkType.WEBSITE] = it.asArray()[0].asString()
+                        }
+                    }
+
+                    it.asObject().get("twitter_screen_name")?.let {
+                        if (!it.isNull) {
+                            links[LinkType.TWITTER] = "https://twitter.com/${it.asString()}"
+                        }
+                    }
+
+                    it.asObject().get("telegram_channel_identifier")?.let {
+                        if (!it.isNull) {
+                            links[LinkType.TELEGRAM] = "https://t.me/${it.asString()}"
+                        }
+                    }
+
+                    it.asObject().get("subreddit_url")?.let {
+                        if (!it.isNull) {
+                            links[LinkType.REDDIT] = it.asString()
+                        }
+                    }
+
+                    it.asObject().get("repos_url")?.let {
+                        it.asObject().get("github")?.let { github ->
+                            if (!github.asArray().isEmpty)
+                                links[LinkType.GITHUB] = github.asArray()[0].asString()
+                        }
                     }
                 }
 
-                if (linksElement.get("twitter_screen_name") != null) {
-                    if (!linksElement.get("twitter_screen_name").isNull) {
-                        links[LinkType.TWITTER] = "https://twitter.com/${linksElement.get("twitter_screen_name").asString()}"
-                    }
-                }
-
-                if (linksElement.get("telegram_channel_identifier") != null) {
-                    if (!linksElement.get("telegram_channel_identifier").isNull) {
-                        links[LinkType.TELEGRAM] = "https://t.me/${linksElement.get("telegram_channel_identifier").asString()}"
-                    }
-                }
-
-                if (linksElement.get("subreddit_url") != null) {
-                    if (!linksElement.get("subreddit_url").isNull) {
-                        links[LinkType.REDDIT] = linksElement.get("subreddit_url").asString()
-                    }
-                }
-
-                if (linksElement.get("repos_url") != null) {
-                    val gitHub = linksElement.get("repos_url").asObject().get("github")
-                    if (gitHub != null) {
-                        if (!gitHub.asArray().isEmpty)
-                            links[LinkType.GITHUB] = gitHub.asArray()[0].asString()
-                    }
-                }
-
-                if (element.get("asset_platform_id") != null) {
-                    if (!element.get("asset_platform_id").isNull) {
-                        val platformId = element.get("asset_platform_id").asString()
+                element.get("asset_platform_id")?.let {
+                    if (!it.isNull) {
+                        val platformId = it.asString()
                         val platformType = when(platformId.toLowerCase()){
                             "tron" ->  CoinPlatformType.TRON
                             "ethereum" ->  CoinPlatformType.ETHEREUM
@@ -200,17 +200,17 @@ data class CoinGeckoCoinInfo(
                             else -> null
                         }
 
-                        platformType?.let {
-                            if (element.get("contract_address") != null) {
-                                if (!element.get("contract_address").isNull) {
-                                    platforms[it] = element.get("contract_address").asString()
+                        platformType?.let { pType ->
+                            element.get("contract_address")?.let {
+                                if (!it.isNull) {
+                                    platforms[pType] = it.asString()
                                 }
                             }
                         }
                     }
                 }
 
-            }catch (e: Exception){
+            } catch (e: Exception){
                 print(e.getLocalizedMessage())    //ignore error
             }
 
@@ -239,9 +239,9 @@ data class CoinGeckoTickersResponse(
             val tickers = mutableListOf<CoinGeckoTickersResponse>()
             try{
 
-                if (jsonValue.asObject().get("tickers") != null) {
+                jsonValue.asObject().get("tickers")?.let {
 
-                    jsonValue.asObject().get("tickers").asArray().forEach { tickerData ->
+                    it.asArray().forEach { tickerData ->
                         tickerData?.asObject()?.let { element ->
                             val base = element.get("base").asString()
                             val target = element.get("target").asString()
@@ -292,51 +292,61 @@ data class CoinGeckoCoinMarketDetailsResponse(
 
             val rate = if (element.get("current_price").isNull) BigDecimal.ZERO
             else{
-                if(element.get("current_price").asObject().get(currencyCode.toLowerCase()).isNull) BigDecimal.ZERO
-                else element.get("current_price").asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                element.get("current_price").asObject().get(currencyCode.toLowerCase())?.let {
+                    if(it.isNull) BigDecimal.ZERO
+                    else element.get("current_price").asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                } ?:BigDecimal.ZERO
             }
 
-            val rateHigh24h = if (element.get("high_24h") != null ){
-                if (element.get("high_24h").isNull) BigDecimal.ZERO
+            val rateHigh24h = element.get("high_24h")?.let { highPriceElement ->
+                if (highPriceElement.isNull) BigDecimal.ZERO
                 else{
-                    if(element.get("high_24h").asObject().get(currencyCode.toLowerCase()).isNull) BigDecimal.ZERO
-                    else element.get("high_24h").asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                    highPriceElement.asObject().get(currencyCode.toLowerCase())?.let {
+                        if(it.isNull) BigDecimal.ZERO
+                        else highPriceElement.asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                    } ?:BigDecimal.ZERO
                 }
-            } else BigDecimal.ZERO
+            } ?: BigDecimal.ZERO
 
-            val rateLow24h = if (element.get("low_24h") != null){
-                if (element.get("low_24h").isNull) BigDecimal.ZERO
+            val rateLow24h = element.get("low_24h")?.let { lowPriceElement ->
+                if (lowPriceElement.isNull) BigDecimal.ZERO
                 else{
-                    if(element.get("low_24h").asObject().get(currencyCode.toLowerCase()).isNull) BigDecimal.ZERO
-                    else element.get("low_24h").asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                    lowPriceElement.asObject().get(currencyCode.toLowerCase())?.let {
+                        if(it.isNull) BigDecimal.ZERO
+                        else lowPriceElement.asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                    } ?:BigDecimal.ZERO
                 }
-            } else BigDecimal.ZERO
+            } ?: BigDecimal.ZERO
 
-            val marketCap = if (element.get("market_cap") != null){
-                if (element.get("market_cap").isNull) BigDecimal.ZERO
+            val marketCap = element.get("market_cap")?.let { marketElement ->
+                if (marketElement.isNull) BigDecimal.ZERO
                 else{
-                    if(element.get("market_cap").asObject().get(currencyCode.toLowerCase()).isNull) BigDecimal.ZERO
-                    else element.get("market_cap").asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                    marketElement.asObject().get(currencyCode.toLowerCase())?.let {
+                        if(it.isNull) BigDecimal.ZERO
+                        else marketElement.asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                    } ?:BigDecimal.ZERO
                 }
-            } else BigDecimal.ZERO
+            } ?: BigDecimal.ZERO
 
-            val volume24h = if (element.get("total_volume") != null){
-                if (element.get("total_volume").isNull) BigDecimal.ZERO
+            val volume24h = element.get("total_volume")?.let { volumeElement ->
+                if (volumeElement.isNull) BigDecimal.ZERO
                 else{
-                    if(element.get("total_volume").asObject().get(currencyCode.toLowerCase()).isNull) BigDecimal.ZERO
-                    else element.get("total_volume").asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                    volumeElement.asObject().get(currencyCode.toLowerCase())?.let {
+                        if(it.isNull) BigDecimal.ZERO
+                        else volumeElement.asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                    } ?:BigDecimal.ZERO
                 }
-            } else BigDecimal.ZERO
+            } ?: BigDecimal.ZERO
 
-            val circulatingSupply = if (element.get("circulating_supply") != null){
-                if (element.get("circulating_supply").isNull) BigDecimal.ZERO
-                else element.get("circulating_supply").asDouble().toBigDecimal()
-            } else BigDecimal.ZERO
+            val circulatingSupply = element.get("circulating_supply")?.let {
+                if (it.isNull) BigDecimal.ZERO
+                else it.asDouble().toBigDecimal()
+            } ?: BigDecimal.ZERO
 
-            val totalSupply = if (element.get("total_supply").isNull){
-                if (element.get("total_supply").isNull) BigDecimal.ZERO
-                else element.get("total_supply").asDouble().toBigDecimal()
-            } else BigDecimal.ZERO
+            val totalSupply = element.get("total_supply")?.let {
+                if (it.isNull) BigDecimal.ZERO
+                else it.asDouble().toBigDecimal()
+            } ?: BigDecimal.ZERO
 
             rateDiffPeriods.forEach { period ->
 
@@ -353,16 +363,16 @@ data class CoinGeckoCoinMarketDetailsResponse(
                 }
 
                 rateDiffCoinCodes.forEach { coinCode ->
-
-                val diff = if (element.get(diffPeriod) != null) {
-                                if (element.get(diffPeriod).isNull) BigDecimal.ZERO
-                                else{
-                                    if(element.get(diffPeriod).asObject().get(coinCode.toLowerCase()).isNull) BigDecimal.ZERO
-                                    else element.get(diffPeriod).asObject().get(coinCode.toLowerCase()).asDouble().toBigDecimal()
-                                }
-                           } else BigDecimal.ZERO
+                    val diff = element.get(diffPeriod)?.let {
+                        if (it.isNull) BigDecimal.ZERO
+                        else{
+                            it.asObject().get(coinCode.toLowerCase())?.let {
+                                if (it.isNull) BigDecimal.ZERO
+                                else it.asDouble().toBigDecimal()
+                            } ?: BigDecimal.ZERO
+                        }
+                    } ?: BigDecimal.ZERO
                     rateDiffs[coinCode] = diff
-
                 }
                 rateDiffsPeriod[period] = rateDiffs
             }
