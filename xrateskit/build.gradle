@@ -41,7 +41,7 @@ dependencies {
     implementation 'com.eclipsesource.minimal-json:minimal-json:0.9.5'
 
     //CoinKit
-    implementation 'com.github.horizontalsystems:coin-kit-android:a876cf2'
+    implementation 'com.github.horizontalsystems:coin-kit-android:d60ce30'
 
     // Test
     testImplementation 'junit:junit:4.12'
