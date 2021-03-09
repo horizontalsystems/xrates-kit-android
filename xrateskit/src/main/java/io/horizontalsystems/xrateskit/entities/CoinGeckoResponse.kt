@@ -401,18 +401,24 @@ class CoinGeckoMarketChartsResponse(
     val timestamp: Long
 ) {
     companion object{
-        fun parseData(jsonValue: JsonValue): List<CoinGeckoMarketChartsResponse> {
+        fun parseData(chartPointKey: ChartInfoKey, jsonValue: JsonValue): List<CoinGeckoMarketChartsResponse> {
             val charts = mutableListOf<CoinGeckoMarketChartsResponse>()
 
             val rates = jsonValue.asObject().get("prices").asArray()
             val volumes = jsonValue.asObject().get("total_volumes").asArray()
+            var nextTs = 0L
 
-            rates.forEachIndexed { index, rateData ->
+                rates.forEachIndexed { index, rateData ->
                 try {
-                    val rate = rateData.asArray()[1].asDouble().toBigDecimal()
-                    val timestamp = rateData.asArray()[0].asLong()
-                    val volume = volumes[index].asArray()[1].asDouble().toBigDecimal()
-                    charts.add(CoinGeckoMarketChartsResponse(rate, volume, timestamp/1000))
+                    val timestamp = rateData.asArray()[0].asLong()/1000
+
+                    if(timestamp >= nextTs){
+                        nextTs = timestamp + chartPointKey.chartType.seconds - 180
+                        val rate = rateData.asArray()[1].asDouble().toBigDecimal()
+                        val volume = volumes[index].asArray()[1].asDouble().toBigDecimal()
+                        charts.add(CoinGeckoMarketChartsResponse(rate, volume, timestamp))
+                    }
+
                 } catch (e: Exception){
                     //ignore
                 }

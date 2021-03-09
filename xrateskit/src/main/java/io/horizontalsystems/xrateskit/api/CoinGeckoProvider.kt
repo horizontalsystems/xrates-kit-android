@@ -240,10 +240,12 @@ class CoinGeckoProvider(
     }
 
     private fun getCoinMarketCharts(providerCoinId: String, chartPointKey: ChartInfoKey): List<ChartPointEntity> {
-        val json = apiManager.getJsonValue(
-            "${provider.baseUrl}/coins/${providerCoinId}/market_chart?vs_currency=${chartPointKey.currency}&days=${chartPointKey.chartType.days}")
 
-        return CoinGeckoMarketChartsResponse.parseData(json).map { response ->
+        val interval = if(chartPointKey.chartType.days >= 90) "&interval=daily" else ""
+        val json = apiManager.getJsonValue(
+            "${provider.baseUrl}/coins/${providerCoinId}/market_chart?vs_currency=${chartPointKey.currency}&days=${2 * chartPointKey.chartType.days}${interval}")
+
+        return CoinGeckoMarketChartsResponse.parseData(chartPointKey, json).map { response ->
             ChartPointEntity(
                 chartPointKey.chartType,
                 chartPointKey.coinType,
