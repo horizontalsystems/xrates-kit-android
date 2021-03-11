@@ -3,7 +3,7 @@ package io.horizontalsystems.xrateskit.core
 import com.nhaarman.mockitokotlin2.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.managers.ChartStatSyncer
-import io.horizontalsystems.xrateskit.managers.HistoricalRateManager
+import io.horizontalsystems.xrateskit.rates.HistoricalRateManager
 import io.horizontalsystems.xrateskit.managers.MarketStatsManager
 import org.junit.Assert.assertEquals
 import org.spekframework.spek2.Spek

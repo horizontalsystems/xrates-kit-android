@@ -22,16 +22,16 @@ class RatesManager(context: Context, currency: String) {
         kit.refresh()
     }
 
-    fun marketInfoObservable(coinType: CoinType, currencyCode: String): Observable<MarketInfo> {
-        return kit.marketInfoObservable(coinType, currencyCode)
+    fun getLatestRateAsync(coinType: CoinType, currencyCode: String): Observable<LatestRate> {
+        return kit.getLatestRateAsync(coinType, currencyCode)
     }
 
-    fun marketInfoObservable(currencyCode: String): Observable<Map<CoinType, MarketInfo>> {
-        return kit.marketInfoMapObservable(currencyCode)
+    fun getLatestRateAsync(currencyCode: String): Observable<Map<CoinType, LatestRate>> {
+        return kit.latestRateMapObservable(currencyCode)
     }
 
-    fun marketInfo(coinType: CoinType, currency: String): MarketInfo? {
-        return kit.getMarketInfo(coinType, currency)
+    fun latestRate(coinType: CoinType, currency: String): LatestRate? {
+        return kit.getLatestRate(coinType, currency)
     }
 
     fun chartInfo(coinType: CoinType, currency: String, chartType: ChartType): ChartInfo? {

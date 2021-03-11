@@ -14,7 +14,7 @@ class UniswapGraphProvider(
     private val factory: Factory,
     private val apiManager: ApiManager,
     private val fiatXRatesProvider: IFiatXRatesProvider
-): IMarketInfoProvider, IInfoProvider {
+): ILatestRateProvider, IInfoProvider {
 
     override val provider: InfoProvider = InfoProvider.GraphNetwork()
 
@@ -99,7 +99,7 @@ class UniswapGraphProvider(
 
     }
 
-    override fun getMarketInfo(coinTypes: List<CoinType>, fiatCurrency: String): Single<List<MarketInfoEntity>> {
+    override fun getLatestRate(coinTypes: List<CoinType>, fiatCurrency: String): Single<List<LatestRateEntity>> {
         val tokenAddresses = tokenAddresses(coinTypes)
 
         if (tokenAddresses.isEmpty())
@@ -111,7 +111,7 @@ class UniswapGraphProvider(
             getLatestFiatXRatesAsync(fiatCurrency),
             { ethXRateResponse, xRatesResponse, ethFiatXRate ->
 
-                val list = mutableListOf<MarketInfoEntity>()
+                val list = mutableListOf<LatestRateEntity>()
                 val ethPrice = ethXRateResponse.rateInUSD * ethFiatXRate.toBigDecimal()
 
                 xRatesResponse.forEach { xRateResponse ->
@@ -130,15 +130,11 @@ class UniswapGraphProvider(
                         } else 0.0
 
                         list.add(
-                            factory.createMarketInfoEntity(
+                            factory.createLatestRateEntity(
                                 CoinType.fromString("erc20|${xRateResponse.address}"),
                                 fiatCurrency,
                                 coinLatestPrice.toBigDecimal(),
-                                coinOpenDayPrice.toBigDecimal(),
-                                diff.toBigDecimal(),
-                                BigDecimal.ZERO,
-                                BigDecimal.ZERO,
-                                BigDecimal.ZERO
+                                diff.toBigDecimal()
                             )
                         )
                     }

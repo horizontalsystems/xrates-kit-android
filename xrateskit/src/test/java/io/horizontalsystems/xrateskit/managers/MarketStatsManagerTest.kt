@@ -30,7 +30,7 @@ object MarketStatsManagerTest : Spek({
 
         context("when market stats not exists in DB") {
             beforeEach {
-                whenever(storage.getMarketInfo(coin, currency)).thenReturn(null)
+                whenever(storage.getLatestRate(coin, currency)).thenReturn(null)
             }
 
             it("fetches market stats from API") {
@@ -43,7 +43,7 @@ object MarketStatsManagerTest : Spek({
         context("when market stats exists in DB and not yet expired") {
             beforeEach {
                 whenever(marketStats.timestamp).thenReturn(Date().time / 1000)
-                whenever(storage.getMarketInfo(coin, currency)).thenReturn(marketStats)
+                whenever(storage.getLatestRate(coin, currency)).thenReturn(marketStats)
             }
 
             it("returns market stats from DB") {
@@ -58,13 +58,13 @@ object MarketStatsManagerTest : Spek({
         context("when market stats exists in DB and expired") {
             beforeEach {
                 whenever(marketStats.timestamp).thenReturn(Date().time / 1000 - 24 * 60 * 60 - 1)
-                whenever(storage.getMarketInfo(coin, currency)).thenReturn(marketStats)
+                whenever(storage.getLatestRate(coin, currency)).thenReturn(marketStats)
             }
 
             it("fetches market stats from API and saves it into DB") {
                 marketStatsManager.getMarketStats(coin, currency).test().assertOf {
                     verify(statsProvider).getMarketStats(coin, currency)
-                    verify(storage).saveMarketInfo(marketStats)
+                    verify(storage).saveLatestRates(marketStats)
                 }
             }
         }

@@ -5,8 +5,8 @@ import io.horizontalsystems.xrateskit.RxTestRule
 import io.horizontalsystems.xrateskit.XRatesDataSource
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.LatestRate
-import io.horizontalsystems.xrateskit.marketinfo.MarketInfoScheduler
-import io.horizontalsystems.xrateskit.marketinfo.LatestRateSyncer
+import io.horizontalsystems.xrateskit.rates.LatestRatesScheduler
+import io.horizontalsystems.xrateskit.rates.LatestRateSyncer
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -23,7 +23,7 @@ class LatestRateSyncerTest : Spek({
     val dataSource by memoized { XRatesDataSource(currency = currency) }
 
     val storage by memoized { mock<IStorage>() }
-    val rateProvider by memoized { mock<IMarketInfoProvider>() }
+    val rateProvider by memoized { mock<ILatestRateProvider>() }
     val rateListener by memoized { mock<LatestRateSyncer.Listener>() }
     val syncListener by memoized { mock<ISyncCompletionListener>() }
 
@@ -43,7 +43,7 @@ class LatestRateSyncerTest : Spek({
         val disposable by memoized { mock<Disposable>() }
         val flowable by memoized { mock<Flowable<SyncSchedulerEvent>>() }
         val subject by memoized { mock<PublishSubject<SyncSchedulerEvent>>() }
-        val scheduler by memoized { mock<MarketInfoScheduler>() }
+        val scheduler by memoized { mock<LatestRatesScheduler>() }
 
         beforeEach {
             whenever(flowable.subscribe(any<Consumer<SyncSchedulerEvent>>())).thenReturn(disposable)
@@ -80,15 +80,15 @@ class LatestRateSyncerTest : Spek({
             }
 
             it("fetches latest rate from API") {
-                whenever(rateProvider.getMarketInfo(coins, currency)).thenReturn(Observable.create {})
+                whenever(rateProvider.getLatestRate(coins, currency)).thenReturn(Observable.create {})
                 latestRateSyncer.sync()
 
-                verify(rateProvider).getMarketInfo(coins, currency)
+                verify(rateProvider).getLatestRate(coins, currency)
             }
 
             context("when latest rates fetched from API") {
                 beforeEach {
-                    whenever(rateProvider.getMarketInfo(coins, currency)).thenReturn(Observable.just(latestRate))
+                    whenever(rateProvider.getLatestRate(coins, currency)).thenReturn(Observable.just(latestRate))
                 }
 
                 it("saves fetched data into DB and emits update to listener") {
@@ -103,7 +103,7 @@ class LatestRateSyncerTest : Spek({
                 val stubException = Exception("Failed to fetch rate from API")
 
                 beforeEach {
-                    whenever(rateProvider.getMarketInfo(coins, currency)).thenReturn(Observable.error(stubException))
+                    whenever(rateProvider.getLatestRate(coins, currency)).thenReturn(Observable.error(stubException))
                 }
 
                 it("emits `onFail` events to sync completion listener") {

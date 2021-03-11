@@ -17,7 +17,7 @@ class CryptoCompareProvider(
         private val apiKey: String,
         private val indicatorPointCount: Int,
         private val providerCoinsManager: ProviderCoinsManager)
-    : IInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, IMarketInfoProvider, IFiatXRatesProvider {
+    : IInfoProvider, IHistoricalRateProvider, IChartInfoProvider, ICryptoNewsProvider, ILatestRateProvider, IFiatXRatesProvider {
 
     private val logger = Logger.getLogger("CryptoCompareProvider")
     override val provider: InfoProvider = InfoProvider.CryptoCompare()
@@ -48,7 +48,7 @@ class CryptoCompareProvider(
 
         throw ProviderCoinError.NoMatchingExternalId()
     }
-    override fun getMarketInfo(coinTypes: List<CoinType>, currency: String): Single<List<MarketInfoEntity>> {
+    override fun getLatestRate(coinTypes: List<CoinType>, currency: String): Single<List<LatestRateEntity>> {
 
         val coinCodeList = providerCoinsManager.getProviderIds(coinTypes, this.provider)
         if(coinCodeList.isEmpty())
@@ -59,7 +59,7 @@ class CryptoCompareProvider(
                 val codes = coinCodeList.joinToString(",")
                 val json = apiManager.getJson("${provider.baseUrl}/data/pricemultifull?api_key=${apiKey}&fsyms=${codes}&tsyms=${currency}")
                 val data = json["RAW"].asObject()
-                val list = mutableListOf<MarketInfoEntity>()
+                val list = mutableListOf<LatestRateEntity>()
 
                 for (coin in coinCodeList) {
                     try {
@@ -68,13 +68,9 @@ class CryptoCompareProvider(
                         val dataFiat = dataCoin.get(currency).asObject()
 
                         val rate = dataFiat["PRICE"].toString().toBigDecimal()
-                        val rateOpenDay = dataFiat["OPENDAY"].toString().toBigDecimal()
                         val diff = dataFiat["CHANGEPCTDAY"].toString().toBigDecimal()
-                        val volume = dataFiat["VOLUME24HOURTO"].asDouble().toBigDecimal()
-                        val mktcap = dataFiat["MKTCAP"].asDouble().toBigDecimal()
-                        val supply = dataFiat["SUPPLY"].asDouble().toBigDecimal()
 
-                        list.add(factory.createMarketInfoEntity(coinType, currency, rate, rateOpenDay, diff, volume, mktcap, supply))
+                        list.add(factory.createLatestRateEntity(coinType, currency, rate, diff))
                     } catch (e: Exception) {
                         continue
                     }

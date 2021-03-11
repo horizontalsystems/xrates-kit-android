@@ -42,9 +42,9 @@ interface IStorage {
     fun deleteChartPoints(key: ChartInfoKey)
 
     //  MarketInfo
-    fun getMarketInfo(coinType: CoinType, currencyCode: String): MarketInfoEntity?
-    fun getOldMarketInfo(coinTypes: List<CoinType>, currencyCode: String): List<MarketInfoEntity>
-    fun saveMarketInfo(marketInfoList: List<MarketInfoEntity>)
+    fun getLatestRate(coinType: CoinType, currencyCode: String): LatestRateEntity?
+    fun getOldLatestRates(coinTypes: List<CoinType>, currencyCode: String): List<LatestRateEntity>
+    fun saveLatestRates(marketInfoList: List<LatestRateEntity>)
 
     //  GlobalMarketInfo
     fun getGlobalMarketInfo(currency: String): GlobalCoinMarket?
@@ -72,8 +72,8 @@ interface IFiatXRatesProvider {
     fun getLatestFiatXRates(sourceCurrency: String, targetCurrency: String): Double
 }
 
-interface IMarketInfoProvider {
-    fun getMarketInfo(coinTypes: List<CoinType>, currency: String): Single<List<MarketInfoEntity>>
+interface ILatestRateProvider {
+    fun getLatestRate(coinTypes: List<CoinType>, currency: String): Single<List<LatestRateEntity>>
 }
 
 interface IChartInfoProvider {
