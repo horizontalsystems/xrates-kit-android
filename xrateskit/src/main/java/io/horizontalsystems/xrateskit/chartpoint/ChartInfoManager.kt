@@ -3,13 +3,13 @@ package io.horizontalsystems.xrateskit.chartpoint
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
-import io.horizontalsystems.xrateskit.marketinfo.MarketInfoManager
+import io.horizontalsystems.xrateskit.rates.LatestRatesManager
 import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
 
-class ChartInfoManager(private val storage: IStorage, private val factory: Factory, private val marketInfoManager: MarketInfoManager) {
+class ChartInfoManager(private val storage: IStorage, private val factory: Factory, private val latestRatesManager: LatestRatesManager) {
 
     var listener: Listener? = null
 
@@ -72,12 +72,12 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
         val startDayTimestamp = calendar.timeInMillis / 1000
         val entities = points.map { point ->
             if (point.timestamp == startDayTimestamp) {
-                marketInfoManager.getMarketInfo(point.coinType, point.currency)?.let { marketInfo ->
+                latestRatesManager.getLatestRate(point.coinType, point.currency)?.let { marketInfo ->
                     return@map ChartPointEntity(
                         point.type,
                         point.coinType,
                         point.currency,
-                        marketInfo.rateOpenDay,
+                        marketInfo.rate,
                         point.volume,
                         point.timestamp
                     )

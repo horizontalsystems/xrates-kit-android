@@ -1,4 +1,4 @@
-package io.horizontalsystems.xrateskit.managers
+package io.horizontalsystems.xrateskit.rates
 
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.api.CryptoCompareProvider

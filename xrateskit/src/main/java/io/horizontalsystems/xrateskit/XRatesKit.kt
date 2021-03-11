@@ -11,10 +11,10 @@ import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.cryptonews.CryptoNewsManager
 import io.horizontalsystems.xrateskit.entities.*
-import io.horizontalsystems.xrateskit.managers.HistoricalRateManager
-import io.horizontalsystems.xrateskit.marketinfo.MarketInfoManager
-import io.horizontalsystems.xrateskit.marketinfo.MarketInfoSchedulerFactory
-import io.horizontalsystems.xrateskit.marketinfo.MarketInfoSyncManager
+import io.horizontalsystems.xrateskit.rates.HistoricalRateManager
+import io.horizontalsystems.xrateskit.rates.LatestRatesManager
+import io.horizontalsystems.xrateskit.rates.LatestRatesSchedulerFactory
+import io.horizontalsystems.xrateskit.rates.LatestRatesSyncManager
 import io.horizontalsystems.xrateskit.storage.Database
 import io.horizontalsystems.xrateskit.storage.Storage
 import io.horizontalsystems.xrateskit.coinmarkets.GlobalMarketInfoManager
@@ -25,8 +25,8 @@ import io.reactivex.Single
 import java.math.BigDecimal
 
 class XRatesKit(
-    private val marketInfoManager: MarketInfoManager,
-    private val marketInfoSyncManager: MarketInfoSyncManager,
+    private val latestRatesManager: LatestRatesManager,
+    private val latestRatesSyncManager: LatestRatesSyncManager,
     private val chartInfoManager: ChartInfoManager,
     private val chartInfoSyncManager: ChartInfoSyncManager,
     private val historicalRateManager: HistoricalRateManager,
@@ -38,27 +38,27 @@ class XRatesKit(
 ) {
 
     fun set(coins: List<CoinType>) {
-        marketInfoSyncManager.set(coins)
+        latestRatesSyncManager.set(coins)
     }
 
     fun set(currencyCode: String) {
-        marketInfoSyncManager.set(currencyCode)
+        latestRatesSyncManager.set(currencyCode)
     }
 
     fun refresh() {
-        marketInfoSyncManager.refresh()
+        latestRatesSyncManager.refresh()
     }
 
-    fun getMarketInfo(coinType: CoinType, currencyCode: String): MarketInfo? {
-        return marketInfoManager.getMarketInfo(coinType, currencyCode)
+    fun getLatestRate(coinType: CoinType, currencyCode: String): LatestRate? {
+        return latestRatesManager.getLatestRate(coinType, currencyCode)
     }
 
-    fun marketInfoObservable(coinType: CoinType, currencyCode: String): Observable<MarketInfo> {
-        return marketInfoSyncManager.marketInfoObservable(MarketInfoKey(coinType, currencyCode))
+    fun getLatestRateAsync(coinType: CoinType, currencyCode: String): Observable<LatestRate> {
+        return latestRatesSyncManager.getLatestRateAsync(LatestRateKey(coinType, currencyCode))
     }
 
-    fun marketInfoMapObservable(currencyCode: String): Observable<Map<CoinType, MarketInfo>> {
-        return marketInfoSyncManager.marketInfoMapObservable(currencyCode)
+    fun latestRateMapObservable(currencyCode: String): Observable<Map<CoinType, LatestRate>> {
+        return latestRatesSyncManager.getLatestRateMapObservable(currencyCode)
     }
 
     fun getChartInfo(coinType: CoinType, currencyCode: String, chartType: ChartType): ChartInfo? {
@@ -128,20 +128,20 @@ class XRatesKit(
             val coinGeckoProvider = CoinGeckoProvider(factory, apiManager, coinInfoManager, providerCoinsManager)
             val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, cryptoCompareApiKey, indicatorPointCount, providerCoinsManager)
             val uniswapGraphProvider = UniswapGraphProvider(factory, apiManager, cryptoCompareProvider)
-            val marketInfoProvider = BaseMarketInfoProvider(cryptoCompareProvider, uniswapGraphProvider)
+            val latestRatesProvider = BaseLatestRateProvider(cryptoCompareProvider, uniswapGraphProvider)
             val chartInfoProvider = BaseChartInfoProvider(providerCoinsManager, cryptoCompareProvider, coinGeckoProvider)
             val globalMarketInfoManager = GlobalMarketInfoManager(coinPaprikaProvider, horsysProvider, storage)
 
             val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
 
-            val marketInfoManager = MarketInfoManager(storage, factory)
-            val marketInfoSchedulerFactory = MarketInfoSchedulerFactory(marketInfoManager, marketInfoProvider, rateExpirationInterval, retryInterval)
-            val marketInfoSyncManager = MarketInfoSyncManager(currency, marketInfoSchedulerFactory).also {
-                marketInfoManager.listener = it
+            val latestRatesManager = LatestRatesManager(storage, factory)
+            val latestRatesSchedulerFactory = LatestRatesSchedulerFactory(latestRatesManager, latestRatesProvider, rateExpirationInterval, retryInterval)
+            val latestRatesSyncManager = LatestRatesSyncManager(currency, latestRatesSchedulerFactory).also {
+                latestRatesManager.listener = it
             }
 
-            val chartInfoManager = ChartInfoManager(storage, factory, marketInfoManager)
+            val chartInfoManager = ChartInfoManager(storage, factory, latestRatesManager)
             val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, chartInfoProvider, retryInterval)
             val chartInfoSyncManager = ChartInfoSyncManager(chartInfoSchedulerFactory).also {
                 chartInfoManager.listener = it
@@ -150,8 +150,8 @@ class XRatesKit(
             val topMarketsManager = CoinMarketsManager(coinGeckoProvider, storage, factory)
 
             return XRatesKit(
-                    marketInfoManager,
-                    marketInfoSyncManager,
+                    latestRatesManager,
+                    latestRatesSyncManager,
                     chartInfoManager,
                     chartInfoSyncManager,
                     historicalRateManager,

@@ -10,7 +10,7 @@ class Storage(private val database: Database) : IStorage {
     private val providerCoinDao = database.providerCoinsDao
     private val historicalRateDao = database.historicalRateDao
     private val chartPointDao = database.chartPointDao
-    private val marketInfoDao = database.marketInfoDao
+    private val latestRateDao = database.latestRatesDao
     private val globalMarketInfoDao = database.globalMarketInfoDao
     private val coinInfoDao = database.coinInfoDao
     private val resourceInfoDao = database.resourceInfoDao
@@ -124,16 +124,16 @@ class Storage(private val database: Database) : IStorage {
 
     //  MarketStats
 
-    override fun getMarketInfo(coinType: CoinType, currencyCode: String): MarketInfoEntity? {
-        return marketInfoDao.getMarketInfo(coinType, currencyCode)
+    override fun getLatestRate(coinType: CoinType, currencyCode: String): LatestRateEntity? {
+        return latestRateDao.getLatestRate(coinType, currencyCode)
     }
 
-    override fun getOldMarketInfo(coinTypes: List<CoinType>, currencyCode: String): List<MarketInfoEntity> {
-        return marketInfoDao.getOldList(coinTypes, currencyCode)
+    override fun getOldLatestRates(coinTypes: List<CoinType>, currencyCode: String): List<LatestRateEntity> {
+        return latestRateDao.getOldList(coinTypes, currencyCode)
     }
 
-    override fun saveMarketInfo(marketInfoList: List<MarketInfoEntity>) {
-        marketInfoDao.insertAll(marketInfoList)
+    override fun saveLatestRates(marketInfoList: List<LatestRateEntity>) {
+        latestRateDao.insertAll(marketInfoList)
     }
 
     // GlobalMarketInfo

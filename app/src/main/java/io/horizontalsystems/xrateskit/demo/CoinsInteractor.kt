@@ -3,6 +3,7 @@ package io.horizontalsystems.xrateskit.demo
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartType
+import io.horizontalsystems.xrateskit.entities.LatestRate
 import io.horizontalsystems.xrateskit.entities.MarketInfo
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -11,9 +12,8 @@ import io.reactivex.schedulers.Schedulers
 class CoinsInteractor(private val ratesManager: RatesManager) {
     var presenter: CoinsPresenter? = null
 
-    private var marketInfoDisposables = CompositeDisposable()
+    private var latestRatesDisposables = CompositeDisposable()
     private var chartInfoDisposables = CompositeDisposable()
-    private var topListDisposable: Disposable? = null
 
     fun set(coinTypes: List<CoinType>) {
         ratesManager.set(coinTypes)
@@ -28,15 +28,15 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
     }
 
     fun subscribeToMarketInfo(currency: String) {
-        marketInfoDisposables.clear()
+        latestRatesDisposables.clear()
 
-        ratesManager.marketInfoObservable(currency)
+        ratesManager.getLatestRateAsync(currency)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    presenter?.onUpdateMarketInfo(it)
+                    presenter?.onUpdateLatestRate(it)
                 }.let {
-                    marketInfoDisposables.add(it)
+                    latestRatesDisposables.add(it)
                 }
     }
 
@@ -57,8 +57,8 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
         }
     }
 
-    fun marketInfo(coinType: CoinType, currency: String): MarketInfo? {
-        return ratesManager.marketInfo(coinType, currency)
+    fun latestRate(coinType: CoinType, currency: String): LatestRate? {
+        return ratesManager.latestRate(coinType, currency)
     }
 
     fun chartInfo(coinType: CoinType, currency: String): ChartInfo? {

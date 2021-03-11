@@ -14,26 +14,22 @@ class Factory(private val expirationInterval: Long) {
         return ChartPoint(value, volume, timestamp)
     }
 
-    fun createMarketInfoEntity(coinType: CoinType, currency: String, rate: BigDecimal, rateOpen24Hour: BigDecimal, rateDiff: BigDecimal, volume: BigDecimal, marketCap: BigDecimal, supply: BigDecimal): MarketInfoEntity {
-        return MarketInfoEntity(coinType, currency, rate, rateOpen24Hour, rateDiff, volume, supply, Date().time / 1000, BigDecimal.ZERO, marketCap)
+    fun createLatestRateEntity(coinType: CoinType, currency: String, rate: BigDecimal, rateDiff: BigDecimal): LatestRateEntity {
+        return LatestRateEntity(coinType, currency, rate, rateDiff,  Date().time / 1000)
     }
 
-    fun createMarketInfoEntity(coinType: CoinType, marketInfo: MarketInfo): MarketInfoEntity {
-        return MarketInfoEntity(  coinType = coinType,
-                                  currencyCode = marketInfo.currencyCode,
-                                  rate = marketInfo.rate,
-                                  rateOpenDay = marketInfo.rateOpenDay,
-                                  rateDiff = marketInfo.rateDiff,
-                                  volume =  marketInfo.volume,
-                                  supply = marketInfo.supply,
-                                  timestamp = marketInfo.timestamp,
-                                  rateDiffPeriod =  marketInfo.rateDiffPeriod,
-                                  marketCap = marketInfo.marketCap,
-                                  liquidity = marketInfo.liquidity)
+    fun createLatestRateEntity(coinType: CoinType, marketInfo: MarketInfo): LatestRateEntity {
+        return LatestRateEntity(
+            coinType = coinType,
+            currencyCode = marketInfo.currencyCode,
+            rate = marketInfo.rate,
+            rateDiff24h = marketInfo.rateDiff,
+            timestamp = marketInfo.timestamp
+        )
     }
 
-    fun createMarketInfo(marketInfoEntity: MarketInfoEntity): MarketInfo {
-        return MarketInfo(marketInfoEntity, expirationInterval)
+    fun createLatestRate(latestRateEntity: LatestRateEntity): LatestRate {
+        return LatestRate(latestRateEntity, expirationInterval)
     }
 
     fun createCoinMarket(coinData: CoinData,

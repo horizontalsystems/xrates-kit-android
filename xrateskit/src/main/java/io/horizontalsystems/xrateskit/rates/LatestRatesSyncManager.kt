@@ -1,22 +1,22 @@
-package io.horizontalsystems.xrateskit.marketinfo
+package io.horizontalsystems.xrateskit.rates
 
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.entities.MarketInfo
-import io.horizontalsystems.xrateskit.entities.MarketInfoKey
+import io.horizontalsystems.xrateskit.entities.LatestRate
+import io.horizontalsystems.xrateskit.entities.LatestRateKey
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.ConcurrentHashMap
 
-class MarketInfoSyncManager(
+class LatestRatesSyncManager(
         private var currency: String,
-        private val schedulerFactory: MarketInfoSchedulerFactory)
-    : MarketInfoManager.Listener {
+        private val schedulerFactory: LatestRatesSchedulerFactory)
+    : LatestRatesManager.Listener {
 
     private var coinTypes: List<CoinType> = listOf()
-    private val subjects = ConcurrentHashMap<MarketInfoKey, PublishSubject<MarketInfo>>()
-    private val currencySubjects = ConcurrentHashMap<String, PublishSubject<Map<CoinType, MarketInfo>>>()
+    private val subjects = ConcurrentHashMap<LatestRateKey, PublishSubject<LatestRate>>()
+    private val currencySubjects = ConcurrentHashMap<String, PublishSubject<Map<CoinType, LatestRate>>>()
 
-    private var scheduler: MarketInfoScheduler? = null
+    private var scheduler: LatestRatesScheduler? = null
 
     fun set(coinTypes: List<CoinType>) {
         this.coinTypes = coinTypes
@@ -37,7 +37,7 @@ class MarketInfoSyncManager(
         scheduler?.start(force = true)
     }
 
-    fun marketInfoObservable(key: MarketInfoKey): Observable<MarketInfo> {
+    fun getLatestRateAsync(key: LatestRateKey): Observable<LatestRate> {
         var subject = subjects[key]
         if (subject == null) {
             subject = PublishSubject.create()
@@ -47,7 +47,7 @@ class MarketInfoSyncManager(
         return subject
     }
 
-    fun marketInfoMapObservable(currency: String): Observable<Map<CoinType, MarketInfo>> {
+    fun getLatestRateMapObservable(currency: String): Observable<Map<CoinType, LatestRate>> {
         var subject = currencySubjects[currency]
         if (subject == null) {
             subject = PublishSubject.create()
@@ -76,11 +76,11 @@ class MarketInfoSyncManager(
 
     //  LatestRateManager.Listener
 
-    override fun onUpdate(marketInfo: MarketInfo, key: MarketInfoKey) {
-        subjects[key]?.onNext(marketInfo)
+    override fun onUpdate(latestRate: LatestRate, key: LatestRateKey) {
+        subjects[key]?.onNext(latestRate)
     }
 
-    override fun onUpdate(marketInfoMap: Map<CoinType, MarketInfo>, currency: String) {
-        currencySubjects[currency]?.onNext(marketInfoMap)
+    override fun onUpdate(latestRateMap: Map<CoinType, LatestRate>, currency: String) {
+        currencySubjects[currency]?.onNext(latestRateMap)
     }
 }

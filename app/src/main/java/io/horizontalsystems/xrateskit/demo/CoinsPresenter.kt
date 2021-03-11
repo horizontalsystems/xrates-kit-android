@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.CoinData
-import io.horizontalsystems.xrateskit.entities.MarketInfo
+import io.horizontalsystems.xrateskit.entities.LatestRate
 import java.util.concurrent.Executors
 
 class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteractor) : ViewModel() {
@@ -65,11 +65,11 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
         }
     }
 
-    fun onUpdateMarketInfo(marketInfo: Map<CoinType, MarketInfo>) {
+    fun onUpdateLatestRate(latestRate: Map<CoinType, LatestRate>) {
         executor.submit {
             items.forEach { item ->
-                marketInfo[item.coinData.code]?.let {
-                    item.marketInfo = it
+                latestRate[item.coinData.code]?.let {
+                    item.latestRate = it
                 }
             }
 
@@ -91,7 +91,7 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
 
     private fun syncMarketInfo() {
         enabledCoins.forEach { item ->
-            item.marketInfo = interactor.marketInfo(item.coinData.type, currency)
+            item.latestRate = interactor.latestRate(item.coinData.type, currency)
         }
     }
 
@@ -127,7 +127,7 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
 class CoinViewItem(
     val coinData: CoinData,
     var isChecked: Boolean = false,
-    var marketInfo: MarketInfo? = null,
+    var latestRate: LatestRate? = null,
     var chartInfoState: ChartInfoState = ChartInfoState.Loading
 )
 

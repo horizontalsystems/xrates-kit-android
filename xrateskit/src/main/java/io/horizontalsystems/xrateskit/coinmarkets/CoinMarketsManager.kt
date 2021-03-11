@@ -5,7 +5,6 @@ import io.horizontalsystems.xrateskit.api.CoinGeckoProvider
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 
 class CoinMarketsManager(
     private val coinGeckoProvider: CoinGeckoProvider,
@@ -18,9 +17,9 @@ class CoinMarketsManager(
             .getTopCoinMarketsAsync(currency, fetchDiffPeriod, itemsCount)
             .map { topMarkets ->
                 val marketEntityList = topMarkets.map {
-                    factory.createMarketInfoEntity(it.data.type, it.marketInfo)
+                    factory.createLatestRateEntity(it.data.type, it.marketInfo)
                 }
-                storage.saveMarketInfo(marketEntityList)
+                storage.saveLatestRates(marketEntityList)
                 topMarkets
             }
     }
@@ -29,8 +28,8 @@ class CoinMarketsManager(
         return coinGeckoProvider
                 .getCoinMarketsAsync(coinTypes, currencyCode, fetchDiffPeriod)
                 .map { markets ->
-                    val marketEntityList = markets.map { factory.createMarketInfoEntity(it.data.type, it.marketInfo) }
-                    storage.saveMarketInfo(marketEntityList)
+                    val marketEntityList = markets.map { factory.createLatestRateEntity(it.data.type, it.marketInfo) }
+                    storage.saveLatestRates(marketEntityList)
                     markets
         }
     }

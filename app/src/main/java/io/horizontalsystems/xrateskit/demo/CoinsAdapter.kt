@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import io.horizontalsystems.xrateskit.entities.LatestRate
 import io.horizontalsystems.xrateskit.entities.MarketInfo
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_holder_rate.view.*
@@ -45,10 +46,10 @@ class RatesAdapter : RecyclerView.Adapter<RatesAdapter.ViewHolderCoin>() {
                 presenter.onSwitch(item, !switchView.isChecked)
             }
 
-            updateMarketInfo(item.marketInfo)
+            updateLatestRate(item.latestRate)
         }
 
-        private fun updateMarketInfo(info: MarketInfo?) {
+        private fun updateLatestRate(info: LatestRate?) {
             if (info == null) {
                 marketInfo.text = ""
                 return
@@ -56,11 +57,8 @@ class RatesAdapter : RecyclerView.Adapter<RatesAdapter.ViewHolderCoin>() {
 
             val text = """
                 Rate: ${info.rate}
-                Diff: ${info.rateDiff}
+                Diff: ${info.rateDiff24h}
                 Time: ${Date(info.timestamp * 1000)}
-                Volume: ${info.volume}
-                Supply: ${info.supply}
-                Market cap: ${info.marketCap}
             """.trimIndent()
 
             marketInfo.text = text

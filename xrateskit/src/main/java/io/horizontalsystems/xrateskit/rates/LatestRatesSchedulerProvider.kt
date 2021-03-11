@@ -1,23 +1,23 @@
-package io.horizontalsystems.xrateskit.marketinfo
+package io.horizontalsystems.xrateskit.rates
 
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.core.IMarketInfoProvider
-import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
+import io.horizontalsystems.xrateskit.core.ILatestRateProvider
+import io.horizontalsystems.xrateskit.entities.LatestRateEntity
 import io.reactivex.Single
 
-class MarketInfoSchedulerProvider(
+class LatestRatesSchedulerProvider(
     val retryInterval: Long,
     val expirationInterval: Long,
     private var coinTypes: List<CoinType>,
     private val currency: String,
-    private val manager: MarketInfoManager,
-    private val provider: IMarketInfoProvider) {
+    private val manager: LatestRatesManager,
+    private val provider: ILatestRateProvider) {
 
     val lastSyncTimestamp: Long?
         get() = manager.getLastSyncTimestamp(coinTypes, currency)
 
     val syncSingle: Single<Unit>
-        get() = provider.getMarketInfo(coinTypes, currency)
+        get() = provider.getLatestRate(coinTypes, currency)
                 .doOnSuccess { rates ->
                     update(rates)
                 }
@@ -27,11 +27,11 @@ class MarketInfoSchedulerProvider(
         manager.notifyExpired(coinTypes, currency)
     }
 
-    private fun update(list: List<MarketInfoEntity>) {
+    private fun update(list: List<LatestRateEntity>) {
 
-        list.forEach { marketInfoEntity ->
-            coinTypes.find { it.ID.toUpperCase().contentEquals(marketInfoEntity.coinType.ID.toUpperCase()) }?.let {
-                marketInfoEntity.coinType = it
+        list.forEach { latestRateEntity ->
+            coinTypes.find { it.ID.toUpperCase().contentEquals(latestRateEntity.coinType.ID.toUpperCase()) }?.let {
+                latestRateEntity.coinType = it
             }
         }
 
