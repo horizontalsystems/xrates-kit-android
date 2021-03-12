@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.horizontalsystems.xrateskit.api.CryptoCompareProvider
+import io.horizontalsystems.xrateskit.providers.CryptoCompareProvider
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 import io.reactivex.Single

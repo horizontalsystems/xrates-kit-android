@@ -14,16 +14,12 @@ class Factory(private val expirationInterval: Long) {
         return ChartPoint(value, volume, timestamp)
     }
 
-    fun createLatestRateEntity(coinType: CoinType, currency: String, rate: BigDecimal, rateDiff: BigDecimal): LatestRateEntity {
-        return LatestRateEntity(coinType, currency, rate, rateDiff,  Date().time / 1000)
-    }
-
     fun createLatestRateEntity(coinType: CoinType, marketInfo: MarketInfo): LatestRateEntity {
         return LatestRateEntity(
             coinType = coinType,
             currencyCode = marketInfo.currencyCode,
             rate = marketInfo.rate,
-            rateDiff24h = marketInfo.rateDiff,
+            rateDiff24h = marketInfo.rateDiffPeriod,
             timestamp = marketInfo.timestamp
         )
     }

@@ -1,13 +1,15 @@
-package io.horizontalsystems.xrateskit.api
+package io.horizontalsystems.xrateskit.providers
 
+import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
 import io.horizontalsystems.xrateskit.entities.GlobalCoinMarket
 import io.reactivex.Single
 import java.util.logging.Logger
 
-class CoinPaprikaProvider(private val apiManager: ApiManager): IGlobalCoinMarketProvider {
+class CoinPaprikaProvider(): IGlobalCoinMarketProvider {
 
     override val provider: InfoProvider = InfoProvider.CoinPaprika()
+    private val apiManager = ApiManager(provider.rateLimit)
     private val logger = Logger.getLogger("CoinPaprikaProvider")
     private val BTC_ID = "btc-bitcoin"
     private val HOURS_24_IN_SECONDS = 86400

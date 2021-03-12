@@ -12,6 +12,6 @@ interface HistoricalRateDao {
     @Delete
     fun delete(rate: HistoricalRate)
 
-    @Query("SELECT * FROM HistoricalRate WHERE coinType = :coinType AND currency = :currency AND timestamp = :timestamp LIMIT 1")
+    @Query("SELECT * FROM HistoricalRate WHERE coinType = :coinType AND currencyCode = :currency AND timestamp = :timestamp LIMIT 1")
     fun getRate(coinType: CoinType, currency: String, timestamp: Long): HistoricalRate?
 }

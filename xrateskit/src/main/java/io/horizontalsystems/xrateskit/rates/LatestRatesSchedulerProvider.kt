@@ -17,7 +17,7 @@ class LatestRatesSchedulerProvider(
         get() = manager.getLastSyncTimestamp(coinTypes, currency)
 
     val syncSingle: Single<Unit>
-        get() = provider.getLatestRate(coinTypes, currency)
+        get() = provider.getLatestRatesAsync(coinTypes, currency)
                 .doOnSuccess { rates ->
                     update(rates)
                 }

@@ -395,6 +395,22 @@ data class CoinGeckoCoinMarketDetailsResponse(
     }
 }
 
+class CoinGeckoHistoRateResponse(val rate: BigDecimal) {
+    companion object {
+        fun parseData(jsonValue: JsonValue): BigDecimal {
+
+            val rates = jsonValue.asObject().get("prices").asArray()
+
+            return rates?.let {
+                if(it.size() > 0){
+                    it[0].asArray()[1].asDouble().toBigDecimal()
+                } else BigDecimal.ZERO
+
+            }?: BigDecimal.ZERO
+        }
+    }
+}
+
 class CoinGeckoMarketChartsResponse(
     val rate: BigDecimal,
     val volume: BigDecimal,
@@ -408,7 +424,7 @@ class CoinGeckoMarketChartsResponse(
             val volumes = jsonValue.asObject().get("total_volumes").asArray()
             var nextTs = 0L
 
-                rates.forEachIndexed { index, rateData ->
+            rates.forEachIndexed { index, rateData ->
                 try {
                     val timestamp = rateData.asArray()[0].asLong()/1000
 

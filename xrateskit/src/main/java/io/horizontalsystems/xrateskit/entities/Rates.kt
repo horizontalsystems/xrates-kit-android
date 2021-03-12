@@ -30,10 +30,10 @@ data class LatestRateKey(
         val currencyCode: String
 )
 
-@Entity(primaryKeys = ["coinType", "currency", "timestamp"])
+@Entity(primaryKeys = ["coinType", "currencyCode", "timestamp"])
 class HistoricalRate(
         val coinType: CoinType,
-        val currency: String,
+        val currencyCode: String,
         val value: BigDecimal,
         val timestamp: Long
 )

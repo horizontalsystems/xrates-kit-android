@@ -1,7 +1,7 @@
 package io.horizontalsystems.xrateskit.core
 
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.api.InfoProvider
+import io.horizontalsystems.xrateskit.providers.InfoProvider
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 
@@ -41,7 +41,7 @@ interface IStorage {
     fun saveChartPoints(points: List<ChartPointEntity>)
     fun deleteChartPoints(key: ChartInfoKey)
 
-    //  MarketInfo
+    //  LatestRate
     fun getLatestRate(coinType: CoinType, currencyCode: String): LatestRateEntity?
     fun getOldLatestRates(coinTypes: List<CoinType>, currencyCode: String): List<LatestRateEntity>
     fun saveLatestRates(marketInfoList: List<LatestRateEntity>)
@@ -73,15 +73,15 @@ interface IFiatXRatesProvider {
 }
 
 interface ILatestRateProvider {
-    fun getLatestRate(coinTypes: List<CoinType>, currency: String): Single<List<LatestRateEntity>>
+    fun getLatestRatesAsync(coinTypes: List<CoinType>, currencyCode: String): Single<List<LatestRateEntity>>
 }
 
 interface IChartInfoProvider {
-    fun getChartPoints(chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>>
+    fun getChartPointsAsync(chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>>
 }
 
 interface IHistoricalRateProvider {
-    fun getHistoricalRate(coinType: CoinType, currency: String, timestamp: Long): Single<HistoricalRate>
+    fun getHistoricalRateAsync(coinType: CoinType, currencyCode: String, timestamp: Long): Single<HistoricalRate>
 }
 
 interface ICryptoNewsProvider {

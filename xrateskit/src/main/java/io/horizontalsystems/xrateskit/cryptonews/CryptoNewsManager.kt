@@ -1,6 +1,6 @@
 package io.horizontalsystems.xrateskit.cryptonews
 
-import io.horizontalsystems.xrateskit.api.CryptoCompareProvider
+import io.horizontalsystems.xrateskit.providers.CryptoCompareProvider
 import io.horizontalsystems.xrateskit.entities.CryptoNews
 import io.reactivex.Single
 import java.util.*
