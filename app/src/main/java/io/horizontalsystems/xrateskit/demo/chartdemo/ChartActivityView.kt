@@ -8,6 +8,7 @@ class ChartActivityView {
     val hideSpinner = MutableLiveData<Unit>()
     val setSelectedPoint = MutableLiveData<ChartPointViewItem>()
     val showChartInfo = MutableLiveData<ChartInfoViewItem>()
+    val showHistoInfo = MutableLiveData<HistoInfoViewItem>()
     val setDefaultMode = MutableLiveData<ChartType>()
 
     val showEma = MutableLiveData<Boolean>()
@@ -16,6 +17,10 @@ class ChartActivityView {
 
     fun showSpinner() {
         showSpinner.postValue(Unit)
+    }
+
+    fun showHistoInfo(info: HistoInfoViewItem) {
+        showHistoInfo.postValue(info)
     }
 
     fun hideSpinner() {

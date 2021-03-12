@@ -4,6 +4,7 @@ import io.horizontalsystems.chartview.*
 import io.horizontalsystems.chartview.extensions.ChartInfoTrend
 import io.horizontalsystems.chartview.models.ChartPoint
 import io.horizontalsystems.chartview.models.MacdInfo
+import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.demo.chartdemo.entities.CurrencyValue
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartType
@@ -25,6 +26,13 @@ data class ChartPointViewItem(
     val price: CurrencyValue,
     val volume: CurrencyValue?,
     val macdInfo: MacdInfo?
+)
+
+data class HistoInfoViewItem(
+    val coinType: CoinType,
+    val date: Long,
+    val currencyCode: String,
+    val rate: BigDecimal
 )
 
 class ChartViewFactory {

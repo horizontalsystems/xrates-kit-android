@@ -10,6 +10,7 @@ import io.horizontalsystems.xrateskit.demo.chartdemo.entities.Currency
 import io.horizontalsystems.xrateskit.demo.chartdemo.entities.CurrencyValue
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartType
+import java.math.BigDecimal
 import java.util.concurrent.Executors
 
 class ChartPresenter(
@@ -31,6 +32,7 @@ class ChartPresenter(
         executor.submit {
             view.setChartType(chartType)
             fetchChartInfo()
+            fetchHistoInfo()
         }
     }
 
@@ -60,6 +62,13 @@ class ChartPresenter(
 
         try {
             view.showChartInfo(factory.createChartInfo(chartType, info, null))
+        } catch (e: Exception) {
+        }
+    }
+
+    fun updateHistoInfo(coinType: CoinType, currencyCode: String, timestamp: Long, rate: BigDecimal) {
+        try {
+            view.showHistoInfo(HistoInfoViewItem(coinType, timestamp, currencyCode, rate))
         } catch (e: Exception) {
         }
     }
@@ -95,6 +104,10 @@ class ChartPresenter(
 
         rsiIsEnabled = !rsiIsEnabled
         view.setRsiEnabled(rsiIsEnabled)
+    }
+
+    private fun fetchHistoInfo() {
+        interactor.observeHistoRate(coinType, currency.code, (System.currentTimeMillis()/1000) - 86400)
     }
 
     private fun fetchChartInfo() {

@@ -230,6 +230,16 @@
             app:layout_constraintTop_toBottomOf="@+id/macdChartIndicator"
             app:title="RSI" />
 
+        <TextView
+            android:id="@+id/txtHistoRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HistoRate:"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rsiChartIndicator"/>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

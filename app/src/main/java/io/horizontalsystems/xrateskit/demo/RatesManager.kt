@@ -6,6 +6,7 @@ import io.horizontalsystems.xrateskit.XRatesKit
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Observable
 import io.reactivex.Single
+import java.math.BigDecimal
 
 class RatesManager(context: Context, currency: String) {
     private val kit = XRatesKit.create(context, currency, 60 * 10)
@@ -20,10 +21,6 @@ class RatesManager(context: Context, currency: String) {
 
     fun refresh() {
         kit.refresh()
-    }
-
-    fun getLatestRateAsync(coinType: CoinType, currencyCode: String): Observable<LatestRate> {
-        return kit.getLatestRateAsync(coinType, currencyCode)
     }
 
     fun getLatestRateAsync(currencyCode: String): Observable<Map<CoinType, LatestRate>> {
@@ -56,6 +53,10 @@ class RatesManager(context: Context, currency: String) {
 
     fun getMarketsByCategory(categoryId: String, currency: String, period: TimePeriod): Single<List<CoinMarket>>{
         return kit.getCoinMarketsByCategoryAsync(categoryId, currency, period)
+    }
+
+    fun getHistoRates(coinType: CoinType, currency: String, timestamp: Long): Single<BigDecimal>{
+        return kit.getHistoricalRateAsync(coinType, currency, timestamp)
     }
 
     fun globalMarketInfo(currency: String): Single<GlobalCoinMarket>{

@@ -32,13 +32,10 @@ class TopMarketsFragment() : Fragment() {
         CoinData(CoinType.Dash, "DASH","Dash"),
         CoinData(CoinType.fromString("bep2|BNB"), "BNB", "Bnb"),
         CoinData(CoinType.fromString("unsupprted|eos"),"EOS", "Eos"),
-        CoinData(CoinType.Erc20("0xE41d2489571d322189246DaFA5ebDe1F4699F498"),"ZRX", "Zrx"),
-        CoinData(CoinType.Erc20("0xbf2179859fc6D5BEE9Bf9158632Dc51678a4100e"),"ELF", "Elf"),
-        CoinData(CoinType.Erc20("0xa74476443119A942dE498590Fe1f2454d7D4aC0d"), "GNT", "Gnt"),
-        CoinData(CoinType.Erc20("0x6c6EE5e31d828De241282B9606C8e98Ea48526E2"),"HOT", "Hot"),
-        CoinData(CoinType.Erc20("0xfC1E690f61EFd961294b3e1Ce3313fBD8aa4f85d"),"ADAI", "Aave DAI"),
-        CoinData(CoinType.Erc20("0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C"),"BNT", "Bnt")
-    )
+        CoinData(CoinType.fromString("unsupported|theta-token"),"THETA", "THETA"),
+        CoinData(CoinType.Erc20("0x5732046a883704404f284ce41ffadd5b007fd668"),"BLZ", "BLZ"),
+        CoinData(CoinType.Erc20("0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"), "UNI", "Uniswap"),
+        CoinData(CoinType.Bep20("0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82"),"CAKE", "Cake"))
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
