@@ -1,7 +1,7 @@
 package io.horizontalsystems.xrateskit.entities
 
 import com.eclipsesource.json.JsonObject
-import io.horizontalsystems.xrateskit.api.ProviderError
+import io.horizontalsystems.xrateskit.providers.ProviderError
 
 class CryptoCompareResponse {
 

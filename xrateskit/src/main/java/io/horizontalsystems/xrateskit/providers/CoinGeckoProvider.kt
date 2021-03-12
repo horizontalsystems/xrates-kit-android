@@ -1,12 +1,11 @@
-package io.horizontalsystems.xrateskit.api
+package io.horizontalsystems.xrateskit.providers
 
 import io.horizontalsystems.coinkit.models.CoinType
+import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.coins.ProviderCoinError
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
-import io.horizontalsystems.xrateskit.core.Factory
-import io.horizontalsystems.xrateskit.core.IChartInfoProvider
-import io.horizontalsystems.xrateskit.core.ICoinMarketProvider
+import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 import java.math.BigDecimal
@@ -15,14 +14,16 @@ import java.util.logging.Logger
 
 class CoinGeckoProvider(
     private val factory: Factory,
-    private val apiManager: ApiManager,
     private val coinInfoManager: CoinInfoManager,
     private val providerCoinsManager: ProviderCoinsManager
-) : ICoinMarketProvider, IChartInfoProvider {
+) : ICoinMarketProvider, IChartInfoProvider, ILatestRateProvider, IHistoricalRateProvider {
+
     private val logger = Logger.getLogger("CoinGeckoProvider")
+
     override val provider: InfoProvider = InfoProvider.CoinGecko()
+    private val apiManager = ApiManager(provider.rateLimit)
     private val MAX_ITEM_PER_PAGE = 250
-    private val REQUEST_DELAY = 600 // Millis
+    private val HOURS_2_IN_SECONDS = 60 * 60 * 24 * 2
 
     init {
         initProvider()
@@ -59,19 +60,16 @@ class CoinGeckoProvider(
         try {
             var pageNumber = 1
             val singles = mutableListOf<Single<List<CoinMarket>>>()
-            var delay = 0L
             var requestItems = itemsCount
 
             do{
-                singles.add(getCoinMarketsDelayed(
-                    delay = delay,
+                singles.add(getCoinMarketsSingle(
                     currencyCode = currencyCode,
                     fetchDiffPeriod = fetchDiffPeriod,
                     itemsCount = if(requestItems > MAX_ITEM_PER_PAGE) MAX_ITEM_PER_PAGE else requestItems,
                     pageNumber = pageNumber)
                 )
 
-                delay += REQUEST_DELAY
                 requestItems -= MAX_ITEM_PER_PAGE
                 pageNumber ++
 
@@ -89,9 +87,8 @@ class CoinGeckoProvider(
         return Single.just(emptyList())
     }
 
-    private fun getCoinMarketsDelayed(delay: Long, currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int, pageNumber: Int): Single<List<CoinMarket>> {
+    private fun getCoinMarketsSingle( currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int, pageNumber: Int): Single<List<CoinMarket>> {
         return Single.create { emitter->
-            Thread.sleep(delay)
             emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, itemsCount = itemsCount, pageNumber = pageNumber))
         }
     }
@@ -226,7 +223,7 @@ class CoinGeckoProvider(
         return CoinGeckoCoinMarketDetailsResponse.parseData(json, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
     }
 
-    override fun getChartPoints(chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>> {
+    override fun getChartPointsAsync(chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>> {
         val providerCoinId = getProviderCoinId(chartPointKey.coinType)
 
         return Single.create { emitter ->
@@ -254,5 +251,62 @@ class CoinGeckoProvider(
                 response.volume,
                 response.timestamp)
         }
+    }
+
+    override fun getLatestRatesAsync(coinTypes: List<CoinType>, currencyCode: String): Single<List<LatestRateEntity>> {
+        val providerCoinIds = providerCoinsManager.getProviderIds(coinTypes, this.provider).mapNotNull { it }
+        if(providerCoinIds.isEmpty())
+            return Single.just(Collections.emptyList())
+
+        return Single.create { emitter ->
+            try {
+                val latestRates = getCoinMarkets(
+                    currencyCode, TimePeriod.HOUR_24,
+                    coinIds = providerCoinIds
+                ).map { coinMarket ->
+                    LatestRateEntity(
+                        coinType = coinMarket.data.type,
+                        currencyCode = currencyCode,
+                        rateDiff24h = coinMarket.marketInfo.rateDiffPeriod,
+                        rate = coinMarket.marketInfo.rate,
+                        timestamp = System.currentTimeMillis() / 1000
+                    )
+                }
+                emitter.onSuccess(latestRates)
+
+            } catch (ex: Exception) {
+                emitter.onError(ex)
+            }
+        }
+    }
+
+    override fun getHistoricalRateAsync(coinType: CoinType, currencyCode: String, timestamp: Long): Single<HistoricalRate> {
+        val providerCoinId = getProviderCoinId(coinType)
+
+        return Single.create { emitter ->
+            try {
+                emitter.onSuccess(getHistoricalRate(coinType, providerCoinId, currencyCode, timestamp))
+
+            } catch (ex: Exception) {
+                emitter.onError(ex)
+            }
+        }
+    }
+
+    private fun getHistoricalRate(coinType: CoinType, providerCoinId: String, currencyCode: String, timestamp: Long): HistoricalRate {
+
+        val fromTs = timestamp //TODO Need to Round (ceil or floor) timestamp to get close value
+        val toTs = fromTs + HOURS_2_IN_SECONDS
+
+        val json = apiManager.getJsonValue(
+            "${provider.baseUrl}/coins/${providerCoinId}/market_chart/range?vs_currency=${currencyCode}&from=${fromTs}&to=${toTs}")
+
+
+        return HistoricalRate(
+            coinType = coinType,
+            currencyCode = currencyCode,
+            timestamp = timestamp,
+            value = CoinGeckoHistoRateResponse.parseData(json)
+        )
     }
 }

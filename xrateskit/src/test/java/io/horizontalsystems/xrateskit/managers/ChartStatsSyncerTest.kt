@@ -41,7 +41,7 @@ object ChartStatsSyncerTest : Spek({
             val stats = listOf<ChartPointEntity>(mock())
 
             beforeEach {
-                whenever(statsProvider.getChartPoints(coin, currency, chartType)).thenReturn(Single.just(stats))
+                whenever(statsProvider.getChartPointsAsync(coin, currency, chartType)).thenReturn(Single.just(stats))
             }
 
             it("saves fetched data into DB and emits update to listener") {
@@ -57,7 +57,7 @@ object ChartStatsSyncerTest : Spek({
             val stubException = Exception("Failed to fetch rate from API")
 
             beforeEach {
-                whenever(statsProvider.getChartPoints(coin, currency, chartType)).thenReturn(Single.error(stubException))
+                whenever(statsProvider.getChartPointsAsync(coin, currency, chartType)).thenReturn(Single.error(stubException))
             }
 
             it("emits `onFail` events to sync completion listener") {
@@ -117,7 +117,7 @@ object ChartStatsSyncerTest : Spek({
 
             beforeEach {
                 whenever(subjectHolder.activeChartStatsKeys).thenReturn(listOf(subjectKey))
-                whenever(statsProvider.getChartPoints(coin, currency, chartType)).thenReturn(Single.just(listOf()))
+                whenever(statsProvider.getChartPointsAsync(coin, currency, chartType)).thenReturn(Single.just(listOf()))
             }
 
             context("when no chart stats in DB") {
@@ -127,7 +127,7 @@ object ChartStatsSyncerTest : Spek({
 
                 it("syncs from the beginning") {
                     subject.onNext(SyncSchedulerEvent.FIRE)
-                    verify(statsProvider).getChartPoints(coin, currency, chartType)
+                    verify(statsProvider).getChartPointsAsync(coin, currency, chartType)
                 }
             }
 
@@ -141,7 +141,7 @@ object ChartStatsSyncerTest : Spek({
 
                 it("syncs from the beginning") {
                     subject.onNext(SyncSchedulerEvent.FIRE)
-                    verify(statsProvider).getChartPoints(coin, currency, chartType)
+                    verify(statsProvider).getChartPointsAsync(coin, currency, chartType)
                 }
             }
 

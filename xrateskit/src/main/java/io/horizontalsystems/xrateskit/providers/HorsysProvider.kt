@@ -1,14 +1,16 @@
-package io.horizontalsystems.xrateskit.api
+package io.horizontalsystems.xrateskit.providers
 
+import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
 import io.horizontalsystems.xrateskit.entities.GlobalCoinMarket
 import io.reactivex.Single
 import java.math.BigDecimal
 
-class HorsysProvider(
-    private val apiManager: ApiManager
-) : IGlobalCoinMarketProvider {
+class HorsysProvider : IGlobalCoinMarketProvider {
+
     override val provider: InfoProvider = InfoProvider.HorSys()
+    private val apiManager = ApiManager(provider.rateLimit)
+
     override fun initProvider() {}
 
     override fun destroy() {}

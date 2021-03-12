@@ -1,6 +1,6 @@
 package io.horizontalsystems.xrateskit.chartpoint
 
-import io.horizontalsystems.xrateskit.api.ProviderError
+import io.horizontalsystems.xrateskit.providers.ProviderError
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import java.util.*

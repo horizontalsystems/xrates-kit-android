@@ -1,7 +1,7 @@
 package io.horizontalsystems.xrateskit.coinmarkets
 
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.api.CoinGeckoProvider
+import io.horizontalsystems.xrateskit.providers.CoinGeckoProvider
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
@@ -16,10 +16,14 @@ class CoinMarketsManager(
         return coinGeckoProvider
             .getTopCoinMarketsAsync(currency, fetchDiffPeriod, itemsCount)
             .map { topMarkets ->
-                val marketEntityList = topMarkets.map {
-                    factory.createLatestRateEntity(it.data.type, it.marketInfo)
+
+                if(fetchDiffPeriod == TimePeriod.HOUR_24) {
+                    val marketEntityList = topMarkets.map {
+                        factory.createLatestRateEntity(it.data.type, it.marketInfo)
+                    }
+                    storage.saveLatestRates(marketEntityList)
                 }
-                storage.saveLatestRates(marketEntityList)
+
                 topMarkets
             }
     }
@@ -28,8 +32,10 @@ class CoinMarketsManager(
         return coinGeckoProvider
                 .getCoinMarketsAsync(coinTypes, currencyCode, fetchDiffPeriod)
                 .map { markets ->
-                    val marketEntityList = markets.map { factory.createLatestRateEntity(it.data.type, it.marketInfo) }
-                    storage.saveLatestRates(marketEntityList)
+                    if(fetchDiffPeriod == TimePeriod.HOUR_24) {
+                        val marketEntityList = markets.map { factory.createLatestRateEntity(it.data.type, it.marketInfo) }
+                        storage.saveLatestRates(marketEntityList)
+                    }
                     markets
         }
     }

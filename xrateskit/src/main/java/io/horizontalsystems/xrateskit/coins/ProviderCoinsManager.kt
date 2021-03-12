@@ -2,7 +2,7 @@ package io.horizontalsystems.xrateskit.coins
 
 import android.content.Context
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.api.InfoProvider
+import io.horizontalsystems.xrateskit.providers.InfoProvider
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.CoinData
 import io.horizontalsystems.xrateskit.entities.ProviderCoinsResource
@@ -34,7 +34,7 @@ class ProviderCoinsManager(
         }
     }
 
-    fun getProviderIds(coinTypes: List<CoinType>, provider: InfoProvider ): List<String?> {
+    fun getProviderIds(coinTypes: List<CoinType>, provider: InfoProvider): List<String?> {
         return storage.getProviderCoins(coinTypes).mapNotNull {
             if(provider is InfoProvider.CoinGecko)
                 it.coingeckoId

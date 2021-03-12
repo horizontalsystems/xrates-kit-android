@@ -1,6 +1,6 @@
 package io.horizontalsystems.xrateskit.chartpoint
 
-import io.horizontalsystems.xrateskit.api.ProviderError
+import io.horizontalsystems.xrateskit.providers.ProviderError
 import io.horizontalsystems.xrateskit.core.IChartInfoProvider
 import io.horizontalsystems.xrateskit.entities.ChartInfoKey
 import io.reactivex.Single
@@ -18,7 +18,7 @@ class ChartInfoSchedulerProvider(
         get() = key.chartType.seconds
 
     val syncSingle: Single<Unit>
-        get() = provider.getChartPoints(key)
+        get() = provider.getChartPointsAsync(key)
                 .doOnSuccess { points ->
                     manager.update(points, key)
                 }

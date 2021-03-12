@@ -80,15 +80,15 @@ class LatestRateSyncerTest : Spek({
             }
 
             it("fetches latest rate from API") {
-                whenever(rateProvider.getLatestRate(coins, currency)).thenReturn(Observable.create {})
+                whenever(rateProvider.getLatestRatesAsync(coins, currency)).thenReturn(Observable.create {})
                 latestRateSyncer.sync()
 
-                verify(rateProvider).getLatestRate(coins, currency)
+                verify(rateProvider).getLatestRatesAsync(coins, currency)
             }
 
             context("when latest rates fetched from API") {
                 beforeEach {
-                    whenever(rateProvider.getLatestRate(coins, currency)).thenReturn(Observable.just(latestRate))
+                    whenever(rateProvider.getLatestRatesAsync(coins, currency)).thenReturn(Observable.just(latestRate))
                 }
 
                 it("saves fetched data into DB and emits update to listener") {
@@ -103,7 +103,7 @@ class LatestRateSyncerTest : Spek({
                 val stubException = Exception("Failed to fetch rate from API")
 
                 beforeEach {
-                    whenever(rateProvider.getLatestRate(coins, currency)).thenReturn(Observable.error(stubException))
+                    whenever(rateProvider.getLatestRatesAsync(coins, currency)).thenReturn(Observable.error(stubException))
                 }
 
                 it("emits `onFail` events to sync completion listener") {
