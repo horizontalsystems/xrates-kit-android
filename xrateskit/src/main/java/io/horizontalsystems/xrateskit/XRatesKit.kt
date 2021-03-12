@@ -3,7 +3,6 @@ package io.horizontalsystems.xrateskit
 import android.content.Context
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.api.*
-import io.horizontalsystems.xrateskit.api.graphproviders.UniswapGraphProvider
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoManager
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSchedulerFactory
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSyncManager
@@ -20,6 +19,10 @@ import io.horizontalsystems.xrateskit.storage.Storage
 import io.horizontalsystems.xrateskit.coinmarkets.GlobalMarketInfoManager
 import io.horizontalsystems.xrateskit.coinmarkets.CoinMarketsManager
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
+import io.horizontalsystems.xrateskit.providers.CoinGeckoProvider
+import io.horizontalsystems.xrateskit.providers.CoinPaprikaProvider
+import io.horizontalsystems.xrateskit.providers.CryptoCompareProvider
+import io.horizontalsystems.xrateskit.providers.HorsysProvider
 import io.reactivex.Observable
 import io.reactivex.Single
 import java.math.BigDecimal
@@ -69,12 +72,12 @@ class XRatesKit(
         return chartInfoSyncManager.chartInfoObservable(ChartInfoKey(coinType, currencyCode, chartType))
     }
 
-    fun historicalRate(coinType: CoinType, currencyCode: String, timestamp: Long): BigDecimal? {
+    fun getHistoricalRate(coinType: CoinType, currencyCode: String, timestamp: Long): BigDecimal? {
         return historicalRateManager.getHistoricalRate(coinType, currencyCode, timestamp)
     }
 
-    fun historicalRateFromApi(coinType: CoinType, currencyCode: String, timestamp: Long): Single<BigDecimal> {
-        return historicalRateManager.getHistoricalRateFromApi(coinType, currencyCode, timestamp)
+    fun getHistoricalRateAsync(coinType: CoinType, currencyCode: String, timestamp: Long): Single<BigDecimal> {
+        return historicalRateManager.getHistoricalRateAsync(coinType, currencyCode, timestamp)
     }
 
     fun cryptoNews(coinCode: String): Single<List<CryptoNews>> {
@@ -122,27 +125,23 @@ class XRatesKit(
             val coinInfoManager = CoinInfoManager(context, storage)
             val providerCoinsManager = ProviderCoinsManager(context, storage)
 
-            val apiManager = ApiManager()
-            val coinPaprikaProvider = CoinPaprikaProvider(apiManager)
-            val horsysProvider = HorsysProvider(apiManager)
-            val coinGeckoProvider = CoinGeckoProvider(factory, apiManager, coinInfoManager, providerCoinsManager)
-            val cryptoCompareProvider = CryptoCompareProvider(factory, apiManager, cryptoCompareApiKey, indicatorPointCount, providerCoinsManager)
-            val uniswapGraphProvider = UniswapGraphProvider(factory, apiManager, cryptoCompareProvider)
-            val latestRatesProvider = BaseLatestRateProvider(cryptoCompareProvider, uniswapGraphProvider)
-            val chartInfoProvider = BaseChartInfoProvider(providerCoinsManager, cryptoCompareProvider, coinGeckoProvider)
+            val coinPaprikaProvider = CoinPaprikaProvider()
+            val horsysProvider = HorsysProvider()
+            val coinGeckoProvider = CoinGeckoProvider(factory, coinInfoManager, providerCoinsManager)
+            val cryptoCompareProvider = CryptoCompareProvider(factory, cryptoCompareApiKey)
             val globalMarketInfoManager = GlobalMarketInfoManager(coinPaprikaProvider, horsysProvider, storage)
 
-            val historicalRateManager = HistoricalRateManager(storage, cryptoCompareProvider)
+            val historicalRateManager = HistoricalRateManager(storage, coinGeckoProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
 
             val latestRatesManager = LatestRatesManager(storage, factory)
-            val latestRatesSchedulerFactory = LatestRatesSchedulerFactory(latestRatesManager, latestRatesProvider, rateExpirationInterval, retryInterval)
+            val latestRatesSchedulerFactory = LatestRatesSchedulerFactory(latestRatesManager, coinGeckoProvider, rateExpirationInterval, retryInterval)
             val latestRatesSyncManager = LatestRatesSyncManager(currency, latestRatesSchedulerFactory).also {
                 latestRatesManager.listener = it
             }
 
             val chartInfoManager = ChartInfoManager(storage, factory, latestRatesManager)
-            val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, chartInfoProvider, retryInterval)
+            val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, coinGeckoProvider, retryInterval)
             val chartInfoSyncManager = ChartInfoSyncManager(chartInfoSchedulerFactory).also {
                 chartInfoManager.listener = it
             }
