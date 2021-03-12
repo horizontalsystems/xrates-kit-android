@@ -84,6 +84,10 @@ class ChartActivity : AppCompatActivity(), Chart.Listener {
 
     private fun observeData() {
 
+        presenter.view.showHistoInfo.observe(this, {
+            txtHistoRate.text = "${it.coinType.ID}/${it.currencyCode} Rate:${it.rate} Date:${Date(it.date * 1000)}"
+        })
+
         presenter.view.showSpinner.observe(this, {
             chart.showSinner()
         })

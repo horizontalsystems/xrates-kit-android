@@ -9,6 +9,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 class ChartInteractor(private val ratesManager: RatesManager) {
@@ -17,6 +18,18 @@ class ChartInteractor(private val ratesManager: RatesManager) {
 
     private var cInfoDisposable: Disposable? = null
 
+    fun observeHistoRate(coinType: CoinType, currencyCode: String, timestamp: Long) {
+        cInfoDisposable?.dispose()
+        cInfoDisposable = ratesManager.getHistoRates(coinType, currencyCode, timestamp)
+            .delay(600, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ rate ->
+                presenter?.updateHistoInfo(coinType, currencyCode, timestamp, rate)
+            }, {
+                Log.e("ChartInteractor", "exception", it)
+            })
+    }
 
     fun observeChartInfo(coinType: CoinType, currencyCode: String, chartType: ChartType) {
         cInfoDisposable?.dispose()
@@ -34,7 +47,6 @@ class ChartInteractor(private val ratesManager: RatesManager) {
     fun getChartInfo(coinType: CoinType, currencyCode: String, chartType: ChartType): ChartInfo? {
         return ratesManager.chartInfo(coinType, currencyCode, chartType)
     }
-
 
     fun clear() {
         cInfoDisposable?.dispose()
