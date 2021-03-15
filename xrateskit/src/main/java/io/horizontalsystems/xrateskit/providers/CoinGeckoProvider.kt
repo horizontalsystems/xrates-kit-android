@@ -40,6 +40,8 @@ class CoinGeckoProvider(
                 }
             }
         }
+
+        logger.warning(" *** Error! Cannot get providerCoin for CoinType:${coinType.ID}")
         throw ProviderCoinError.NoMatchingExternalId()
     }
 
@@ -53,6 +55,7 @@ class CoinGeckoProvider(
             }
         }
 
+        logger.warning(" *** Error! Cannot get coinType for providerCoin:${providerCoinId}")
         throw ProviderCoinError.NoMatchingExternalId()
     }
 
@@ -94,14 +97,13 @@ class CoinGeckoProvider(
     }
 
     override fun getCoinMarketsAsync(coinTypes: List<CoinType>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
-
-        val providerCoinIds = providerCoinsManager.getProviderIds(coinTypes, this.provider).mapNotNull { it }
-        if(providerCoinIds.isEmpty())
-            return Single.just(Collections.emptyList())
-
         return Single.create { emitter ->
             try {
-                emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, coinIds = providerCoinIds))
+                val providerCoinIds = providerCoinsManager.getProviderIds(coinTypes, this.provider).mapNotNull { it }
+                if(providerCoinIds.isEmpty())
+                    emitter.onSuccess(Collections.emptyList())
+                else
+                    emitter.onSuccess(getCoinMarkets(currencyCode,fetchDiffPeriod, coinIds = providerCoinIds))
 
             } catch (ex: Exception) {
                 emitter.onError(ex)
@@ -224,10 +226,10 @@ class CoinGeckoProvider(
     }
 
     override fun getChartPointsAsync(chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>> {
-        val providerCoinId = getProviderCoinId(chartPointKey.coinType)
 
         return Single.create { emitter ->
             try {
+                val providerCoinId = getProviderCoinId(chartPointKey.coinType)
                 emitter.onSuccess(getCoinMarketCharts(providerCoinId, chartPointKey))
 
             } catch (ex: Exception) {
@@ -254,13 +256,14 @@ class CoinGeckoProvider(
     }
 
     override fun getLatestRatesAsync(coinTypes: List<CoinType>, currencyCode: String): Single<List<LatestRateEntity>> {
-        val providerCoinIds = providerCoinsManager.getProviderIds(coinTypes, this.provider).mapNotNull { it }
-        if(providerCoinIds.isEmpty())
-            return Single.just(Collections.emptyList())
 
         return Single.create { emitter ->
             try {
-                emitter.onSuccess(getLatestRates(providerCoinIds, currencyCode))
+                val providerCoinIds = providerCoinsManager.getProviderIds(coinTypes, this.provider).mapNotNull { it }
+                if(providerCoinIds.isEmpty())
+                    emitter.onSuccess(Collections.emptyList())
+                else
+                    emitter.onSuccess(getLatestRates(providerCoinIds, currencyCode))
 
             } catch (ex: Exception) {
                 emitter.onError(ex)
@@ -295,10 +298,10 @@ class CoinGeckoProvider(
     }
 
     override fun getHistoricalRateAsync(coinType: CoinType, currencyCode: String, timestamp: Long): Single<HistoricalRate> {
-        val providerCoinId = getProviderCoinId(coinType)
 
         return Single.create { emitter ->
             try {
+                val providerCoinId = getProviderCoinId(coinType)
                 emitter.onSuccess(getHistoricalRate(coinType, providerCoinId, currencyCode, timestamp))
 
             } catch (ex: Exception) {
