@@ -294,7 +294,7 @@ data class CoinGeckoCoinMarketDetailsResponse(
             else{
                 element.get("current_price").asObject().get(currencyCode.toLowerCase())?.let {
                     if(it.isNull) BigDecimal.ZERO
-                    else element.get("current_price").asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                    else it.asDouble().toBigDecimal()
                 } ?:BigDecimal.ZERO
             }
 
@@ -303,7 +303,7 @@ data class CoinGeckoCoinMarketDetailsResponse(
                 else{
                     highPriceElement.asObject().get(currencyCode.toLowerCase())?.let {
                         if(it.isNull) BigDecimal.ZERO
-                        else highPriceElement.asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                        else it.asDouble().toBigDecimal()
                     } ?:BigDecimal.ZERO
                 }
             } ?: BigDecimal.ZERO
@@ -313,7 +313,7 @@ data class CoinGeckoCoinMarketDetailsResponse(
                 else{
                     lowPriceElement.asObject().get(currencyCode.toLowerCase())?.let {
                         if(it.isNull) BigDecimal.ZERO
-                        else lowPriceElement.asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                        else it.asDouble().toBigDecimal()
                     } ?:BigDecimal.ZERO
                 }
             } ?: BigDecimal.ZERO
@@ -323,7 +323,7 @@ data class CoinGeckoCoinMarketDetailsResponse(
                 else{
                     marketElement.asObject().get(currencyCode.toLowerCase())?.let {
                         if(it.isNull) BigDecimal.ZERO
-                        else marketElement.asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                        else it.asDouble().toBigDecimal()
                     } ?:BigDecimal.ZERO
                 }
             } ?: BigDecimal.ZERO
@@ -333,7 +333,7 @@ data class CoinGeckoCoinMarketDetailsResponse(
                 else{
                     volumeElement.asObject().get(currencyCode.toLowerCase())?.let {
                         if(it.isNull) BigDecimal.ZERO
-                        else volumeElement.asObject().get(currencyCode.toLowerCase()).asDouble().toBigDecimal()
+                        else it.asDouble().toBigDecimal()
                     } ?:BigDecimal.ZERO
                 }
             } ?: BigDecimal.ZERO
@@ -441,6 +441,47 @@ class CoinGeckoMarketChartsResponse(
             }
 
             return charts
+        }
+    }
+}
+
+data class CoinGeckoCoinPriceResponse(
+    val coinId: String,
+    val rate: BigDecimal,
+    val rateDiff24h: BigDecimal) {
+
+    companion object {
+
+        fun parseData(jsonValue: JsonValue, currencyCode: String, coinIds: List<String>): List<CoinGeckoCoinPriceResponse> {
+
+            val coinGeckoPriceResponses = mutableListOf<CoinGeckoCoinPriceResponse>()
+
+            coinIds.forEach { coinId ->
+                try {
+
+                    jsonValue.asObject().get(coinId)?.let { coinData ->
+
+                        if (!coinData.isNull) {
+                            val rate = coinData.asObject().get(currencyCode.toLowerCase())?.let {
+                                if (it.isNull) BigDecimal.ZERO
+                                else it.asDouble().toBigDecimal()
+                            } ?: BigDecimal.ZERO
+
+                            val rateDiff24h = coinData.asObject().get("${currencyCode.toLowerCase()}_24h_change")?.let {
+                                if (it.isNull) BigDecimal.ZERO
+                                else it.asDouble().toBigDecimal()
+                            } ?: BigDecimal.ZERO
+
+                            coinGeckoPriceResponses.add(CoinGeckoCoinPriceResponse(coinId, rate, rateDiff24h))
+                        }
+                    }
+
+                } catch (e: Exception) {
+                    //ignore
+                }
+            }
+
+            return coinGeckoPriceResponses
         }
     }
 }

@@ -260,24 +260,38 @@ class CoinGeckoProvider(
 
         return Single.create { emitter ->
             try {
-                val latestRates = getCoinMarkets(
-                    currencyCode, TimePeriod.HOUR_24,
-                    coinIds = providerCoinIds
-                ).map { coinMarket ->
-                    LatestRateEntity(
-                        coinType = coinMarket.data.type,
-                        currencyCode = currencyCode,
-                        rateDiff24h = coinMarket.marketInfo.rateDiffPeriod,
-                        rate = coinMarket.marketInfo.rate,
-                        timestamp = System.currentTimeMillis() / 1000
-                    )
-                }
-                emitter.onSuccess(latestRates)
+                emitter.onSuccess(getLatestRates(providerCoinIds, currencyCode))
 
             } catch (ex: Exception) {
                 emitter.onError(ex)
             }
         }
+    }
+
+    private fun getLatestRates(coinIds: List<String>, currencyCode: String): List<LatestRateEntity>{
+        val latestRates = mutableListOf<LatestRateEntity>()
+        val coinIdsParams = "&ids=${coinIds.joinToString(separator = ",")}"
+
+        val json = apiManager.getJsonValue(
+            "${provider.baseUrl}/simple/price?${coinIdsParams}" +
+                    "&vs_currencies=${currencyCode}&include_market_cap=false" +
+                    "&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=false")
+
+        val responses = CoinGeckoCoinPriceResponse.parseData(json, currencyCode, coinIds)
+        val timestamp = System.currentTimeMillis() / 1000
+        responses.forEach {
+            latestRates.add(
+                LatestRateEntity(
+                    coinType = getCoinType(it.coinId),
+                    currencyCode = currencyCode,
+                    rateDiff24h = it.rateDiff24h,
+                    rate = it.rate,
+                    timestamp = timestamp
+                )
+            )
+        }
+
+        return latestRates
     }
 
     override fun getHistoricalRateAsync(coinType: CoinType, currencyCode: String, timestamp: Long): Single<HistoricalRate> {
