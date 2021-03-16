@@ -11,7 +11,7 @@ class CryptoCompareProvider(
     : IInfoProvider, ICryptoNewsProvider, IFiatXRatesProvider {
 
     override val provider: InfoProvider = InfoProvider.CryptoCompare()
-    private val apiManager = ApiManager(provider.rateLimit)
+    private val apiManager = ApiManager.create(provider.rateLimit)
 
     override fun initProvider() {}
     override fun destroy() {}

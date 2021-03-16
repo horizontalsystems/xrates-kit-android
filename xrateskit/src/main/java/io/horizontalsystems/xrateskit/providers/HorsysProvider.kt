@@ -9,7 +9,7 @@ import java.math.BigDecimal
 class HorsysProvider : IGlobalCoinMarketProvider {
 
     override val provider: InfoProvider = InfoProvider.HorSys()
-    private val apiManager = ApiManager(provider.rateLimit)
+    private val apiManager = ApiManager.create(provider.rateLimit)
 
     override fun initProvider() {}
 
