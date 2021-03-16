@@ -135,8 +135,7 @@ class CoinGeckoProvider(
                         rateDiff = response.coinGeckoMarkets.rateDiffPeriod?.get(TimePeriod.HOUR_24) ?: BigDecimal.ZERO,
                         volume = response.coinGeckoMarkets.volume24h,
                         supply = response.coinGeckoMarkets.circulatingSupply,
-                        rateDiffPeriod = response.coinGeckoMarkets.rateDiffPeriod?.get(fetchDiffPeriod)
-                            ?: BigDecimal.ZERO,
+                        rateDiffPeriod = response.coinGeckoMarkets.rateDiffPeriod?.get(fetchDiffPeriod) ?: BigDecimal.ZERO,
                         marketCap = response.coinGeckoMarkets.marketCap
                     )
                 )
