@@ -9,7 +9,7 @@ import java.util.logging.Logger
 class CoinPaprikaProvider(): IGlobalCoinMarketProvider {
 
     override val provider: InfoProvider = InfoProvider.CoinPaprika()
-    private val apiManager = ApiManager(provider.rateLimit)
+    private val apiManager = ApiManager.create(provider.rateLimit)
     private val logger = Logger.getLogger("CoinPaprikaProvider")
     private val BTC_ID = "btc-bitcoin"
     private val HOURS_24_IN_SECONDS = 86400

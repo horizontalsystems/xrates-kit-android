@@ -21,7 +21,7 @@ class CoinGeckoProvider(
     private val logger = Logger.getLogger("CoinGeckoProvider")
 
     override val provider: InfoProvider = InfoProvider.CoinGecko()
-    private val apiManager = ApiManager(provider.rateLimit)
+    private val apiManager = ApiManager.create(provider.rateLimit)
     private val MAX_ITEM_PER_PAGE = 250
     private val HOURS_2_IN_SECONDS = 60 * 60 * 24 * 2
 

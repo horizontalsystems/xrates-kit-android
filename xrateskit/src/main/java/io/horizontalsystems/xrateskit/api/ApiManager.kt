@@ -3,10 +3,12 @@ package io.horizontalsystems.xrateskit.api
 import com.eclipsesource.json.Json
 import com.eclipsesource.json.JsonObject
 import com.eclipsesource.json.JsonValue
-import java.net.URL
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.util.concurrent.TimeUnit
 import java.util.logging.Logger
 
-class ApiManager(private val requestDelay: Int) {
+class ApiManager private constructor(private val requestDelay: Int, private val httpClient: OkHttpClient) {
     private val logger = Logger.getLogger("ApiManager")
     private var lastRequestTime = 0L
 
@@ -19,17 +21,12 @@ class ApiManager(private val requestDelay: Int) {
 
         logger.info("Fetching $uri")
 
-        return URL(uri)
-            .openConnection()
-            .apply {
-                connectTimeout = 5000
-                readTimeout = 60000
-                setRequestProperty("Accept", "application/json")
-            }
-            .getInputStream()
-            .use {
-                Json.parse(it.bufferedReader())
-            }
+        val request = Request.Builder()
+                .addHeader("Accept", "application/json")
+                .url(uri)
+                .build()
+
+        return Json.parse(httpClient.newCall(request).execute().body!!.charStream())
     }
 
     @Synchronized
@@ -45,5 +42,14 @@ class ApiManager(private val requestDelay: Int) {
         }
 
         lastRequestTime = currentTime
+    }
+
+    companion object {
+        private val httpClient = OkHttpClient.Builder()
+                .connectTimeout(5000, TimeUnit.MILLISECONDS)
+                .readTimeout(60000, TimeUnit.MILLISECONDS)
+                .build()
+
+        fun create(minDelayBetweenRequests: Int) = ApiManager(minDelayBetweenRequests, httpClient)
     }
 }
