@@ -2,6 +2,7 @@ package io.horizontalsystems.xrateskit.entities
 
 import com.eclipsesource.json.JsonValue
 import java.lang.Exception
+import java.lang.Math.abs
 import java.math.BigDecimal
 
 class CoinGeckoCoinMarkets(
@@ -395,18 +396,25 @@ data class CoinGeckoCoinMarketDetailsResponse(
     }
 }
 
-class CoinGeckoHistoRateResponse(val rate: BigDecimal) {
+class CoinGeckoHistoRateResponse(
+    val timeDiff: Long,
+    val rate: BigDecimal) {
+
     companion object {
-        fun parseData(jsonValue: JsonValue): BigDecimal {
+        fun parseData(jsonValue: JsonValue, timestamp: Long): List<CoinGeckoHistoRateResponse> {
 
-            val rates = jsonValue.asObject().get("prices").asArray()
+            val ratesArray = jsonValue.asObject().get("prices").asArray()
+            val rates = mutableListOf<CoinGeckoHistoRateResponse>()
 
-            return rates?.let {
-                if(it.size() > 0){
-                    it[0].asArray()[1].asDouble().toBigDecimal()
-                } else BigDecimal.ZERO
+            ratesArray?.let {
+                ratesArray.forEach {
 
-            }?: BigDecimal.ZERO
+                    val timeDiff = kotlin.math.abs((it.asArray()[0].asLong() / 1000) - timestamp)
+                    rates.add(CoinGeckoHistoRateResponse(timeDiff, it.asArray()[1].asDouble().toBigDecimal()))
+                }
+            }
+
+            return rates
         }
     }
 }

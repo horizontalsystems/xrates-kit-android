@@ -11,6 +11,7 @@ import io.reactivex.Single
 import java.math.BigDecimal
 import java.util.*
 import java.util.logging.Logger
+import kotlin.math.abs
 
 class CoinGeckoProvider(
     private val factory: Factory,
@@ -23,7 +24,8 @@ class CoinGeckoProvider(
     override val provider: InfoProvider = InfoProvider.CoinGecko()
     private val apiManager = ApiManager.create(provider.rateLimit)
     private val MAX_ITEM_PER_PAGE = 250
-    private val HOURS_2_IN_SECONDS = 60 * 60 * 24 * 2
+    private val MINUTES_10_IN_SECONDS = 60 * 10
+    private val HOURS_2_IN_SECONDS = 60 * 60 * 2
 
     init {
         initProvider()
@@ -311,18 +313,22 @@ class CoinGeckoProvider(
 
     private fun getHistoricalRate(coinType: CoinType, providerCoinId: String, currencyCode: String, timestamp: Long): HistoricalRate {
 
-        val fromTs = timestamp //TODO Need to Round (ceil or floor) timestamp to get close value
-        val toTs = fromTs + HOURS_2_IN_SECONDS
+        val tsDiff = ((System.currentTimeMillis()/1000) - timestamp)/ 3600 //Diff in hours
+        val fromTs = if(tsDiff < 24) timestamp - MINUTES_10_IN_SECONDS else timestamp - HOURS_2_IN_SECONDS
+        val toTs = if(tsDiff < 24) timestamp + MINUTES_10_IN_SECONDS else timestamp + HOURS_2_IN_SECONDS
 
         val json = apiManager.getJsonValue(
             "${provider.baseUrl}/coins/${providerCoinId}/market_chart/range?vs_currency=${currencyCode}&from=${fromTs}&to=${toTs}")
 
+        // Get the closest value for timestamp
+        val response = CoinGeckoHistoRateResponse.parseData(json, timestamp)
+        val histoRate = response.minByOrNull { it.timeDiff }?.rate ?: BigDecimal.ZERO
 
         return HistoricalRate(
             coinType = coinType,
             currencyCode = currencyCode,
             timestamp = timestamp,
-            value = CoinGeckoHistoRateResponse.parseData(json)
+            value = histoRate
         )
     }
 }
