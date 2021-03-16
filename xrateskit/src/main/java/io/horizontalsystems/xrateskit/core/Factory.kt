@@ -28,19 +28,22 @@ class Factory(private val expirationInterval: Long) {
         return LatestRate(latestRateEntity, expirationInterval)
     }
 
-    fun createCoinMarket(coinData: CoinData,
-                         currency: String,
-                         rate: BigDecimal,
-                         rateOpenDay: BigDecimal,
-                         rateDiff: BigDecimal,
-                         volume: BigDecimal,
-                         supply: BigDecimal,
-                         rateDiffPeriod: BigDecimal = BigDecimal.ZERO,
-                         marketCap: BigDecimal? = null,
-                         liquidity: BigDecimal? = null): CoinMarket {
-        val marketInfoEntity = MarketInfoEntity(coinData.type, currency, rate, rateOpenDay, rateDiff, volume, supply,
-                                                Date().time / 1000, rateDiffPeriod, marketCap, liquidity)
-        val marketInfo = MarketInfo(marketInfoEntity, expirationInterval)
+    fun createCoinMarket(coinData: CoinData, currency: String, rate: BigDecimal, rateOpenDay: BigDecimal,
+        rateDiff: BigDecimal, volume: BigDecimal, supply: BigDecimal, rateDiffPeriod: BigDecimal = BigDecimal.ZERO, marketCap: BigDecimal? = null
+    ): CoinMarket {
+        val marketInfo = MarketInfo(
+            coinType = coinData.type,
+            currencyCode = currency,
+            rate = rate, rateOpenDay = rateOpenDay,
+            rateDiff = rateDiff,
+            volume = volume,
+            supply = supply,
+            rateDiffPeriod = rateDiffPeriod,
+            timestamp =  Date().time / 1000,
+            marketCap = marketCap,
+            expirationInterval = expirationInterval
+        )
+
         return CoinMarket(coinData, marketInfo)
     }
 

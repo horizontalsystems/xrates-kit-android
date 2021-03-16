@@ -3,7 +3,6 @@ package io.horizontalsystems.xrateskit.storage
 import androidx.room.*
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.entities.LatestRateEntity
-import io.horizontalsystems.xrateskit.entities.MarketInfoEntity
 
 @Dao
 interface LatestRatesDao {
