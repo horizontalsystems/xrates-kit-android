@@ -67,30 +67,11 @@ class ChartInfoManager(private val storage: IStorage, private val factory: Facto
     }
 
     fun update(points: List<ChartPointEntity>, key: ChartInfoKey) {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
-
-        val startDayTimestamp = calendar.timeInMillis / 1000
-        val entities = points.map { point ->
-            if (point.timestamp == startDayTimestamp) {
-                latestRatesManager.getLatestRate(point.coinType, point.currency)?.let { marketInfo ->
-                    return@map ChartPointEntity(
-                        point.type,
-                        point.coinType,
-                        point.currency,
-                        marketInfo.rate,
-                        point.volume,
-                        point.timestamp
-                    )
-                }
-            }
-
-            point
-        }
 
         storage.deleteChartPoints(key)
-        storage.saveChartPoints(entities)
+        storage.saveChartPoints(points)
 
-        val chartInfo = chartInfo(entities.map { ChartPoint(it.value, it.volume, it.timestamp) }, key.chartType)
+        val chartInfo = chartInfo(points.map { ChartPoint(it.value, it.volume, it.timestamp) }, key.chartType)
         if (chartInfo == null) {
             listener?.noChartInfo(key)
         } else {
