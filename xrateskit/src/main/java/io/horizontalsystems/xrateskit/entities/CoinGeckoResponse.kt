@@ -431,15 +431,19 @@ class CoinGeckoMarketChartsResponse(
             val rates = jsonValue.asObject().get("prices").asArray()
             val volumes = jsonValue.asObject().get("total_volumes").asArray()
             var nextTs = 0L
+            val chartPointsCount = chartPointKey.chartType.interval * 2
 
             rates.forEachIndexed { index, rateData ->
                 try {
                     val timestamp = rateData.asArray()[0].asLong()/1000
 
-                    if(timestamp >= nextTs){
+                    if(timestamp >= nextTs || rates.size() <= chartPointsCount){
                         nextTs = timestamp + chartPointKey.chartType.seconds - 180
                         val rate = rateData.asArray()[1].asDouble().toBigDecimal()
-                        val volume = volumes[index].asArray()[1].asDouble().toBigDecimal()
+                        val volume =
+                            if(chartPointKey.chartType.days >= 90) volumes[index].asArray()[1].asDouble().toBigDecimal()
+                            else BigDecimal.ZERO
+
                         charts.add(CoinGeckoMarketChartsResponse(rate, volume, timestamp))
                     }
 
