@@ -19,13 +19,11 @@ import io.horizontalsystems.xrateskit.storage.Storage
 import io.horizontalsystems.xrateskit.coinmarkets.GlobalMarketInfoManager
 import io.horizontalsystems.xrateskit.coinmarkets.CoinMarketsManager
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
-import io.horizontalsystems.xrateskit.providers.CoinGeckoProvider
-import io.horizontalsystems.xrateskit.providers.CoinPaprikaProvider
-import io.horizontalsystems.xrateskit.providers.CryptoCompareProvider
-import io.horizontalsystems.xrateskit.providers.HorsysProvider
+import io.horizontalsystems.xrateskit.providers.*
 import io.reactivex.Observable
 import io.reactivex.Single
 import java.math.BigDecimal
+import java.security.Provider
 
 class XRatesKit(
     private val latestRatesManager: LatestRatesManager,
@@ -39,6 +37,18 @@ class XRatesKit(
     private val coinInfoManager: CoinInfoManager,
     private val providerCoinsManager: ProviderCoinsManager
 ) {
+
+    fun getNotificationCoinCode(coinType: CoinType): String? {
+        providerCoinsManager.getProviderIds(listOf(coinType), InfoProvider.CryptoCompare()).let {
+            if(it.isNotEmpty()){
+                it[0]?.let { code ->
+                    return code
+                }
+            }
+        }
+
+        return null
+    }
 
     fun set(coins: List<CoinType>) {
         latestRatesSyncManager.set(coins)
