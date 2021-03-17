@@ -39,15 +39,7 @@ class XRatesKit(
 ) {
 
     fun getNotificationCoinCode(coinType: CoinType): String? {
-        providerCoinsManager.getProviderIds(listOf(coinType), InfoProvider.CryptoCompare()).let {
-            if(it.isNotEmpty()){
-                it[0]?.let { code ->
-                    return code
-                }
-            }
-        }
-
-        return null
+        return providerCoinsManager.getProviderIds(listOf(coinType), InfoProvider.CryptoCompare()).firstOrNull()
     }
 
     fun set(coins: List<CoinType>) {
