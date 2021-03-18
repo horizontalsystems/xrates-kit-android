@@ -112,8 +112,9 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo2.visibility = View.VISIBLE
             rviewInfo3.visibility = View.GONE
         }
+
         btnLoadCoinInfo.setOnClickListener {
-            viewModel.loadCoinInfo(CoinType.fromString("erc20|0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"))
+            viewModel.loadCoinInfo(CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9"))
             rviewInfo4.visibility = View.GONE
             rviewInfo.visibility = View.GONE
             rviewInfo2.visibility = View.GONE
