@@ -18,7 +18,7 @@ class CoinInfoManager(
     }
 
     private fun updateCoinInfo() {
-        val coinsResponse = CoinInfoResource.parseFile(context, coinInfoFileName)
+        var coinsResponse = CoinInfoResource.parseFile(true, context, coinInfoFileName)
         val resourceInfo = storage.getResourceInfo(ResourceType.COIN_INFO)
 
         val update = resourceInfo?.let {
@@ -26,13 +26,20 @@ class CoinInfoManager(
         } ?: true
 
         if (update) {
+            coinsResponse = CoinInfoResource.parseFile(false, context, coinInfoFileName)
             storage.deleteAllCoinCategories()
             storage.deleteAllCoinLinks()
             storage.deleteAllCoinsCategories()
+            storage.deleteAllCoinFunds()
+            storage.deleteAllCoinsFunds()
+            storage.deleteAllCoinFundCategories()
 
             storage.saveCoinInfos(coinsResponse.coinInfos)
-            storage.saveCoinCategories(coinsResponse.coinCategories)
+            storage.saveCoinCategories(coinsResponse.coinsCategories)
             storage.saveCoinCategory(coinsResponse.categories)
+            storage.saveCoinFund(coinsResponse.funds)
+            storage.saveCoinFunds(coinsResponse.coinFunds)
+            storage.saveCoinFundCategory(coinsResponse.fundCategories)
             storage.saveCoinLinks(coinsResponse.links)
             storage.saveResourceInfo(ResourceInfo(ResourceType.COIN_INFO, coinsResponse.version))
         }
@@ -45,6 +52,19 @@ class CoinInfoManager(
     fun getCoinCategories(coinType: CoinType): List<CoinCategory> {
         return storage.getCoinInfo(coinType)?.let {
             storage.getCoinCategories(it.coinType)
+        } ?: emptyList()
+    }
+
+    fun getCoinFundCategories(coinType: CoinType): List<CoinFundCategory> {
+
+        return storage.getCoinInfo(coinType)?.let {
+            val funds = storage.getCoinFunds(it.coinType)
+            val categories = storage.getCoinFundCategories(funds.map { it.categoryId })
+
+            categories.forEach {  category ->
+                category.funds.addAll(funds.filter { it.categoryId.contentEquals(category.id) })
+            }
+            categories
         } ?: emptyList()
     }
 

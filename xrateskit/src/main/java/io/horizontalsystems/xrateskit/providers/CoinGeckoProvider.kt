@@ -11,7 +11,6 @@ import io.reactivex.Single
 import java.math.BigDecimal
 import java.util.*
 import java.util.logging.Logger
-import kotlin.math.abs
 
 class CoinGeckoProvider(
     private val factory: Factory,
@@ -159,6 +158,7 @@ class CoinGeckoProvider(
                     doCoinMarketDetailsRequest(providerCoinId, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
                 val coinRating = coinInfoManager.getCoinRating(coinType)
                 val categories = coinInfoManager.getCoinCategories(coinType)
+                val funds = coinInfoManager.getCoinFundCategories(coinType)
                 val links = coinInfoManager.getLinks(coinType, coinMarketDetailsResponse.coinInfo.links)
 
                 emitter.onSuccess(
@@ -182,6 +182,7 @@ class CoinGeckoProvider(
                             links,
                             coinRating,
                             categories,
+                            funds,
                             coinMarketDetailsResponse.coinInfo.platforms
                         ),
 
