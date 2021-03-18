@@ -189,22 +189,22 @@ data class CoinGeckoCoinInfo(
                     }
                 }
 
-                element.get("asset_platform_id")?.let {
-                    if (!it.isNull) {
-                        val platformId = it.asString()
-                        val platformType = when(platformId.toLowerCase()){
-                            "tron" ->  CoinPlatformType.TRON
-                            "ethereum" ->  CoinPlatformType.ETHEREUM
-                            "eos" ->  CoinPlatformType.EOS
-                            "binance-smart-chain" ->  CoinPlatformType.BINANCE_SMART_CHAIN
-                            "binancecoin" ->  CoinPlatformType.BINANCE
-                            else -> null
-                        }
+                element.get("platforms")?.let {
+                    it.asObject()?.let {
+                        it.asObject().forEach { platform ->
+                            val platformId = platform.name
+                            val platformType = when(platformId.toLowerCase()){
+                                "tron" ->  CoinPlatformType.TRON
+                                "ethereum" ->  CoinPlatformType.ETHEREUM
+                                "eos" ->  CoinPlatformType.EOS
+                                "binance-smart-chain" ->  CoinPlatformType.BINANCE_SMART_CHAIN
+                                "binancecoin" ->  CoinPlatformType.BINANCE
+                                else -> CoinPlatformType.OTHER
+                            }
 
-                        platformType?.let { pType ->
-                            element.get("contract_address")?.let {
-                                if (!it.isNull) {
-                                    platforms[pType] = it.asString()
+                            platform.value?.let {
+                                if(!it.isNull){
+                                    platforms[platformType] = it.asString()
                                 }
                             }
                         }
@@ -222,7 +222,7 @@ data class CoinGeckoCoinInfo(
                 description = description,
                 links = links,
                 platforms = platforms,
-                tickers = CoinGeckoTickersResponse.parseData(jsonValue)
+                tickers = CoinGeckoTickersResponse.parseData(jsonValue, coinCode, platforms.map { it.value.toLowerCase() })
             )
         }
     }
@@ -236,7 +236,7 @@ data class CoinGeckoTickersResponse(
     val volume: BigDecimal = BigDecimal.ZERO){
 
     companion object {
-        fun parseData(jsonValue: JsonValue): List<CoinGeckoTickersResponse> {
+        fun parseData(jsonValue: JsonValue, coinCode: String, contractAddresses: List<String>): List<CoinGeckoTickersResponse> {
             val tickers = mutableListOf<CoinGeckoTickersResponse>()
             try{
 
@@ -244,8 +244,16 @@ data class CoinGeckoTickersResponse(
 
                     it.asArray().forEach { tickerData ->
                         tickerData?.asObject()?.let { element ->
-                            val base = element.get("base").asString()
-                            val target = element.get("target").asString()
+                            var base = element.get("base").asString()
+                            var target = element.get("target").asString()
+
+                            if(contractAddresses.isNotEmpty()){
+                                if(contractAddresses.contains(base.toLowerCase()))
+                                    base = coinCode.toUpperCase()
+                                else if(contractAddresses.contains(target.toLowerCase()))
+                                    target = coinCode.toUpperCase()
+                            }
+
                             val marketName =
                                 if(element.get("market") != null){
                                     element.get("market").asObject().get("name").asString()
