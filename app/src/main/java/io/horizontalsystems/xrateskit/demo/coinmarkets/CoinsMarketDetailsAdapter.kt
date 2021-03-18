@@ -43,11 +43,15 @@ class CoinsMarketDetailsAdapter: RecyclerView.Adapter<CoinsMarketDetailsAdapter.
             txtTitle.text = item.infoTitle
             if(item.value.compareTo(BigDecimal.ZERO) != 0)
                 txtValue.text = dec.format(item.value)
+            else
+                txtValue.text = ""
 
             if(item.valueChange.compareTo(BigDecimal.ZERO) != 0 ){
                 txtChangeValue.text = "%.2f".format(item.valueChange)
                 if(item.valueChange < BigDecimal.ZERO)
                     txtChangeValue.setTextColor(ContextCompat.getColor(context, R.color.red_d))
+            } else {
+                txtChangeValue.text = ""
             }
         }
     }
@@ -91,6 +95,16 @@ data class CoinMarketDetailsItem(val infoTitle: String, val value: BigDecimal, v
                 list.add(CoinMarketDetailsItem("--------------- Tickers ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
                 coinMarketDetails.tickers.forEach {
                     list.add(CoinMarketDetailsItem("${it.base} / ${it.target} - ${it.marketName}", it.rate, it.volume))
+                }
+            }
+
+            list.add(CoinMarketDetailsItem("--------------- Funds ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
+            coinMarketDetails.meta.fundCategories.forEach{
+                list.add(CoinMarketDetailsItem("Category : ${ it.name } : ${it.order}", BigDecimal.ZERO, BigDecimal.ZERO))
+                it.funds.forEach{
+                    list.add(CoinMarketDetailsItem("${ it.name }", BigDecimal.ZERO, BigDecimal.ZERO))
+                    list.add(CoinMarketDetailsItem("${ it.url }", BigDecimal.ZERO, BigDecimal.ZERO))
+                    list.add(CoinMarketDetailsItem("--------", BigDecimal.ZERO, BigDecimal.ZERO))
                 }
             }
 
