@@ -33,6 +33,7 @@ enum class LinkType{
 }
 
 enum class CoinPlatformType{
+    OTHER,
     ETHEREUM,
     BINANCE,
     BINANCE_SMART_CHAIN,
