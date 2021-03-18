@@ -15,6 +15,8 @@ interface IStorage {
     fun getCoinInfoCount(): Int
     fun getCoinInfos(): List<CoinInfoEntity>
     fun getCoinCategories(coinType: CoinType): List<CoinCategory>
+    fun getCoinFunds(coinType: CoinType): List<CoinFund>
+    fun getCoinFundCategories(categoriesId: List<String>): List<CoinFundCategory>
     fun getCoinInfosByCategory(categoryId: String): List<CoinInfoEntity>
     fun getCoinInfo(coinType: CoinType): CoinInfoEntity?
     fun getCoinLinks(coinType: CoinType): List<CoinLinksEntity>
@@ -22,9 +24,15 @@ interface IStorage {
     fun saveCoinCategories(coinCategoryEntities: List<CoinCategoriesEntity>)
     fun saveCoinCategory(coinCategories: List<CoinCategory>)
     fun saveCoinLinks(coinLinks: List<CoinLinksEntity>)
+    fun saveCoinFunds(coinFunds: List<CoinFundsEntity>)
+    fun saveCoinFund(coinFunds: List<CoinFund>)
+    fun saveCoinFundCategory(coinFundCategories: List<CoinFundCategory>)
     fun deleteAllCoinCategories()
     fun deleteAllCoinsCategories()
     fun deleteAllCoinLinks()
+    fun deleteAllCoinFunds()
+    fun deleteAllCoinsFunds()
+    fun deleteAllCoinFundCategories()
 
         //Provider Coins
     fun saveProviderCoins(providerCoins: List<ProviderCoinEntity>)

@@ -14,10 +14,19 @@ interface CoinInfoDao {
     fun insertCoinCategories(all: List<CoinCategoriesEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCoinFunds(all: List<CoinFundsEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCoinLinks(all: List<CoinLinksEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCoinCategory(all: List<CoinCategory>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCoinFund(all: List<CoinFund>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCoinFundCategory(all: List<CoinFundCategory>)
 
     @Query("DELETE FROM CoinCategory")
     fun deleteAllCoinCategories()
@@ -25,11 +34,26 @@ interface CoinInfoDao {
     @Query("DELETE FROM CoinCategoriesEntity")
     fun deleteAllCoinsCategories()
 
+    @Query("DELETE FROM CoinFundCategory")
+    fun deleteAllCoinFundCategories()
+
+    @Query("DELETE FROM CoinFundsEntity")
+    fun deleteAllCoinsFunds()
+
+    @Query("DELETE FROM CoinFund")
+    fun deleteAllCoinFunds()
+
     @Query("DELETE FROM CoinLinksEntity")
     fun deleteAllCoinLinks()
 
-    @Query("SELECT * FROM CoinCategory WHERE  id IN (SELECT categoryId FROM CoinCategoriesEntity WHERE coinType =:coinType)")
+    @Query("SELECT * FROM CoinCategory WHERE id IN (SELECT categoryId FROM CoinCategoriesEntity WHERE coinType =:coinType)")
     fun getCoinCategories(coinType: CoinType): List<CoinCategory>
+
+    @Query("SELECT * FROM CoinFund WHERE id IN (SELECT fundId FROM CoinFundsEntity WHERE coinType =:coinType)")
+    fun getCoinFunds(coinType: CoinType): List<CoinFund>
+
+    @Query("SELECT * FROM CoinFundCategory WHERE id IN(:categoryIds) ORDER BY `order`")
+    fun getCoinFundCategories(categoryIds: List<String>): List<CoinFundCategory>
 
     @Query("SELECT * FROM CoinInfoEntity WHERE coinType IN (SELECT coinType FROM CoinCategoriesEntity WHERE categoryId =:categoryId)")
     fun getCoinInfoByCategory(categoryId: String): List<CoinInfoEntity>

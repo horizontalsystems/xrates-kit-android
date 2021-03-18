@@ -1,6 +1,7 @@
 package io.horizontalsystems.xrateskit.entities
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import io.horizontalsystems.coinkit.models.CoinType
 
@@ -16,6 +17,7 @@ class CoinMeta(
     val links: Map<LinkType, String>,
     val rating: String?,
     var categories: List<CoinCategory>,
+    var fundCategories: List<CoinFundCategory>,
     val platforms: Map<CoinPlatformType, String>
 )
 
@@ -68,4 +70,25 @@ data class ProviderCoinEntity(
     val coingeckoId: String?,
     val cryptocompareId: String?
 )
+
+@Entity(primaryKeys = ["id"])
+data class CoinFund(
+    val id: String,
+    val name: String,
+    val url: String,
+    val categoryId: String)
+
+@Entity(primaryKeys = ["coinType", "fundId"])
+data class CoinFundsEntity(val coinType: CoinType, val fundId: String)
+
+@Entity
+data class CoinFundCategory(
+    @PrimaryKey
+    val id: String,
+    val name: String,
+    val order: Int){
+
+    @Ignore
+    var funds = mutableListOf<CoinFund>()
+}
 

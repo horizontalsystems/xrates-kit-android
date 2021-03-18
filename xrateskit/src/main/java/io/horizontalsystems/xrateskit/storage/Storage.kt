@@ -45,6 +45,14 @@ class Storage(private val database: Database) : IStorage {
         return coinInfoDao.getCoinCategories(coinType)
     }
 
+    override fun getCoinFunds(coinType: CoinType): List<CoinFund> {
+        return coinInfoDao.getCoinFunds(coinType)
+    }
+
+    override fun getCoinFundCategories(categoriesIds: List<String>): List<CoinFundCategory> {
+        return coinInfoDao.getCoinFundCategories(categoriesIds)
+    }
+
     override fun getCoinInfosByCategory(categoryId: String): List<CoinInfoEntity> {
         return coinInfoDao.getCoinInfoByCategory(categoryId)
     }
@@ -61,8 +69,20 @@ class Storage(private val database: Database) : IStorage {
         coinInfoDao.insertCoinCategory(coinCategories)
     }
 
+    override fun saveCoinFund(coinFunds: List<CoinFund>){
+        coinInfoDao.insertCoinFund(coinFunds)
+    }
+
     override fun saveCoinLinks(coinLinks: List<CoinLinksEntity>){
         coinInfoDao.insertCoinLinks(coinLinks)
+    }
+
+    override fun saveCoinFunds(coinFunds: List<CoinFundsEntity>){
+        coinInfoDao.insertCoinFunds(coinFunds)
+    }
+
+    override fun saveCoinFundCategory(coinFundCategories: List<CoinFundCategory>){
+        coinInfoDao.insertCoinFundCategory(coinFundCategories)
     }
 
     override fun deleteAllCoinCategories(){
@@ -75,6 +95,18 @@ class Storage(private val database: Database) : IStorage {
 
     override fun deleteAllCoinLinks(){
         coinInfoDao.deleteAllCoinLinks()
+    }
+
+    override fun deleteAllCoinFunds(){
+        coinInfoDao.deleteAllCoinFunds()
+    }
+
+    override fun deleteAllCoinFundCategories(){
+        coinInfoDao.deleteAllCoinFundCategories()
+    }
+
+    override fun deleteAllCoinsFunds(){
+        coinInfoDao.deleteAllCoinsFunds()
     }
 
 
