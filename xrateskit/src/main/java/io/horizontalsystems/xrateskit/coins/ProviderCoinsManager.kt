@@ -21,7 +21,7 @@ class ProviderCoinsManager(
     }
 
     private fun updateCoinIds() {
-        val coinsResponse = ProviderCoinsResource.parseFile(context, providerCoinsFileName)
+        var coinsResponse = ProviderCoinsResource.parseFile(true, context, providerCoinsFileName)
         val resourceInfo = storage.getResourceInfo(ResourceType.PROVIDER_COINS)
 
         val update = resourceInfo?.let {
@@ -29,6 +29,7 @@ class ProviderCoinsManager(
         } ?: true
 
         if (update) {
+            coinsResponse = ProviderCoinsResource.parseFile(false, context, providerCoinsFileName)
             storage.saveProviderCoins(coinsResponse.providerCoins)
             storage.saveResourceInfo(ResourceInfo(ResourceType.PROVIDER_COINS, coinsResponse.version))
         }
