@@ -187,7 +187,12 @@ class CoinGeckoProvider(
                         ),
 
                         rateDiffs = coinMarketDetailsResponse.rateDiffs,
-                        tickers = coinMarketDetailsResponse.coinInfo.tickers.map { MarketTicker(it.base, it.target, it.marketName, it.rate, it.volume) }
+                        tickers = coinMarketDetailsResponse.coinInfo.tickers.map {
+                            val base = if (isSmartContractAddress(it.base)) null else it.base
+                            val target = if (isSmartContractAddress(it.target)) null else it.target
+
+                            MarketTicker(base, target, it.marketName, it.rate, it.volume)
+                        }
                     )
                 )
 
@@ -195,6 +200,12 @@ class CoinGeckoProvider(
                 emitter.onError(ex)
             }
         }
+    }
+
+    private fun isSmartContractAddress(v: String): Boolean {
+        if (v.length != 42) return false
+
+        return v.matches("^0[xX][A-z0-9]+$".toRegex())
     }
 
     private fun doCoinMarketsRequest(currencyCode: String, fetchDiffPeriods: List<TimePeriod>, itemsCount: Int? = null, coinIds: List<String>? = null, pageNumber: Int = 1): List<CoinGeckoCoinMarketsResponse> {
