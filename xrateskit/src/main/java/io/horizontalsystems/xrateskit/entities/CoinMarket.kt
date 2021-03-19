@@ -29,8 +29,8 @@ class CoinMarketDetails(
 )
 
 class MarketTicker(
-    val base: String,
-    val target: String,
+    val base: String?,
+    val target: String?,
     val marketName: String,
     val rate: BigDecimal,
     val volume: BigDecimal
