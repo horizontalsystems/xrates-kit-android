@@ -187,11 +187,10 @@ class CoinGeckoProvider(
                         ),
 
                         rateDiffs = coinMarketDetailsResponse.rateDiffs,
-                        tickers = coinMarketDetailsResponse.coinInfo.tickers.map {
-                            val base = if (isSmartContractAddress(it.base)) null else it.base
-                            val target = if (isSmartContractAddress(it.target)) null else it.target
+                        tickers = coinMarketDetailsResponse.coinInfo.tickers.mapNotNull {
+                            if (isSmartContractAddress(it.base) || isSmartContractAddress(it.target)) return@mapNotNull null
 
-                            MarketTicker(base, target, it.marketName, it.rate, it.volume)
+                            MarketTicker(it.base, it.target, it.marketName, it.rate, it.volume)
                         }
                     )
                 )
