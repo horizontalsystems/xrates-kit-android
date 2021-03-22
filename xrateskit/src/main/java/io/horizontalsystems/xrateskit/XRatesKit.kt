@@ -2,28 +2,26 @@ package io.horizontalsystems.xrateskit
 
 import android.content.Context
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.api.*
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoManager
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSchedulerFactory
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSyncManager
+import io.horizontalsystems.xrateskit.coinmarkets.CoinMarketsManager
+import io.horizontalsystems.xrateskit.coinmarkets.GlobalMarketInfoManager
 import io.horizontalsystems.xrateskit.coins.CoinInfoManager
+import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.cryptonews.CryptoNewsManager
 import io.horizontalsystems.xrateskit.entities.*
+import io.horizontalsystems.xrateskit.providers.*
 import io.horizontalsystems.xrateskit.rates.HistoricalRateManager
 import io.horizontalsystems.xrateskit.rates.LatestRatesManager
 import io.horizontalsystems.xrateskit.rates.LatestRatesSchedulerFactory
 import io.horizontalsystems.xrateskit.rates.LatestRatesSyncManager
 import io.horizontalsystems.xrateskit.storage.Database
 import io.horizontalsystems.xrateskit.storage.Storage
-import io.horizontalsystems.xrateskit.coinmarkets.GlobalMarketInfoManager
-import io.horizontalsystems.xrateskit.coinmarkets.CoinMarketsManager
-import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
-import io.horizontalsystems.xrateskit.providers.*
 import io.reactivex.Observable
 import io.reactivex.Single
 import java.math.BigDecimal
-import java.security.Provider
 
 class XRatesKit(
     private val latestRatesManager: LatestRatesManager,
@@ -60,6 +58,7 @@ class XRatesKit(
 
     fun getLatestRateAsync(coinType: CoinType, currencyCode: String): Observable<LatestRate> {
         return latestRatesSyncManager.getLatestRateAsync(LatestRateKey(coinType, currencyCode))
+            ?: latestRatesManager.getLatestRateAsync(coinType, currencyCode).toObservable()
     }
 
     fun latestRateMapObservable(currencyCode: String): Observable<Map<CoinType, LatestRate>> {
@@ -136,7 +135,7 @@ class XRatesKit(
             val historicalRateManager = HistoricalRateManager(storage, coinGeckoProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
 
-            val latestRatesManager = LatestRatesManager(storage, factory)
+            val latestRatesManager = LatestRatesManager(storage, factory, coinGeckoProvider)
             val latestRatesSchedulerFactory = LatestRatesSchedulerFactory(latestRatesManager, coinGeckoProvider, rateExpirationInterval, retryInterval)
             val latestRatesSyncManager = LatestRatesSyncManager(currency, latestRatesSchedulerFactory).also {
                 latestRatesManager.listener = it

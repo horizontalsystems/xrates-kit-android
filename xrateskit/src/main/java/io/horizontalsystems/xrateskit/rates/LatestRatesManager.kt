@@ -2,12 +2,18 @@ package io.horizontalsystems.xrateskit.rates
 
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.core.Factory
+import io.horizontalsystems.xrateskit.core.ILatestRateProvider
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.LatestRate
 import io.horizontalsystems.xrateskit.entities.LatestRateKey
 import io.horizontalsystems.xrateskit.entities.LatestRateEntity
+import io.reactivex.Single
 
-class LatestRatesManager(private val storage: IStorage, private val factory: Factory) {
+class LatestRatesManager(
+    private val storage: IStorage,
+    private val factory: Factory,
+    private val latestRateProvider: ILatestRateProvider
+) {
 
     var listener: Listener? = null
 
@@ -27,6 +33,11 @@ class LatestRatesManager(private val storage: IStorage, private val factory: Fac
 
     fun getLatestRate(coinType: CoinType, currency: String): LatestRate? {
         return storage.getLatestRate(coinType, currency)?.let { factory.createLatestRate(it) }
+    }
+
+    fun getLatestRateAsync(coinType: CoinType, currency: String): Single<LatestRate> {
+        return latestRateProvider.getLatestRatesAsync(listOf(coinType), currency)
+            .map { factory.createLatestRate(it.first()) }
     }
 
     fun notifyExpired(coinTypes: List<CoinType>, currency: String) {
