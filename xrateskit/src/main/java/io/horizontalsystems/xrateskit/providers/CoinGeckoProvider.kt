@@ -25,6 +25,30 @@ class CoinGeckoProvider(
     private val MAX_ITEM_PER_PAGE = 250
     private val MINUTES_10_IN_SECONDS = 60 * 10
     private val HOURS_2_IN_SECONDS = 60 * 60 * 2
+    private val exchangesOrdering by lazy {
+        var i = 0
+
+        hashMapOf(
+            "binance" to ++i,
+            "binance_us" to ++i,
+            "binance_dex" to ++i,
+            "binance_dex_mini" to ++i,
+            "uniswap_v1" to ++i,
+            "uniswap" to ++i,
+            "gdax" to ++i, // Coinbase
+            "sushiswap" to ++i,
+            "huobi" to ++i,
+            "huobi_thailand" to ++i,
+            "huobi_id" to ++i,
+            "huobi_korea" to ++i,
+            "huobi_japan" to ++i,
+            "ftx_spot" to ++i,
+            "ftx_us" to ++i,
+            "one_inch" to ++i,
+            "one_inch_liquidity_protocol" to ++i,
+            "one_inch_liquidity_protocol_bsc" to ++i,
+        )
+    }
 
     init {
         initProvider()
@@ -187,11 +211,12 @@ class CoinGeckoProvider(
                         ),
 
                         rateDiffs = coinMarketDetailsResponse.rateDiffs,
-                        tickers = coinMarketDetailsResponse.coinInfo.tickers.mapNotNull {
-                            if (isSmartContractAddress(it.base) || isSmartContractAddress(it.target)) return@mapNotNull null
-
-                            MarketTicker(it.base, it.target, it.marketName, it.rate, it.volume)
-                        }
+                        tickers = coinMarketDetailsResponse.coinInfo.tickers
+                            .filter { !isSmartContractAddress(it.base) && !isSmartContractAddress(it.target) }
+                            .sortedBy { exchangesOrdering[it.marketId] ?: Integer.MAX_VALUE }
+                            .map {
+                                MarketTicker(it.base, it.target, it.marketName, it.rate, it.volume)
+                            }
                     )
                 )
 

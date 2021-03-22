@@ -232,6 +232,7 @@ data class CoinGeckoTickersResponse(
     val base: String,
     val target: String,
     val marketName: String,
+    val marketId: String,
     val rate: BigDecimal = BigDecimal.ZERO,
     val volume: BigDecimal = BigDecimal.ZERO){
 
@@ -259,6 +260,11 @@ data class CoinGeckoTickersResponse(
                                     element.get("market").asObject().get("name").asString()
                                 } else ""
 
+                            val marketId =
+                                if(element.get("market") != null){
+                                    element.get("market").asObject().get("identifier").asString()
+                                } else ""
+
                             val rate =
                                 if(!element.get("last").isNull)
                                     element.get("last").asDouble().toBigDecimal()
@@ -269,7 +275,7 @@ data class CoinGeckoTickersResponse(
                                     element.get("volume").asDouble().toBigDecimal()
                                 else BigDecimal.ZERO
 
-                            tickers.add(CoinGeckoTickersResponse(base, target, marketName, rate, volume))
+                            tickers.add(CoinGeckoTickersResponse(base, target, marketName, marketId, rate, volume))
                         }
                     }
                 }
