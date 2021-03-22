@@ -37,14 +37,8 @@ class LatestRatesSyncManager(
         scheduler?.start(force = true)
     }
 
-    fun getLatestRateAsync(key: LatestRateKey): Observable<LatestRate> {
-        var subject = subjects[key]
-        if (subject == null) {
-            subject = PublishSubject.create()
-            subjects[key] = subject
-        }
-
-        return subject
+    fun getLatestRateAsync(key: LatestRateKey): Observable<LatestRate>? {
+        return subjects[key]
     }
 
     fun getLatestRateMapObservable(currency: String): Observable<Map<CoinType, LatestRate>> {
