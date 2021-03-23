@@ -212,7 +212,7 @@ class CoinGeckoProvider(
 
                         rateDiffs = coinMarketDetailsResponse.rateDiffs,
                         tickers = coinMarketDetailsResponse.coinInfo.tickers
-                            .filter { !isSmartContractAddress(it.base) && !isSmartContractAddress(it.target) }
+                            .filter { filterTicker(it) }
                             .sortedBy { exchangesOrdering[it.marketId] ?: Integer.MAX_VALUE }
                             .map {
                                 MarketTicker(it.base, it.target, it.marketName, it.rate, it.volume)
@@ -224,6 +224,14 @@ class CoinGeckoProvider(
                 emitter.onError(ex)
             }
         }
+    }
+
+    private fun filterTicker(it: CoinGeckoTickersResponse) = when {
+        it.rate.compareTo(BigDecimal.ZERO) == 0 -> false
+        it.volume.compareTo(BigDecimal.ZERO) == 0 -> false
+        isSmartContractAddress(it.base) -> false
+        isSmartContractAddress(it.target) -> false
+        else -> true
     }
 
     private fun isSmartContractAddress(v: String): Boolean {
