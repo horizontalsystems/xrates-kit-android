@@ -2,7 +2,6 @@ package io.horizontalsystems.xrateskit.entities
 
 import com.eclipsesource.json.JsonValue
 import java.lang.Exception
-import java.lang.Math.abs
 import java.math.BigDecimal
 
 class CoinGeckoCoinMarkets(
@@ -157,34 +156,34 @@ data class CoinGeckoCoinInfo(
             try {
 
                 element.get("links")?.let {
-                    it.asObject().get("homepage")?.let {
-                        if (!it.asArray().isNull) {
-                            links[LinkType.WEBSITE] = it.asArray()[0].asString()
+                    val linksJsonObject = it.asObject()
+
+                    linksJsonObject.get("homepage")?.let {
+                        val homepage = it.asArray().firstOrNull()?.asString()
+                        if (!homepage.isNullOrBlank()) {
+                            links[LinkType.WEBSITE] = homepage
                         }
                     }
 
-                    it.asObject().get("twitter_screen_name")?.let {
-                        if (!it.isNull) {
-                            links[LinkType.TWITTER] = "https://twitter.com/${it.asString()}"
-                        }
+                    val twitterScreenName = linksJsonObject.getString("twitter_screen_name",null)
+                    if (!twitterScreenName.isNullOrBlank()) {
+                        links[LinkType.TWITTER] = "https://twitter.com/${twitterScreenName}"
                     }
 
-                    it.asObject().get("telegram_channel_identifier")?.let {
-                        if (!it.isNull) {
-                            links[LinkType.TELEGRAM] = "https://t.me/${it.asString()}"
-                        }
+                    val telegramChannelId = linksJsonObject.getString("telegram_channel_identifier", null)
+                    if (!telegramChannelId.isNullOrBlank()) {
+                        links[LinkType.TELEGRAM] = "https://t.me/${telegramChannelId}"
                     }
 
-                    it.asObject().get("subreddit_url")?.let {
-                        if (!it.isNull) {
-                            links[LinkType.REDDIT] = it.asString()
-                        }
+                    val subredditUrl = linksJsonObject.getString("subreddit_url", null)
+                    if (!subredditUrl.isNullOrBlank()) {
+                        links[LinkType.REDDIT] = subredditUrl
                     }
 
-                    it.asObject().get("repos_url")?.let {
-                        it.asObject().get("github")?.let { github ->
-                            if (!github.asArray().isEmpty)
-                                links[LinkType.GITHUB] = github.asArray()[0].asString()
+                    linksJsonObject.get("repos_url")?.asObject()?.get("github")?.let { github ->
+                        val githubUrl = github.asArray().firstOrNull()?.asString()
+                        if (!githubUrl.isNullOrBlank()) {
+                            links[LinkType.GITHUB] = githubUrl
                         }
                     }
                 }
