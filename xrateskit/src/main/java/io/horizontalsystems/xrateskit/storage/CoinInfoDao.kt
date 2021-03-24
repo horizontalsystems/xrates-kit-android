@@ -1,6 +1,9 @@
 package io.horizontalsystems.xrateskit.storage
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.entities.*
 
@@ -69,5 +72,8 @@ interface CoinInfoDao {
 
     @Query("SELECT count(*) FROM CoinInfoEntity")
     fun getCoinInfoCount(): Int
+
+    @Query("SELECT DISTINCT coinType FROM CoinCategoriesEntity")
+    fun getCategorizedCoinTypes(): List<CoinType>
 
 }

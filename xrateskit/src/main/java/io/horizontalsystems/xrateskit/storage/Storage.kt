@@ -57,6 +57,10 @@ class Storage(private val database: Database) : IStorage {
         return coinInfoDao.getCoinInfoByCategory(categoryId)
     }
 
+    override fun getCategorizedCoinTypes(): List<CoinType> {
+        return coinInfoDao.getCategorizedCoinTypes()
+    }
+
     override fun saveCoinInfos(coinInfos: List<CoinInfoEntity>) {
         coinInfoDao.insertCoinInfo(coinInfos)
     }
@@ -128,6 +132,14 @@ class Storage(private val database: Database) : IStorage {
             return providerCoinDao.getCoinTypesForCoinGecko(providerCoinId)
         else
             return providerCoinDao.getCoinTypesForCryptoCompare(providerCoinId)
+    }
+
+    override fun clearPriorities() {
+        providerCoinDao.resetPriorities(Int.MAX_VALUE)
+    }
+
+    override fun setPriorityForCoin(coinType: CoinType, priority: Int) {
+        providerCoinDao.setPriorityForCoin(coinType, priority)
     }
 
     // HistoricalRate

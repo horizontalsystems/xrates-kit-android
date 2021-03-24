@@ -18,6 +18,7 @@ class ResourceInfo(
 enum class ResourceType{
     COIN_INFO,
     PROVIDER_COINS,
+    PROVIDER_COINS_PRIORITY
 }
 
 

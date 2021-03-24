@@ -20,6 +20,7 @@ interface IStorage {
     fun getCoinInfosByCategory(categoryId: String): List<CoinInfoEntity>
     fun getCoinInfo(coinType: CoinType): CoinInfoEntity?
     fun getCoinLinks(coinType: CoinType): List<CoinLinksEntity>
+    fun getCategorizedCoinTypes(): List<CoinType>
     fun saveCoinInfos(coinInfos: List<CoinInfoEntity>)
     fun saveCoinCategories(coinCategoryEntities: List<CoinCategoriesEntity>)
     fun saveCoinCategory(coinCategories: List<CoinCategory>)
@@ -39,6 +40,8 @@ interface IStorage {
     fun getProviderCoins(coinTypes: List<CoinType>): List<ProviderCoinEntity>
     fun getCoinTypesByProviderCoinId(providerCoinId: String, provider: InfoProvider): List<CoinType>
     fun searchCoins(searchText: String): List<ProviderCoinEntity>
+    fun clearPriorities()
+    fun setPriorityForCoin(coinType: CoinType, priority: Int)
 
     //  HistoricalRate
     fun saveHistoricalRate(rate: HistoricalRate)

@@ -21,6 +21,12 @@ interface ProviderCoinsDao {
     @Query("SELECT coinType FROM ProviderCoinEntity WHERE coingeckoId =:providerCoinId")
     fun getCoinTypesForCoinGecko(providerCoinId: String): List<CoinType>
 
-    @Query("SELECT * FROM ProviderCoinEntity WHERE code LIKE :searchText OR name LIKE :searchText")
+    @Query("SELECT * FROM ProviderCoinEntity WHERE code LIKE :searchText OR name LIKE :searchText ORDER BY priority")
     fun searchCoins(searchText: String): List<ProviderCoinEntity>
+
+    @Query("UPDATE ProviderCoinEntity SET priority = :priority")
+    fun resetPriorities(priority: Int)
+
+    @Query("UPDATE ProviderCoinEntity SET priority = :priority WHERE coinType = :coinType")
+    fun setPriorityForCoin(coinType: CoinType, priority: Int)
 }

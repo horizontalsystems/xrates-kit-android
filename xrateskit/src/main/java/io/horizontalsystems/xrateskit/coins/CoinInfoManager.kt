@@ -13,10 +13,6 @@ class CoinInfoManager(
 
     private val coinInfoFileName = "coins.json"
 
-    init {
-        updateCoinInfo()
-    }
-
     private fun updateCoinInfo() {
         var coinsResponse = CoinInfoResource.parseFile(true, context, coinInfoFileName)
         val resourceInfo = storage.getResourceInfo(ResourceType.COIN_INFO)
@@ -42,6 +38,13 @@ class CoinInfoManager(
             storage.saveCoinFundCategory(coinsResponse.fundCategories)
             storage.saveCoinLinks(coinsResponse.links)
             storage.saveResourceInfo(ResourceInfo(ResourceType.COIN_INFO, coinsResponse.version))
+        }
+    }
+
+    fun sync(): Single<Unit> {
+        return Single.create { emitter ->
+            updateCoinInfo()
+            emitter.onSuccess(Unit)
         }
     }
 
