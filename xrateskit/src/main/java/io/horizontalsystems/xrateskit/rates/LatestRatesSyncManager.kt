@@ -64,6 +64,10 @@ class LatestRatesSyncManager(
             return
         }
 
+        coinTypes.forEach {
+            subjects[LatestRateKey(it, currency)] = PublishSubject.create()
+        }
+
         scheduler = schedulerFactory.getScheduler(coinTypes, currency)
         scheduler?.start()
     }
