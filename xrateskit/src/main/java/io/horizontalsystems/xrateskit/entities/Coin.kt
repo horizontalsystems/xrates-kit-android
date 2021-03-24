@@ -2,6 +2,7 @@ package io.horizontalsystems.xrateskit.entities
 
 import androidx.room.Entity
 import androidx.room.Ignore
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.horizontalsystems.coinkit.models.CoinType
 
@@ -62,14 +63,15 @@ data class CoinLinksEntity(
 @Entity(primaryKeys = ["coinType", "categoryId"])
 data class CoinCategoriesEntity(val coinType: CoinType, val categoryId: String)
 
-@Entity
+@Entity(indices = [Index(value = ["code"]), Index(value = ["name"]), Index(value = ["priority"])])
 data class ProviderCoinEntity(
     @PrimaryKey
     val coinType: CoinType,
     val code: String,
     val name: String,
     val coingeckoId: String?,
-    val cryptocompareId: String?
+    val cryptocompareId: String?,
+    val priority: Int = Int.MAX_VALUE
 )
 
 @Entity(primaryKeys = ["id"])

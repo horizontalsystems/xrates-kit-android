@@ -8,6 +8,7 @@ import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSyncManager
 import io.horizontalsystems.xrateskit.coinmarkets.CoinMarketsManager
 import io.horizontalsystems.xrateskit.coinmarkets.GlobalMarketInfoManager
 import io.horizontalsystems.xrateskit.coins.CoinInfoManager
+import io.horizontalsystems.xrateskit.coins.CoinSyncer
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.cryptonews.CryptoNewsManager
@@ -33,8 +34,13 @@ class XRatesKit(
     private val coinMarketManager: CoinMarketsManager,
     private val globalMarketInfoManager: GlobalMarketInfoManager,
     private val coinInfoManager: CoinInfoManager,
-    private val providerCoinsManager: ProviderCoinsManager
+    private val providerCoinsManager: ProviderCoinsManager,
+    coinSyncer: CoinSyncer
 ) {
+
+    init {
+        coinSyncer.sync()
+    }
 
     fun getNotificationCoinCode(coinType: CoinType): String? {
         return providerCoinsManager.getProviderIds(listOf(coinType), InfoProvider.CryptoCompare()).firstOrNull()
@@ -126,9 +132,10 @@ class XRatesKit(
             val coinInfoManager = CoinInfoManager(context, storage)
             val providerCoinsManager = ProviderCoinsManager(context, storage)
 
+            val coinGeckoProvider = CoinGeckoProvider(factory, coinInfoManager, providerCoinsManager)
+            providerCoinsManager.coinGeckoProvider = coinGeckoProvider
             val coinPaprikaProvider = CoinPaprikaProvider()
             val horsysProvider = HorsysProvider()
-            val coinGeckoProvider = CoinGeckoProvider(factory, coinInfoManager, providerCoinsManager)
             val cryptoCompareProvider = CryptoCompareProvider(factory, cryptoCompareApiKey)
             val globalMarketInfoManager = GlobalMarketInfoManager(coinPaprikaProvider, horsysProvider, cryptoCompareProvider, storage)
 
@@ -149,6 +156,8 @@ class XRatesKit(
 
             val topMarketsManager = CoinMarketsManager(coinGeckoProvider, storage, factory)
 
+            val coinSyncer = CoinSyncer(providerCoinsManager, coinInfoManager)
+
             return XRatesKit(
                     latestRatesManager,
                     latestRatesSyncManager,
@@ -159,7 +168,8 @@ class XRatesKit(
                     topMarketsManager,
                     globalMarketInfoManager,
                     coinInfoManager,
-                    providerCoinsManager
+                    providerCoinsManager,
+                    coinSyncer
             )
         }
     }
