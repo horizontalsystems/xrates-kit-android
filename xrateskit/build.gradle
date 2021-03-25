@@ -41,7 +41,7 @@ dependencies {
     implementation 'com.eclipsesource.minimal-json:minimal-json:0.9.5'
 
     //CoinKit
-    api 'com.github.horizontalsystems:coin-kit-android:a899d1032a'
+    api 'com.github.horizontalsystems:coin-kit-android:3ebaaee'
 
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
