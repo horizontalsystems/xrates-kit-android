@@ -1,7 +1,7 @@
 package io.horizontalsystems.xrateskit.coinmarkets
 
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.providers.CoinGeckoProvider
+import io.horizontalsystems.xrateskit.providers.coingecko.CoinGeckoProvider
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single

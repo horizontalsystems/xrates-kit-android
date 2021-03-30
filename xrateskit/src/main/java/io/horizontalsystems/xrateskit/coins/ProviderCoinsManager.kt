@@ -4,7 +4,7 @@ import android.content.Context
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
-import io.horizontalsystems.xrateskit.providers.CoinGeckoProvider
+import io.horizontalsystems.xrateskit.providers.coingecko.CoinGeckoProvider
 import io.horizontalsystems.xrateskit.providers.InfoProvider
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable

@@ -14,6 +14,10 @@ import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.cryptonews.CryptoNewsManager
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.providers.*
+import io.horizontalsystems.xrateskit.providers.coingecko.CoinGeckoProvider
+import io.horizontalsystems.xrateskit.providers.coinpaprika.CoinPaprikaProvider
+import io.horizontalsystems.xrateskit.providers.cryptocompare.CryptoCompareProvider
+import io.horizontalsystems.xrateskit.providers.horsys.HorsysProvider
 import io.horizontalsystems.xrateskit.rates.HistoricalRateManager
 import io.horizontalsystems.xrateskit.rates.LatestRatesManager
 import io.horizontalsystems.xrateskit.rates.LatestRatesSchedulerFactory

@@ -409,29 +409,6 @@ data class CoinGeckoCoinMarketDetailsResponse(
     }
 }
 
-class CoinGeckoHistoRateResponse(
-    val timeDiff: Long,
-    val rate: BigDecimal) {
-
-    companion object {
-        fun parseData(jsonValue: JsonValue, timestamp: Long): List<CoinGeckoHistoRateResponse> {
-
-            val ratesArray = jsonValue.asObject().get("prices").asArray()
-            val rates = mutableListOf<CoinGeckoHistoRateResponse>()
-
-            ratesArray?.let {
-                ratesArray.forEach {
-
-                    val timeDiff = kotlin.math.abs((it.asArray()[0].asLong() / 1000) - timestamp)
-                    rates.add(CoinGeckoHistoRateResponse(timeDiff, it.asArray()[1].asDouble().toBigDecimal()))
-                }
-            }
-
-            return rates
-        }
-    }
-}
-
 class CoinGeckoMarketChartsResponse(
     val rate: BigDecimal,
     val volume: BigDecimal,
@@ -466,47 +443,6 @@ class CoinGeckoMarketChartsResponse(
             }
 
             return charts
-        }
-    }
-}
-
-data class CoinGeckoCoinPriceResponse(
-    val coinId: String,
-    val rate: BigDecimal,
-    val rateDiff24h: BigDecimal) {
-
-    companion object {
-
-        fun parseData(jsonValue: JsonValue, currencyCode: String, coinIds: List<String>): List<CoinGeckoCoinPriceResponse> {
-
-            val coinGeckoPriceResponses = mutableListOf<CoinGeckoCoinPriceResponse>()
-
-            coinIds.forEach { coinId ->
-                try {
-
-                    jsonValue.asObject().get(coinId)?.let { coinData ->
-
-                        if (!coinData.isNull) {
-                            val rate = coinData.asObject().get(currencyCode.toLowerCase())?.let {
-                                if (it.isNull) BigDecimal.ZERO
-                                else it.asDouble().toBigDecimal()
-                            } ?: BigDecimal.ZERO
-
-                            val rateDiff24h = coinData.asObject().get("${currencyCode.toLowerCase()}_24h_change")?.let {
-                                if (it.isNull) BigDecimal.ZERO
-                                else it.asDouble().toBigDecimal()
-                            } ?: BigDecimal.ZERO
-
-                            coinGeckoPriceResponses.add(CoinGeckoCoinPriceResponse(coinId, rate, rateDiff24h))
-                        }
-                    }
-
-                } catch (e: Exception) {
-                    //ignore
-                }
-            }
-
-            return coinGeckoPriceResponses
         }
     }
 }
