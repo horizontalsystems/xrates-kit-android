@@ -80,7 +80,7 @@ interface IInfoProvider {
 }
 
 interface IFiatXRatesProvider {
-    fun getLatestFiatXRates(sourceCurrency: String, targetCurrency: String): Double
+    fun getLatestFiatXRates(sourceCurrency: String, targetCurrency: String): Single<Double>
 }
 
 interface ILatestRateProvider {

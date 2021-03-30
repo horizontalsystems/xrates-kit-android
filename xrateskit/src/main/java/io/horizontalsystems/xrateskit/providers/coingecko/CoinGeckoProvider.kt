@@ -1,5 +1,7 @@
-package io.horizontalsystems.xrateskit.providers
+package io.horizontalsystems.xrateskit.providers.coingecko
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.coins.CoinInfoManager
@@ -7,10 +9,18 @@ import io.horizontalsystems.xrateskit.coins.ProviderCoinError
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
+import io.horizontalsystems.xrateskit.providers.InfoProvider
+import io.horizontalsystems.xrateskit.utils.BigDecimalAdapter
 import io.reactivex.Single
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.math.BigDecimal
 import java.util.*
 import java.util.logging.Logger
+import kotlin.math.absoluteValue
 
 class CoinGeckoProvider(
     private val factory: Factory,
@@ -49,6 +59,33 @@ class CoinGeckoProvider(
             "one_inch_liquidity_protocol_bsc" to ++i,
         )
     }
+
+    private val coinGeckoService: CoinGeckoService by lazy {
+
+        val logging = HttpLoggingInterceptor()
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(provider.baseUrl)
+            .client(client)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(
+                MoshiConverterFactory
+                    .create(
+                        Moshi.Builder()
+                            .add(BigDecimalAdapter())
+                            .addLast(KotlinJsonAdapterFactory())
+                            .build()
+                    )
+            )
+            .build()
+
+        retrofit.create(CoinGeckoService::class.java)
+    }
+
 
     init {
         initProvider()
@@ -301,78 +338,66 @@ class CoinGeckoProvider(
     }
 
     override fun getLatestRatesAsync(coinTypes: List<CoinType>, currencyCode: String): Single<List<LatestRateEntity>> {
-
-        return Single.create { emitter ->
-            try {
-                val providerCoinIds = providerCoinsManager.getProviderIds(coinTypes, this.provider).mapNotNull { it }
-                if(providerCoinIds.isEmpty())
-                    emitter.onSuccess(Collections.emptyList())
-                else
-                    emitter.onSuccess(getLatestRates(providerCoinIds, currencyCode))
-
-            } catch (ex: Exception) {
-                emitter.onError(ex)
-            }
+        val providerCoinIds = providerCoinsManager.getProviderIds(coinTypes, this.provider).filterNotNull()
+        return when {
+            providerCoinIds.isEmpty() -> Single.just(listOf())
+            else -> getLatestRates(providerCoinIds, currencyCode)
         }
     }
 
-    private fun getLatestRates(coinIds: List<String>, currencyCode: String): List<LatestRateEntity>{
-        val latestRates = mutableListOf<LatestRateEntity>()
-        val coinIdsParams = "&ids=${coinIds.joinToString(separator = ",")}"
+    private fun getLatestRates(coinIds: List<String>, currencyCode: String): Single<List<LatestRateEntity>> {
+        return coinGeckoService.simplePrice(
+            coinIds.joinToString(separator = ","),
+            currencyCode,
+            "false",
+            "false",
+            "true",
+            "false",
+        ).map { simplePrices ->
+            val timestamp = System.currentTimeMillis() / 1000
+            val currencyCodeLowercase = currencyCode.toLowerCase(Locale.ENGLISH)
 
-        val json = apiManager.getJsonValue(
-            "${provider.baseUrl}/simple/price?${coinIdsParams}" +
-                    "&vs_currencies=${currencyCode}&include_market_cap=false" +
-                    "&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=false")
+            coinIds.mapNotNull { coinId ->
+                val simplePrice = simplePrices[coinId] ?: return@mapNotNull null
 
-        val responses = CoinGeckoCoinPriceResponse.parseData(json, currencyCode, coinIds)
-        val timestamp = System.currentTimeMillis() / 1000
-        responses.forEach {
-            latestRates.add(
+                val rate = simplePrice[currencyCodeLowercase] ?: return@mapNotNull null
+                val rateDiff24h = simplePrice[currencyCodeLowercase + "_24h_change"] ?: return@mapNotNull null
+
                 LatestRateEntity(
-                    coinType = getCoinType(it.coinId),
+                    coinType = getCoinType(coinId),
                     currencyCode = currencyCode,
-                    rateDiff24h = it.rateDiff24h,
-                    rate = it.rate,
+                    rateDiff24h = rateDiff24h,
+                    rate = rate,
                     timestamp = timestamp
                 )
-            )
+            }
         }
-
-        return latestRates
     }
 
     override fun getHistoricalRateAsync(coinType: CoinType, currencyCode: String, timestamp: Long): Single<HistoricalRate> {
+        val tsDiff = ((System.currentTimeMillis() / 1000) - timestamp) / 3600 //Diff in hours
+        val fromTs = if (tsDiff < 24) timestamp - MINUTES_10_IN_SECONDS else timestamp - HOURS_2_IN_SECONDS
+        val toTs = if (tsDiff < 24) timestamp + MINUTES_10_IN_SECONDS else timestamp + HOURS_2_IN_SECONDS
 
-        return Single.create { emitter ->
-            try {
-                val providerCoinId = getProviderCoinId(coinType)
-                emitter.onSuccess(getHistoricalRate(coinType, providerCoinId, currencyCode, timestamp))
+        return coinGeckoService.historicalMarketData(
+            getProviderCoinId(coinType),
+            currencyCode,
+            fromTs,
+            toTs
+        ).map {
+            val price = it.prices.minByOrNull {
+                val timestampMillis = it[0].toLong()
 
-            } catch (ex: Exception) {
-                emitter.onError(ex)
-            }
+                (timestampMillis / 1000L - timestamp).absoluteValue
+            }!!.get(1)
+
+            HistoricalRate(
+                coinType = coinType,
+                currencyCode = currencyCode,
+                timestamp = timestamp,
+                value = price
+            )
         }
     }
 
-    private fun getHistoricalRate(coinType: CoinType, providerCoinId: String, currencyCode: String, timestamp: Long): HistoricalRate {
-
-        val tsDiff = ((System.currentTimeMillis()/1000) - timestamp)/ 3600 //Diff in hours
-        val fromTs = if(tsDiff < 24) timestamp - MINUTES_10_IN_SECONDS else timestamp - HOURS_2_IN_SECONDS
-        val toTs = if(tsDiff < 24) timestamp + MINUTES_10_IN_SECONDS else timestamp + HOURS_2_IN_SECONDS
-
-        val json = apiManager.getJsonValue(
-            "${provider.baseUrl}/coins/${providerCoinId}/market_chart/range?vs_currency=${currencyCode}&from=${fromTs}&to=${toTs}")
-
-        // Get the closest value for timestamp
-        val response = CoinGeckoHistoRateResponse.parseData(json, timestamp)
-        val histoRate = response.minByOrNull { it.timeDiff }?.rate ?: BigDecimal.ZERO
-
-        return HistoricalRate(
-            coinType = coinType,
-            currencyCode = currencyCode,
-            timestamp = timestamp,
-            value = histoRate
-        )
-    }
 }

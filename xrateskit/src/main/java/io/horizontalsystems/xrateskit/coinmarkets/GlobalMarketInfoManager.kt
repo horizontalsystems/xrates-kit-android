@@ -43,15 +43,7 @@ class GlobalMarketInfoManager(
             return Single.just(1.0)
         }
 
-        return Single.create { emitter ->
-            try {
-                val rate = fiatXRatesProvider.getLatestFiatXRates(BASE_FIAT_CURRENCY, currencyCode)
-                emitter.onSuccess(rate)
-
-            } catch (ex: Exception) {
-                emitter.onError(ex)
-            }
-        }
+        return fiatXRatesProvider.getLatestFiatXRates(BASE_FIAT_CURRENCY, currencyCode)
     }
 
     override fun destroy() {
