@@ -3,7 +3,6 @@ package io.horizontalsystems.xrateskit.providers.coingecko
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.api.ApiManager
 import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.coins.ProviderCoinError
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
@@ -31,7 +30,6 @@ class CoinGeckoProvider(
     private val logger = Logger.getLogger("CoinGeckoProvider")
 
     override val provider: InfoProvider = InfoProvider.CoinGecko()
-    private val apiManager = ApiManager.create(provider.rateLimit)
     private val MAX_ITEM_PER_PAGE = 250
     private val MINUTES_10_IN_SECONDS = 60 * 10
     private val HOURS_2_IN_SECONDS = 60 * 60 * 2
