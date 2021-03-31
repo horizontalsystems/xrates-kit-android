@@ -41,7 +41,35 @@ interface CoinGeckoService {
         @Query("localization") localization: String,
         @Query("sparkline") sparkline: String,
     ): Single<Coin>
+
+    @GET("coins/markets")
+    fun coinsMarkets(
+        @Query("vs_currency") vs_currency: String,
+        @Query("ids") ids: String?,
+        @Query("order") order: String?,
+        @Query("per_page") per_page: Int?,
+        @Query("page") page: Int?,
+        @Query("price_change_percentage") price_change_percentage: String?,
+    ): Single<List<ResponseCoinMarket>>
 }
+
+data class ResponseCoinMarket(
+    val id: String,
+    val symbol: String,
+    val name: String,
+    val current_price: BigDecimal,
+    val price_change_24h: BigDecimal,
+    val market_cap: BigDecimal,
+    val circulating_supply: BigDecimal,
+    val total_volume: BigDecimal,
+    val price_change_percentage_24h: BigDecimal?,
+    val price_change_percentage_1h_in_currency: BigDecimal?,
+    val price_change_percentage_7d_in_currency: BigDecimal?,
+    val price_change_percentage_14d_in_currency: BigDecimal?,
+    val price_change_percentage_30d_in_currency: BigDecimal?,
+    val price_change_percentage_200d_in_currency: BigDecimal?,
+    val price_change_percentage_1y_in_currency: BigDecimal?,
+)
 
 data class HistoricalMarketData(
     val prices: List<List<BigDecimal>>,
