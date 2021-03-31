@@ -9,20 +9,20 @@ import java.math.BigDecimal
 interface CoinGeckoService {
 
     @GET("coins/{coinId}/market_chart")
-    fun coinsMarketChart(
+    fun coinMarketChart(
         @Path("coinId") coinId: String,
         @Query("vs_currency") vs_currency: String,
         @Query("days") days: Int,
         @Query("interval") interval: String?,
-    ): Single<HistoricalMarketData>
+    ): Single<Response.HistoricalMarketData>
 
     @GET("coins/{coinId}/market_chart/range")
-    fun historicalMarketData(
+    fun coinMarketChartRange(
         @Path("coinId") coinId: String,
         @Query("vs_currency") vs_currency: String,
         @Query("from") from: Long,
         @Query("to") to: Long,
-    ): Single<HistoricalMarketData>
+    ): Single<Response.HistoricalMarketData>
 
     @GET("simple/price")
     fun simplePrice(
@@ -40,7 +40,7 @@ interface CoinGeckoService {
         @Query("tickers") tickers: String,
         @Query("localization") localization: String,
         @Query("sparkline") sparkline: String,
-    ): Single<Coin>
+    ): Single<Response.Coin>
 
     @GET("coins/markets")
     fun coinsMarkets(
@@ -50,75 +50,77 @@ interface CoinGeckoService {
         @Query("per_page") per_page: Int?,
         @Query("page") page: Int?,
         @Query("price_change_percentage") price_change_percentage: String?,
-    ): Single<List<ResponseCoinMarket>>
-}
+    ): Single<List<Response.CoinMarket>>
 
-data class ResponseCoinMarket(
-    val id: String,
-    val symbol: String,
-    val name: String,
-    val current_price: BigDecimal,
-    val price_change_24h: BigDecimal,
-    val market_cap: BigDecimal,
-    val circulating_supply: BigDecimal,
-    val total_volume: BigDecimal,
-    val price_change_percentage_24h: BigDecimal?,
-    val price_change_percentage_1h_in_currency: BigDecimal?,
-    val price_change_percentage_7d_in_currency: BigDecimal?,
-    val price_change_percentage_14d_in_currency: BigDecimal?,
-    val price_change_percentage_30d_in_currency: BigDecimal?,
-    val price_change_percentage_200d_in_currency: BigDecimal?,
-    val price_change_percentage_1y_in_currency: BigDecimal?,
-)
+    object Response {
+        data class CoinMarket(
+            val id: String,
+            val symbol: String,
+            val name: String,
+            val current_price: BigDecimal,
+            val price_change_24h: BigDecimal,
+            val market_cap: BigDecimal,
+            val circulating_supply: BigDecimal,
+            val total_volume: BigDecimal,
+            val price_change_percentage_24h: BigDecimal?,
+            val price_change_percentage_1h_in_currency: BigDecimal?,
+            val price_change_percentage_7d_in_currency: BigDecimal?,
+            val price_change_percentage_14d_in_currency: BigDecimal?,
+            val price_change_percentage_30d_in_currency: BigDecimal?,
+            val price_change_percentage_200d_in_currency: BigDecimal?,
+            val price_change_percentage_1y_in_currency: BigDecimal?,
+        )
 
-data class HistoricalMarketData(
-    val prices: List<List<BigDecimal>>,
-    val market_caps: List<List<BigDecimal>>,
-    val total_volumes: List<List<BigDecimal>>,
-)
+        data class HistoricalMarketData(
+            val prices: List<List<BigDecimal>>,
+            val market_caps: List<List<BigDecimal>>,
+            val total_volumes: List<List<BigDecimal>>,
+        )
 
-data class MarketData(
-    val current_price: Map<String, BigDecimal>,
-    val high_24h: Map<String, BigDecimal>,
-    val low_24h: Map<String, BigDecimal>,
-    val market_cap: Map<String, BigDecimal>,
-    val total_volume: Map<String, BigDecimal>,
-    val circulating_supply: BigDecimal?,
-    val total_supply: BigDecimal?,
-    val price_change_percentage_1h_in_currency: Map<String, BigDecimal>,
-    val price_change_percentage_24h_in_currency: Map<String, BigDecimal>,
-    val price_change_percentage_7d_in_currency: Map<String, BigDecimal>,
-    val price_change_percentage_14d_in_currency: Map<String, BigDecimal>,
-    val price_change_percentage_30d_in_currency: Map<String, BigDecimal>,
-    val price_change_percentage_200d_in_currency: Map<String, BigDecimal>,
-    val price_change_percentage_1y_in_currency: Map<String, BigDecimal>,
-)
+        data class Coin(
+            val id: String,
+            val symbol: String,
+            val name: String,
+            val description: Map<String, String>,
+            val links: Links,
+            val platforms: Map<String, String>,
+            val market_data: MarketData,
+            val tickers: List<Ticker>
+        ) {
+            data class MarketData(
+                val current_price: Map<String, BigDecimal>,
+                val high_24h: Map<String, BigDecimal>,
+                val low_24h: Map<String, BigDecimal>,
+                val market_cap: Map<String, BigDecimal>,
+                val total_volume: Map<String, BigDecimal>,
+                val circulating_supply: BigDecimal?,
+                val total_supply: BigDecimal?,
+                val price_change_percentage_1h_in_currency: Map<String, BigDecimal>,
+                val price_change_percentage_24h_in_currency: Map<String, BigDecimal>,
+                val price_change_percentage_7d_in_currency: Map<String, BigDecimal>,
+                val price_change_percentage_14d_in_currency: Map<String, BigDecimal>,
+                val price_change_percentage_30d_in_currency: Map<String, BigDecimal>,
+                val price_change_percentage_200d_in_currency: Map<String, BigDecimal>,
+                val price_change_percentage_1y_in_currency: Map<String, BigDecimal>,
+            )
 
-data class Coin(
-    val id: String,
-    val symbol: String,
-    val name: String,
-    val description: Map<String, String>,
-    val links: Links,
-    val platforms: Map<String, String>,
-    val market_data: MarketData,
-    val tickers: List<Ticker>
-) {
-    data class Links(
-        val homepage: List<String>,
-        val twitter_screen_name: String?,
-        val telegram_channel_identifier: String?,
-        val subreddit_url: String?,
-        val repos_url: Map<String, List<String>>,
-    )
+            data class Links(
+                val homepage: List<String>,
+                val twitter_screen_name: String?,
+                val telegram_channel_identifier: String?,
+                val subreddit_url: String?,
+                val repos_url: Map<String, List<String>>,
+            )
 
-    data class Ticker(
-        val base: String,
-        val target: String,
-        val market: Market,
-        val last: BigDecimal,
-        val volume: BigDecimal,
-    ) {
-        data class Market(val name: String, val identifier: String)
+            data class Ticker(
+                val base: String,
+                val target: String,
+                val market: Market,
+                val last: BigDecimal,
+                val volume: BigDecimal,
+            ) {
+                data class Market(val name: String, val identifier: String)
+            }
+        }
     }
 }
