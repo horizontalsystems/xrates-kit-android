@@ -1,7 +1,5 @@
 package io.horizontalsystems.xrateskit.providers.coingecko
 
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.coins.ProviderCoinError
@@ -9,13 +7,8 @@ import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.providers.InfoProvider
-import io.horizontalsystems.xrateskit.utils.BigDecimalAdapter
+import io.horizontalsystems.xrateskit.utils.RetrofitUtils
 import io.reactivex.Single
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.moshi.MoshiConverterFactory
 import java.math.BigDecimal
 import java.util.*
 import java.util.logging.Logger
@@ -59,29 +52,7 @@ class CoinGeckoProvider(
     }
 
     private val coinGeckoService: CoinGeckoService by lazy {
-
-        val logging = HttpLoggingInterceptor()
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
-        val client: OkHttpClient = OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(provider.baseUrl)
-            .client(client)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(
-                MoshiConverterFactory
-                    .create(
-                        Moshi.Builder()
-                            .add(BigDecimalAdapter())
-                            .addLast(KotlinJsonAdapterFactory())
-                            .build()
-                    )
-            )
-            .build()
-
-        retrofit.create(CoinGeckoService::class.java)
+        RetrofitUtils.build(provider.baseUrl).create(CoinGeckoService::class.java)
     }
 
 

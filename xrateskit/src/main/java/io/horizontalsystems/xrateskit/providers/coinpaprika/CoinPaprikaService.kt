@@ -1,6 +1,5 @@
 package io.horizontalsystems.xrateskit.providers.coinpaprika
 
-import io.horizontalsystems.xrateskit.providers.horsys.GlobalDefi
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
