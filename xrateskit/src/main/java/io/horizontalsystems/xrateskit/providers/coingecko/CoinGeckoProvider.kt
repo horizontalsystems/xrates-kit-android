@@ -402,32 +402,42 @@ class CoinGeckoProvider(
     }
 
     override fun getChartPointsAsync(chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>> {
-
-        return Single.create { emitter ->
-            try {
-                val providerCoinId = getProviderCoinId(chartPointKey.coinType)
-                emitter.onSuccess(getCoinMarketCharts(providerCoinId, chartPointKey))
-
-            } catch (ex: Exception) {
-                emitter.onError(ex)
-            }
-        }
+        val providerCoinId = getProviderCoinId(chartPointKey.coinType)
+        return getCoinMarketCharts(providerCoinId, chartPointKey)
     }
 
-    private fun getCoinMarketCharts(providerCoinId: String, chartPointKey: ChartInfoKey): List<ChartPointEntity> {
+    private fun getCoinMarketCharts(providerCoinId: String, chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>> {
+        val interval = if (chartPointKey.chartType.days >= 90) "daily" else null
 
-        val interval = if(chartPointKey.chartType.days >= 90) "&interval=daily" else ""
-        val json = apiManager.getJsonValue(
-            "${provider.baseUrl}/coins/${providerCoinId}/market_chart?vs_currency=${chartPointKey.currency}&days=${2 * chartPointKey.chartType.days}${interval}")
+        return coinGeckoService.coinsMarketChart(
+            providerCoinId,
+            chartPointKey.currency,
+            2 * chartPointKey.chartType.days,
+            interval
+        ).map {
+            var nextTs = 0L
+            val chartPointsCount = chartPointKey.chartType.interval * 2
 
-        return CoinGeckoMarketChartsResponse.parseData(chartPointKey, json).map { response ->
-            ChartPointEntity(
-                chartPointKey.chartType,
-                chartPointKey.coinType,
-                chartPointKey.currency,
-                response.rate,
-                response.volume,
-                response.timestamp)
+            it.prices.mapIndexedNotNull { index, rateData ->
+                val timestamp = rateData[0].toLong()
+
+                if (timestamp >= nextTs || it.prices.size <= chartPointsCount) {
+                    nextTs = timestamp + chartPointKey.chartType.seconds - 180
+                    val rate = rateData[1]
+                    val volume = if (chartPointKey.chartType.days >= 90) it.total_volumes[index][1] else BigDecimal.ZERO
+
+                    ChartPointEntity(
+                        chartPointKey.chartType,
+                        chartPointKey.coinType,
+                        chartPointKey.currency,
+                        rate,
+                        volume,
+                        timestamp)
+
+                } else {
+                    null
+                }
+            }
         }
     }
 

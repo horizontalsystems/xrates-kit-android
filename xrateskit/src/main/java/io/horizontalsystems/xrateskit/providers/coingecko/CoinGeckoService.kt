@@ -7,6 +7,15 @@ import retrofit2.http.Query
 import java.math.BigDecimal
 
 interface CoinGeckoService {
+
+    @GET("coins/{coinId}/market_chart")
+    fun coinsMarketChart(
+        @Path("coinId") coinId: String,
+        @Query("vs_currency") vs_currency: String,
+        @Query("days") days: Int,
+        @Query("interval") interval: String?,
+    ): Single<HistoricalMarketData>
+
     @GET("coins/{coinId}/market_chart/range")
     fun historicalMarketData(
         @Path("coinId") coinId: String,
@@ -35,7 +44,9 @@ interface CoinGeckoService {
 }
 
 data class HistoricalMarketData(
-    val prices: List<List<BigDecimal>>
+    val prices: List<List<BigDecimal>>,
+    val market_caps: List<List<BigDecimal>>,
+    val total_volumes: List<List<BigDecimal>>,
 )
 
 data class MarketData(
