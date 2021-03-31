@@ -210,57 +210,47 @@ class CoinGeckoProvider(
     }
 
     override fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
-
-        return Single.create { emitter ->
-            try {
-
-                val providerCoinId = getProviderCoinId(coinType)
-                val coinMarketDetailsResponse =
-                    doCoinMarketDetailsRequest(providerCoinId, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
+        val providerCoinId = getProviderCoinId(coinType)
+        return doCoinMarketDetailsRequest(providerCoinId, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
+            .map { coinMarketDetailsResponse ->
                 val coinRating = coinInfoManager.getCoinRating(coinType)
                 val categories = coinInfoManager.getCoinCategories(coinType)
                 val funds = coinInfoManager.getCoinFundCategories(coinType)
                 val links = coinInfoManager.getLinks(coinType, coinMarketDetailsResponse.coinInfo.links)
 
-                emitter.onSuccess(
-                    CoinMarketDetails(
-                        data = CoinData(
-                            coinType,
-                            coinMarketDetailsResponse.coinInfo.coinCode,
-                            coinMarketDetailsResponse.coinInfo.title
-                        ),
-                        currencyCode = currencyCode,
-                        rate = coinMarketDetailsResponse.coinGeckoMarkets.rate,
-                        rateHigh24h = coinMarketDetailsResponse.coinGeckoMarkets.rateHigh24h,
-                        rateLow24h = coinMarketDetailsResponse.coinGeckoMarkets.rateLow24h,
-                        marketCap = coinMarketDetailsResponse.coinGeckoMarkets.marketCap,
-                        marketCapDiff24h = coinMarketDetailsResponse.coinGeckoMarkets.marketCapDiff24h,
-                        volume24h = coinMarketDetailsResponse.coinGeckoMarkets.volume24h,
-                        circulatingSupply = coinMarketDetailsResponse.coinGeckoMarkets.circulatingSupply,
-                        totalSupply = coinMarketDetailsResponse.coinGeckoMarkets.totalSupply,
-                        meta = CoinMeta(
-                            coinMarketDetailsResponse.coinInfo.description ?: "",
-                            links,
-                            coinRating,
-                            categories,
-                            funds,
-                            coinMarketDetailsResponse.coinInfo.platforms
-                        ),
+                CoinMarketDetails(
+                    data = CoinData(
+                        coinType,
+                        coinMarketDetailsResponse.coinInfo.coinCode,
+                        coinMarketDetailsResponse.coinInfo.title
+                    ),
+                    currencyCode = currencyCode,
+                    rate = coinMarketDetailsResponse.coinGeckoMarkets.rate,
+                    rateHigh24h = coinMarketDetailsResponse.coinGeckoMarkets.rateHigh24h,
+                    rateLow24h = coinMarketDetailsResponse.coinGeckoMarkets.rateLow24h,
+                    marketCap = coinMarketDetailsResponse.coinGeckoMarkets.marketCap,
+                    marketCapDiff24h = coinMarketDetailsResponse.coinGeckoMarkets.marketCapDiff24h,
+                    volume24h = coinMarketDetailsResponse.coinGeckoMarkets.volume24h,
+                    circulatingSupply = coinMarketDetailsResponse.coinGeckoMarkets.circulatingSupply,
+                    totalSupply = coinMarketDetailsResponse.coinGeckoMarkets.totalSupply,
+                    meta = CoinMeta(
+                        coinMarketDetailsResponse.coinInfo.description ?: "",
+                        links,
+                        coinRating,
+                        categories,
+                        funds,
+                        coinMarketDetailsResponse.coinInfo.platforms
+                    ),
 
-                        rateDiffs = coinMarketDetailsResponse.rateDiffs,
-                        tickers = coinMarketDetailsResponse.coinInfo.tickers
-                            .filter { filterTicker(it) }
-                            .sortedBy { exchangesOrdering[it.marketId] ?: Integer.MAX_VALUE }
-                            .map {
-                                MarketTicker(it.base, it.target, it.marketName, it.rate, it.volume)
-                            }
-                    )
+                    rateDiffs = coinMarketDetailsResponse.rateDiffs,
+                    tickers = coinMarketDetailsResponse.coinInfo.tickers
+                        .filter { filterTicker(it) }
+                        .sortedBy { exchangesOrdering[it.marketId] ?: Integer.MAX_VALUE }
+                        .map {
+                            MarketTicker(it.base, it.target, it.marketName, it.rate, it.volume)
+                        }
                 )
-
-            } catch (ex: Exception) {
-                emitter.onError(ex)
             }
-        }
     }
 
     private fun filterTicker(it: CoinGeckoTickersResponse) = when {
@@ -299,12 +289,116 @@ class CoinGeckoProvider(
         return CoinGeckoCoinMarketsResponse.parseData(json)
     }
 
-    private fun doCoinMarketDetailsRequest(coinId: String, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): CoinGeckoCoinMarketDetailsResponse {
+    private fun doCoinMarketDetailsRequest(coinId: String, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinGeckoCoinMarketDetailsResponse> {
+        return coinGeckoService.coin(coinId, "true", "false", "false")
+            .map { coin ->
 
-        val json = apiManager.getJsonValue(
-            "${provider.baseUrl}/coins/${coinId}?tickers=true&localization=false&sparkline=false")
+                val links = mutableMapOf<LinkType, String>()
+                coin.links.apply {
+                    homepage.firstOrNull()?.let {
+                        links[LinkType.WEBSITE] = it
+                    }
 
-        return CoinGeckoCoinMarketDetailsResponse.parseData(json, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
+                    if (!twitter_screen_name.isNullOrBlank()) {
+                        links[LinkType.TWITTER] = "https://twitter.com/${twitter_screen_name}"
+                    }
+
+                    if (!telegram_channel_identifier.isNullOrBlank()) {
+                        links[LinkType.TELEGRAM] = "https://t.me/${telegram_channel_identifier}"
+                    }
+
+                    if (!subreddit_url.isNullOrBlank()) {
+                        links[LinkType.REDDIT] = subreddit_url
+                    }
+
+                    repos_url["github"]?.firstOrNull()?.let {
+                        links[LinkType.GITHUB] = it
+                    }
+                }
+
+                val platforms = coin.platforms.mapNotNull {
+                    if (it.value.isBlank()) return@mapNotNull null
+
+                    val platformType = when (it.key.toLowerCase(Locale.ENGLISH)) {
+                        "tron" -> CoinPlatformType.TRON
+                        "ethereum" -> CoinPlatformType.ETHEREUM
+                        "eos" -> CoinPlatformType.EOS
+                        "binance-smart-chain" -> CoinPlatformType.BINANCE_SMART_CHAIN
+                        "binancecoin" -> CoinPlatformType.BINANCE
+                        else -> CoinPlatformType.OTHER
+                    }
+
+                    platformType to it.value
+                }.toMap()
+
+                val contractAddresses = platforms.map { it.value.toLowerCase(Locale.ENGLISH) }
+                val tickers = coin.tickers.map {
+                    val base = if (contractAddresses.contains(it.base.toLowerCase(Locale.ENGLISH))) {
+                        coin.symbol
+                    } else {
+                        it.base
+                    }
+
+                    val target = if (contractAddresses.contains(it.target.toLowerCase(Locale.ENGLISH))) {
+                        coin.symbol
+                    } else {
+                        it.target
+                    }
+
+                    CoinGeckoTickersResponse(base, target, it.market.name, it.market.identifier, it.last, it.volume)
+                }
+
+                val coinGeckoCoinInfo = CoinGeckoCoinInfo(
+                    coinId = coin.id,
+                    coinCode = coin.symbol,
+                    title = coin.name,
+                    description = coin.description["en"] ?: "",
+                    links = links,
+                    platforms = platforms,
+                    tickers = tickers
+                )
+
+                val coinGeckoMarkets = coin.market_data.run {
+                    val currencyCodeLowercase = currencyCode.toLowerCase(Locale.ENGLISH)
+
+                    CoinGeckoCoinMarkets(
+                        rate = current_price[currencyCodeLowercase] ?: BigDecimal.ZERO,
+                        rateHigh24h = high_24h[currencyCodeLowercase] ?: BigDecimal.ZERO,
+                        rateLow24h = low_24h[currencyCodeLowercase] ?: BigDecimal.ZERO,
+                        marketCap = market_cap[currencyCodeLowercase] ?: BigDecimal.ZERO,
+                        volume24h = total_volume[currencyCodeLowercase] ?: BigDecimal.ZERO,
+                        circulatingSupply = circulating_supply ?: BigDecimal.ZERO,
+                        totalSupply = total_supply ?: BigDecimal.ZERO,
+                    )
+                }
+
+                val rateDiffsPeriod = rateDiffPeriods.map { period ->
+                    val diffPeriod = when(period) {
+                        TimePeriod.HOUR_1 -> coin.market_data.price_change_percentage_1h_in_currency
+                        TimePeriod.HOUR_24 -> coin.market_data.price_change_percentage_24h_in_currency
+                        TimePeriod.DAY_7 -> coin.market_data.price_change_percentage_7d_in_currency
+                        TimePeriod.DAY_14 -> coin.market_data.price_change_percentage_14d_in_currency
+                        TimePeriod.DAY_30 -> coin.market_data.price_change_percentage_30d_in_currency
+                        TimePeriod.DAY_200 -> coin.market_data.price_change_percentage_200d_in_currency
+                        TimePeriod.YEAR_1 -> coin.market_data.price_change_percentage_1y_in_currency
+                        else -> coin.market_data.price_change_percentage_24h_in_currency
+                    }
+
+                    val rateDiffs = rateDiffCoinCodes.map { coinCode ->
+                        coinCode to (diffPeriod[coinCode.toLowerCase(Locale.ENGLISH)] ?: BigDecimal.ZERO)
+                    }.toMap()
+
+                    period to rateDiffs
+                }.toMap()
+
+
+                CoinGeckoCoinMarketDetailsResponse(
+                    coinGeckoCoinInfo,
+                    coinGeckoMarkets,
+                    rateDiffsPeriod
+                )
+            }
+
     }
 
     override fun getChartPointsAsync(chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>> {
