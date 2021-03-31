@@ -417,7 +417,7 @@ class CoinGeckoProvider(
     private fun getCoinMarketCharts(providerCoinId: String, chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>> {
         val interval = if (chartPointKey.chartType.days >= 90) "daily" else null
 
-        return coinGeckoService.coinsMarketChart(
+        return coinGeckoService.coinMarketChart(
             providerCoinId,
             chartPointKey.currency,
             2 * chartPointKey.chartType.days,
@@ -491,7 +491,7 @@ class CoinGeckoProvider(
         val fromTs = if (tsDiff < 24) timestamp - MINUTES_10_IN_SECONDS else timestamp - HOURS_2_IN_SECONDS
         val toTs = if (tsDiff < 24) timestamp + MINUTES_10_IN_SECONDS else timestamp + HOURS_2_IN_SECONDS
 
-        return coinGeckoService.historicalMarketData(
+        return coinGeckoService.coinMarketChartRange(
             getProviderCoinId(coinType),
             currencyCode,
             fromTs,
