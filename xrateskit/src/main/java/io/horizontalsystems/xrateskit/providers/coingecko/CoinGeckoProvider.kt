@@ -398,7 +398,7 @@ class CoinGeckoProvider(
             val chartPointsCount = chartPointKey.chartType.interval * 2
 
             it.prices.mapIndexedNotNull { index, rateData ->
-                val timestamp = rateData[0].toLong()
+                val timestamp = rateData[0].toLong() / 1000
 
                 if (timestamp >= nextTs || it.prices.size <= chartPointsCount) {
                     nextTs = timestamp + chartPointKey.chartType.seconds - 180
