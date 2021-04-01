@@ -125,10 +125,10 @@ class CoinGeckoProvider(
     }
 
     private fun getCoinMarkets(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int? = null, coinIds: List<String>? = null, pageNumber: Int = 1): Single<List<CoinMarket>> {
-        val priceChangePercentage = listOf(fetchDiffPeriod)
-            .filter { it != TimePeriod.ALL && it != TimePeriod.HOUR_24 }
-            .map { it.title }
-            .joinToString(",")
+        val priceChangePercentage = when (fetchDiffPeriod) {
+            TimePeriod.ALL, TimePeriod.HOUR_24 -> null
+            else -> fetchDiffPeriod.title
+        }
 
         return coinGeckoService.coinsMarkets(
             currencyCode,
