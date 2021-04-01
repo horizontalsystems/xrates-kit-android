@@ -19,11 +19,6 @@ class CoinGeckoCoinMarkets(
     val totalSupply: BigDecimal = BigDecimal.ZERO
 )
 
-data class CoinGeckoCoinMarketsResponse(
-    val coinInfo: CoinGeckoCoinInfo,
-    val coinGeckoMarkets: CoinGeckoCoinMarkets
-)
-
 data class CoinGeckoCoinInfo(
     val coinId: String,
     val coinCode: String,
