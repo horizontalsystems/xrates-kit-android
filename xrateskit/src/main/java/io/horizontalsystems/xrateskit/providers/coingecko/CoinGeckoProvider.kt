@@ -76,18 +76,8 @@ class CoinGeckoProvider(
         throw ProviderCoinError.NoMatchingExternalId()
     }
 
-    private fun getCoinType(providerCoinId: String?): CoinType {
-
-        providerCoinId?.let {
-            providerCoinsManager.getCoinTypes(it.toLowerCase(), this.provider).let { coinTypes ->
-                if (coinTypes.isNotEmpty()) {
-                    return coinTypes[0]
-                }
-            }
-        }
-
-        logger.warning(" *** Error! Cannot get coinType for providerCoin:${providerCoinId}")
-        throw ProviderCoinError.NoMatchingExternalId()
+    private fun getCoinType(providerCoinId: String): CoinType? {
+        return providerCoinsManager.getCoinTypes(providerCoinId.toLowerCase(Locale.ENGLISH), provider).firstOrNull()
     }
 
     override fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>> {
@@ -153,14 +143,7 @@ class CoinGeckoProvider(
     }
 
     private fun convertCoinGeckoCoinMarket(responseCoinMarket: CoinGeckoService.Response.CoinMarket, currencyCode: String, fetchDiffPeriod: TimePeriod): CoinMarket? {
-        val type: CoinType
-
-        try {
-            type = getCoinType(responseCoinMarket.id)
-        } catch (e: ProviderCoinError.NoMatchingExternalId) {
-            logger.info("No provider record for CoinId: ${responseCoinMarket.id}")
-            return null
-        }
+        val type = getCoinType(responseCoinMarket.id) ?: return null
 
         val rateDiffPeriod = when (fetchDiffPeriod) {
             TimePeriod.HOUR_1 -> responseCoinMarket.price_change_percentage_1h_in_currency
@@ -422,8 +405,10 @@ class CoinGeckoProvider(
                 val rate = simplePrice[currencyCodeLowercase] ?: return@mapNotNull null
                 val rateDiff24h = simplePrice[currencyCodeLowercase + "_24h_change"] ?: return@mapNotNull null
 
+                val coinType = getCoinType(coinId) ?: return@mapNotNull null
+
                 LatestRateEntity(
-                    coinType = getCoinType(coinId),
+                    coinType = coinType,
                     currencyCode = currencyCode,
                     rateDiff24h = rateDiff24h,
                     rate = rate,
