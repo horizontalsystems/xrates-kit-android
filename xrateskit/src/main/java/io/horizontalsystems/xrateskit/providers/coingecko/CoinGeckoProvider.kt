@@ -135,39 +135,55 @@ class CoinGeckoProvider(
     }
 
     private fun getCoinMarkets(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int? = null, coinIds: List<String>? = null, pageNumber: Int = 1): Single<List<CoinMarket>> {
-        return doCoinMarketsRequest(currencyCode, listOf(fetchDiffPeriod), itemsCount, coinIds, pageNumber).map {
-            val topMarkets = mutableListOf<CoinMarket>()
-            var coinId = ""
+        val priceChangePercentage = listOf(fetchDiffPeriod)
+            .filter { it != TimePeriod.ALL && it != TimePeriod.HOUR_24 }
+            .map { it.title }
+            .joinToString(",")
 
-            it.forEach { response ->
-
-                try{
-                    coinId = response.coinInfo.coinId
-
-                    topMarkets.add(
-                        factory.createCoinMarket(
-                            coinData = CoinData(
-                                getCoinType(response.coinInfo.coinId),
-                                response.coinInfo.coinCode,
-                                response.coinInfo.title
-                            ),
-                            currency = currencyCode,
-                            rate = response.coinGeckoMarkets.rate,
-                            rateOpenDay = response.coinGeckoMarkets.rateOpenDay,
-                            rateDiff = response.coinGeckoMarkets.rateDiffPeriod?.get(TimePeriod.HOUR_24) ?: BigDecimal.ZERO,
-                            volume = response.coinGeckoMarkets.volume24h,
-                            supply = response.coinGeckoMarkets.circulatingSupply,
-                            rateDiffPeriod = response.coinGeckoMarkets.rateDiffPeriod?.get(fetchDiffPeriod) ?: BigDecimal.ZERO,
-                            marketCap = response.coinGeckoMarkets.marketCap
-                        )
-                    )
-                } catch(e: ProviderCoinError.NoMatchingExternalId){
-                    println(" No provider record for CoinId: ${coinId}")
-                }
-            }
-
-            topMarkets
+        return coinGeckoService.coinsMarkets(
+            currencyCode,
+            coinIds?.joinToString(","),
+            "market_cap_desc",
+            itemsCount,
+            pageNumber,
+            priceChangePercentage
+        ).map {
+            it.mapNotNull { convertCoinGeckoCoinMarket(it, currencyCode, fetchDiffPeriod) }
         }
+    }
+
+    private fun convertCoinGeckoCoinMarket(responseCoinMarket: CoinGeckoService.Response.CoinMarket, currencyCode: String, fetchDiffPeriod: TimePeriod): CoinMarket? {
+        val type: CoinType
+
+        try {
+            type = getCoinType(responseCoinMarket.id)
+        } catch (e: ProviderCoinError.NoMatchingExternalId) {
+            logger.info("No provider record for CoinId: ${responseCoinMarket.id}")
+            return null
+        }
+
+        val rateDiffPeriod = when (fetchDiffPeriod) {
+            TimePeriod.HOUR_1 -> responseCoinMarket.price_change_percentage_1h_in_currency
+            TimePeriod.HOUR_24 -> responseCoinMarket.price_change_percentage_24h
+            TimePeriod.DAY_7 -> responseCoinMarket.price_change_percentage_7d_in_currency
+            TimePeriod.DAY_14 -> responseCoinMarket.price_change_percentage_14d_in_currency
+            TimePeriod.DAY_30 -> responseCoinMarket.price_change_percentage_30d_in_currency
+            TimePeriod.DAY_200 -> responseCoinMarket.price_change_percentage_200d_in_currency
+            TimePeriod.YEAR_1 -> responseCoinMarket.price_change_percentage_1y_in_currency
+            else -> null
+        } ?: BigDecimal.ZERO
+
+        return factory.createCoinMarket(
+            coinData = CoinData(type, responseCoinMarket.symbol.toUpperCase(Locale.ENGLISH), responseCoinMarket.name),
+            currency = currencyCode,
+            rate = responseCoinMarket.current_price,
+            rateOpenDay = responseCoinMarket.price_change_24h,
+            rateDiff = responseCoinMarket.price_change_percentage_24h ?: BigDecimal.ZERO,
+            volume = responseCoinMarket.total_volume,
+            supply = responseCoinMarket.circulating_supply,
+            rateDiffPeriod = rateDiffPeriod,
+            marketCap = responseCoinMarket.market_cap
+        )
     }
 
     override fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
@@ -226,46 +242,6 @@ class CoinGeckoProvider(
         if (v.length != 42) return false
 
         return v.matches("^0[xX][A-z0-9]+$".toRegex())
-    }
-
-    private fun doCoinMarketsRequest(currencyCode: String, fetchDiffPeriods: List<TimePeriod>, itemsCount: Int? = null, coinIds: List<String>? = null, pageNumber: Int = 1): Single<List<CoinGeckoCoinMarketsResponse>> {
-
-        val priceChangePercentage = fetchDiffPeriods
-            .filter { it != TimePeriod.ALL && it != TimePeriod.HOUR_24 }
-            .map { it.title }
-            .joinToString(",")
-
-        return coinGeckoService.coinsMarkets(
-            currencyCode,
-            coinIds?.joinToString(","),
-            "market_cap_desc",
-            itemsCount,
-            pageNumber,
-            priceChangePercentage
-        ).map {
-            it.map {
-                val rateDiffPeriod = mutableMapOf<TimePeriod, BigDecimal>()
-                it.price_change_percentage_24h?.let { rateDiffPeriod[TimePeriod.HOUR_24] = it }
-                it.price_change_percentage_1h_in_currency?.let { rateDiffPeriod[TimePeriod.HOUR_1] = it }
-                it.price_change_percentage_7d_in_currency?.let { rateDiffPeriod[TimePeriod.DAY_7] = it }
-                it.price_change_percentage_14d_in_currency?.let { rateDiffPeriod[TimePeriod.DAY_14] = it }
-                it.price_change_percentage_30d_in_currency?.let { rateDiffPeriod[TimePeriod.DAY_30] = it }
-                it.price_change_percentage_200d_in_currency?.let { rateDiffPeriod[TimePeriod.DAY_200] = it }
-                it.price_change_percentage_1y_in_currency?.let { rateDiffPeriod[TimePeriod.YEAR_1] = it }
-
-                CoinGeckoCoinMarketsResponse(
-                    CoinGeckoCoinInfo(it.id, it.symbol.toUpperCase(Locale.ENGLISH), it.name),
-                    CoinGeckoCoinMarkets(
-                        rate = it.current_price,
-                        rateOpenDay = it.price_change_24h,
-                        rateDiffPeriod = rateDiffPeriod,
-                        marketCap = it.market_cap,
-                        volume24h = it.total_volume,
-                        circulatingSupply = it.circulating_supply
-                    )
-                )
-            }
-        }
     }
 
     private fun doCoinMarketDetailsRequest(coinId: String, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinGeckoCoinMarketDetailsResponse> {
