@@ -92,6 +92,7 @@ interface CoinGeckoService {
                 val high_24h: Map<String, BigDecimal>,
                 val low_24h: Map<String, BigDecimal>,
                 val market_cap: Map<String, BigDecimal>,
+                val market_cap_change_percentage_24h: BigDecimal,
                 val total_volume: Map<String, BigDecimal>,
                 val circulating_supply: BigDecimal?,
                 val total_supply: BigDecimal?,
