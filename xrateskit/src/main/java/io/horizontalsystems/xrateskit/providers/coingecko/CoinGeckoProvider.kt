@@ -231,20 +231,8 @@ class CoinGeckoProvider(
                     .filter { filterTicker(it) }
                     .sortedBy { exchangesOrdering[it.market.identifier] ?: Integer.MAX_VALUE }
                     .map {
-                        MarketTicker(it.base, it.target, it.market.identifier, it.last, it.volume)
+                        MarketTicker(it.base, it.target, it.market.name, it.last, it.volume)
                     }
-
-
-                val currencyCodeLowercase = currencyCode.toLowerCase(Locale.ENGLISH)
-
-                val rate = coin.market_data.current_price[currencyCodeLowercase] ?: BigDecimal.ZERO
-                val rateHigh24h = coin.market_data.high_24h[currencyCodeLowercase] ?: BigDecimal.ZERO
-                val rateLow24h = coin.market_data.low_24h[currencyCodeLowercase] ?: BigDecimal.ZERO
-                val marketCap = coin.market_data.market_cap[currencyCodeLowercase] ?: BigDecimal.ZERO
-                val marketCapDiff24h = coin.market_data.market_cap_change_percentage_24h
-                val volume24h = coin.market_data.total_volume[currencyCodeLowercase] ?: BigDecimal.ZERO
-                val circulatingSupply = coin.market_data.circulating_supply ?: BigDecimal.ZERO
-                val totalSupply = coin.market_data.total_supply ?: BigDecimal.ZERO
 
                 val rateDiffsPeriod = rateDiffPeriods.map<TimePeriod, Pair<TimePeriod, Map<String, BigDecimal>>> { period ->
                     val diffPeriod = when(period) {
@@ -266,32 +254,25 @@ class CoinGeckoProvider(
                 }.toMap()
 
 
-                val coinRating = coinInfoManager.getCoinRating(coinType)
-                val categories = coinInfoManager.getCoinCategories(coinType)
-                val funds = coinInfoManager.getCoinFundCategories(coinType)
-                val linksXxx = coinInfoManager.getLinks(coinType, links)
+                val currencyCodeLowercase = currencyCode.toLowerCase(Locale.ENGLISH)
 
                 CoinMarketDetails(
-                    data = CoinData(
-                        coinType,
-                        coin.symbol,
-                        coin.name
-                    ),
+                    data = CoinData(coinType, coin.symbol, coin.name),
                     currencyCode = currencyCode,
-                    rate = rate,
-                    rateHigh24h = rateHigh24h,
-                    rateLow24h = rateLow24h,
-                    marketCap = marketCap,
-                    marketCapDiff24h = marketCapDiff24h,
-                    volume24h = volume24h,
-                    circulatingSupply = circulatingSupply,
-                    totalSupply = totalSupply,
+                    rate = coin.market_data.current_price[currencyCodeLowercase] ?: BigDecimal.ZERO,
+                    rateHigh24h = coin.market_data.high_24h[currencyCodeLowercase] ?: BigDecimal.ZERO,
+                    rateLow24h = coin.market_data.low_24h[currencyCodeLowercase] ?: BigDecimal.ZERO,
+                    marketCap = coin.market_data.market_cap[currencyCodeLowercase] ?: BigDecimal.ZERO,
+                    marketCapDiff24h = coin.market_data.market_cap_change_percentage_24h,
+                    volume24h = coin.market_data.total_volume[currencyCodeLowercase] ?: BigDecimal.ZERO,
+                    circulatingSupply = coin.market_data.circulating_supply ?: BigDecimal.ZERO,
+                    totalSupply = coin.market_data.total_supply ?: BigDecimal.ZERO,
                     meta = CoinMeta(
                         coin.description["en"] ?: "",
-                        linksXxx,
-                        coinRating,
-                        categories,
-                        funds,
+                        coinInfoManager.getLinks(coinType, links),
+                        coinInfoManager.getCoinRating(coinType),
+                        coinInfoManager.getCoinCategories(coinType),
+                        coinInfoManager.getCoinFundCategories(coinType),
                         platforms
                     ),
 
@@ -383,13 +364,7 @@ class CoinGeckoProvider(
 
                 val coinType = getCoinType(coinId) ?: return@mapNotNull null
 
-                LatestRateEntity(
-                    coinType = coinType,
-                    currencyCode = currencyCode,
-                    rateDiff24h = rateDiff24h,
-                    rate = rate,
-                    timestamp = timestamp
-                )
+                LatestRateEntity(coinType, currencyCode, rate, rateDiff24h, timestamp)
             }
         }
     }
@@ -411,12 +386,7 @@ class CoinGeckoProvider(
                 (timestampMillis / 1000L - timestamp).absoluteValue
             }!!.get(1)
 
-            HistoricalRate(
-                coinType = coinType,
-                currencyCode = currencyCode,
-                timestamp = timestamp,
-                value = price
-            )
+            HistoricalRate(coinType, currencyCode, price, timestamp)
         }
     }
 
