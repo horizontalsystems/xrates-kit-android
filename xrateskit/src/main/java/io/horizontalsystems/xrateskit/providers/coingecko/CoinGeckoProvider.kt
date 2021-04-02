@@ -2,7 +2,6 @@ package io.horizontalsystems.xrateskit.providers.coingecko
 
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.coins.CoinInfoManager
-import io.horizontalsystems.xrateskit.coins.ProviderCoinError
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
@@ -63,17 +62,8 @@ class CoinGeckoProvider(
     override fun initProvider() {}
     override fun destroy() {}
 
-    private fun getProviderCoinId(coinType: CoinType): String {
-        providerCoinsManager.getProviderIds(listOf(coinType), this.provider).let {
-            if(it.isNotEmpty()){
-                it[0]?.let {
-                    return it
-                }
-            }
-        }
-
-        logger.warning(" *** Error! Cannot get providerCoin for CoinType:${coinType.ID}")
-        throw ProviderCoinError.NoMatchingExternalId()
+    private fun getProviderCoinId(coinType: CoinType): String? {
+        return providerCoinsManager.getProviderIds(listOf(coinType), provider).firstOrNull()
     }
 
     private fun getCoinType(providerCoinId: String): CoinType? {
@@ -170,7 +160,8 @@ class CoinGeckoProvider(
     }
 
     override fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
-        val providerCoinId = getProviderCoinId(coinType)
+        val providerCoinId = getProviderCoinId(coinType) ?: return Single.error(Exception("No CoinGecko CoinId found for $coinType"))
+
         return coinGeckoService.coin(providerCoinId, "true", "false", "false")
             .map { coin ->
 
@@ -297,7 +288,7 @@ class CoinGeckoProvider(
     }
 
     override fun getChartPointsAsync(chartPointKey: ChartInfoKey): Single<List<ChartPointEntity>> {
-        val providerCoinId = getProviderCoinId(chartPointKey.coinType)
+        val providerCoinId = getProviderCoinId(chartPointKey.coinType) ?: return Single.error(Exception("No CoinGecko CoinId found for ${chartPointKey.coinType}"))
         return getCoinMarketCharts(providerCoinId, chartPointKey)
     }
 
@@ -370,12 +361,14 @@ class CoinGeckoProvider(
     }
 
     override fun getHistoricalRateAsync(coinType: CoinType, currencyCode: String, timestamp: Long): Single<HistoricalRate> {
+        val providerCoinId = getProviderCoinId(coinType) ?: return Single.error(Exception("No CoinGecko CoinId found for $coinType"))
+
         val tsDiff = ((System.currentTimeMillis() / 1000) - timestamp) / 3600 //Diff in hours
         val fromTs = if (tsDiff < 24) timestamp - MINUTES_10_IN_SECONDS else timestamp - HOURS_2_IN_SECONDS
         val toTs = if (tsDiff < 24) timestamp + MINUTES_10_IN_SECONDS else timestamp + HOURS_2_IN_SECONDS
 
         return coinGeckoService.coinMarketChartRange(
-            getProviderCoinId(coinType),
+            providerCoinId,
             currencyCode,
             fromTs,
             toTs
