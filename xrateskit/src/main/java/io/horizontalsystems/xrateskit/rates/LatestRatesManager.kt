@@ -11,7 +11,6 @@ class LatestRatesManager(private val storage: IStorage, private val factory: Fac
     var listener: Listener? = null
 
     interface Listener {
-        val coinTypes: Map<String, List<CoinType>>
         fun onUpdate(latestRates: Map<CoinType, LatestRate>, currencyCode: String)
     }
 
