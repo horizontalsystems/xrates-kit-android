@@ -164,7 +164,7 @@ class XRatesKit(
                 latestRatesManager.listener = it
             }
 
-            val chartInfoManager = ChartInfoManager(storage, factory, latestRatesManager)
+            val chartInfoManager = ChartInfoManager(storage, factory)
             val chartInfoSchedulerFactory = ChartInfoSchedulerFactory(chartInfoManager, coinGeckoProvider, retryInterval)
             val chartInfoSyncManager = ChartInfoSyncManager(chartInfoSchedulerFactory).also {
                 chartInfoManager.listener = it

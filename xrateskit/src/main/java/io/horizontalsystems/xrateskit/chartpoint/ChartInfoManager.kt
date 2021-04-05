@@ -3,13 +3,12 @@ package io.horizontalsystems.xrateskit.chartpoint
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
-import io.horizontalsystems.xrateskit.rates.LatestRatesManager
 import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
 
-class ChartInfoManager(private val storage: IStorage, private val factory: Factory, private val latestRatesManager: LatestRatesManager) {
+class ChartInfoManager(private val storage: IStorage, private val factory: Factory) {
 
     var listener: Listener? = null
 
