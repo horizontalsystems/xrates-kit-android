@@ -51,16 +51,8 @@ class XRatesKit(
         return providerCoinsManager.getProviderIds(listOf(coinType), InfoProvider.CryptoCompare()).firstOrNull()
     }
 
-    fun set(coins: List<CoinType>) {
-        latestRatesSyncManager.set(coins)
-    }
-
-    fun set(currencyCode: String) {
-        latestRatesSyncManager.set(currencyCode)
-    }
-
-    fun refresh() {
-        latestRatesSyncManager.refresh()
+    fun refresh(currencyCode: String) {
+        latestRatesSyncManager.refresh(currencyCode)
     }
 
     fun getLatestRate(coinType: CoinType, currencyCode: String): LatestRate? {
@@ -68,12 +60,11 @@ class XRatesKit(
     }
 
     fun getLatestRateAsync(coinType: CoinType, currencyCode: String): Observable<LatestRate> {
-        return latestRatesSyncManager.getLatestRateAsync(LatestRateKey(coinType, currencyCode))
-            ?: latestRatesManager.getLatestRateAsync(coinType, currencyCode).toObservable()
+        return latestRatesSyncManager.getLatestRateAsync(PairKey(coinType, currencyCode))
     }
 
-    fun latestRateMapObservable(currencyCode: String): Observable<Map<CoinType, LatestRate>> {
-        return latestRatesSyncManager.getLatestRateMapObservable(currencyCode)
+    fun latestRateMapObservable(coinTypes: List<CoinType>, currencyCode: String): Observable<Map<CoinType, LatestRate>> {
+        return latestRatesSyncManager.getLatestRatesAsync(coinTypes, currencyCode)
     }
 
     fun getChartInfo(coinType: CoinType, currencyCode: String, chartType: ChartType): ChartInfo? {
@@ -167,9 +158,9 @@ class XRatesKit(
             val historicalRateManager = HistoricalRateManager(storage, coinGeckoProvider)
             val cryptoNewsManager = CryptoNewsManager(cryptoCompareProvider)
 
-            val latestRatesManager = LatestRatesManager(storage, factory, coinGeckoProvider)
+            val latestRatesManager = LatestRatesManager(storage, factory)
             val latestRatesSchedulerFactory = LatestRatesSchedulerFactory(latestRatesManager, coinGeckoProvider, rateExpirationInterval, retryInterval)
-            val latestRatesSyncManager = LatestRatesSyncManager(currency, latestRatesSchedulerFactory).also {
+            val latestRatesSyncManager = LatestRatesSyncManager(latestRatesSchedulerFactory).also {
                 latestRatesManager.listener = it
             }
 

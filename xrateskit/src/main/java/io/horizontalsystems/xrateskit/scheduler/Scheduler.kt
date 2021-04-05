@@ -1,4 +1,4 @@
-package io.horizontalsystems.xrateskit.rates
+package io.horizontalsystems.xrateskit.scheduler
 
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -7,13 +7,12 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
-class LatestRatesScheduler(private val provider: LatestRatesSchedulerProvider) {
+class Scheduler(private val provider: ISchedulerProvider, private val bufferInterval: Int = 0) {
 
     private var timeDisposable: Disposable? = null
     private var syncDisposable: Disposable? = null
 
     private var isExpiredRatesNotified = false
-    private val bufferInterval = 5
 
     @Volatile
     private var stopped = false
@@ -81,7 +80,7 @@ class LatestRatesScheduler(private val provider: LatestRatesSchedulerProvider) {
 
         val timestamp = provider.lastSyncTimestamp
         if (timestamp == null || Date().time / 1000 - timestamp > provider.expirationInterval) {
-            provider.notifyExpiredRates()
+            provider.notifyExpired()
             isExpiredRatesNotified = true
         }
     }

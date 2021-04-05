@@ -4,9 +4,7 @@ import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartType
 import io.horizontalsystems.xrateskit.entities.LatestRate
-import io.horizontalsystems.xrateskit.entities.MarketInfo
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class CoinsInteractor(private val ratesManager: RatesManager) {
@@ -15,22 +13,14 @@ class CoinsInteractor(private val ratesManager: RatesManager) {
     private var latestRatesDisposables = CompositeDisposable()
     private var chartInfoDisposables = CompositeDisposable()
 
-    fun set(coinTypes: List<CoinType>) {
-        ratesManager.set(coinTypes)
+    fun refresh(currencyCode: String) {
+        ratesManager.refresh(currencyCode)
     }
 
-    fun set(currency: String) {
-        ratesManager.set(currency)
-    }
-
-    fun refresh() {
-        ratesManager.refresh()
-    }
-
-    fun subscribeToMarketInfo(currency: String) {
+    fun subscribeToMarketInfo(coinTypes: List<CoinType>, currency: String) {
         latestRatesDisposables.clear()
 
-        ratesManager.getLatestRateAsync(currency)
+        ratesManager.getLatestRateAsync(coinTypes, currency)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe {

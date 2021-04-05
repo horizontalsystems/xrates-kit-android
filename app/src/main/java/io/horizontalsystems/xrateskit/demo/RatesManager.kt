@@ -11,20 +11,12 @@ import java.math.BigDecimal
 class RatesManager(context: Context, currency: String) {
     private val kit = XRatesKit.create(context, currency, 60 * 10)
 
-    fun set(coinTypes: List<CoinType>) {
-        kit.set(coinTypes)
+    fun refresh(currencyCode: String) {
+        kit.refresh(currencyCode)
     }
 
-    fun set(currency: String) {
-        kit.set(currency)
-    }
-
-    fun refresh() {
-        kit.refresh()
-    }
-
-    fun getLatestRateAsync(currencyCode: String): Observable<Map<CoinType, LatestRate>> {
-        return kit.latestRateMapObservable(currencyCode)
+    fun getLatestRateAsync(coinTypes: List<CoinType>, currencyCode: String): Observable<Map<CoinType, LatestRate>> {
+        return kit.latestRateMapObservable(coinTypes, currencyCode)
     }
 
     fun getNewsAsync(): Single<List<CryptoNews>> {

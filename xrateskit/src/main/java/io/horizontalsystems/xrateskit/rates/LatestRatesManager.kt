@@ -2,24 +2,17 @@ package io.horizontalsystems.xrateskit.rates
 
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.core.Factory
-import io.horizontalsystems.xrateskit.core.ILatestRateProvider
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.LatestRate
-import io.horizontalsystems.xrateskit.entities.LatestRateKey
 import io.horizontalsystems.xrateskit.entities.LatestRateEntity
-import io.reactivex.Single
 
-class LatestRatesManager(
-    private val storage: IStorage,
-    private val factory: Factory,
-    private val latestRateProvider: ILatestRateProvider
-) {
+class LatestRatesManager(private val storage: IStorage, private val factory: Factory) {
 
     var listener: Listener? = null
 
     interface Listener {
-        fun onUpdate(LatestRate: LatestRate, key: LatestRateKey)
-        fun onUpdate(LatestRateMap: Map<CoinType, LatestRate>, currency: String)
+        val coinTypes: Map<String, List<CoinType>>
+        fun onUpdate(latestRates: Map<CoinType, LatestRate>, currencyCode: String)
     }
 
     fun getLastSyncTimestamp(coinTypes: List<CoinType>, currency: String): Long? {
@@ -33,11 +26,6 @@ class LatestRatesManager(
 
     fun getLatestRate(coinType: CoinType, currency: String): LatestRate? {
         return storage.getLatestRate(coinType, currency)?.let { factory.createLatestRate(it) }
-    }
-
-    fun getLatestRateAsync(coinType: CoinType, currency: String): Single<LatestRate> {
-        return latestRateProvider.getLatestRatesAsync(listOf(coinType), currency)
-            .map { factory.createLatestRate(it.first()) }
     }
 
     fun notifyExpired(coinTypes: List<CoinType>, currency: String) {
@@ -54,10 +42,7 @@ class LatestRatesManager(
         val latestRateMap = mutableMapOf<CoinType, LatestRate>()
 
         entities.forEach { entity ->
-            val rateKey = LatestRateKey(entity.coinType, entity.currencyCode)
-
             val latestRate = factory.createLatestRate(entity)
-            listener?.onUpdate(latestRate, rateKey)
             latestRateMap[entity.coinType] = latestRate
         }
 

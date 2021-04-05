@@ -22,7 +22,7 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
         executor.submit {
             items = coinDatas.map { CoinViewItem(it) }
 
-            interactor.subscribeToMarketInfo(currency)
+            interactor.subscribeToMarketInfo(coinDatas.map { it.type }, currency)
 
             //test fetching rates for top 100 coins
             //interactor.getTopList(100, currency)
@@ -37,7 +37,7 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
 
             val coinTypes = enabledCoins.map { it.coinData.type }
 
-            interactor.set(coinTypes)
+            interactor.subscribeToMarketInfo(coinTypes, currency)
             interactor.subscribeToChartInfo(coinTypes, currency)
 
             syncMarketInfo()
@@ -48,15 +48,16 @@ class CoinsPresenter(val view: CoinsView, private val interactor: CoinsInteracto
     }
 
     fun onRefresh() {
-        interactor.refresh()
+        interactor.refresh(currency)
     }
 
     fun onChangeCurrency(newCurrency: String) {
         executor.submit {
             currency = newCurrency
 
-            interactor.set(currency)
-            interactor.subscribeToMarketInfo(currency)
+            val coinTypes = enabledCoins.map { it.coinData.type }
+
+            interactor.subscribeToMarketInfo(coinTypes, currency)
 
             syncMarketInfo()
             syncChartInfo()
