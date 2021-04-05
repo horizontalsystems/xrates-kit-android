@@ -17,13 +17,11 @@ class LatestRatesSyncManager(
     private val subjects = ConcurrentHashMap<LatestRateKey, PublishSubject<Map<CoinType, LatestRate>>>()
 
     private fun observingCoinTypes(currencyCode: String): Set<CoinType> {
-        subjects.forEach { (existKey, _) ->
-            if (existKey.currencyCode == currencyCode) {
-                return existKey.coinTypes.toSet()
-            }
-        }
-
-        return setOf()
+        return subjects
+            .filter { it.key.currencyCode == currencyCode }
+            .map { it.key.coinTypes }
+            .flatten()
+            .toSet()
     }
 
     private fun needForceUpdate(key: LatestRateKey): Boolean {
