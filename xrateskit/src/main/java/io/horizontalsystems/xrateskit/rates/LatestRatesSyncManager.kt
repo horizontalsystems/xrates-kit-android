@@ -104,10 +104,7 @@ class LatestRatesSyncManager(
             }
     }
 
-    //  LatestRateManager.Listener
-
-    override val coinTypes: Map<String, List<CoinType>>
-        get() = subjects.map { it.key.currencyCode to it.key.coinTypes }.toMap()
+    //  LatestRatesManager.Listener
 
     override fun onUpdate(latestRates: Map<CoinType, LatestRate>, currencyCode: String) {
         subjects.forEach { (key, subject) ->
