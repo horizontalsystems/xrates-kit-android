@@ -28,7 +28,7 @@ class Storage(private val database: Database) : IStorage {
     override fun getCoinInfoCount(): Int {
         return coinInfoDao.getCoinInfoCount()
     }
-    
+
     override fun getCoinInfo(coinType: CoinType): CoinInfoEntity? {
         return coinInfoDao.getCoinInfo(coinType)
     }
@@ -144,10 +144,11 @@ class Storage(private val database: Database) : IStorage {
     }
 
     override  fun getCoinTypesByProviderCoinId(providerCoinId: String, provider: InfoProvider): List<CoinType> {
-        if(provider is InfoProvider.CoinGecko)
-            return providerCoinDao.getCoinTypesForCoinGecko(providerCoinId)
-        else
-            return providerCoinDao.getCoinTypesForCryptoCompare(providerCoinId)
+        return when (provider) {
+            is InfoProvider.CoinGecko -> providerCoinDao.getCoinTypesForCoinGecko(providerCoinId)
+            is InfoProvider.CryptoCompare -> providerCoinDao.getCoinTypesForCryptoCompare(providerCoinId)
+            else -> listOf()
+        }
     }
 
     override fun clearPriorities() {
