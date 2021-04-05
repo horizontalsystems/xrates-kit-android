@@ -26,6 +26,11 @@ data class LatestRateEntity(
 )
 
 data class LatestRateKey(
+        val coinTypes: List<CoinType>,
+        val currencyCode: String
+)
+
+data class PairKey(
         val coinType: CoinType,
         val currencyCode: String
 )

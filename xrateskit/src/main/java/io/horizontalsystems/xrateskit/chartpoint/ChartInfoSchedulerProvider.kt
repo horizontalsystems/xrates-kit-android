@@ -3,29 +3,36 @@ package io.horizontalsystems.xrateskit.chartpoint
 import io.horizontalsystems.xrateskit.providers.ProviderError
 import io.horizontalsystems.xrateskit.core.IChartInfoProvider
 import io.horizontalsystems.xrateskit.entities.ChartInfoKey
+import io.horizontalsystems.xrateskit.scheduler.ISchedulerProvider
 import io.reactivex.Single
 
 class ChartInfoSchedulerProvider(
-        val retryInterval: Long,
-        private val key: ChartInfoKey,
-        private val provider: IChartInfoProvider,
-        private val manager: ChartInfoManager) {
+    override val retryInterval: Long,
+    private val key: ChartInfoKey,
+    private val provider: IChartInfoProvider,
+    private val manager: ChartInfoManager
+) : ISchedulerProvider {
 
-    val lastSyncTimestamp: Long?
+    override val id = key.toString()
+
+    override val lastSyncTimestamp: Long?
         get() = manager.getLastSyncTimestamp(key)
 
-    val expirationInterval: Long
+    override val expirationInterval: Long
         get() = key.chartType.seconds
 
-    val syncSingle: Single<Unit>
+    override val syncSingle: Single<Unit>
         get() = provider.getChartPointsAsync(key)
-                .doOnSuccess { points ->
-                    manager.update(points, key)
+            .doOnSuccess { points ->
+                manager.update(points, key)
+            }
+            .doOnError {
+                if (it is ProviderError.NoDataForCoin) {
+                    manager.handleNoChartPoints(key)
                 }
-                .doOnError {
-                    if (it is ProviderError.NoDataForCoin) {
-                        manager.handleNoChartPoints(key)
-                    }
-                }
-                .map { Unit }
+            }
+            .map { Unit }
+
+    override fun notifyExpired() = Unit
+
 }

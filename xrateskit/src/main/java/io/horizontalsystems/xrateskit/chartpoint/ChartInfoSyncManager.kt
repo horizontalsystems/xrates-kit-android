@@ -3,6 +3,7 @@ package io.horizontalsystems.xrateskit.chartpoint
 import io.horizontalsystems.xrateskit.core.NoChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartInfo
 import io.horizontalsystems.xrateskit.entities.ChartInfoKey
+import io.horizontalsystems.xrateskit.scheduler.Scheduler
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
@@ -14,7 +15,7 @@ class ChartInfoSyncManager(private val factory: ChartInfoSchedulerFactory)
     : ChartInfoManager.Listener {
 
     private val subjects = ConcurrentHashMap<ChartInfoKey, PublishSubject<ChartInfo>>()
-    private val schedulers = ConcurrentHashMap<ChartInfoKey, ChartInfoScheduler>()
+    private val schedulers = ConcurrentHashMap<ChartInfoKey, Scheduler>()
     private val observers = ConcurrentHashMap<ChartInfoKey, AtomicInteger>()
 
     private val failedKeys = ConcurrentLinkedQueue<ChartInfoKey>()
@@ -66,7 +67,7 @@ class ChartInfoSyncManager(private val factory: ChartInfoSchedulerFactory)
     }
 
     @Synchronized
-    private fun getScheduler(key: ChartInfoKey): ChartInfoScheduler {
+    private fun getScheduler(key: ChartInfoKey): Scheduler {
         var scheduler = schedulers[key]
         if (scheduler == null) {
             scheduler = factory.getScheduler(key)
