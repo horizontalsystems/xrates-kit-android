@@ -8,13 +8,15 @@ import io.horizontalsystems.xrateskit.scheduler.Scheduler
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicInteger
 
 class LatestRatesSyncManager(
     private val schedulerFactory: LatestRatesSchedulerFactory
 ) : LatestRatesManager.Listener, ILatestRatesCoinTypeDataSource {
 
-    private val schedulers = mutableMapOf<String, Scheduler>()
+    private val schedulers = ConcurrentHashMap<String, Scheduler>()
     private val subjects = ConcurrentHashMap<LatestRateKey, PublishSubject<Map<CoinType, LatestRate>>>()
+    private val observers = ConcurrentHashMap<LatestRateKey, AtomicInteger>()
 
     private fun observingCoinTypes(currencyCode: String): Set<CoinType> {
         return subjects
@@ -33,9 +35,19 @@ class LatestRatesSyncManager(
         return newCoinTypes.isNotEmpty()
     }
 
+    private fun getCounter(key: LatestRateKey): AtomicInteger {
+        var count = observers[key]
+        if (count == null) {
+            count = AtomicInteger(0)
+            observers[key] = count
+        }
+
+        return count
+    }
+
     private fun cleanUp(key: LatestRateKey) {
         val subject = subjects[key] ?: return
-        if (subject.hasObservers()) return
+        if (getCounter(key).get() > 0) return
 
         subject.onComplete()
         subjects.remove(key)
@@ -44,10 +56,6 @@ class LatestRatesSyncManager(
             schedulers[key.currencyCode]?.stop()
             schedulers.remove(key.currencyCode)
         }
-    }
-
-    private fun onDisposed(key: LatestRateKey) {
-        cleanUp(key)
     }
 
     private fun subject(key: LatestRateKey):  Observable<Map<CoinType, LatestRate>> {
@@ -75,8 +83,16 @@ class LatestRatesSyncManager(
         }
 
         return subject
+            .doOnSubscribe {
+                getCounter(key).incrementAndGet()
+            }
             .doOnDispose {
-                onDisposed(key)
+                getCounter(key).decrementAndGet()
+                cleanUp(key)
+            }
+            .doOnError {
+                getCounter(key).decrementAndGet()
+                cleanUp(key)
             }
     }
 
