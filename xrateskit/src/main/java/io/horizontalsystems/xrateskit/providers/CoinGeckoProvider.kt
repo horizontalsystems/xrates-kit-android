@@ -304,11 +304,22 @@ class CoinGeckoProvider(
 
         return Single.create { emitter ->
             try {
-                val providerCoinIds = providerCoinsManager.getProviderIds(coinTypes, this.provider).mapNotNull { it }
-                if(providerCoinIds.isEmpty())
+                val coinTypesByCoinGeckoId = mutableMapOf<String, MutableList<CoinType>>()
+
+                coinTypes.forEach { coinType ->
+                    providerCoinsManager.getProviderId(coinType, provider)?.let { providerCoinId ->
+                        if (coinTypesByCoinGeckoId[providerCoinId] == null) {
+                            coinTypesByCoinGeckoId[providerCoinId] = mutableListOf()
+                        }
+
+                        coinTypesByCoinGeckoId[providerCoinId]?.add(coinType)
+                    }
+                }
+
+                if (coinTypesByCoinGeckoId.isEmpty())
                     emitter.onSuccess(Collections.emptyList())
                 else
-                    emitter.onSuccess(getLatestRates(providerCoinIds, currencyCode))
+                    emitter.onSuccess(getLatestRates(coinTypesByCoinGeckoId, currencyCode))
 
             } catch (ex: Exception) {
                 emitter.onError(ex)
@@ -316,7 +327,8 @@ class CoinGeckoProvider(
         }
     }
 
-    private fun getLatestRates(coinIds: List<String>, currencyCode: String): List<LatestRateEntity>{
+    private fun getLatestRates(coinTypesByCoinGeckoId: Map<String, List<CoinType>>, currencyCode: String): List<LatestRateEntity>{
+        val coinIds = coinTypesByCoinGeckoId.keys.toList()
         val latestRates = mutableListOf<LatestRateEntity>()
         val coinIdsParams = "&ids=${coinIds.joinToString(separator = ",")}"
 
@@ -328,15 +340,18 @@ class CoinGeckoProvider(
         val responses = CoinGeckoCoinPriceResponse.parseData(json, currencyCode, coinIds)
         val timestamp = System.currentTimeMillis() / 1000
         responses.forEach {
-            latestRates.add(
-                LatestRateEntity(
-                    coinType = getCoinType(it.coinId),
-                    currencyCode = currencyCode,
-                    rateDiff24h = it.rateDiff24h,
-                    rate = it.rate,
-                    timestamp = timestamp
+            val providerCoinId = it.coinId
+            coinTypesByCoinGeckoId[providerCoinId]?.forEach { coinType ->
+                latestRates.add(
+                    LatestRateEntity(
+                        coinType = coinType,
+                        currencyCode = currencyCode,
+                        rateDiff24h = it.rateDiff24h,
+                        rate = it.rate,
+                        timestamp = timestamp
+                    )
                 )
-            )
+            }
         }
 
         return latestRates

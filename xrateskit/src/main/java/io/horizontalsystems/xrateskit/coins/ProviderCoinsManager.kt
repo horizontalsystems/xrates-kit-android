@@ -100,6 +100,15 @@ class ProviderCoinsManager(
         }
     }
 
+    fun getProviderId(coinType: CoinType, provider: InfoProvider) : String? {
+        return storage.getProviderCoin(coinType)?.let {
+            if(provider is InfoProvider.CoinGecko)
+                it.coingeckoId
+            else
+                it.cryptocompareId
+        }
+    }
+
     fun getCoinTypes(providerCoinId: String, provider: InfoProvider): List<CoinType> {
         return storage.getCoinTypesByProviderCoinId(providerCoinId, provider)
     }
