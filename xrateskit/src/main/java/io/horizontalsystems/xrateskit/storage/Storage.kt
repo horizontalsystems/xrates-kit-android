@@ -127,6 +127,10 @@ class Storage(private val database: Database) : IStorage {
         return providerCoinDao.getProviderCoins(coinTypes)
     }
 
+    override fun getProviderCoin(coinType: CoinType): ProviderCoinEntity? {
+        return providerCoinDao.getProviderCoin(coinType)
+    }
+
     override  fun getCoinTypesByProviderCoinId(providerCoinId: String, provider: InfoProvider): List<CoinType> {
         if(provider is InfoProvider.CoinGecko)
             return providerCoinDao.getCoinTypesForCoinGecko(providerCoinId)

@@ -38,6 +38,7 @@ interface IStorage {
         //Provider Coins
     fun saveProviderCoins(providerCoins: List<ProviderCoinEntity>)
     fun getProviderCoins(coinTypes: List<CoinType>): List<ProviderCoinEntity>
+    fun getProviderCoin(coinType: CoinType): ProviderCoinEntity?
     fun getCoinTypesByProviderCoinId(providerCoinId: String, provider: InfoProvider): List<CoinType>
     fun searchCoins(searchText: String): List<ProviderCoinEntity>
     fun clearPriorities()

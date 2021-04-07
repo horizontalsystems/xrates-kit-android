@@ -15,6 +15,9 @@ interface ProviderCoinsDao {
     @Query("SELECT * FROM ProviderCoinEntity WHERE coinType  IN (:coinTypes)")
     fun getProviderCoins(coinTypes: List<CoinType>): List<ProviderCoinEntity>
 
+    @Query("SELECT * FROM ProviderCoinEntity WHERE coinType = :coinType")
+    fun getProviderCoin(coinType: CoinType): ProviderCoinEntity?
+
     @Query("SELECT coinType FROM ProviderCoinEntity WHERE cryptocompareId =:providerCoinId")
     fun getCoinTypesForCryptoCompare(providerCoinId: String): List<CoinType>
 
