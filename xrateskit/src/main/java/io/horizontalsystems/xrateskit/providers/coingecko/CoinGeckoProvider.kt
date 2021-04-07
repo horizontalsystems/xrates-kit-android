@@ -328,14 +328,27 @@ class CoinGeckoProvider(
     }
 
     override fun getLatestRatesAsync(coinTypes: List<CoinType>, currencyCode: String): Single<List<LatestRateEntity>> {
-        val providerCoinIds = providerCoinsManager.getProviderIds(coinTypes, this.provider).filterNotNull()
+        val coinTypesByCoinGeckoId = mutableMapOf<String, MutableList<CoinType>>()
+
+        coinTypes.forEach { coinType ->
+            providerCoinsManager.getProviderId(coinType, provider)?.let { providerCoinId ->
+                if (coinTypesByCoinGeckoId[providerCoinId] == null) {
+                    coinTypesByCoinGeckoId[providerCoinId] = mutableListOf()
+                }
+
+                coinTypesByCoinGeckoId[providerCoinId]?.add(coinType)
+            }
+        }
+
         return when {
-            providerCoinIds.isEmpty() -> Single.just(listOf())
-            else -> getLatestRates(providerCoinIds, currencyCode)
+            coinTypesByCoinGeckoId.isEmpty() -> Single.just(listOf())
+            else -> getLatestRates(coinTypesByCoinGeckoId, currencyCode)
         }
     }
 
-    private fun getLatestRates(coinIds: List<String>, currencyCode: String): Single<List<LatestRateEntity>> {
+    private fun getLatestRates(coinTypesByCoinGeckoId: Map<String, List<CoinType>>, currencyCode: String): Single<List<LatestRateEntity>> {
+        val coinIds = coinTypesByCoinGeckoId.keys.toList()
+
         return coinGeckoService.simplePrice(
             coinIds.joinToString(separator = ","),
             currencyCode,
@@ -346,17 +359,20 @@ class CoinGeckoProvider(
         ).map { simplePrices ->
             val timestamp = System.currentTimeMillis() / 1000
             val currencyCodeLowercase = currencyCode.toLowerCase(Locale.ENGLISH)
+            val latestRates = mutableListOf<LatestRateEntity>()
 
-            coinIds.mapNotNull { coinId ->
-                val simplePrice = simplePrices[coinId] ?: return@mapNotNull null
+            for (coinId in coinIds) {
+                val simplePrice = simplePrices[coinId] ?: continue
 
-                val rate = simplePrice[currencyCodeLowercase] ?: return@mapNotNull null
-                val rateDiff24h = simplePrice[currencyCodeLowercase + "_24h_change"] ?: return@mapNotNull null
+                val rate = simplePrice[currencyCodeLowercase] ?: continue
+                val rateDiff24h = simplePrice[currencyCodeLowercase + "_24h_change"] ?: continue
 
-                val coinType = getCoinType(coinId) ?: return@mapNotNull null
-
-                LatestRateEntity(coinType, currencyCode, rate, rateDiff24h, timestamp)
+                coinTypesByCoinGeckoId[coinId]?.forEach { coinType ->
+                    latestRates.add(LatestRateEntity(coinType, currencyCode, rate, rateDiff24h, timestamp))
+                }
             }
+
+            latestRates
         }
     }
 
