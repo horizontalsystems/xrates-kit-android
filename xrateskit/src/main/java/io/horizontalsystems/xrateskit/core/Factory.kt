@@ -29,7 +29,8 @@ class Factory(private val expirationInterval: Long) {
     }
 
     fun createCoinMarket(coinData: CoinData, currency: String, rate: BigDecimal, rateOpenDay: BigDecimal,
-        rateDiff: BigDecimal, volume: BigDecimal, supply: BigDecimal, rateDiffPeriod: BigDecimal = BigDecimal.ZERO, marketCap: BigDecimal? = null
+        rateDiff: BigDecimal, volume: BigDecimal, supply: BigDecimal, rateDiffPeriod: BigDecimal = BigDecimal.ZERO, marketCap: BigDecimal? = null,
+                         athChangePercentage: BigDecimal? = null, atlChangePercentage: BigDecimal? = null
     ): CoinMarket {
         val marketInfo = MarketInfo(
             coinType = coinData.type,
@@ -41,6 +42,8 @@ class Factory(private val expirationInterval: Long) {
             rateDiffPeriod = rateDiffPeriod,
             timestamp =  Date().time / 1000,
             marketCap = marketCap,
+            athChangePercentage = athChangePercentage,
+            atlChangePercentage = atlChangePercentage,
             expirationInterval = expirationInterval
         )
 

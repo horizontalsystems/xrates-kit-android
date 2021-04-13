@@ -155,7 +155,9 @@ class CoinGeckoProvider(
             volume = responseCoinMarket.total_volume,
             supply = responseCoinMarket.circulating_supply,
             rateDiffPeriod = rateDiffPeriod,
-            marketCap = responseCoinMarket.market_cap
+            marketCap = responseCoinMarket.market_cap,
+            athChangePercentage = responseCoinMarket.ath_change_percentage,
+            atlChangePercentage = responseCoinMarket.atl_change_percentage
         )
     }
 
