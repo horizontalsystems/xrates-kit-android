@@ -15,6 +15,8 @@ class MarketInfo(
     val rateDiffPeriod: BigDecimal,
     val timestamp: Long,
     val marketCap: BigDecimal?,
+    val athChangePercentage: BigDecimal?,
+    val atlChangePercentage: BigDecimal?,
     val expirationInterval: Long){
 
     fun isExpired(): Boolean {

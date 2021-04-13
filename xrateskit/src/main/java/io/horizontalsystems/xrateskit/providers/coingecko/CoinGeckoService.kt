@@ -62,6 +62,8 @@ interface CoinGeckoService {
             val market_cap: BigDecimal,
             val circulating_supply: BigDecimal,
             val total_volume: BigDecimal,
+            val ath_change_percentage: BigDecimal,
+            val atl_change_percentage: BigDecimal,
             val price_change_percentage_24h: BigDecimal?,
             val price_change_percentage_1h_in_currency: BigDecimal?,
             val price_change_percentage_7d_in_currency: BigDecimal?,
