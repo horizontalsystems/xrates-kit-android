@@ -23,7 +23,7 @@ interface GlobalMarketInfoDao {
     fun getPoints(poinInfoId: Long): List<GlobalCoinMarketPoint>
 
     @Transaction
-    fun indertPointsInfoDetails(globalCoinMarketPointInfo: GlobalCoinMarketPointInfo){
+    fun insertPointsInfoDetails(globalCoinMarketPointInfo: GlobalCoinMarketPointInfo){
         val id = insertPointInfo(globalCoinMarketPointInfo)
         globalCoinMarketPointInfo.points.forEach{ point ->
             point.pointInfoId = id
