@@ -197,7 +197,7 @@ class Storage(private val database: Database) : IStorage {
     }
 
     override fun saveGlobalMarketPointInfo(globalCoinMarketPointInfo: GlobalCoinMarketPointInfo){
-        globalMarketInfoDao.indertPointsInfoDetails(globalCoinMarketPointInfo)
+        globalMarketInfoDao.insertPointsInfoDetails(globalCoinMarketPointInfo)
     }
 
 }
