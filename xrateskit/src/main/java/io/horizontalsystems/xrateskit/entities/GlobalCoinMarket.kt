@@ -73,30 +73,30 @@ data class GlobalCoinMarket(
                 val endingPoint = globalMarketPoints.first()
 
                 marketCap = endingPoint.marketCap
-                if(startingPoint.marketCap.compareTo(BigDecimal.ZERO) != 0 )
-                    marketCapDiff = ((marketCap - startingPoint.marketCap) * BigDecimal(100))/startingPoint.marketCap
+                marketCapDiff = calculateDiff(startingPoint.marketCap, marketCap)
 
                 defiMarketCap = endingPoint.defiMarketCap
-                if(startingPoint.defiMarketCap.compareTo(BigDecimal.ZERO) != 0 )
-                    defiMarketCapDiff = ((defiMarketCap - startingPoint.defiMarketCap) * BigDecimal(100))/startingPoint.defiMarketCap
+                defiMarketCapDiff = calculateDiff(startingPoint.defiMarketCap, defiMarketCap)
 
                 volume24h = endingPoint.volume24h
-                if(startingPoint.volume24h.compareTo(BigDecimal.ZERO) != 0 )
-                    volume24hDiff = ((volume24h - startingPoint.volume24h) * BigDecimal(100))/startingPoint.volume24h
+                volume24hDiff = calculateDiff(startingPoint.volume24h, volume24h)
 
                 btcDominance = endingPoint.btcDominance
-                if(startingPoint.btcDominance.compareTo(BigDecimal.ZERO) != 0 )
-                    btcDominanceDiff = ((btcDominance - startingPoint.btcDominance) * BigDecimal(100))/startingPoint.btcDominance
+                btcDominanceDiff = calculateDiff(startingPoint.btcDominance, btcDominance)
 
                 tvl = endingPoint.defiTvl
-                if(startingPoint.defiTvl.compareTo(BigDecimal.ZERO) != 0 )
-                    tvlDiff = ((tvl - startingPoint.defiTvl) * BigDecimal(100))/startingPoint.defiTvl
-
+                tvlDiff = calculateDiff(startingPoint.defiTvl, tvl)
             }
 
             return GlobalCoinMarket(currencyCode, volume24h, volume24hDiff, marketCap, marketCapDiff, btcDominance,
                 btcDominanceDiff, defiMarketCap, defiMarketCapDiff, tvl, tvlDiff, globalMarketPoints)
 
+        }
+
+        private fun calculateDiff(sourceValue: BigDecimal, targetValue: BigDecimal): BigDecimal {
+            return if(sourceValue.compareTo(BigDecimal.ZERO) != 0 )
+                    ((targetValue - sourceValue) * BigDecimal(100))/sourceValue
+            else BigDecimal.ZERO
         }
     }
 }
