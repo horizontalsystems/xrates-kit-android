@@ -1,16 +1,34 @@
 package io.horizontalsystems.xrateskit.storage
 
 import androidx.room.*
-import io.horizontalsystems.xrateskit.entities.GlobalCoinMarket
+import io.horizontalsystems.xrateskit.entities.GlobalCoinMarketPoint
+import io.horizontalsystems.xrateskit.entities.GlobalCoinMarketPointInfo
+import io.horizontalsystems.xrateskit.entities.TimePeriod
 
 @Dao
 interface GlobalMarketInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(globalCoinMarket: GlobalCoinMarket)
+    fun insertPointInfo(globalCoinMarketPointInfo: GlobalCoinMarketPointInfo): Long
 
-    @Delete
-    fun delete(globalCoinMarket: GlobalCoinMarket)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertPoints(globalCoinMarketPoints: List<GlobalCoinMarketPoint>)
 
-    @Query("SELECT * FROM GlobalCoinMarket WHERE currencyCode = :currency")
-    fun getGlobalMarketInfo(currency: String): GlobalCoinMarket?
+    @Query("DELETE FROM GlobalCoinMarketPointInfo WHERE currencyCode = :currencyCode and timePeriod = :timePeriod")
+    fun deletePointInfo(currencyCode: String, timePeriod: TimePeriod)
+
+    @Query("SELECT * FROM GlobalCoinMarketPointInfo WHERE currencyCode = :currencyCode and timePeriod = :timePeriod")
+    fun getPointInfo(currencyCode: String, timePeriod: TimePeriod ): GlobalCoinMarketPointInfo?
+
+    @Query("SELECT * FROM GlobalCoinMarketPoint WHERE pointInfoId =:poinInfoId")
+    fun getPoints(poinInfoId: Long): List<GlobalCoinMarketPoint>
+
+    @Transaction
+    fun indertPointsInfoDetails(globalCoinMarketPointInfo: GlobalCoinMarketPointInfo){
+        val id = insertPointInfo(globalCoinMarketPointInfo)
+        globalCoinMarketPointInfo.points.forEach{ point ->
+            point.pointInfoId = id
+        }
+        insertPoints(globalCoinMarketPointInfo.points)
+    }
+
 }
