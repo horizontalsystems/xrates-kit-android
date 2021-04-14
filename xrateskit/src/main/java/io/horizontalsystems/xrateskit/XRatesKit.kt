@@ -15,7 +15,6 @@ import io.horizontalsystems.xrateskit.cryptonews.CryptoNewsManager
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.providers.*
 import io.horizontalsystems.xrateskit.providers.coingecko.CoinGeckoProvider
-import io.horizontalsystems.xrateskit.providers.coinpaprika.CoinPaprikaProvider
 import io.horizontalsystems.xrateskit.providers.cryptocompare.CryptoCompareProvider
 import io.horizontalsystems.xrateskit.providers.horsys.HorsysProvider
 import io.horizontalsystems.xrateskit.rates.HistoricalRateManager
@@ -116,8 +115,8 @@ class XRatesKit(
         return coinMarketManager.getCoinMarketDetailsAsync(coinType, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
     }
 
-    fun getGlobalCoinMarketsAsync(currencyCode: String): Single<GlobalCoinMarket> {
-        return globalMarketInfoManager.getGlobalMarketInfo(currencyCode)
+    fun getGlobalCoinMarketsAsync(currencyCode: String, timePeriod: TimePeriod = TimePeriod.HOUR_24): Single<GlobalCoinMarket> {
+        return globalMarketInfoManager.getGlobalMarketInfo(currencyCode, timePeriod)
     }
 
     fun searchCoins(searchText: String): List<CoinData> {
@@ -138,10 +137,9 @@ class XRatesKit(
 
             val coinGeckoProvider = CoinGeckoProvider(factory, coinInfoManager, providerCoinsManager)
             providerCoinsManager.coinGeckoProvider = coinGeckoProvider
-            val coinPaprikaProvider = CoinPaprikaProvider()
-            val horsysProvider = HorsysProvider()
             val cryptoCompareProvider = CryptoCompareProvider(factory, cryptoCompareApiKey)
-            val globalMarketInfoManager = GlobalMarketInfoManager(coinPaprikaProvider, horsysProvider, cryptoCompareProvider, storage)
+            val horsysProvider = HorsysProvider()
+            val globalMarketInfoManager = GlobalMarketInfoManager(horsysProvider, storage)
 
             val historicalRateManager = HistoricalRateManager(storage, coinGeckoProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)

@@ -2,16 +2,23 @@ package io.horizontalsystems.xrateskit.providers.horsys
 
 import io.reactivex.Single
 import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 import java.math.BigDecimal
 
 interface HorsysService {
-    @GET("markets/global/defi")
-    fun marketsGlobalDefi(): Single<GlobalDefi>
+    @GET("markets/global/{timePeriod}")
+    fun globalCoinMarketPoints(@Path("timePeriod") timePeriod: String, @Query("currency_code") currencyCode: String): Single<List<Response.GlobalCoinMarket>>
 }
 
-data class GlobalDefi(
-    val marketCap: BigDecimal?,
-    val marketCapDiff24h: BigDecimal?,
-    val totalValueLocked: BigDecimal?,
-    val totalValueLockedDiff24h: BigDecimal?,
-)
+object Response {
+    data class GlobalCoinMarket(
+        val currency_code: String,
+        val timestamp: Long,
+        var volume24h: BigDecimal,
+        var market_cap: BigDecimal,
+        var dominance_btc: BigDecimal = BigDecimal.ZERO,
+        var market_cap_defi: BigDecimal = BigDecimal.ZERO,
+        var tvl: BigDecimal = BigDecimal.ZERO,
+    )
+}

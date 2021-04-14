@@ -59,8 +59,9 @@ interface IStorage {
     fun saveLatestRates(marketInfoList: List<LatestRateEntity>)
 
     //  GlobalMarketInfo
-    fun getGlobalMarketInfo(currency: String): GlobalCoinMarket?
-    fun saveGlobalMarketInfo(globalCoinMarket: GlobalCoinMarket)
+    fun getGlobalMarketPointInfo(currencyCode: String, timePeriod: TimePeriod): GlobalCoinMarketPointInfo?
+    fun deleteGlobalMarketPointInfo(currencyCode: String, timePeriod: TimePeriod)
+    fun saveGlobalMarketPointInfo(globalCoinMarketPointInfo: GlobalCoinMarketPointInfo)
 
 }
 
@@ -107,5 +108,5 @@ interface ICoinMarketProvider : IInfoProvider {
 }
 
 interface IGlobalCoinMarketProvider : IInfoProvider {
-    fun getGlobalCoinMarketsAsync(currency: String): Single<GlobalCoinMarket>
+    fun getGlobalCoinMarketPointsAsync(currencyCode: String, timePeriod: TimePeriod): Single<List<GlobalCoinMarketPoint>>
 }
