@@ -185,12 +185,19 @@ class Storage(private val database: Database) : IStorage {
     }
 
     // GlobalMarketInfo
-    override fun saveGlobalMarketInfo(globalCoinMarket: GlobalCoinMarket) {
-        globalMarketInfoDao.insert(globalCoinMarket)
+    override fun getGlobalMarketPointInfo(currencyCode: String, timePeriod: TimePeriod): GlobalCoinMarketPointInfo? {
+        return globalMarketInfoDao.getPointInfo(currencyCode, timePeriod)?.let {
+            it.points.addAll(globalMarketInfoDao.getPoints(it.id))
+            it
+        }
     }
 
-    override fun getGlobalMarketInfo(currencyCode: String): GlobalCoinMarket? {
-        return globalMarketInfoDao.getGlobalMarketInfo(currencyCode)
+    override fun deleteGlobalMarketPointInfo(currencyCode: String, timePeriod: TimePeriod){
+        globalMarketInfoDao.deletePointInfo(currencyCode, timePeriod)
+    }
+
+    override fun saveGlobalMarketPointInfo(globalCoinMarketPointInfo: GlobalCoinMarketPointInfo){
+        globalMarketInfoDao.indertPointsInfoDetails(globalCoinMarketPointInfo)
     }
 
 }

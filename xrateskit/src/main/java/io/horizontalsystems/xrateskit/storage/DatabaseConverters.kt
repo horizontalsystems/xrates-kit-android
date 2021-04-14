@@ -5,6 +5,7 @@ import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.entities.ChartType
 import io.horizontalsystems.xrateskit.entities.LinkType
 import io.horizontalsystems.xrateskit.entities.ResourceType
+import io.horizontalsystems.xrateskit.entities.TimePeriod
 import java.math.BigDecimal
 
 class DatabaseConverters {
@@ -64,6 +65,16 @@ class DatabaseConverters {
     @TypeConverter
     fun toResourceType(value: String): ResourceType {
         return ResourceType.valueOf(value)
+    }
+
+    @TypeConverter
+    fun toString(timePeriod: TimePeriod): String {
+        return timePeriod.name
+    }
+
+    @TypeConverter
+    fun toTimePeriod(value: String): TimePeriod {
+        return TimePeriod.valueOf(value)
     }
 
 }
