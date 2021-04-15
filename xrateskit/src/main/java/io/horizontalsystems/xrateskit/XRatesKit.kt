@@ -119,6 +119,10 @@ class XRatesKit(
         return globalMarketInfoManager.getGlobalMarketInfo(currencyCode, timePeriod)
     }
 
+    fun getGlobalCoinMarketPointsAsync(currencyCode: String, timePeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<GlobalCoinMarketPoint>> {
+        return globalMarketInfoManager.getGlobalMarketPoints(currencyCode, timePeriod)
+    }
+
     fun searchCoins(searchText: String): List<CoinData> {
         return providerCoinsManager.searchCoins(searchText)
     }
