@@ -1,13 +1,22 @@
 package io.horizontalsystems.xrateskit.providers.horsys
 
+import io.horizontalsystems.coinkit.models.CoinType
+import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
+import io.horizontalsystems.xrateskit.core.IDefiMarketsProvider
 import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
+import io.horizontalsystems.xrateskit.entities.CoinData
+import io.horizontalsystems.xrateskit.entities.DefiMarket
 import io.horizontalsystems.xrateskit.entities.GlobalCoinMarketPoint
 import io.horizontalsystems.xrateskit.entities.TimePeriod
 import io.horizontalsystems.xrateskit.providers.InfoProvider
+import io.horizontalsystems.xrateskit.providers.coingecko.CoinGeckoProvider
 import io.horizontalsystems.xrateskit.utils.RetrofitUtils
 import io.reactivex.Single
+import java.util.*
 
-class HorsysProvider : IGlobalCoinMarketProvider {
+class HorsysProvider(
+    private val providerCoinsManager: ProviderCoinsManager
+) : IGlobalCoinMarketProvider, IDefiMarketsProvider {
 
     override val provider: InfoProvider = InfoProvider.HorSys()
 
@@ -18,6 +27,10 @@ class HorsysProvider : IGlobalCoinMarketProvider {
     override fun initProvider() {}
 
     override fun destroy() {}
+
+    private fun getCoinType(providerCoinId: String, provider: InfoProvider): CoinType? {
+        return providerCoinsManager.getCoinTypes(providerCoinId.toLowerCase(Locale.ENGLISH), provider).firstOrNull()
+    }
 
     override fun getGlobalCoinMarketPointsAsync(currencyCode: String, timePeriod: TimePeriod): Single<List<GlobalCoinMarketPoint>> {
         if(!isTimePeriodSupported(timePeriod))
@@ -46,6 +59,21 @@ class HorsysProvider : IGlobalCoinMarketProvider {
             TimePeriod.YEAR_1 -> false
             TimePeriod.DAY_200 -> false
             else -> true
+        }
+    }
+
+    override fun getGlobalCoinMarketPointsAsync(currencyCode: String, itemsCount: Int): Single<List<DefiMarket>> {
+        return horsysService.defiMarkets(currencyCode).map { responseList ->
+            val markets = responseList.mapNotNull { item ->
+                item.coingecko_id?.let {
+                    if(item.coingecko_id.isNotEmpty()){
+                        getCoinType(item.coingecko_id, InfoProvider.CoinGecko())?.let {
+                            DefiMarket(CoinData(it, item.code, item.name), item.tvl, item.tvl_diff_24h)
+                        }
+                    } else null
+                }
+            }
+            markets.sortedByDescending { it.tvl }
         }
     }
 }

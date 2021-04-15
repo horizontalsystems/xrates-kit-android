@@ -6,6 +6,7 @@ import io.horizontalsystems.xrateskit.chartpoint.ChartInfoManager
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSchedulerFactory
 import io.horizontalsystems.xrateskit.chartpoint.ChartInfoSyncManager
 import io.horizontalsystems.xrateskit.coinmarkets.CoinMarketsManager
+import io.horizontalsystems.xrateskit.coinmarkets.DefiMarketsManager
 import io.horizontalsystems.xrateskit.coinmarkets.GlobalMarketInfoManager
 import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.coins.CoinSyncer
@@ -36,6 +37,7 @@ class XRatesKit(
     private val cryptoNewsManager: CryptoNewsManager,
     private val coinMarketManager: CoinMarketsManager,
     private val globalMarketInfoManager: GlobalMarketInfoManager,
+    private val defiMarketsManager: DefiMarketsManager,
     private val coinInfoManager: CoinInfoManager,
     private val providerCoinsManager: ProviderCoinsManager,
     coinSyncer: CoinSyncer
@@ -98,6 +100,10 @@ class XRatesKit(
         return coinMarketManager.getTopCoinMarketsAsync(currencyCode, fetchDiffPeriod, itemsCount)
     }
 
+    fun getTopDefiMarketsAsync(currencyCode: String, itemsCount: Int = 200): Single<List<DefiMarket>> {
+        return defiMarketsManager.getTopDefiMarketsAsync(currencyCode, itemsCount)
+    }
+
     fun getCoinMarketsAsync(coinTypes: List<CoinType>, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<CoinMarket>> {
         return coinMarketManager.getCoinMarketsAsync(coinTypes , currencyCode, fetchDiffPeriod)
     }
@@ -142,8 +148,9 @@ class XRatesKit(
             val coinGeckoProvider = CoinGeckoProvider(factory, coinInfoManager, providerCoinsManager)
             providerCoinsManager.coinGeckoProvider = coinGeckoProvider
             val cryptoCompareProvider = CryptoCompareProvider(factory, cryptoCompareApiKey)
-            val horsysProvider = HorsysProvider()
+            val horsysProvider = HorsysProvider(providerCoinsManager)
             val globalMarketInfoManager = GlobalMarketInfoManager(horsysProvider, storage)
+            val defiMarketInfoManager = DefiMarketsManager(horsysProvider)
 
             val historicalRateManager = HistoricalRateManager(storage, coinGeckoProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
@@ -173,6 +180,7 @@ class XRatesKit(
                     cryptoNewsManager,
                     topMarketsManager,
                     globalMarketInfoManager,
+                    defiMarketInfoManager,
                     coinInfoManager,
                     providerCoinsManager,
                     coinSyncer
