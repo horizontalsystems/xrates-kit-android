@@ -9,6 +9,9 @@ import java.math.BigDecimal
 interface HorsysService {
     @GET("markets/global/{timePeriod}")
     fun globalCoinMarketPoints(@Path("timePeriod") timePeriod: String, @Query("currency_code") currencyCode: String): Single<List<Response.GlobalCoinMarketPoint>>
+
+    @GET("markets/defi")
+    fun defiMarkets(@Query("currency_code") currencyCode: String): Single<List<Response.DefiMarket>>
 }
 
 object Response {
@@ -20,5 +23,14 @@ object Response {
         var dominance_btc: BigDecimal = BigDecimal.ZERO,
         var market_cap_defi: BigDecimal = BigDecimal.ZERO,
         var tvl: BigDecimal = BigDecimal.ZERO,
+    )
+
+    data class DefiMarket(
+        val currency_code: String,
+        val coingecko_id: String?,
+        val name: String,
+        val code: String,
+        var tvl: BigDecimal,
+        var tvl_diff_24h: BigDecimal
     )
 }

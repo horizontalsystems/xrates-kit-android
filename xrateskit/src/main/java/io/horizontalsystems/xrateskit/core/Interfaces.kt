@@ -110,3 +110,7 @@ interface ICoinMarketProvider : IInfoProvider {
 interface IGlobalCoinMarketProvider : IInfoProvider {
     fun getGlobalCoinMarketPointsAsync(currencyCode: String, timePeriod: TimePeriod): Single<List<GlobalCoinMarketPoint>>
 }
+
+interface IDefiMarketsProvider : IInfoProvider {
+    fun getGlobalCoinMarketPointsAsync(currencyCode: String, itemsCount: Int): Single<List<DefiMarket>>
+}
