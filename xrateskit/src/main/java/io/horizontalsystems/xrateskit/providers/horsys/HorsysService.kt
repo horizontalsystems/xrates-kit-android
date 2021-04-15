@@ -8,11 +8,11 @@ import java.math.BigDecimal
 
 interface HorsysService {
     @GET("markets/global/{timePeriod}")
-    fun globalCoinMarketPoints(@Path("timePeriod") timePeriod: String, @Query("currency_code") currencyCode: String): Single<List<Response.GlobalCoinMarket>>
+    fun globalCoinMarketPoints(@Path("timePeriod") timePeriod: String, @Query("currency_code") currencyCode: String): Single<List<Response.GlobalCoinMarketPoint>>
 }
 
 object Response {
-    data class GlobalCoinMarket(
+    data class GlobalCoinMarketPoint(
         val currency_code: String,
         val timestamp: Long,
         var volume24h: BigDecimal,

@@ -45,7 +45,6 @@ class HorsysProvider : IGlobalCoinMarketProvider {
             TimePeriod.DAY_START -> false
             TimePeriod.YEAR_1 -> false
             TimePeriod.DAY_200 -> false
-            TimePeriod.YEAR_1 -> false
             else -> true
         }
     }
