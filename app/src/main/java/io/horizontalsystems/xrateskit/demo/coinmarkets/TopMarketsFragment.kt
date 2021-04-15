@@ -22,6 +22,7 @@ class TopMarketsFragment() : Fragment() {
     private val viewModel by viewModels<TopMarketsViewModel> { TopMarketsModule.Factory() }
     private val globalMarketInfoAdapter = GlobalCoinsMarketAdapter()
     private val topMarketsAdapter = TopMarketsAdapter()
+    private val topDefiMarketsAdapter = TopDefiMarketsAdapter()
     private val coinMarketDetailsAdapter = CoinsMarketDetailsAdapter()
     private val coinSearchAdapter = CoinSearchAdapter()
 
@@ -79,6 +80,7 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo2.visibility = View.GONE
             rviewInfo.visibility = View.VISIBLE
             rviewInfo3.visibility = View.GONE
+            rviewInfoDefi.visibility = View.GONE
         }
 
         btnLoadMarkets.setOnClickListener {
@@ -86,6 +88,16 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo4.visibility = View.GONE
             rviewInfo2.visibility = View.GONE
             rviewInfo.visibility = View.VISIBLE
+            rviewInfo3.visibility = View.GONE
+            rviewInfoDefi.visibility = View.GONE
+        }
+
+        btnTopDefi.setOnClickListener {
+            viewModel.loadTopDefiMarkets()
+            rviewInfoDefi.visibility = View.VISIBLE
+            rviewInfo4.visibility = View.GONE
+            rviewInfo2.visibility = View.GONE
+            rviewInfo.visibility = View.GONE
             rviewInfo3.visibility = View.GONE
         }
 
@@ -95,6 +107,7 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo2.visibility = View.GONE
             rviewInfo.visibility = View.VISIBLE
             rviewInfo3.visibility = View.GONE
+            rviewInfoDefi.visibility = View.GONE
         }
 
         btnCategoryBlockchain.setOnClickListener {
@@ -103,6 +116,7 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo2.visibility = View.GONE
             rviewInfo.visibility = View.VISIBLE
             rviewInfo3.visibility = View.GONE
+            rviewInfoDefi.visibility = View.GONE
         }
 
         btnLoadGLobalMarkets.setOnClickListener {
@@ -111,6 +125,7 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo.visibility = View.GONE
             rviewInfo2.visibility = View.VISIBLE
             rviewInfo3.visibility = View.GONE
+            rviewInfoDefi.visibility = View.GONE
         }
 
         btnLoadCoinInfo.setOnClickListener {
@@ -119,6 +134,7 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo.visibility = View.GONE
             rviewInfo2.visibility = View.GONE
             rviewInfo3.visibility = View.VISIBLE
+            rviewInfoDefi.visibility = View.GONE
         }
 
         btnSearch.setOnClickListener {
@@ -127,12 +143,14 @@ class TopMarketsFragment() : Fragment() {
             rviewInfo.visibility = View.GONE
             rviewInfo2.visibility = View.GONE
             rviewInfo4.visibility = View.VISIBLE
+            rviewInfoDefi.visibility = View.GONE
         }
 
         rviewInfo.adapter = topMarketsAdapter
         rviewInfo2.adapter = globalMarketInfoAdapter
         rviewInfo3.adapter = coinMarketDetailsAdapter
         rviewInfo4.adapter = coinSearchAdapter
+        rviewInfoDefi.adapter = topDefiMarketsAdapter
 
         observeLiveData()
     }
@@ -141,6 +159,11 @@ class TopMarketsFragment() : Fragment() {
         viewModel.topMarkets.observe(viewLifecycleOwner, Observer {
             topMarketsAdapter.items = it
             topMarketsAdapter.notifyDataSetChanged()
+        })
+
+        viewModel.topDefiMarkets.observe(viewLifecycleOwner, Observer {
+            topDefiMarketsAdapter.items = it
+            topDefiMarketsAdapter.notifyDataSetChanged()
         })
 
         viewModel.globalMarketInfo.observe(viewLifecycleOwner, Observer {

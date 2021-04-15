@@ -109,8 +109,20 @@
         android:layout_marginTop="5dp"
         android:text="Search"
         android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@id/btnTopDefi"
+        app:layout_constraintTop_toBottomOf="@+id/btnLoadCoinInfo" />
+
+    <Button
+        android:id="@+id/btnTopDefi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="TopDefi"
+        android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@id/btnCategoryDex"
         app:layout_constraintTop_toBottomOf="@+id/btnLoadCoinInfo" />
+
 
     <EditText
         android:id="@+id/eTxtSearch"
@@ -118,7 +130,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:layout_marginEnd="4dp"
-        android:ems="5"
+        android:ems="2"
         android:inputType="textPersonName"
         android:text=""
         tools:layout_editor_absoluteX="5dp"
@@ -159,6 +171,16 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rviewInfo4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCategoryBlockchain" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rviewInfoDefi"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
