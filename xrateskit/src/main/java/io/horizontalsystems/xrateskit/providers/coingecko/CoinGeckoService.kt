@@ -46,6 +46,7 @@ interface CoinGeckoService {
     fun coinsMarkets(
         @Query("vs_currency") vs_currency: String,
         @Query("ids") ids: String?,
+        @Query("category") category: String?,
         @Query("order") order: String?,
         @Query("per_page") per_page: Int?,
         @Query("page") page: Int?,

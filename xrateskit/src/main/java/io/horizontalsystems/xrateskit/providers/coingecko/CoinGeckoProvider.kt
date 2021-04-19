@@ -70,7 +70,7 @@ class CoinGeckoProvider(
         return providerCoinsManager.getCoinTypes(providerCoinId.toLowerCase(Locale.ENGLISH), provider).firstOrNull()
     }
 
-    override fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>> {
+    override fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int, defiFilter: Boolean): Single<List<CoinMarket>> {
         try {
             var pageNumber = 1
             val singles = mutableListOf<Single<List<CoinMarket>>>()
@@ -81,7 +81,8 @@ class CoinGeckoProvider(
                     currencyCode = currencyCode,
                     fetchDiffPeriod = fetchDiffPeriod,
                     itemsCount = if(requestItems > MAX_ITEM_PER_PAGE) MAX_ITEM_PER_PAGE else requestItems,
-                    pageNumber = pageNumber)
+                    pageNumber = pageNumber,
+                    defiFilter = defiFilter)
                 )
 
                 requestItems -= MAX_ITEM_PER_PAGE
@@ -101,8 +102,8 @@ class CoinGeckoProvider(
         return Single.just(emptyList())
     }
 
-    private fun getCoinMarketsSingle( currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int, pageNumber: Int): Single<List<CoinMarket>> {
-        return getCoinMarkets(currencyCode,fetchDiffPeriod, itemsCount = itemsCount, pageNumber = pageNumber)
+    private fun getCoinMarketsSingle( currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int, pageNumber: Int, defiFilter: Boolean): Single<List<CoinMarket>> {
+        return getCoinMarkets(currencyCode,fetchDiffPeriod, itemsCount = itemsCount, pageNumber = pageNumber, defiFilter = defiFilter)
     }
 
     override fun getCoinMarketsAsync(coinTypes: List<CoinType>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>> {
@@ -110,19 +111,22 @@ class CoinGeckoProvider(
 
         return when {
             providerCoinIds.isEmpty() -> Single.just(listOf())
-            else -> getCoinMarkets(currencyCode,fetchDiffPeriod, coinIds = providerCoinIds)
+            else -> getCoinMarkets(currencyCode,fetchDiffPeriod, coinIds = providerCoinIds, defiFilter = false)
         }
     }
 
-    private fun getCoinMarkets(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int? = null, coinIds: List<String>? = null, pageNumber: Int = 1): Single<List<CoinMarket>> {
+    private fun getCoinMarkets(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int? = null, coinIds: List<String>? = null, pageNumber: Int = 1, defiFilter: Boolean): Single<List<CoinMarket>> {
         val priceChangePercentage = when (fetchDiffPeriod) {
             TimePeriod.ALL, TimePeriod.HOUR_24 -> null
             else -> fetchDiffPeriod.title
         }
 
+        val category = if(defiFilter) "decentralized_finance_defi" else null
+
         return coinGeckoService.coinsMarkets(
             currencyCode,
             coinIds?.joinToString(","),
+            category,
             "market_cap_desc",
             itemsCount,
             pageNumber,

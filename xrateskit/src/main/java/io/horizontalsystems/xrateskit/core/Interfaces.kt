@@ -102,7 +102,7 @@ interface ICryptoNewsProvider {
 }
 
 interface ICoinMarketProvider : IInfoProvider {
-    fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>>
+    fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int, defiFilter: Boolean = false): Single<List<CoinMarket>>
     fun getCoinMarketsAsync(coinTypes: List<CoinType>, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarket>>
     fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinIds: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails>
 }
@@ -112,5 +112,5 @@ interface IGlobalCoinMarketProvider : IInfoProvider {
 }
 
 interface IDefiMarketsProvider : IInfoProvider {
-    fun getGlobalCoinMarketPointsAsync(currencyCode: String, itemsCount: Int): Single<List<DefiMarket>>
+    fun getTopDefiTvlAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<DefiTvl>>
 }
