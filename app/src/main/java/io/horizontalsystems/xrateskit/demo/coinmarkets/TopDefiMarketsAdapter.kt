@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import io.horizontalsystems.xrateskit.demo.R
-import io.horizontalsystems.xrateskit.entities.DefiMarket
+import io.horizontalsystems.xrateskit.entities.DefiTvl
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_holder_top_markets.view.*
 import java.math.BigDecimal
@@ -17,7 +17,7 @@ import java.text.DecimalFormat
 
 class TopDefiMarketsAdapter: RecyclerView.Adapter<TopDefiMarketsAdapter.ViewHolderTopDefiMarkets>(){
 
-    var items = listOf<DefiMarket>()
+    var items = listOf<DefiTvl>()
     lateinit var context : Context
 
     override fun getItemCount(): Int {
@@ -41,7 +41,7 @@ class TopDefiMarketsAdapter: RecyclerView.Adapter<TopDefiMarketsAdapter.ViewHold
         private val txtIndex = containerView.txtIndex
         private val txtPriceChange = containerView.txtPriceChange
 
-        fun bind(item: DefiMarket, index: Int) {
+        fun bind(item: DefiTvl, index: Int) {
             containerView.setBackgroundColor(if (index % 2 == 0)
                                                  Color.parseColor("#dddddd") else
                                                  Color.TRANSPARENT
@@ -51,9 +51,9 @@ class TopDefiMarketsAdapter: RecyclerView.Adapter<TopDefiMarketsAdapter.ViewHold
             txtCoinCode.text = "${item.data.code}"
             txtCoinTitle.text = "${item.data.title}"
             txtPrice.text = "TVL:${dec.format(item.tvl)} $"
-            if(item.tvlDiff24h < BigDecimal.ZERO)
+            if(item.tvlDiff < BigDecimal.ZERO)
                     txtPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red_d))
-            txtPriceChange.text = "TVL Change: % " + "%.2f".format(item.tvlDiff24h)
+            txtPriceChange.text = "TVL Change: % " + "%.2f".format(item.tvlDiff)
         }
     }
 }

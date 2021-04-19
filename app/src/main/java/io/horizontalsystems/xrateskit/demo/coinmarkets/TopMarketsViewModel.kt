@@ -4,10 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.demo.RatesManager
-import io.horizontalsystems.xrateskit.entities.CoinData
-import io.horizontalsystems.xrateskit.entities.TimePeriod
-import io.horizontalsystems.xrateskit.entities.CoinMarket
-import io.horizontalsystems.xrateskit.entities.DefiMarket
+import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
@@ -15,7 +12,7 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
 
     val searchCoinsLiveData = MutableLiveData<List<CoinData>>()
     val topMarkets = MutableLiveData<List<CoinMarket>>()
-    val topDefiMarkets = MutableLiveData<List<DefiMarket>>()
+    val topDefiMarkets = MutableLiveData<List<DefiTvl>>()
     val coinMarketDetails = MutableLiveData<List<CoinMarketDetailsItem>>()
     val progressState = MutableLiveData<Boolean>()
     val globalMarketInfo = MutableLiveData<List<GlobalMarketInfoItem>>()
@@ -41,7 +38,7 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
 
     fun loadTopDefiMarkets() {
         progressState.postValue(true)
-        ratesManager.topDefiList(255, "USD")
+        ratesManager.topDefiTvlList(255, "USD")
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .subscribe({ topDefiMarketList ->
