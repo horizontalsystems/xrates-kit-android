@@ -4,12 +4,8 @@ import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.core.IDefiMarketsProvider
 import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
-import io.horizontalsystems.xrateskit.entities.CoinData
-import io.horizontalsystems.xrateskit.entities.DefiMarket
-import io.horizontalsystems.xrateskit.entities.GlobalCoinMarketPoint
-import io.horizontalsystems.xrateskit.entities.TimePeriod
+import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.providers.InfoProvider
-import io.horizontalsystems.xrateskit.providers.coingecko.CoinGeckoProvider
 import io.horizontalsystems.xrateskit.utils.RetrofitUtils
 import io.reactivex.Single
 import java.util.*
@@ -62,13 +58,13 @@ class HorsysProvider(
         }
     }
 
-    override fun getGlobalCoinMarketPointsAsync(currencyCode: String, itemsCount: Int): Single<List<DefiMarket>> {
+    override fun getTopDefiTvlAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<DefiTvl>> {
         return horsysService.defiMarkets(currencyCode).map { responseList ->
             val markets = responseList.mapNotNull { item ->
                 item.coingecko_id?.let {
                     if(item.coingecko_id.isNotEmpty()){
                         getCoinType(item.coingecko_id, InfoProvider.CoinGecko())?.let {
-                            DefiMarket(CoinData(it, item.code, item.name), item.tvl, item.tvl_diff_24h)
+                            DefiTvl(CoinData(it, item.code, item.name), item.tvl, item.tvl_diff_24h)
                         }
                     } else null
                 }

@@ -100,8 +100,12 @@ class XRatesKit(
         return coinMarketManager.getTopCoinMarketsAsync(currencyCode, fetchDiffPeriod, itemsCount)
     }
 
-    fun getTopDefiMarketsAsync(currencyCode: String, itemsCount: Int = 200): Single<List<DefiMarket>> {
-        return defiMarketsManager.getTopDefiMarketsAsync(currencyCode, itemsCount)
+    fun getTopDefiMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24, itemsCount: Int = 200): Single<List<CoinMarket>> {
+        return defiMarketsManager.getTopDefiMarketsAsync(currencyCode, fetchDiffPeriod, itemsCount)
+    }
+
+    fun getTopDefiTvlAsync(currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24, itemsCount: Int = 200): Single<List<DefiTvl>> {
+        return defiMarketsManager.getTopDefiTvlAsync(currencyCode, fetchDiffPeriod, itemsCount)
     }
 
     fun getCoinMarketsAsync(coinTypes: List<CoinType>, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<CoinMarket>> {
@@ -150,7 +154,7 @@ class XRatesKit(
             val cryptoCompareProvider = CryptoCompareProvider(factory, cryptoCompareApiKey)
             val horsysProvider = HorsysProvider(providerCoinsManager)
             val globalMarketInfoManager = GlobalMarketInfoManager(horsysProvider, storage)
-            val defiMarketInfoManager = DefiMarketsManager(horsysProvider)
+            val defiMarketInfoManager = DefiMarketsManager(coinGeckoProvider, horsysProvider)
 
             val historicalRateManager = HistoricalRateManager(storage, coinGeckoProvider)
             val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
