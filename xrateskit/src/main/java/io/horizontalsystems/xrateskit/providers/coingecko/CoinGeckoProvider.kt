@@ -160,6 +160,8 @@ class CoinGeckoProvider(
             supply = responseCoinMarket.circulating_supply,
             rateDiffPeriod = rateDiffPeriod,
             marketCap = responseCoinMarket.market_cap,
+            dilutedMarketCap = responseCoinMarket.fully_diluted_valuation,
+            totalSupply = responseCoinMarket.total_supply,
             athChangePercentage = responseCoinMarket.ath_change_percentage,
             atlChangePercentage = responseCoinMarket.atl_change_percentage
         )
@@ -261,6 +263,7 @@ class CoinGeckoProvider(
                     rateLow24h = coin.market_data.low_24h[currencyCodeLowercase] ?: BigDecimal.ZERO,
                     marketCap = coin.market_data.market_cap[currencyCodeLowercase] ?: BigDecimal.ZERO,
                     marketCapDiff24h = coin.market_data.market_cap_change_percentage_24h,
+                    dilutedMarketCap = coin.market_data.fully_diluted_valuation[currencyCodeLowercase] ?: BigDecimal.ZERO,
                     volume24h = coin.market_data.total_volume[currencyCodeLowercase] ?: BigDecimal.ZERO,
                     circulatingSupply = coin.market_data.circulating_supply ?: BigDecimal.ZERO,
                     totalSupply = coin.market_data.total_supply ?: BigDecimal.ZERO,
@@ -272,7 +275,6 @@ class CoinGeckoProvider(
                         coinInfoManager.getCoinFundCategories(coinType),
                         platforms
                     ),
-
                     rateDiffs = rateDiffsPeriod,
                     tickers = marketTickers
                 )

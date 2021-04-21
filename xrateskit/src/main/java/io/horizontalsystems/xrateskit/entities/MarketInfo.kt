@@ -17,6 +17,8 @@ class MarketInfo(
     val marketCap: BigDecimal?,
     val athChangePercentage: BigDecimal?,
     val atlChangePercentage: BigDecimal?,
+    val totalSupply: BigDecimal?,
+    val dilutedMarketCap: BigDecimal?,
     val expirationInterval: Long){
 
     fun isExpired(): Boolean {
