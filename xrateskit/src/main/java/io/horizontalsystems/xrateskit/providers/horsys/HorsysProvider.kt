@@ -8,6 +8,7 @@ import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.providers.InfoProvider
 import io.horizontalsystems.xrateskit.utils.RetrofitUtils
 import io.reactivex.Single
+import java.math.BigDecimal
 import java.util.*
 
 class HorsysProvider(
@@ -59,12 +60,25 @@ class HorsysProvider(
     }
 
     override fun getTopDefiTvlAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<DefiTvl>> {
-        return horsysService.defiMarkets(currencyCode).map { responseList ->
+
+        val period = if(isTimePeriodSupported(fetchDiffPeriod)) fetchDiffPeriod.title else TimePeriod.HOUR_24.title
+
+        return horsysService.defiTvl(currencyCode, period).map { responseList ->
             val markets = responseList.mapNotNull { item ->
                 item.coingecko_id?.let {
                     if(item.coingecko_id.isNotEmpty()){
+
+                        val rateDiffPeriod = when (fetchDiffPeriod) {
+                            TimePeriod.HOUR_1 -> item.tvl_diff_1h
+                            TimePeriod.DAY_7 -> item.tvl_diff_7d
+                            TimePeriod.DAY_14 -> item.tvl_diff_14d
+                            TimePeriod.DAY_30 -> item.tvl_diff_30d
+                            else -> item.tvl_diff_24h
+
+                        } ?: BigDecimal.ZERO
+
                         getCoinType(item.coingecko_id, InfoProvider.CoinGecko())?.let {
-                            DefiTvl(CoinData(it, item.code, item.name), item.tvl, item.tvl_diff_24h)
+                            DefiTvl(CoinData(it, item.code, item.name), item.tvl, rateDiffPeriod)
                         }
                     } else null
                 }

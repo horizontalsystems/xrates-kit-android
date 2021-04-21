@@ -11,7 +11,7 @@ interface HorsysService {
     fun globalCoinMarketPoints(@Path("timePeriod") timePeriod: String, @Query("currency_code") currencyCode: String): Single<List<Response.GlobalCoinMarketPoint>>
 
     @GET("markets/defi")
-    fun defiMarkets(@Query("currency_code") currencyCode: String): Single<List<Response.DefiMarket>>
+    fun defiTvl(@Query("currency_code") currencyCode: String, @Query("diff_period") periods: String): Single<List<Response.DefiTvl>>
 }
 
 object Response {
@@ -25,12 +25,16 @@ object Response {
         var tvl: BigDecimal = BigDecimal.ZERO,
     )
 
-    data class DefiMarket(
+    data class DefiTvl(
         val currency_code: String,
         val coingecko_id: String?,
         val name: String,
         val code: String,
         var tvl: BigDecimal,
-        var tvl_diff_24h: BigDecimal
+        var tvl_diff_1h: BigDecimal?,
+        var tvl_diff_24h: BigDecimal?,
+        var tvl_diff_7d: BigDecimal?,
+        var tvl_diff_14d: BigDecimal?,
+        var tvl_diff_30d: BigDecimal?,
     )
 }
