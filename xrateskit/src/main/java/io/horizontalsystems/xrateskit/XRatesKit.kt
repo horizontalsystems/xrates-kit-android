@@ -108,6 +108,14 @@ class XRatesKit(
         return defiMarketsManager.getTopDefiTvlAsync(currencyCode, fetchDiffPeriod, itemsCount)
     }
 
+    fun getDefiTvlPointsAsync(coinType: CoinType, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<DefiTvlPoint>> {
+        return defiMarketsManager.getDefiTvlPointsAsync(coinType, currencyCode, fetchDiffPeriod)
+    }
+
+    fun getDefiTvlPointsAsync(coinType: CoinType, currencyCode: String): Single<DefiTvl> {
+        return defiMarketsManager.getDefiTvlAsync(coinType, currencyCode)
+    }
+
     fun getCoinMarketsAsync(coinTypes: List<CoinType>, currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24): Single<List<CoinMarket>> {
         return coinMarketManager.getCoinMarketsAsync(coinTypes , currencyCode, fetchDiffPeriod)
     }
@@ -171,7 +179,7 @@ class XRatesKit(
                 chartInfoManager.listener = it
             }
 
-            val topMarketsManager = CoinMarketsManager(coinGeckoProvider)
+            val topMarketsManager = CoinMarketsManager(coinGeckoProvider, horsysProvider)
 
             val coinSyncer = CoinSyncer(providerCoinsManager, coinInfoManager)
 

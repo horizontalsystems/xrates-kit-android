@@ -12,6 +12,16 @@ interface HorsysService {
 
     @GET("markets/defi")
     fun defiTvl(@Query("currency_code") currencyCode: String, @Query("diff_period") periods: String): Single<List<Response.DefiTvl>>
+
+    @GET("markets/defi/{coinGeckoId}/latest")
+    fun coinDefiTvl(@Path("coinGeckoId") timePeriod: String, @Query("currency_code") currencyCode: String): Single<Response.DefiTvl>
+
+    @GET("markets/defi/{coinGeckoId}/{timePeriod}")
+    fun defiTvlPoints(
+        @Path("coinGeckoId") coinGeckoId: String,
+        @Path("timePeriod") timePeriod: String,
+        @Query("currency_code") currencyCode: String
+    ): Single<List<Response.DefiTvlPoint>>
 }
 
 object Response {
@@ -36,5 +46,11 @@ object Response {
         var tvl_diff_7d: BigDecimal?,
         var tvl_diff_14d: BigDecimal?,
         var tvl_diff_30d: BigDecimal?,
+    )
+
+    data class DefiTvlPoint(
+        val timestamp: Long,
+        val currency_code: String,
+        var tvl: BigDecimal
     )
 }

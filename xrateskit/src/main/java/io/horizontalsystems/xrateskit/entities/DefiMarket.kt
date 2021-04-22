@@ -7,3 +7,8 @@ class DefiTvl(
     val tvl: BigDecimal,
     val tvlDiff: BigDecimal
 )
+
+class DefiTvlPoint(
+    val timestamp: Long,
+    val tvl: BigDecimal,
+)

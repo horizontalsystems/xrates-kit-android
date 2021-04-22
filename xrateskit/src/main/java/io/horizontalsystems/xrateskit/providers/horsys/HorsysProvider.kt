@@ -86,4 +86,27 @@ class HorsysProvider(
             markets.sortedByDescending { it.tvl }
         }
     }
+
+    override fun getDefiTvlAsync(coinType: CoinType, currencyCode: String): Single<DefiTvl> {
+
+        providerCoinsManager.getProviderIds(listOf(coinType), InfoProvider.CoinGecko()).firstOrNull()?.let { coinGeckoId ->
+            return horsysService.coinDefiTvl(coinGeckoId, currencyCode).map { response ->
+                DefiTvl(CoinData(coinType, response.code, response.name), response.tvl, BigDecimal.ZERO)
+            }
+        }?: return Single.error(Exception("No CoinGecko CoinId found for $coinType"))
+    }
+
+    override fun getDefiTvlPointsAsync(coinType: CoinType, currencyCode: String, timePeriod: TimePeriod): Single<List<DefiTvlPoint>> {
+
+        if(!isTimePeriodSupported(timePeriod))
+            return Single.error(Exception("Unsupported input parameter: $timePeriod"))
+
+        providerCoinsManager.getProviderIds(listOf(coinType), InfoProvider.CoinGecko()).firstOrNull()?.let { coinGeckoId ->
+            return horsysService.defiTvlPoints(coinGeckoId, timePeriod.title ,currencyCode).map { responseList ->
+                responseList.map { responseItem ->
+                    DefiTvlPoint(responseItem.timestamp, responseItem.tvl)
+                }
+            }
+        }?: return Single.error(Exception("No CoinGecko CoinId found for $coinType"))
+    }
 }
