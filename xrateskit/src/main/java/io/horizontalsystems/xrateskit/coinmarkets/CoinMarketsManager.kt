@@ -5,8 +5,14 @@ import io.horizontalsystems.xrateskit.providers.coingecko.CoinGeckoProvider
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
+import io.reactivex.functions.BiFunction
+import java.math.BigDecimal
+import java.util.*
 
-class CoinMarketsManager(private val coinGeckoProvider: CoinGeckoProvider): IInfoManager, ICoinMarketManager {
+class CoinMarketsManager(
+    private val coinGeckoProvider: CoinGeckoProvider,
+    private val defiMarketsProvider: IDefiMarketsProvider
+): IInfoManager, ICoinMarketManager {
 
     override fun getTopCoinMarketsAsync(currency: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<CoinMarket>> {
         return coinGeckoProvider.getTopCoinMarketsAsync(currency, fetchDiffPeriod, itemsCount)
@@ -17,7 +23,16 @@ class CoinMarketsManager(private val coinGeckoProvider: CoinGeckoProvider): IInf
     }
 
     override fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
-        return coinGeckoProvider.getCoinMarketDetailsAsync(coinType, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
+        return Single.zip(
+            coinGeckoProvider.getCoinMarketDetailsAsync(coinType, currencyCode, rateDiffCoinCodes, rateDiffPeriods),
+            // on Error return empty object with ZERO TVL
+            defiMarketsProvider.getDefiTvlAsync(coinType, currencyCode).onErrorReturnItem(DefiTvl(CoinData(coinType,"",""), BigDecimal.ZERO, BigDecimal.ZERO))
+        ){ coinMarketDetails, defiTvlDetails ->
+
+            if(defiTvlDetails.tvl.compareTo(BigDecimal.ZERO) != 0)
+                coinMarketDetails.defiTvl = defiTvlDetails.tvl
+            coinMarketDetails
+        }
     }
 
     override fun destroy() {

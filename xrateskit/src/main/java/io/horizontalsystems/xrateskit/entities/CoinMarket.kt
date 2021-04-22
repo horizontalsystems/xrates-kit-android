@@ -25,6 +25,7 @@ class CoinMarketDetails(
     val marketCapDiff24h: BigDecimal,
 
     val dilutedMarketCap: BigDecimal?,
+    var defiTvl: BigDecimal? = null,
 
     val rateDiffs: Map<TimePeriod, Map<String, BigDecimal>>,
     val tickers: List<MarketTicker>
