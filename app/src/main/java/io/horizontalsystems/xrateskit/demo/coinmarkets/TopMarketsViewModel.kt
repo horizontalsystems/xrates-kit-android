@@ -15,6 +15,7 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
     val topDefiMarkets = MutableLiveData<List<DefiTvl>>()
     val coinMarketDetails = MutableLiveData<List<CoinMarketDetailsItem>>()
     val progressState = MutableLiveData<Boolean>()
+    val tvlData = MutableLiveData<DefiTvl>()
     val globalMarketInfo = MutableLiveData<List<GlobalMarketInfoItem>>()
 
     private var disposables = CompositeDisposable()
@@ -82,6 +83,23 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
                            println("Error !!! ${it.message}")
                            progressState.postValue(false)
                        })
+            .let {
+                disposables.add(it)
+            }
+    }
+
+    fun loadTvl(coinType: CoinType = CoinType.Bitcoin) {
+        progressState.postValue(true)
+        ratesManager.defiTvl(coinType, "USD")
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .subscribe({
+                tvlData.postValue(it)
+                progressState.postValue(false)
+            }, {
+                println("Error !!! ${it.message}")
+                progressState.postValue(false)
+            })
             .let {
                 disposables.add(it)
             }

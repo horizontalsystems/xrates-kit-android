@@ -47,6 +47,10 @@ class RatesManager(context: Context, currency: String) {
         return kit.getTopDefiTvlAsync(currency, TimePeriod.HOUR_24, itemsCount)
     }
 
+    fun defiTvl(coinType: CoinType, currency: String): Single<DefiTvl>{
+        return kit.getDefiTvlPointsAsync(coinType, currency)
+    }
+
     fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
         return kit.getCoinMarketDetailsAsync(coinType, currencyCode, rateDiffCoinCodes, rateDiffPeriods)
     }
