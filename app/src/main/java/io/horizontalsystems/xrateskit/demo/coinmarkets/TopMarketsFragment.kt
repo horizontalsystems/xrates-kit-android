@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
 import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.demo.R
 import io.horizontalsystems.xrateskit.entities.CoinData
@@ -28,7 +29,7 @@ class TopMarketsFragment() : Fragment() {
 
     private val coinDatas = listOf(
         CoinData(CoinType.Bitcoin, "BTC", "Bitcoin"),
-        CoinData(CoinType.Ethereum, "ETH", "Ethereum",),
+        CoinData(CoinType.Ethereum, "ETH", "Ethereum"),
         CoinData(CoinType.BitcoinCash, "BCH", "Bch"),
         CoinData(CoinType.Dash, "DASH","Dash"),
         CoinData(CoinType.fromString("bep2|BNB"), "BNB", "Bnb"),
@@ -110,13 +111,10 @@ class TopMarketsFragment() : Fragment() {
             rviewInfoDefi.visibility = View.GONE
         }
 
-        btnCategoryBlockchain.setOnClickListener {
-            viewModel.loadMarketsByCategory("blockchain",spAct.timePeriod)
-            rviewInfo4.visibility = View.GONE
-            rviewInfo2.visibility = View.GONE
-            rviewInfo.visibility = View.VISIBLE
-            rviewInfo3.visibility = View.GONE
-            rviewInfoDefi.visibility = View.GONE
+        btnTVL.setOnClickListener {
+            val coinType = CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9") //Uniswap
+            //val coinType = CoinType.fromString("unsupported|theta-token") //Theta
+            viewModel.loadTvl(coinType)
         }
 
         btnLoadGLobalMarkets.setOnClickListener {
@@ -129,7 +127,9 @@ class TopMarketsFragment() : Fragment() {
         }
 
         btnLoadCoinInfo.setOnClickListener {
-            viewModel.loadCoinInfo(CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9"))
+            val coinType = CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9") //Uniswap
+            //val coinType = CoinType.fromString("unsupported|theta-token") //Theta
+            viewModel.loadCoinInfo(coinType)
             rviewInfo4.visibility = View.GONE
             rviewInfo.visibility = View.GONE
             rviewInfo2.visibility = View.GONE
@@ -174,6 +174,11 @@ class TopMarketsFragment() : Fragment() {
         viewModel.coinMarketDetails.observe(viewLifecycleOwner, Observer {
             coinMarketDetailsAdapter.items = it
             coinMarketDetailsAdapter.notifyDataSetChanged()
+        })
+
+        viewModel.tvlData.observe(viewLifecycleOwner, Observer {
+            val snackbar = Snackbar.make(this.requireView(), "${it.data.title} - Tvl:${it.tvl}", Snackbar.LENGTH_LONG)
+            snackbar.show()
         })
 
         viewModel.searchCoinsLiveData.observe(viewLifecycleOwner, Observer {

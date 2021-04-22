@@ -80,12 +80,12 @@
         app:layout_constraintTop_toBottomOf="@+id/spPeriod" />
 
     <Button
-        android:id="@+id/btnCategoryBlockchain"
+        android:id="@+id/btnTVL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:text="Blockchain"
+        android:text="Tvl"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLoadCoinInfo" />
@@ -98,7 +98,7 @@
         android:layout_marginTop="5dp"
         android:text="DEXes"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@id/btnCategoryBlockchain"
+        app:layout_constraintEnd_toStartOf="@id/btnTVL"
         app:layout_constraintTop_toBottomOf="@+id/btnLoadCoinInfo" />
 
     <Button
@@ -147,7 +147,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCategoryBlockchain" />
+        app:layout_constraintTop_toBottomOf="@+id/btnTVL" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rviewInfo2"
@@ -157,7 +157,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCategoryBlockchain" />
+        app:layout_constraintTop_toBottomOf="@+id/btnTVL" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rviewInfo3"
@@ -167,7 +167,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCategoryBlockchain" />
+        app:layout_constraintTop_toBottomOf="@+id/btnTVL" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rviewInfo4"
@@ -177,7 +177,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCategoryBlockchain" />
+        app:layout_constraintTop_toBottomOf="@+id/btnTVL" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rviewInfoDefi"
@@ -187,6 +187,6 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCategoryBlockchain" />
+        app:layout_constraintTop_toBottomOf="@+id/btnTVL" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

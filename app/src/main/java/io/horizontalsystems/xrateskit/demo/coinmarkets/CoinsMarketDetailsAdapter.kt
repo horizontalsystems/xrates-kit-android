@@ -65,6 +65,7 @@ data class CoinMarketDetailsItem(val infoTitle: String, val value: BigDecimal, v
             list.add(CoinMarketDetailsItem("Price 24h High/Low :", coinMarketDetails.rateHigh24h, coinMarketDetails.rateLow24h))
             list.add(CoinMarketDetailsItem("Volume 24h:", coinMarketDetails.volume24h, BigDecimal.ZERO))
             list.add(CoinMarketDetailsItem("MarketCap:", coinMarketDetails.marketCap, coinMarketDetails.marketCapDiff24h))
+            list.add(CoinMarketDetailsItem("DefiTvl:", coinMarketDetails.defiTvl?: BigDecimal.ZERO, BigDecimal.ZERO))
             list.add(CoinMarketDetailsItem("--------------- Diff ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
             coinMarketDetails.rateDiffs.forEach { periodDiff ->
                 list.add(CoinMarketDetailsItem("TimePeriod:${periodDiff.key}", BigDecimal.ZERO, BigDecimal.ZERO))
