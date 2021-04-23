@@ -69,8 +69,8 @@ data class GlobalCoinMarket(
             var tvlDiff = BigDecimal.ZERO
 
             if(globalMarketPoints.isNotEmpty()){
-                val startingPoint = globalMarketPoints.last()
-                val endingPoint = globalMarketPoints.first()
+                val startingPoint = globalMarketPoints.first()
+                val endingPoint = globalMarketPoints.last()
 
                 marketCap = endingPoint.marketCap
                 marketCapDiff = calculateDiff(startingPoint.marketCap, marketCap)
