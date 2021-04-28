@@ -37,7 +37,8 @@ class TopMarketsFragment() : Fragment() {
         CoinData(CoinType.fromString("unsupported|theta-token"),"THETA", "THETA"),
         CoinData(CoinType.Erc20("0x5732046a883704404f284ce41ffadd5b007fd668"),"BLZ", "BLZ"),
         CoinData(CoinType.Erc20("0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"), "UNI", "Uniswap"),
-        CoinData(CoinType.Bep20("0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82"),"CAKE", "Cake"))
+        CoinData(CoinType.Bep20("0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82"),"CAKE", "Cake"),
+        CoinData(CoinType.Erc20("0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2"),"Maker", "MKR"))
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -112,7 +113,7 @@ class TopMarketsFragment() : Fragment() {
         }
 
         btnTVL.setOnClickListener {
-            val coinType = CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9") //Uniswap
+            val coinType = CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9") //aave
             //val coinType = CoinType.fromString("unsupported|theta-token") //Theta
             viewModel.loadTvl(coinType)
         }
@@ -127,7 +128,8 @@ class TopMarketsFragment() : Fragment() {
         }
 
         btnLoadCoinInfo.setOnClickListener {
-            val coinType = CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9") //Uniswap
+            val coinType = CoinType.fromString("erc20|0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2") //Maker
+            // val coinType = CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9") //aave
             //val coinType = CoinType.fromString("unsupported|theta-token") //Theta
             viewModel.loadCoinInfo(coinType)
             rviewInfo4.visibility = View.GONE
