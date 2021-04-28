@@ -7,6 +7,7 @@ import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 
 class CoinMarketsManager(
@@ -33,7 +34,7 @@ class CoinMarketsManager(
                 coinMarketDetails.defiTvlInfo = DefiTvlInfo(
                     defiTvlDetails.tvl,
                     defiTvlDetails.tvlRank,
-                    coinMarketDetails.marketCap/defiTvlDetails.tvl
+                    coinMarketDetails.marketCap.divide(defiTvlDetails.tvl, 2, RoundingMode.HALF_UP)
                 )
             }
             coinMarketDetails
