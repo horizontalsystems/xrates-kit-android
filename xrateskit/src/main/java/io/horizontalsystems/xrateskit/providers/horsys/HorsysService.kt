@@ -41,6 +41,7 @@ object Response {
         val name: String,
         val code: String,
         var tvl: BigDecimal,
+        var tvl_rank: Int?,
         var tvl_diff_1h: BigDecimal?,
         var tvl_diff_24h: BigDecimal?,
         var tvl_diff_7d: BigDecimal?,

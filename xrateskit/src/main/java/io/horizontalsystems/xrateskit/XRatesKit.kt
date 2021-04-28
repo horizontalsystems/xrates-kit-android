@@ -112,7 +112,7 @@ class XRatesKit(
         return defiMarketsManager.getDefiTvlPointsAsync(coinType, currencyCode, fetchDiffPeriod)
     }
 
-    fun getDefiTvlPointsAsync(coinType: CoinType, currencyCode: String): Single<DefiTvl> {
+    fun getDefiTvlAsync(coinType: CoinType, currencyCode: String): Single<DefiTvl> {
         return defiMarketsManager.getDefiTvlAsync(coinType, currencyCode)
     }
 

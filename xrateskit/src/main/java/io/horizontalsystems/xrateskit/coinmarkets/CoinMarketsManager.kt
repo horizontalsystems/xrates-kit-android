@@ -29,8 +29,13 @@ class CoinMarketsManager(
             defiMarketsProvider.getDefiTvlAsync(coinType, currencyCode).onErrorReturnItem(DefiTvl(CoinData(coinType,"",""), BigDecimal.ZERO, BigDecimal.ZERO))
         ){ coinMarketDetails, defiTvlDetails ->
 
-            if(defiTvlDetails.tvl.compareTo(BigDecimal.ZERO) != 0)
-                coinMarketDetails.defiTvl = defiTvlDetails.tvl
+            if(defiTvlDetails.tvl.compareTo(BigDecimal.ZERO) != 0) {
+                coinMarketDetails.defiTvlInfo = DefiTvlInfo(
+                    defiTvlDetails.tvl,
+                    defiTvlDetails.tvlRank,
+                    coinMarketDetails.marketCap/defiTvlDetails.tvl
+                )
+            }
             coinMarketDetails
         }
     }
