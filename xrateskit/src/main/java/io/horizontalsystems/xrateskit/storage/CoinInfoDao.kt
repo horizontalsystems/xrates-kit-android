@@ -14,6 +14,9 @@ interface CoinInfoDao {
     fun insertCoinInfo(all: List<CoinInfoEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertExchangeInfo(all: List<ExchangeInfoEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCoinCategories(all: List<CoinCategoriesEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -34,6 +37,9 @@ interface CoinInfoDao {
     @Query("DELETE FROM CoinCategory")
     fun deleteAllCoinCategories()
 
+    @Query("DELETE FROM ExchangeInfoEntity")
+    fun deleteAllExchangeInfo()
+
     @Query("DELETE FROM CoinCategoriesEntity")
     fun deleteAllCoinsCategories()
 
@@ -51,6 +57,9 @@ interface CoinInfoDao {
 
     @Query("SELECT * FROM CoinCategory WHERE id IN (SELECT categoryId FROM CoinCategoriesEntity WHERE coinType =:coinType)")
     fun getCoinCategories(coinType: CoinType): List<CoinCategory>
+
+    @Query("SELECT * FROM ExchangeInfoEntity WHERE id=:exchangeId")
+    fun getExchangeInfo(exchangeId: String): ExchangeInfoEntity?
 
     @Query("SELECT * FROM CoinFund WHERE id IN (SELECT fundId FROM CoinFundsEntity WHERE coinType =:coinType)")
     fun getCoinFunds(coinType: CoinType): List<CoinFund>
