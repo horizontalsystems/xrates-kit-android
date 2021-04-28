@@ -5,6 +5,7 @@ import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.horizontalsystems.coinkit.models.CoinType
+import java.util.*
 
 data class CoinData(
     var type: CoinType,
@@ -19,7 +20,8 @@ class CoinMeta(
     val rating: String?,
     var categories: List<CoinCategory>,
     var fundCategories: List<CoinFundCategory>,
-    val platforms: Map<CoinPlatformType, String>
+    val platforms: Map<CoinPlatformType, String>,
+    val launchDate: Date? = null,
 )
 
 enum class LinkType{
