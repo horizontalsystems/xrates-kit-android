@@ -30,7 +30,8 @@ data class CoinInfoResource(
     val funds: List<CoinFund>,
     val coinFunds: List<CoinFundsEntity>,
     val fundCategories: List<CoinFundCategory>,
-    val links: List<CoinLinksEntity>){
+    val links: List<CoinLinksEntity>,
+    val exchangeInfos: List<ExchangeInfoEntity>){
 
     companion object{
         fun parseFile(quickParse: Boolean, context: Context, fileName: String) : CoinInfoResource{
@@ -44,8 +45,17 @@ data class CoinInfoResource(
             val coinFunds = mutableListOf<CoinFundsEntity>()
             val fundCategories = mutableListOf<CoinFundCategory>()
             val coinLinks = mutableListOf<CoinLinksEntity>()
+            val exchangeInfos = mutableListOf<ExchangeInfoEntity>()
 
             if(!quickParse) {
+                jsonObject.asObject().get("exchanges").asArray().forEach { exchangeInfo ->
+                    val id = exchangeInfo.asObject().get("id").asString()
+                    val name = exchangeInfo.asObject().get("name").asString()
+                    val imageUrl = exchangeInfo.asObject().get("image_url").asString()
+
+                    exchangeInfos.add(ExchangeInfoEntity(id, name, imageUrl))
+                }
+
                 jsonObject.asObject().get("categories").asArray().forEach { category ->
                     val id = category.asObject().get("id").asString()
                     val name = category.asObject().get("name").asString()
@@ -129,7 +139,7 @@ data class CoinInfoResource(
                 }
             }
 
-            return CoinInfoResource(version, coinInfos, categories, coinCategories, funds, coinFunds, fundCategories, coinLinks)
+            return CoinInfoResource(version, coinInfos, categories, coinCategories, funds, coinFunds, fundCategories, coinLinks, exchangeInfos)
         }
     }
 }

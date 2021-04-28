@@ -29,6 +29,7 @@ class CoinInfoManager(
             storage.deleteAllCoinFunds()
             storage.deleteAllCoinsFunds()
             storage.deleteAllCoinFundCategories()
+            storage.deleteAllExchangeInfo()
 
             storage.saveCoinInfos(coinsResponse.coinInfos)
             storage.saveCoinCategories(coinsResponse.coinsCategories)
@@ -37,6 +38,7 @@ class CoinInfoManager(
             storage.saveCoinFunds(coinsResponse.coinFunds)
             storage.saveCoinFundCategory(coinsResponse.fundCategories)
             storage.saveCoinLinks(coinsResponse.links)
+            storage.saveExchangeInfo(coinsResponse.exchangeInfos)
             storage.saveResourceInfo(ResourceInfo(ResourceType.COIN_INFO, coinsResponse.version))
         }
     }
@@ -50,6 +52,10 @@ class CoinInfoManager(
 
     fun getCoinRating(coinType: CoinType): String? {
         return storage.getCoinInfo(coinType)?.rating
+    }
+
+    fun getExchangeInfo(exchagenId: String): ExchangeInfoEntity? {
+        return storage.getExchangeInfo(exchagenId)
     }
 
     fun getCoinCategories(coinType: CoinType): List<CoinCategory> {

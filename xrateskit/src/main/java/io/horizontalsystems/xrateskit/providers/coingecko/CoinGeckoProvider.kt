@@ -230,7 +230,8 @@ class CoinGeckoProvider(
                     .filter { filterTicker(it) }
                     .sortedBy { exchangesOrdering[it.market.identifier] ?: Integer.MAX_VALUE }
                     .map {
-                        MarketTicker(it.base, it.target, it.market.name, it.last, it.volume)
+                        val imageUrl = coinInfoManager.getExchangeInfo(it.market.identifier)?.imageUrl
+                        MarketTicker(it.base, it.target, it.market.name, it.last, it.volume, imageUrl)
                     }
 
                 val rateDiffsPeriod = rateDiffPeriods.map<TimePeriod, Pair<TimePeriod, Map<String, BigDecimal>>> { period ->

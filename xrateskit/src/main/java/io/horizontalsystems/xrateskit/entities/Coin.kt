@@ -43,6 +43,13 @@ enum class CoinPlatformType{
 }
 
 @Entity
+data class ExchangeInfoEntity(
+    @PrimaryKey
+    val id: String,
+    val name: String,
+    val imageUrl: String)
+
+@Entity
 data class CoinInfoEntity(
     @PrimaryKey
     val coinType: CoinType,

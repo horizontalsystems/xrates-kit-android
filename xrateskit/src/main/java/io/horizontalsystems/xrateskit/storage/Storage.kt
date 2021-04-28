@@ -41,6 +41,10 @@ class Storage(private val database: Database) : IStorage {
         return coinInfoDao.getCoinInfos()
     }
 
+    override fun getExchangeInfo(exchangeId: String): ExchangeInfoEntity? {
+        return coinInfoDao.getExchangeInfo(exchangeId)
+    }
+
     override fun getCoinCategories(coinType: CoinType): List<CoinCategory> {
         return coinInfoDao.getCoinCategories(coinType)
     }
@@ -63,6 +67,10 @@ class Storage(private val database: Database) : IStorage {
 
     override fun saveCoinInfos(coinInfos: List<CoinInfoEntity>) {
         coinInfoDao.insertCoinInfo(coinInfos)
+    }
+
+    override fun saveExchangeInfo(exchangeInfos: List<ExchangeInfoEntity>) {
+        coinInfoDao.insertExchangeInfo(exchangeInfos)
     }
 
     override fun saveCoinCategories(coinCategoryEntities: List<CoinCategoriesEntity>) {
@@ -91,6 +99,10 @@ class Storage(private val database: Database) : IStorage {
 
     override fun deleteAllCoinCategories(){
         coinInfoDao.deleteAllCoinCategories()
+    }
+
+    override fun deleteAllExchangeInfo(){
+        coinInfoDao.deleteAllExchangeInfo()
     }
 
     override fun deleteAllCoinsCategories(){

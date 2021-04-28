@@ -37,7 +37,8 @@ class MarketTicker(
     val target: String,
     val marketName: String,
     val rate: BigDecimal,
-    val volume: BigDecimal
+    val volume: BigDecimal,
+    val imageUrl: String? = null
 )
 
 class DefiTvlInfo(
