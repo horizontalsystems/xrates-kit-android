@@ -91,7 +91,7 @@ class HorsysProvider(
 
         providerCoinsManager.getProviderIds(listOf(coinType), InfoProvider.CoinGecko()).firstOrNull()?.let { coinGeckoId ->
             return horsysService.coinDefiTvl(coinGeckoId, currencyCode).map { response ->
-                DefiTvl(CoinData(coinType, response.code, response.name), response.tvl, BigDecimal.ZERO)
+                DefiTvl(CoinData(coinType, response.code, response.name), response.tvl, BigDecimal.ZERO, response.tvl_rank?:0)
             }
         }?: return Single.error(Exception("No CoinGecko CoinId found for $coinType"))
     }
