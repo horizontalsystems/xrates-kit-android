@@ -86,6 +86,7 @@ interface CoinGeckoService {
             val id: String,
             val symbol: String,
             val name: String,
+            val genesis_date: String?,
             val description: Map<String, String>,
             val links: Links,
             val platforms: Map<String, String>,

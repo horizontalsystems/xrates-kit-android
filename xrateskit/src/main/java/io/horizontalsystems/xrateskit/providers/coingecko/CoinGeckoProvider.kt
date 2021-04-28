@@ -9,6 +9,9 @@ import io.horizontalsystems.xrateskit.providers.InfoProvider
 import io.horizontalsystems.xrateskit.utils.RetrofitUtils
 import io.reactivex.Single
 import java.math.BigDecimal
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.logging.Logger
 import kotlin.math.absoluteValue
@@ -255,6 +258,9 @@ class CoinGeckoProvider(
 
 
                 val currencyCodeLowercase = currencyCode.toLowerCase(Locale.ENGLISH)
+                val launchDate = coin.genesis_date?.let{
+                    return@let SimpleDateFormat("yyyy-MM-dd").parse(it)
+                }
 
                 CoinMarketDetails(
                     data = CoinData(coinType, coin.symbol, coin.name),
@@ -274,7 +280,8 @@ class CoinGeckoProvider(
                         coinInfoManager.getCoinRating(coinType),
                         coinInfoManager.getCoinCategories(coinType),
                         coinInfoManager.getCoinFundCategories(coinType),
-                        platforms
+                        platforms,
+                        launchDate
                     ),
                     rateDiffs = rateDiffsPeriod,
                     tickers = marketTickers
