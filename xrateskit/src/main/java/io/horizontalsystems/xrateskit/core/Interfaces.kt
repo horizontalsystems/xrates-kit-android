@@ -84,10 +84,6 @@ interface IInfoProvider {
     fun destroy()
 }
 
-interface IFiatXRatesProvider {
-    fun getLatestFiatXRates(sourceCurrency: String, targetCurrency: String): Single<Double>
-}
-
 interface ILatestRateProvider {
     fun getLatestRatesAsync(coinTypes: List<CoinType>, currencyCode: String): Single<List<LatestRateEntity>>
 }
@@ -101,7 +97,7 @@ interface IHistoricalRateProvider {
 }
 
 interface ICryptoNewsProvider {
-    fun getNews(categories: String): Single<List<CryptoNews>>
+    fun getNewsAsync(latestTimestamp: Long?): Single<List<CryptoNews>>
 }
 
 interface ICoinMarketProvider : IInfoProvider {
