@@ -52,7 +52,7 @@ class Factory(private val expirationInterval: Long) {
         return CoinMarket(coinData, marketInfo)
     }
 
-    fun createCryptoNews(id: Int, time: Long, imageUrl: String, title: String, url: String, body: String, types: List<String>): CryptoNews {
-        return CryptoNews(id, time, imageUrl, title, url, body, types)
+    fun createCryptoNews(id: Int, source: String, time: Long, imageUrl: String, title: String, url: String, body: String, types: List<String>): CryptoNews {
+        return CryptoNews(id, source, time, imageUrl, title, url, body, types)
     }
 }

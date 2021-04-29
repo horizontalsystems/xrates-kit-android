@@ -6,18 +6,12 @@ import retrofit2.http.Query
 
 interface CryptoCompareService {
 
-    @GET("data/price")
-    fun price(
-        @Query("api_key") apiKey: String,
-        @Query("fsym") sourceCurrency: String,
-        @Query("tsyms") targetCurrency: String
-    ): Single<Map<String, Double>>
-
     @GET("data/v2/news/")
     fun news(
         @Query("api_key") apiKey: String,
-        @Query("categories") categories: String,
-        @Query("excludeCategories") excludeCategories: String,
+        @Query("feeds") feeds: String,
+        @Query("extraParams") extraParams: String,
+        @Query("lTs") latestTimestamp: Long?
     ): Single<NewsResponse>
 
 }
@@ -33,5 +27,6 @@ data class NewsItem(
     val title: String,
     val url: String,
     val body: String,
+    val source: String,
     val categories: String,
 )
