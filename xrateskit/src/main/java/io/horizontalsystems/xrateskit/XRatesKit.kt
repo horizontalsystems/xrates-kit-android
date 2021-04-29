@@ -92,8 +92,8 @@ class XRatesKit(
         return historicalRateManager.getHistoricalRateAsync(coinType, currencyCode, timestamp)
     }
 
-    fun cryptoNews(coinCode: String): Single<List<CryptoNews>> {
-        return cryptoNewsManager.getNews(coinCode)
+    fun cryptoNewsAync(latestTimestamp: Long? = null): Single<List<CryptoNews>> {
+        return cryptoNewsManager.getNewsAsync(latestTimestamp)
     }
 
     fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24, itemsCount: Int = 200): Single<List<CoinMarket>> {
@@ -165,7 +165,7 @@ class XRatesKit(
             val defiMarketInfoManager = DefiMarketsManager(coinGeckoProvider, horsysProvider)
 
             val historicalRateManager = HistoricalRateManager(storage, coinGeckoProvider)
-            val cryptoNewsManager = CryptoNewsManager(30, cryptoCompareProvider)
+            val cryptoNewsManager = CryptoNewsManager(cryptoCompareProvider)
 
             val latestRatesManager = LatestRatesManager(storage, factory, coinGeckoProvider)
             val latestRatesSchedulerFactory = LatestRatesSchedulerFactory(latestRatesManager, coinGeckoProvider, rateExpirationInterval, retryInterval)

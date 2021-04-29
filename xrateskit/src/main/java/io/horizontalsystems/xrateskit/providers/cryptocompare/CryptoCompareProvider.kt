@@ -2,7 +2,6 @@ package io.horizontalsystems.xrateskit.providers.cryptocompare
 
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.core.ICryptoNewsProvider
-import io.horizontalsystems.xrateskit.core.IFiatXRatesProvider
 import io.horizontalsystems.xrateskit.core.IInfoProvider
 import io.horizontalsystems.xrateskit.entities.CryptoNews
 import io.horizontalsystems.xrateskit.providers.InfoProvider
@@ -13,7 +12,10 @@ import io.reactivex.Single
 class CryptoCompareProvider(
     private val factory: Factory,
     private val apiKey: String
-) : IInfoProvider, ICryptoNewsProvider, IFiatXRatesProvider {
+) : IInfoProvider, ICryptoNewsProvider {
+
+    private val NEWS_FEEDS = "cointelegraph,theblock,decrypt"
+    private val EXTRA_PARAMS = "Blocksdecoded"
 
     override val provider: InfoProvider = InfoProvider.CryptoCompare()
 
@@ -25,13 +27,14 @@ class CryptoCompareProvider(
     override fun destroy() {}
 
     //  CryptoNews
+    override fun getNewsAsync(latestTimestamp: Long?): Single<List<CryptoNews>> {
 
-    override fun getNews(categories: String): Single<List<CryptoNews>> {
-        return cryptoCompareService.news(apiKey, categories, "Sponsored")
+        return cryptoCompareService.news(apiKey, NEWS_FEEDS, EXTRA_PARAMS, latestTimestamp)
             .map {
                 it.Data.map {
                     factory.createCryptoNews(
                         it.id,
+                        it.source,
                         it.published_on,
                         it.imageurl,
                         it.title,
@@ -40,13 +43,6 @@ class CryptoCompareProvider(
                         it.categories.split("|")
                     )
                 }
-            }
-    }
-
-    override fun getLatestFiatXRates(sourceCurrency: String, targetCurrency: String): Single<Double> {
-        return cryptoCompareService.price(apiKey, sourceCurrency, targetCurrency)
-            .map {
-                it[targetCurrency]
             }
     }
 }
