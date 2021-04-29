@@ -27,6 +27,10 @@ class RatesManager(context: Context, currency: String) {
         return kit.latestRateMapObservable(currencyCode)
     }
 
+    fun getNewsAsync(): Single<List<CryptoNews>> {
+        return kit.cryptoNewsAync()
+    }
+
     fun latestRate(coinType: CoinType, currency: String): LatestRate? {
         return kit.getLatestRate(coinType, currency)
     }

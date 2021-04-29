@@ -36,13 +36,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/btnLoadNews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="News"
+        android:textSize="9sp"
+        app:layout_constraintEnd_toStartOf="@+id/btnLoadGLobalMarkets"
+        app:layout_constraintTop_toBottomOf="@+id/spPeriod" />
+
+    <Button
         android:id="@+id/btnLoadGLobalMarkets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:text="Global-Markets"
-        android:textSize="12sp"
+        android:text="Global-Mkt"
+        android:textSize="9sp"
         app:layout_constraintEnd_toStartOf="@+id/btnLoadMarkets"
         app:layout_constraintTop_toBottomOf="@+id/spPeriod" />
 
@@ -52,8 +63,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:text="TopMarkets"
-        android:textSize="12sp"
+        android:text="Top-Mkt"
+        android:textSize="9sp"
         app:layout_constraintEnd_toStartOf="@+id/btnFavorites"
         app:layout_constraintTop_toBottomOf="@+id/spPeriod" />
 
@@ -63,8 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:text="Favorite"
-        android:textSize="12sp"
+        android:text="Favs"
+        android:textSize="9sp"
         app:layout_constraintEnd_toStartOf="@+id/btnLoadCoinInfo"
         app:layout_constraintTop_toBottomOf="@+id/spPeriod" />
 
@@ -75,7 +86,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:text="CoinInfo"
-        android:textSize="12sp"
+        android:textSize="9sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spPeriod" />
 
@@ -86,7 +97,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:text="Tvl"
-        android:textSize="12sp"
+        android:textSize="9sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLoadCoinInfo" />
 
@@ -97,7 +108,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:text="DEXes"
-        android:textSize="12sp"
+        android:textSize="9sp"
         app:layout_constraintEnd_toStartOf="@id/btnTVL"
         app:layout_constraintTop_toBottomOf="@+id/btnLoadCoinInfo" />
 
@@ -108,7 +119,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:text="Search"
-        android:textSize="12sp"
+        android:textSize="9sp"
         app:layout_constraintEnd_toStartOf="@id/btnTopDefi"
         app:layout_constraintTop_toBottomOf="@+id/btnLoadCoinInfo" />
 
@@ -119,7 +130,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:text="Top-Tvl"
-        android:textSize="12sp"
+        android:textSize="9sp"
         app:layout_constraintEnd_toStartOf="@id/btnCategoryDex"
         app:layout_constraintTop_toBottomOf="@+id/btnLoadCoinInfo" />
 

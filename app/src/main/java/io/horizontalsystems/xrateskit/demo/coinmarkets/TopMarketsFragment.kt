@@ -85,6 +85,10 @@ class TopMarketsFragment() : Fragment() {
             rviewInfoDefi.visibility = View.GONE
         }
 
+        btnLoadNews.setOnClickListener {
+            viewModel.loadNews()
+        }
+
         btnLoadMarkets.setOnClickListener {
             viewModel.loadTopMarkets(spAct.timePeriod)
             rviewInfo4.visibility = View.GONE
@@ -158,6 +162,14 @@ class TopMarketsFragment() : Fragment() {
     }
 
     private fun observeLiveData() {
+        viewModel.news.observe(viewLifecycleOwner, Observer {
+            if(it.size > 0) {
+                val newsItem = it.first()
+                val sbar = Snackbar.make(this.requireView(), "Title${newsItem.title} - Source:${newsItem.source}", Snackbar.LENGTH_LONG)
+                sbar.show()
+            }
+        })
+
         viewModel.topMarkets.observe(viewLifecycleOwner, Observer {
             topMarketsAdapter.items = it
             topMarketsAdapter.notifyDataSetChanged()
