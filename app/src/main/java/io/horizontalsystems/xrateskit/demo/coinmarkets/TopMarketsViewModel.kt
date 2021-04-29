@@ -12,6 +12,7 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
 
     val searchCoinsLiveData = MutableLiveData<List<CoinData>>()
     val topMarkets = MutableLiveData<List<CoinMarket>>()
+    val news = MutableLiveData<List<CryptoNews>>()
     val topDefiMarkets = MutableLiveData<List<DefiTvl>>()
     val coinMarketDetails = MutableLiveData<List<CoinMarketDetailsItem>>()
     val progressState = MutableLiveData<Boolean>()
@@ -32,6 +33,23 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
                             println("Error !!! ${it.message}")
                             progressState.postValue(false)
                        })
+            .let {
+                disposables.add(it)
+            }
+    }
+
+    fun loadNews() {
+        progressState.postValue(true)
+        ratesManager.getNewsAsync()
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .subscribe({ newsResponse ->
+                news.postValue(newsResponse)
+                progressState.postValue(false)
+            }, {
+                println("Error !!! ${it.message}")
+                progressState.postValue(false)
+            })
             .let {
                 disposables.add(it)
             }
