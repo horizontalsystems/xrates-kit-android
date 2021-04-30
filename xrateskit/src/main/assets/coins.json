@@ -1,5 +1,5 @@
 {
-  "version": 15,
+  "version": 17,
   "categories": [
     {
       "id": "blockchain",
@@ -130,6 +130,11 @@
       "id": "computing",
       "name": "Computing",
       "description": "Decentralized on-demand computing solutions."
+    },
+    {
+      "id": "fun_tokens",
+      "name": "Fun Tokens",
+      "description": " "
     }
   ],
   "funds": [
@@ -1655,7 +1660,7 @@
     {
       "code": "DF",
       "name": "dForce Token",
-      "categories": ["yield_aggregators"],
+      "categories": ["yield_aggregators", "lending"],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -2953,7 +2958,7 @@
     {
       "code": "LOOM",
       "name": "Loom Network",
-      "categories": ["b2b"],
+      "categories": [],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -3643,7 +3648,7 @@
     {
       "code": "ZKS",
       "name": "ZKSwap",
-      "categories": ["privacy", "scaling"],
+      "categories": ["scaling"],
       "active": true,
       "platform": {
         "name": "",
@@ -3786,7 +3791,7 @@
     {
       "code": "BLANK",
       "name": "Blank",
-      "categories": ["privacy"],
+      "categories": ["wallets"],
       "active": true,
       "platform": {
         "name": "",
@@ -3891,7 +3896,7 @@
     {
       "code": "ONE",
       "name": "Harmony",
-      "categories": ["scaling", "cross_chain"],
+      "categories": ["scaling", "cross_chain","blockchain"],
       "active": true,
       "description": "",
       "links": {
@@ -5096,7 +5101,7 @@
         "telegram": ""
       },
       "rating": "",
-      "id": "bep2|COS-2E4",
+      "id": "bep20|0x96dd399f9c3afda1f194182f71600f1b65946501",
       "funds": ["binance_labs"]
     },
     {
@@ -6332,7 +6337,7 @@
     {
       "code": "SPDR",
       "name": "SpiderDAO",
-      "categories": ["privacy"],
+      "categories": [ ],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -6855,7 +6860,7 @@
     {
       "code": "UMX",
       "name": "UniMex Network",
-      "categories": ["dexes"],
+      "categories": [ ],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -7116,7 +7121,7 @@
     {
       "code": "XFT",
       "name": "Offshift",
-      "categories": ["privacy"],
+      "categories": [ ],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -7634,7 +7639,7 @@
     {
       "code": "BNB",
       "name": "Binance Coin",
-      "categories": ["dexes", "exchange_tokens"],
+      "categories": ["exchange_tokens"],
       "active": true,
       "description": "BNB powers the Binance ecosystem and is the native asset of the Binance Chain. BNB is a cryptocurrency created in June 2017, launched during an ICO in July, and initially issued as an ERC-20 token. Designed to be used for a fee reduction on the Binance exchange, its scope was extended over the years.BNB powers the Binance Chain as its native chain token. For instance, it is used to pay fees on the Binance DEX, issue new tokens, send/cancel orders, and transfer assets.BNB is also powering the Binance Smart Chain, which is an EVM-compatible network, forked from “go-ethereum”. It supports smart contracts and relies on a new consensus mechanism: Proof-of-Staked Authority (PoSA) consensus (“Parlia”), which incorporates elements from both Proof of Stake and Proof of Authority. BNB is used for delegated staking on the authority validator, leading to staking rewards for users and validators.Besides its on-chain functions, BNB has multiple additional use-cases such as fee discounts on multiple exchanges (e.g., Binance.com), payment asset on third-party services, and participation rights &amp; transacting currency on Binance Launchpad.At the core of the economics of BNB, there is a burn mechanism leading to period reductions in its total supply (~ every three months). From its initial maximum supply of 200 million, burns are expected to continue until the supply reaches 100 million.Whitepaper",
       "links": {
@@ -7645,7 +7650,7 @@
         "telegram": ""
       },
       "rating": "",
-      "id": "bep2|BNB",
+      "id": "binanceSmartChain",
       "funds": []
     },
     {
@@ -7878,7 +7883,7 @@
     {
       "code": "LRC",
       "name": "Loopring",
-      "categories": ["dexes"],
+      "categories": ["dexes","scaling"],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -8083,7 +8088,7 @@
         "telegram": "https://t.me/thorchain_org"
       },
       "rating": "",
-      "id": "bep2|RUNE-B1A",
+      "id": "erc20|0x3155ba85d5f96b2d030a4966af206230e46849cb",
       "funds": ["zee_prime_capital"]
     },
     {
@@ -8149,7 +8154,7 @@
         "telegram": ""
       },
       "rating": "",
-      "id": "bep2|TWT-8C2",
+      "id": "bep20|0x4b0f1812e5df2a09796481ff14017e6005508003",
       "funds": []
     },
     {
@@ -8335,6 +8340,702 @@
       },
       "rating": "",
       "id": "erc20|0x21bfbda47a0b4b5b1248c767ee49f7caa9b23697",
+      "funds": []
+    },
+    {
+      "code": "EPS",
+      "name": "Ellipsis",
+      "categories": ["dexes"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "bep20|0xa7f552078dcc247c2684336020c03648500c6d9f",
+      "funds": []
+    },
+    {
+      "code": "RDN",
+      "name": "Raiden Network Token",
+      "categories": ["scaling"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x255aa6df07540cb5d3d297f0d0d4d84cb52bc8e6",
+      "funds": []
+    },
+    {
+      "code": "SKL",
+      "name": "SKALE",
+      "categories": ["scaling"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x00c83aecc790e8a4453e5dd3b0b4b3680501a7a7",
+      "funds": []
+    },
+    {
+      "code": "BUNNY",
+      "name": "BunnyToken",
+      "categories": ["yield_aggregators"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "bep20|0xc9849e6fdb743d08faee3e34dd2d1bc69ea11a51",
+      "funds": []
+    },
+    {
+      "code": "VALUE",
+      "name": "Value DeFi",
+      "categories": ["yield_aggregators"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x49e833337ece7afe375e44f4e3e8481029218e5c",
+      "funds": []
+    },
+    {
+      "code": "SGT",
+      "name": "SharedStake Governance Token",
+      "categories": ["staking_eth_2_0"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x84810bcf08744d5862b8181f12d17bfd57d3b078",
+      "funds": []
+    },
+    {
+      "code": "ALPACA",
+      "name": "Alpaca Finance",
+      "categories": ["yield_aggregators"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "bep20|0x8f0528ce5ef7b51152a59745befdd91d97091d2f",
+      "funds": []
+    },
+    {
+      "code": "FEI",
+      "name": "Fei Protocol",
+      "categories": ["algo_stablecoins"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x956f47f50a910163d8bf957cf5846d573e7f87ca",
+      "funds": []
+    },
+    {
+      "code": "MIOTA",
+      "name": "IOTA",
+      "categories": ["blockchain"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|iota",
+      "funds": []
+    },
+    {
+      "code": "XRP",
+      "name": "XRP",
+      "categories": ["blockchain"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|ripple",
+      "funds": []
+    },
+    {
+      "code": "WIN",
+      "name": "WINk",
+      "categories": ["oracles"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|wink",
+      "funds": []
+    },
+    {
+      "code": "ACS",
+      "name": "ACryptoS",
+      "categories": ["yield_aggregators"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "bep20|0x4197c6ef3879a08cd51e5560da5064b773aa1d29",
+      "funds": []
+    },
+    {
+      "code": "BTMX",
+      "name": "Bitmax Token",
+      "categories": ["exchange_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0xcca0c9c383076649604ee31b20248bc04fdf61ca",
+      "funds": []
+    },
+    {
+      "code": "WOO",
+      "name": "Wootrade Network",
+      "categories": ["exchange_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x4691937a7508860f876c9c0a2a617e7d9e945d4b",
+      "funds": []
+    },
+    {
+      "code": "ZMT",
+      "name": "Zipmex Token",
+      "categories": ["exchange_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0xaa602de53347579f86b996d2add74bb6f79462b2",
+      "funds": []
+    },
+    {
+      "code": "BDPI",
+      "name": "Interest Bearing DPI",
+      "categories": ["index_funds"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x0309c98b1bffa350bcb3f9fb9780970ca32a5060",
+      "funds": []
+    },
+    {
+      "code": "BAR",
+      "name": "FC Barcelona Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|fc-barcelona-fan-token",
+      "funds": []
+    },
+    {
+      "code": "PSG",
+      "name": "Paris Saint-Germain Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|paris-saint-germain-fan-token",
+      "funds": []
+    },
+    {
+      "code": "JUV",
+      "name": "Juventus Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|juventus-fan-token",
+      "funds": []
+    },
+    {
+      "code": "GAL",
+      "name": "Galatasaray Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|galatasaray-fan-token",
+      "funds": []
+    },
+    {
+      "code": "ACM",
+      "name": "AC Milan Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|ac-milan-fan-token",
+      "funds": []
+    },
+    {
+      "code": "ATM",
+      "name": "Atletico Madrid Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|atletico-madrid",
+      "funds": []
+    },
+    {
+      "code": "OG",
+      "name": "OG Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|og-fan-token",
+      "funds": []
+    },
+    {
+      "code": "ASR",
+      "name": "AS Roma Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|as-roma-fan-token",
+      "funds": []
+    },
+    {
+      "code": "STV",
+      "name": "Sint-Truidense Voetbalvereniging Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|sint-truidense-voetbalvereniging",
+      "funds": []
+    },
+    {
+      "code": "TH",
+      "name": "Team Heretics Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|team-heretics-fan-token",
+      "funds": []
+    },
+    {
+      "code": "TRA",
+      "name": "Trabzonspor Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|trabzonspor-fan-token",
+      "funds": []
+    },
+    {
+      "code": "APL",
+      "name": "Apollo",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|apollo",
+      "funds": []
+    },
+    {
+      "code": "NAVI",
+      "name": "Natus Vincere Fan Token",
+      "categories": ["fun_tokens"],
+      "active": true,
+      "platform": {
+        "name": "",
+        "address": "",
+        "type": ""
+      },
+      "description": "",
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|natus-vincere-fan-token",
       "funds": []
     }
   ],
