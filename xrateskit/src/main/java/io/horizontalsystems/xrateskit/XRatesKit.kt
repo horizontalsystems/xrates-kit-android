@@ -92,7 +92,7 @@ class XRatesKit(
         return historicalRateManager.getHistoricalRateAsync(coinType, currencyCode, timestamp)
     }
 
-    fun cryptoNewsAync(latestTimestamp: Long? = null): Single<List<CryptoNews>> {
+    fun cryptoNewsAsync(latestTimestamp: Long? = null): Single<List<CryptoNews>> {
         return cryptoNewsManager.getNewsAsync(latestTimestamp)
     }
 
