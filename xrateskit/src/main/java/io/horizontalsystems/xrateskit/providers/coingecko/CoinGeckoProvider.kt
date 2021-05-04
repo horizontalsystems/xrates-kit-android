@@ -95,7 +95,9 @@ class CoinGeckoProvider(
 
 
             return Single.zip(singles) { zippedObject ->
-                zippedObject.toList().flatMap { it as List<CoinMarket>}
+                zippedObject.toList().flatMap {
+                    it as List<CoinMarket>
+                }
             }
 
         } catch (ex: Exception) {
@@ -157,7 +159,7 @@ class CoinGeckoProvider(
             coinData = CoinData(type, responseCoinMarket.symbol.toUpperCase(Locale.ENGLISH), responseCoinMarket.name),
             currency = currencyCode,
             rate = responseCoinMarket.current_price,
-            rateOpenDay = responseCoinMarket.price_change_24h,
+            rateOpenDay = responseCoinMarket.price_change_24h ?: BigDecimal.ZERO,
             rateDiff = responseCoinMarket.price_change_percentage_24h ?: BigDecimal.ZERO,
             volume = responseCoinMarket.total_volume,
             supply = responseCoinMarket.circulating_supply,
