@@ -80,7 +80,7 @@ class ProviderCoinsManager(
         if (currentTimestamp - coinsPriorityUpdateTimestamp < priorityUpdateInterval) return
 
         coinGeckoProvider?.let { provider ->
-            provider.getTopCoinMarketsAsync("USD", TimePeriod.HOUR_24, 400)
+            provider.getTopCoinMarketsAsync("USD", TimePeriod.HOUR_24, 1000)
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .subscribe({ topCoins ->
@@ -88,6 +88,16 @@ class ProviderCoinsManager(
                 }, {
 
                 }).let { disposable.add(it) }
+        }
+    }
+
+    private fun platformPriority(coinType: CoinType): Int {
+        return when(coinType) {
+            is CoinType.Erc20 -> 1
+            is CoinType.Bep20 -> 2
+            is CoinType.Bep2 -> 3
+            is CoinType.Unsupported -> 4
+            else -> 0
         }
     }
 
@@ -110,7 +120,9 @@ class ProviderCoinsManager(
     }
 
     fun getCoinTypes(providerCoinId: String, provider: InfoProvider): List<CoinType> {
-        return storage.getCoinTypesByProviderCoinId(providerCoinId, provider)
+        return storage.getCoinTypesByProviderCoinId(providerCoinId, provider).sortedBy {
+            platformPriority(it)
+        }
     }
 
     fun searchCoins(searchText: String): List<CoinData> {

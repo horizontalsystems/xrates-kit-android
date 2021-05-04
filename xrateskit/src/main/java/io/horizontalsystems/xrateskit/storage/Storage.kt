@@ -128,7 +128,7 @@ class Storage(private val database: Database) : IStorage {
 
     // Provider Coin Info
     override fun searchCoins(searchText: String): List<ProviderCoinEntity> {
-        return providerCoinDao.searchCoins("%${searchText}%")
+        return providerCoinDao.searchCoins(searchText)
     }
 
     override fun saveProviderCoins(providerCoins: List<ProviderCoinEntity>) {
