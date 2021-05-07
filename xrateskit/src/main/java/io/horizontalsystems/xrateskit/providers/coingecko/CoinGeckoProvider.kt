@@ -10,8 +10,6 @@ import io.horizontalsystems.xrateskit.utils.RetrofitUtils
 import io.reactivex.Single
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.logging.Logger
 import kotlin.math.absoluteValue
@@ -264,6 +262,18 @@ class CoinGeckoProvider(
                     return@let SimpleDateFormat("yyyy-MM-dd").parse(it)
                 }
 
+                val description: String
+                val descriptionType: CoinMeta.DescriptionType
+
+                val descriptionStored = coinInfoManager.getCoinInfoDescription(coinType)
+                if (descriptionStored == null) {
+                    description = coin.description["en"] ?: ""
+                    descriptionType = CoinMeta.DescriptionType.HTML
+                } else {
+                    description = descriptionStored
+                    descriptionType = CoinMeta.DescriptionType.MARKDOWN
+                }
+
                 CoinMarketDetails(
                     data = CoinData(coinType, coin.symbol, coin.name),
                     currencyCode = currencyCode,
@@ -277,7 +287,8 @@ class CoinGeckoProvider(
                     circulatingSupply = coin.market_data.circulating_supply ?: BigDecimal.ZERO,
                     totalSupply = coin.market_data.total_supply ?: BigDecimal.ZERO,
                     meta = CoinMeta(
-                        coin.description["en"] ?: "",
+                        description,
+                        descriptionType,
                         coinInfoManager.getLinks(coinType, links),
                         coinInfoManager.getCoinRating(coinType),
                         coinInfoManager.getCoinCategories(coinType),

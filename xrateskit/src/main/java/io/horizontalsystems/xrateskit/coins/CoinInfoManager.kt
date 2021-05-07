@@ -50,6 +50,10 @@ class CoinInfoManager(
         }
     }
 
+    fun getCoinInfoDescription(coinType: CoinType): String? {
+        return storage.getCoinInfo(coinType)?.description
+    }
+
     fun getCoinRating(coinType: CoinType): String? {
         return storage.getCoinInfo(coinType)?.rating
     }
