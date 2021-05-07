@@ -16,13 +16,18 @@ data class CoinData(
 
 class CoinMeta(
     val description: String,
+    val descriptionType: DescriptionType,
     val links: Map<LinkType, String>,
     val rating: String?,
     var categories: List<CoinCategory>,
     var fundCategories: List<CoinFundCategory>,
     val platforms: Map<CoinPlatformType, String>,
     val launchDate: Date? = null,
-)
+) {
+    enum class DescriptionType {
+        HTML, MARKDOWN
+    }
+}
 
 enum class LinkType{
     GUIDE,
