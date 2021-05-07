@@ -338,7 +338,7 @@ class CoinGeckoProvider(
                 val timestamp = rateData[0].toLong() / 1000
 
                 if (timestamp <= nextTs || chartPointsResponse.prices.size <= chartPointsCount) {
-                    nextTs = timestamp - chartPointKey.chartType.seconds
+                    nextTs = (timestamp - chartPointKey.chartType.seconds) + 180 // + 3 minutes
                     val rate = rateData[1]
                     val volume = if (chartPointKey.chartType.days >= 90)
                                     volumes[index][1]
