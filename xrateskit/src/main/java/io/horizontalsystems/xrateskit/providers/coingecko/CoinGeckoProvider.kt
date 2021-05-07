@@ -321,17 +321,16 @@ class CoinGeckoProvider(
         ).map { chartPointsResponse ->
             var nextTs = Long.MAX_VALUE
             val chartPointsCount = chartPointKey.chartType.interval * 2
-
-            chartPointsResponse.prices.sortedByDescending { it[0] }
-            chartPointsResponse.total_volumes.sortedByDescending { it[0] }
-            chartPointsResponse.prices.mapIndexedNotNull { index, rateData ->
+            val volumes = chartPointsResponse.total_volumes.reversed()
+            
+            chartPointsResponse.prices.reversed().mapIndexedNotNull { index, rateData ->
                 val timestamp = rateData[0].toLong() / 1000
 
                 if (timestamp <= nextTs || chartPointsResponse.prices.size <= chartPointsCount) {
                     nextTs = timestamp - chartPointKey.chartType.seconds
                     val rate = rateData[1]
                     val volume = if (chartPointKey.chartType.days >= 90)
-                                     chartPointsResponse.total_volumes[index][1]
+                                    volumes[index][1]
                                  else BigDecimal.ZERO
 
                     ChartPointEntity(
@@ -345,7 +344,7 @@ class CoinGeckoProvider(
                 } else {
                     null
                 }
-            }.sortedByDescending { it.timestamp }
+            }.reversed()
         }
     }
 
