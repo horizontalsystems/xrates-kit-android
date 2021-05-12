@@ -58,7 +58,7 @@ interface CoinGeckoService {
             val id: String,
             val symbol: String,
             val name: String,
-            val current_price: BigDecimal,
+            val current_price: BigDecimal?,
             val market_cap: BigDecimal,
             val fully_diluted_valuation: BigDecimal?,
             val total_supply: BigDecimal?,
