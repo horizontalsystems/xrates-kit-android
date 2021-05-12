@@ -156,7 +156,7 @@ class CoinGeckoProvider(
         return factory.createCoinMarket(
             coinData = CoinData(type, responseCoinMarket.symbol.toUpperCase(Locale.ENGLISH), responseCoinMarket.name),
             currency = currencyCode,
-            rate = responseCoinMarket.current_price,
+            rate = responseCoinMarket.current_price ?: BigDecimal.ZERO,
             rateOpenDay = responseCoinMarket.price_change_24h ?: BigDecimal.ZERO,
             rateDiff = responseCoinMarket.price_change_percentage_24h ?: BigDecimal.ZERO,
             volume = responseCoinMarket.total_volume,
