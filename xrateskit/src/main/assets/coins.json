@@ -1,5 +1,5 @@
 {
-  "version": 27,
+  "version": 28,
   "categories": [
     {
       "id": "blockchain",
@@ -582,39 +582,39 @@
       "rating": "",
       "audit": [
         {
-          "name": "MixBytes - December 3, 2020",
+          "name": "MixBytes - December 3, 2020",
           "url": "https://github.com/aave/protocol-v2/blob/master/audits/Mixbytes-aave-v2-03-12-2020.pdf"
         },
         {
-          "name": "PeckShield - December 3, 2020",
+          "name": "PeckShield - December 3, 2020",
           "url": "https://github.com/aave/protocol-v2/blob/master/audits/Peckshield-aave-v2-03-12-2020-EN.pdf"
         },
         {
-          "name": "CertiK - December 2, 2020",
+          "name": "CertiK - December 2, 2020",
           "url": "https://github.com/aave/protocol-v2/blob/master/audits/Certik-aave-v2-03-12-2020.pdf"
         },
         {
-          "name": "CertiK - September 21, 2020",
+          "name": "CertiK - September 21, 2020",
           "url": "https://github.com/aave/safety-module/blob/master/audits/CertiK_Aave_Staking_audit.pdf"
         },
         {
-          "name": "ConsenSys Diligence - August 2020",
+          "name": "ConsenSys Diligence - August 2020",
           "url": "https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-M3C77KySce4HXyLqkEq%2F-ME38dH38FdIqGZrM3GR%2F-ME3L_NQih4VSsV3iruG%2FAave_CreditDelegationVault_Audit_Final.pdf?alt=media&token=43412247-b932-4015-bf5e-e81f81c088f2"
         },
         {
-          "name": "CertiK - July 2020",
+          "name": "CertiK - July 2020",
           "url": "https://github.com/aave/aave-token/blob/master/audits/AaveTokenReport_CertiK.pdf"
         },
         {
-          "name": "ConsenSys Diligence - July 2020",
+          "name": "ConsenSys Diligence - July 2020",
           "url": "https://consensys.net/diligence/audits/2020/07/aave-token/"
         },
         {
-          "name": "ConsenSys Diligence - May 20, 2020",
+          "name": "ConsenSys Diligence - May 20, 2020",
           "url": "https://consensys.net/diligence/audits/2020/05/aave-cpm-price-provider/"
         },
         {
-          "name": "OpenZeppelin - January 20, 2020",
+          "name": "OpenZeppelin - January 20, 2020",
           "url": "https://blog.openzeppelin.com/aave-protocol-audit/"
         }
       ],
@@ -903,15 +903,15 @@
       "rating": "",
       "audit": [
         {
-          "name": "OpenZeppelin - August 9, 2020",
+          "name": "OpenZeppelin - August 9, 2020",
           "url": "https://blog.openzeppelin.com/balancer-contracts-audit/"
         },
         {
-          "name": "ConsenSys Diligence - May 2020",
+          "name": "ConsenSys Diligence - May 2020",
           "url": "https://diligence.consensys.net/audits/2020/05/balancer-finance/"
         },
         {
-          "name": "Trail of Bits - March 5, 2020",
+          "name": "Trail of Bits - March 5, 2020",
           "url": "https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LtMQYB90ZuO38aKDyto%2F-M2EdQiZCQBtqpohoGtt%2F-M2EdpY4ind-7TyqtJL-%2FTrail%20of%20Bits%20Full%20Audit.pdf?alt=media&token=285781fb-c180-4cc3-8aeb-f5fc99578693"
         }
       ],
@@ -1018,27 +1018,27 @@
       "rating": "",
       "audit": [
         {
-          "name": "PeckShield - October 11, 2020",
+          "name": "PeckShield - October 11, 2020",
           "url": "https://drive.google.com/file/d/1baijgjazL4PXD98hD8lGHfuvwNruIUbU/view"
         },
         {
-          "name": "Certik - Octobe",
+          "name": "Certik - Octobe",
           "url": "https://drive.google.com/file/d/1gGszH3bSU6gUZG0oCN79tfYWCx7OfGDe/view)r 202"
         },
         {
-          "name": "Certik - October 9, 2020",
+          "name": "Certik - October 9, 2020",
           "url": "https://drive.google.com/file/d/1QvYBjlGsYKtuO6C82c4-eX4YF2F_NaPk/view"
         },
         {
-          "name": "Halborn - August 17, 2020",
+          "name": "Halborn - August 17, 2020",
           "url": "https://github.com/HalbornSecurity/PublicReports/blob/master/Solidity%20Smart%20Contract%20Audits/Bancor_smartcontract_halborn_report_V1.pdf"
         },
         {
-          "name": "ConsenSys Diligence - July 2020",
+          "name": "ConsenSys Diligence - July 2020",
           "url": "https://drive.google.com/file/d/1NaUEy29L5vk6lcBn0L4DRv3cWgdpAGQu/view"
         },
         {
-          "name": "Arachnid - May 2017",
+          "name": "Arachnid - May 2017",
           "url": "https://gist.github.com/Arachnid/c65fd1bd61a8e0294aef95a4808edc78"
         }
       ],
@@ -1139,23 +1139,23 @@
       "rating": "",
       "audit": [
         {
-          "name": "Certik - September 2020",
+          "name": "Certik - September 2020",
           "url": "https://bzx.network/pdfs/bZx_v2_Audit%E2%80%93Report_CertiK.pdf"
         },
         {
-          "name": "PeckShield - September 2020",
+          "name": "PeckShield - September 2020",
           "url": "https://bzx.network/pdfs/peckshield-audit-report-bZxV2-v1.0rc1.pdf"
         },
         {
-          "name": "Certik - July 2020",
+          "name": "Certik - July 2020",
           "url": "https://bzx.network/pdfs/BZRX_vBZRX_CertiK_Verification_Report_1_07_11_2020.pdf"
         },
         {
-          "name": "Certik - March 2020",
+          "name": "Certik - March 2020",
           "url": "https://bzx.network/pdfs/CertiK%20Verification%20Report%20for%20bZx.pdf"
         },
         {
-          "name": "ZK Labs - September 2018",
+          "name": "ZK Labs - September 2018",
           "url": "https://github.com/mattdf/audits/blob/master/bZx/bzx-audit.pdf"
         }
       ],
@@ -1337,7 +1337,7 @@
         "address": "0xc00e94cb662c3520282e6f5717214004a7f26888",
         "type": "ERC20"
       },
-      "description": "### Project Description\n\nCompound is a decentralized platform that connects cryptocurrency lenders and borrowers.\n\nIn essence, users lend idle cryptocurrency assets to the Compound Finance liquidity pool, from which borrowers can borrow these assets.\n\nFor cryptocurrency owners Compound allows to deposit their holdings into a smart contract and earn an interest on deposits.\n\nAt the same time potential borrowers may request credit from Compound for a fee and collateral deposit (in form of another cryptocurrency).\n\nBorrowing and lending available to regular users as well as smart contracts. This enables DeFi engineers to build decentralized autonomous services which are able to access liquidity on Compound on demand, without requiring any mediating party or other preconditions.\n\nThe borrowing and lending rates are defined algorithmically based on real-time market dynamics. For instance, when the asset supply increases as more users deposit this asset, it leads to a decrease in borrowing/lending rates.\n\n### Token Description\n\nThe COMP token is governance token of the protocol. COMP token-holders can discuss and vote on any future changes to the Compound protocol. For instance, they can initiate proposals to include new assets, or change asset-specific requirements on Compound like required collateralization margins.\n\nIt was explicitly not marketed as an investment, however, it is widely believed token holders will eventually vote in a mechanism of value capture providing them with some claim on the cash flows of the system\n\n### Token Emission\n\nA total of 10 million COMP tokens were created and distributed as follows:\n\n- 4,229,949: users of the protocol (over 4-year period)\n- 2,396,307: shareholders of Compound Labs, Inc.\n- 2,226,037: founders & team (4-year vesting)\n- 372,707: future team members\n- 775,000: for community to advance governance through other means",
+      "description": "### Project Description\n\nCompound is a decentralized platform that connects cryptocurrency lenders and borrowers.\n\nIn essence, users lend idle cryptocurrency assets to the Compound Finance liquidity pool, from which borrowers can borrow these assets.\n\nFor cryptocurrency owners Compound allows to deposit their holdings into a smart contract and earn an interest on deposits.\n\nAt the same time potential borrowers may request credit from Compound for a fee and collateral deposit (in form of another cryptocurrency).\n\nBorrowing and lending available to regular users as well as smart contracts. This enables DeFi engineers to build decentralized autonomous services which are able to access liquidity on Compound on demand, without requiring any mediating party or other preconditions.\n\nThe borrowing and lending rates are defined algorithmically based on real-time market dynamics. For instance, when the asset supply increases as more users deposit this asset, it leads to a decrease in borrowing/lending rates.\n\n### Token Description\n\nThe COMP token is governance token of the protocol. COMP token-holders can discuss and vote on any future changes to the Compound protocol. For instance, they can initiate proposals to include new assets, or change asset-specific requirements on Compound like required collateralization margins.\n\nIt was explicitly not marketed as an investment, however, it is widely believed token holders will eventually vote in a mechanism of value capture providing them with some claim on the cash flows of the system\n\n### Token Emission\n\nA total of 10 million COMP tokens were created and distributed as follows:\n\n- 4,229,949: users of the protocol (over 4-year period)\n- 2,396,307: shareholders of Compound Labs, Inc.\n- 2,226,037: founders & team (4-year vesting)\n- 372,707: future team members\n- 775,000: for community to advance governance through other means",
       "links": {
         "website": "https://compound.finance/governance/comp",
         "whitepaper": "",
@@ -1350,23 +1350,23 @@
       "rating": "",
       "audit": [
         {
-          "name": "OpenZeppelin - May 22, 2020",
+          "name": "OpenZeppelin - May 22, 2020",
           "url": "https://blog.openzeppelin.com/compound-comp-distribution-system-audit/"
         },
         {
-          "name": "OpenZeppelin - April 26, 2020",
+          "name": "OpenZeppelin - April 26, 2020",
           "url": "https://blog.openzeppelin.com/compound-tether-integration-audit/"
         },
         {
-          "name": "Trail of Bits - February 28, 2020",
+          "name": "Trail of Bits - February 28, 2020",
           "url": "https://github.com/trailofbits/publications/blob/master/reviews/compound-governance.pdf"
         },
         {
-          "name": "OpenZeppelin - February 25, 2020",
+          "name": "OpenZeppelin - February 25, 2020",
           "url": "https://blog.openzeppelin.com/compound-alpha-governance-system-audit/"
         },
         {
-          "name": "OpenZeppelin - February 9, 2020",
+          "name": "OpenZeppelin - February 9, 2020",
           "url": "https://blog.openzeppelin.com/compound-finance-mcd-dsr-integration/"
         }
       ],
@@ -1496,7 +1496,7 @@
       "rating": "",
       "audit": [
         {
-          "name": "Quantstamp - October 15, 2020",
+          "name": "Quantstamp - October 15, 2020",
           "url": "https://www.curve.fi/curve_audits/CurveMetapoolAudit.pdf"
         }
       ],
@@ -1836,11 +1836,11 @@
       "rating": "",
       "audit": [
         {
-          "name": "Trail of Bits - September 18, 2020",
+          "name": "Trail of Bits - September 18, 2020",
           "url": "https://github.com/DODOEX/dodo-smart-contract/blob/master/audit/%5BTrail%20of%20Bits%5D%20DODO%20Summary%20Report.pdf"
         },
         {
-          "name": "PeckShield - July 10, 2020",
+          "name": "PeckShield - July 10, 2020",
           "url": "https://github.com/DODOEX/dodo-smart-contract/blob/master/audit/%5BPeckshield%5D%20dodo_audit_report_2020_16_en_1.0.pdf"
         }
       ],
@@ -2066,11 +2066,11 @@
       "rating": "",
       "audit": [
         {
-          "name": "PeckShield - October 1, 2020",
+          "name": "PeckShield - October 1, 2020",
           "url": "https://github.com/harvest-finance/harvest/blob/master/audits/PeckShield-Harvest.pdf"
         },
         {
-          "name": "Haechi - September 29, 2020",
+          "name": "Haechi - September 29, 2020",
           "url": "https://github.com/harvest-finance/harvest/blob/master/audits/Haechi-Harvest.pdf"
         }
       ],
@@ -2179,11 +2179,11 @@
       "rating": "",
       "audit": [
         {
-          "name": "Certik - July 8, 2020",
+          "name": "Certik - July 8, 2020",
           "url": "https://certik-public-assets.s3.amazonaws.com/REP-ForTube-01_08_2020.pdf"
         },
         {
-          "name": "SlowMist - May 2020",
+          "name": "SlowMist - May 2020",
           "url": "https://www.for.tube/ForTube2.0_BOND%20Smart%20Contract%20Security%20Audit_20200602.pdf"
         }
       ],
@@ -2353,19 +2353,19 @@
       "rating": "",
       "audit": [
         {
-          "name": "G0 Group - May 4, 2020",
+          "name": "G0 Group - May 4, 2020",
           "url": "https://github.com/gnosis/safe-contracts/blob/development/docs/Gnosis_Safe_Audit_Report_1_2_0.pdf"
         },
         {
-          "name": "G0 Group - November 11, 2019",
+          "name": "G0 Group - November 11, 2019",
           "url": "https://github.com/g0-group/Audits/blob/master/G0Group-GnosisSafe-Ammended.pdf"
         },
         {
-          "name": "Runtime Verification - February 7, 2019",
+          "name": "Runtime Verification - February 7, 2019",
           "url": "https://github.com/gnosis/safe-contracts/blob/development/docs/Gnosis_Safe_Formal_Verification_Report_1_0_0.pdf"
         },
         {
-          "name": "Alexey Akhunov - July 2018",
+          "name": "Alexey Akhunov - July 2018",
           "url": "https://github.com/gnosis/safe-contracts/blob/development/docs/Gnosis_Safe_Audit_Report.pdf"
         }
       ],
@@ -2692,11 +2692,11 @@
       "rating": "",
       "audit": [
         {
-          "name": "Quantstamp - November 26, 2020",
+          "name": "Quantstamp - November 26, 2020",
           "url": "https://certificate.quantstamp.com/full/idle-goverance"
         },
         {
-          "name": "Quantstamp - December 10, 2020",
+          "name": "Quantstamp - December 10, 2020",
           "url": "https://certificate.quantstamp.com/full/idle-finance"
         }
       ],
@@ -2817,19 +2817,19 @@
       "rating": "",
       "audit": [
         {
-          "name": "SmartDec - December 2, 2019",
+          "name": "SmartDec - December 2, 2019",
           "url": "https://github.com/KyberNetwork/smart-contracts/blob/master/audits/APRAudit/SmartDecAudit.pdf"
         },
         {
-          "name": "ChainSecurity - January 9, 2019",
+          "name": "ChainSecurity - January 9, 2019",
           "url": "https://github.com/KyberNetwork/smart-contracts/blob/master/audits/kyberV3Audit/ChainSecurity_Kyberv3.pdf"
         },
         {
-          "name": "ChainSecurity - June 28, 2018",
+          "name": "ChainSecurity - June 28, 2018",
           "url": "https://github.com/KyberNetwork/smart-contracts/blob/master/audits/kyberV2Audit/ChainSecurity_KyberNetwork_Public.pdf"
         },
         {
-          "name": "BlockchainLabs.NZ - February 7, 2018",
+          "name": "BlockchainLabs.NZ - February 7, 2018",
           "url": "https://github.com/KyberNetwork/smart-contracts/blob/master/audits/kyberV1Audit2/KyberNetwork%20BlockchainLabs%20Audit%20Report.pdf"
         }
       ],
@@ -3086,11 +3086,11 @@
       "rating": "",
       "audit": [
         {
-          "name": "OpenZeppelin - June 5, 2020",
+          "name": "OpenZeppelin - June 5, 2020",
           "url": "https://blog.openzeppelin.com/mcdex-mai-protocol-audit/"
         },
         {
-          "name": "ConsenSys Diligence - May 2020",
+          "name": "ConsenSys Diligence - May 2020",
           "url": "https://consensys.net/diligence/audits/2020/05/mcdex-mai-protocol-v2/"
         }
       ],
@@ -3190,23 +3190,23 @@
       "rating": "",
       "audit": [
         {
-          "name": "Trail of Bits - March 23, 2018",
+          "name": "Trail of Bits - March 23, 2018",
           "url": "https://github.com/makerdao/audits/blob/master/mcd/trail-of-bits.pdf"
         },
         {
-          "name": "Bok Consulting - June 21, 2018",
+          "name": "Bok Consulting - June 21, 2018",
           "url": "https://github.com/bokkypoobah/MakerDAOSaiContractAudit/tree/8dbefb06826c01082ff2fb9c368d30c0336733a1/audit"
         },
         {
-          "name": "White Hat Group - December 15, 2017",
+          "name": "White Hat Group - December 15, 2017",
           "url": "https://github.com/makerdao/audits/blob/master/scd/white-hat-group.pdf"
         },
         {
-          "name": "Trail of Bits - December 8, 2017",
+          "name": "Trail of Bits - December 8, 2017",
           "url": "https://github.com/makerdao/audits/blob/master/dappsys/trail-of-bits.pdf"
         },
         {
-          "name": "Trail of Bits - October 24, 2017",
+          "name": "Trail of Bits - October 24, 2017",
           "url": "https://github.com/makerdao/audits/blob/master/scd/trail-of-bits.pdf"
         }
       ],
@@ -3295,11 +3295,11 @@
       "rating": "",
       "audit": [
         {
-          "name": "ConsenSys Diligence - July 2020",
+          "name": "ConsenSys Diligence - July 2020",
           "url": "https://consensys.net/diligence/audits/2020/07/mstable-1.1/"
         },
         {
-          "name": "Bramah Systems - April 2020",
+          "name": "Bramah Systems - April 2020",
           "url": "https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LxR8Ppz-_JQ7mRRKKgl%2F-M8VZ0fN5FQOJZPhONiA%2F-M8V_c3WStQFYTR5G2NP%2FmStable%20Audit%20--%20Bramah%20Systems.pdf?alt=media&token=d1f5756e-6e76-4918-877c-1c791b82e74f"
         }
       ],
@@ -5865,7 +5865,7 @@
     {
       "code": "POLS",
       "name": "Polkastarter",
-      "categories": ["fundraising"],
+      "categories": ["fundraising","cross_chain"],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -6308,23 +6308,23 @@
       "rating": "",
       "audit": [
         {
-          "name": "iosiro - November 2020",
+          "name": "iosiro - November 2020",
           "url": "https://iosiro.com/audits/synthetix-mimosa-release-smart-contract-audit"
         },
         {
-          "name": "iosiro - October 2020",
+          "name": "iosiro - October 2020",
           "url": "https://iosiro.com/audits/synthetix-deneb-release-smart-contract-audit"
         },
         {
-          "name": "iosiro - September 2020",
+          "name": "iosiro - September 2020",
           "url": "https://iosiro.com/audits/synthetix-fomalhaut-release-smart-contract-audit"
         },
         {
-          "name": "iosiro - August 2020",
+          "name": "iosiro - August 2020",
           "url": "https://iosiro.com/audits/synthetix-pollux-release-smart-contract-audit"
         },
         {
-          "name": "Sigma Prime - July 2020",
+          "name": "Sigma Prime - July 2020",
           "url": "https://github.com/sigp/public-audits/blob/master/synthetix/ethercollateral/review.pdf"
         }
       ],
@@ -6419,15 +6419,15 @@
       "rating": "",
       "audit": [
         {
-          "name": "Quantstamp - August 3, 2020",
+          "name": "Quantstamp - August 3, 2020",
           "url": "https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-Lpi9AHj62wscNlQjI-l%2F-MDpPr8Yo6WRri70y6jK%2F-MDpRA6694Ae1hZvk3TW%2FXDai%20Easy%20Staking%20-%20Final%20Report.pdf?alt=media&token=f58a70c3-d5e8-40be-812e-e1f9aad0996f"
         },
         {
-          "name": "Quantstamp - June 24, 2020",
+          "name": "Quantstamp - June 24, 2020",
           "url": "https://github.com/xdaichain/stake-token/blob/master/audit/Quantstamp/xDAI%20STAKE%20Token%20Distribution%20-%20Additional%20Report.pdf"
         },
         {
-          "name": "Quantstamp - September 5, 2019",
+          "name": "Quantstamp - September 5, 2019",
           "url": "https://github.com/xdaichain/stake-token/blob/master/audit/Quantstamp/DPOS%20token-Audit%20Final%20Report.pdf"
         }
       ],
@@ -6492,7 +6492,7 @@
         "address": "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2",
         "type": "ERC20"
       },
-      "description": "### Project Description\n\nSushiswap is a peer-to-peer, decentralized cryptocurrency exchange for trading Ethereum and Ethereum-based tokens (ERC20). Initially launched as a Uniswap clone, Sushiswap managed to attract significant userbase and attract some liquidity from Uniswap by introducing additional incentives.\n\n### Token Description\n\nThe native cryptocurrency token on Sushiswap protocol is SUSHI. The primary use case for SUSHI token holders is governance over Sushiswap protocol (i.e. Sushiswap development fund) as well as being able to claim 0.05% of all trading fees on the platform.\n\n### Token Emission\n\nSUSHI tokens can only be minted by supplying liquidity to SushiSwap pools. \n\nThere can be about 214 million SUSHI tokens in total. To ensure the long-term viability of the project, 10% of every SUSHI minted are set aside to fund the development of the platform. \n\nThe remaining 90% are meant for distribution among public community of liquidity providers.",
+      "description": "### Project Description\n\nSushiswap is a peer-to-peer, decentralized cryptocurrency exchange for trading Ethereum and Ethereum-based tokens (ERC20). Initially launched as a Uniswap clone, Sushiswap managed to attract significant userbase and attract some liquidity from Uniswap by introducing additional incentives.\n\n### Token Description\n\nThe native cryptocurrency token on Sushiswap protocol is SUSHI. The primary use case for SUSHI token holders is governance over Sushiswap protocol (i.e. Sushiswap development fund) as well as being able to claim 0.05% of all trading fees on the platform.\n\n### Token Emission\n\nSUSHI tokens can only be minted by supplying liquidity to SushiSwap pools. \n\nThere can be about 214 million SUSHI tokens in total. To ensure the long-term viability of the project, 10% of every SUSHI minted are set aside to fund the development of the platform. \n\nThe remaining 90% are meant for distribution among public community of liquidity providers.",
       "links": {
         "website": "https://sushiswap.org/",
         "whitepaper": "",
@@ -6504,11 +6504,11 @@
       "rating": "",
       "audit": [
         {
-          "name": "Quantstamp - September 9, 2020",
+          "name": "Quantstamp - September 9, 2020",
           "url": "https://github.com/quantstamp/sushiswap-security-review"
         },
         {
-          "name": "PeckShield - September 3, 2020",
+          "name": "PeckShield - September 3, 2020",
           "url": "https://github.com/peckshield/publications/blob/master/audit_reports/PeckShield-Audit-Report-SushiSwap-v1.0.pdf"
         }
       ],
@@ -6896,7 +6896,7 @@
         "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
         "type": "ERC20"
       },
-      "description": "### Project Description\n\nUniswap is a peer-to-peer, decentralized cryptocurrency exchange to trade Ethereum and Ethereum-based tokens (ERC20). Uniswap is one the first exchanges to utilize Automated Market Making (AMM) model and currently the largest decentralized exchange by trading volume.\n\nUniswap smart contracts today facilitate close to a billion worth of cryptocurrency daily, in autonomous and decentralized manner. Exchange operators have no means to censor service users or interfere with its operation.\n\nEach trading pair on Uniswap has its own liquidity pool. Anyone with cryptocurrency can create a liquidity pool on Uniswap or join an existing one and earn a share of trading fees (0.3%) as a reward.\n\n### Token Description\n\nThe native cryptocurrency token of Uniswap protocol is UNI. The primary use case for token is to oversee future Uniswap development steps, take part in a decision making and other governance related aspects.\n\n### Token Emission\n\nThere are 1,000,000,000 UNI tokens in total with a yearly 2% emission that will start 4 years after launch, sometime in 2024.\n\nThe tokens are being distributed per following criteria:\n\n- 60% to public community\n- 21.51% for team (4-year vesting)\n- 17.80% for investors (4-year vesting)\n- 0.69% for advisors (4-year vesting)",
+      "description": "### Project Description\n\nUniswap is a peer-to-peer, decentralized cryptocurrency exchange to trade Ethereum and Ethereum-based tokens (ERC20). Uniswap is one the first exchanges to utilize Automated Market Making (AMM) model and currently the largest decentralized exchange by trading volume.\n\nUniswap smart contracts today facilitate close to a billion worth of cryptocurrency daily, in autonomous and decentralized manner. Exchange operators have no means to censor service users or interfere with its operation.\n\nEach trading pair on Uniswap has its own liquidity pool. Anyone with cryptocurrency can create a liquidity pool on Uniswap or join an existing one and earn a share of trading fees (0.3%) as a reward.\n\n### Token Description\n\nThe native cryptocurrency token of Uniswap protocol is UNI. The primary use case for token is to oversee future Uniswap development steps, take part in a decision making and other governance related aspects.\n\n### Token Emission\n\nThere are 1,000,000,000 UNI tokens in total with a yearly 2% emission that will start 4 years after launch, sometime in 2024.\n\nThe tokens are being distributed per following criteria:\n\n- 60% to public community\n- 21.51% for team (4-year vesting)\n- 17.80% for investors (4-year vesting)\n- 0.69% for advisors (4-year vesting)",
       "links": {
         "website": "https://uniswap.org/",
         "whitepaper": "",
@@ -6908,15 +6908,15 @@
       "rating": "",
       "audit": [
         {
-          "name": "dapp.org - April 2020",
+          "name": "dapp.org - April 2020",
           "url": "https://uniswap.org/audit.html"
         },
         {
-          "name": "OpenZeppelin - July 28, 2019",
+          "name": "OpenZeppelin - July 28, 2019",
           "url": "https://blog.openzeppelin.com/exploiting-uniswap-from-reentrancy-to-actual-profit/"
         },
         {
-          "name": "ConsenSys Diligence - January 2019",
+          "name": "ConsenSys Diligence - January 2019",
           "url": "https://github.com/ConsenSys/Uniswap-audit-report-2018-12/blob/master/Uniswap-final.md"
         }
       ],
@@ -6941,7 +6941,7 @@
         "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
         "type": "ERC20"
       },
-      "description": "### Project Description\n\nUSDC is a digital dollar stablecoin, issued by heavily regulated financial institutions, backed by fully reserved assets, redeemable on a 1:1 basis for US dollars, and governed by Centre, a membership-based consortium that sets technical, policy and financial standards for stablecoins.\n\nUSDC tokens are treable on many crypto exchanges and supported by most cryptocurrency wallets. It's a highly liquid stablecoin. While it's not as popular as it main competitor Tether (USDT) it's been growing fast and typically regarded as more reliable. \n\n### Token Description\n\nStablecoin denoted by USDC symbol and as of May 2020 exist on Ethereum, Algorand and Solana blockchains.\n\nUSDC is available on Ethereum, Algorand and Solana blockchains. \n\nBeing a cryptocurrency token on a blockchain, USDC adopts some benefits of cryptocurrency allowing parties to transact with each other pseudo anonymously.\n\nUSDC is a centralized stablecoin and therefore your USDC balance can potentially be frozen even if's on non-custodial wallet. Such functionality is integarted into a smart contract powering the USDC stablecoin.\n\n### Token Emission\n\nThere is no limit to Tether supply, and as of May 2020 there were 13.5 billion USDC tokens in circulation.",
+      "description": "### Project Description\n\nUSDC is a digital dollar stablecoin, issued by heavily regulated financial institutions, backed by fully reserved assets, redeemable on a 1:1 basis for US dollars, and governed by Centre, a membership-based consortium that sets technical, policy and financial standards for stablecoins.\n\nUSDC tokens are treable on many crypto exchanges and supported by most cryptocurrency wallets. It's a highly liquid stablecoin. While it's not as popular as it main competitor Tether (USDT) it's been growing fast and typically regarded as more reliable. \n\n### Token Description\n\nStablecoin denoted by USDC symbol and as of May 2020 exist on Ethereum, Algorand and Solana blockchains.\n\nUSDC is available on Ethereum, Algorand and Solana blockchains. \n\nBeing a cryptocurrency token on a blockchain, USDC adopts some benefits of cryptocurrency allowing parties to transact with each other pseudo anonymously.\n\nUSDC is a centralized stablecoin and therefore your USDC balance can potentially be frozen even if's on non-custodial wallet. Such functionality is integarted into a smart contract powering the USDC stablecoin.\n\n### Token Emission\n\nThere is no limit to Tether supply, and as of May 2020 there were 13.5 billion USDC tokens in circulation.",
       "links": {
         "website": "https://www.circle.com/en/usdc",
         "whitepaper": "",
@@ -7018,35 +7018,35 @@
       "rating": "",
       "audit": [
         {
-          "name": "Arcadia Group - August 29, 2020",
+          "name": "Arcadia Group - August 29, 2020",
           "url": "https://valuedefi.io/files/YFV_Protocol_Audit_Summary.pdf"
         },
         {
-          "name": "Arcadia Group - September 1, 2020",
+          "name": "Arcadia Group - September 1, 2020",
           "url": "https://valuedefi.io/files/YFV_Staking_Pool_v2_-_Audit_Summary.pdf"
         },
         {
-          "name": "Pessimistic - September 11, 2020",
+          "name": "Pessimistic - September 11, 2020",
           "url": "https://valuedefi.io/files/Security_Analysis_by_Pessimistic.pdf"
         },
         {
-          "name": "Arcadia Group - September 18, 2020",
+          "name": "Arcadia Group - September 18, 2020",
           "url": "https://valuedefi.io/files/Arcadia_Vault_AuditPublic.pdf"
         },
         {
-          "name": "Arcadia Group - October 14, 2020",
+          "name": "Arcadia Group - October 14, 2020",
           "url": "https://valuedefi.io/files/Value_Token_Contract_Audit.pdf"
         },
         {
-          "name": "Arcadia Group - October 20, 2020",
+          "name": "Arcadia Group - October 20, 2020",
           "url": "https://valuedefi.io/files/ValueGov2Audit.pdf"
         },
         {
-          "name": "PeckShield - November 28, 2020",
+          "name": "PeckShield - November 28, 2020",
           "url": "https://valuedefi.io/files/Peckshield_Audit_Report.pdf"
         },
         {
-          "name": "Arcadia Group - November 4, 2020",
+          "name": "Arcadia Group - November 4, 2020",
           "url": "https://valuedefi.io/files/FaaSPool.pdf"
         }
       ],
@@ -7558,7 +7558,7 @@
       "name": "Algorand",
       "categories": ["blockchain"],
       "active": true,
-      "description": "### Project Description\n\nAlgorand is a scalable, secure, and decentralized cryptocurrency and smart contract platform. Algorand blockchain finalizes blocks in seconds and provides immediate transaction finality. Along with Avalanche and Solana, Algorand is one of the key contenders to the Ethereum.\n\nAlgorand headed by a strong team from MIT and other academic institutions. It was founded by a turning award-winning MIT cryptography professor Silvio Micali who has conceived a number of key technologies currently used in blockchains such as zero-knowledge proofs. So, to say that he’s accomplished in the field of cryptography is an understatement. \n\nThe project raised a large amount of money through 2 private sales and one public sale over 120 million dollars from funds like Union Square Ventures and many others. \n\nThe proceeds of the sales have been used by the team to finance the development of community, academics involved in the project, and development of the Algorand blockchain ecosystem.\n\n### Token Description\n\nThe native cryptocurrency on Alagorand blockchain known as Algo and denoted as ALGO.\n\nAs is the case with most proof-of-stake blockchains, Algo token holders may stake their holdings with the protocol and earn rewards in a form of newly emitted tokens by the protocol. Also, a small amount of Algo required to execute a transaction on the blockchain.\n\nFinally, Algo token holders are in charge of governance and control the direction of Algorand protocol.\n\n### Token Emission\n\nAt genesis of the Algorand blockchain, 10 billion ALGO was minted and it represents the fixed and immutable maximum supply of the Algo cryptocurrency. About 30% of that amount was in circulation as of April, 2021. \n\nThe 2.5 billion of initially minted tokens were primarily assigned to  Algorand Inc (2 billion ALGO) and Algorand Foundation (500 million ALGO).\n\nThe remaining supply of 7 billion ALGO is expected to be in circulation by the end of 2030 and distributed in the following manner:\n\n- Community Incentives: 6.2 billion ALGO\n- Ecosystem Support: 1.25 billion ALGO\n\nWhile the ALGO emission rate is going to remain pretty high over the next 9 years it should facilitate more democratic distribution of ALGO tokens in the ecosystem.",
+      "description": "### Project Description\n\nAlgorand is a scalable, secure, and decentralized cryptocurrency and smart contract platform. Algorand blockchain finalizes blocks in seconds and provides immediate transaction finality. Along with Avalanche and Solana, Algorand is one of the key contenders to the Ethereum.\n\nAlgorand headed by a strong team from MIT and other academic institutions. It was founded by a turning award-winning MIT cryptography professor Silvio Micali who has conceived a number of key technologies currently used in blockchains such as zero-knowledge proofs. So, to say that he’s accomplished in the field of cryptography is an understatement. \n\nThe project raised a large amount of money through 2 private sales and one public sale over 120 million dollars from funds like Union Square Ventures and many others. \n\nThe proceeds of the sales have been used by the team to finance the development of community, academics involved in the project, and development of the Algorand blockchain ecosystem.\n\n### Token Description\n\nThe native cryptocurrency on Alagorand blockchain known as Algo and denoted as ALGO.\n\nAs is the case with most proof-of-stake blockchains, Algo token holders may stake their holdings with the protocol and earn rewards in a form of newly emitted tokens by the protocol. Also, a small amount of Algo required to execute a transaction on the blockchain.\n\nFinally, Algo token holders are in charge of governance and control the direction of Algorand protocol.\n\n### Token Emission\n\nAt genesis of the Algorand blockchain, 10 billion ALGO was minted and it represents the fixed and immutable maximum supply of the Algo cryptocurrency. About 30% of that amount was in circulation as of April, 2021. \n\nThe 2.5 billion of initially minted tokens were primarily assigned to  Algorand Inc (2 billion ALGO) and Algorand Foundation (500 million ALGO).\n\nThe remaining supply of 7 billion ALGO is expected to be in circulation by the end of 2030 and distributed in the following manner:\n\n- Community Incentives: 6.2 billion ALGO\n- Ecosystem Support: 1.25 billion ALGO\n\nWhile the ALGO emission rate is going to remain pretty high over the next 9 years it should facilitate more democratic distribution of ALGO tokens in the ecosystem.",
       "links": {
         "website": "https://algorand.foundation/",
         "whitepaper": "",
@@ -7613,7 +7613,7 @@
       "name": "Avalanche",
       "categories": ["blockchain"],
       "active": true,
-      "description": "### Project Description\n\nAvalanche is a high-speed third generation smart-contract enabled blockchain that's capable of confirming transactions in under one second.\n\nAvalanche features complete support for the Ethereum**,** and thus, Ethereum tooling works out of the box. As a result it's very easy to get started developing on Avalanche blockchain for someone coming from Ethereum.\n\nAvalanche supports application-specific sharding, empowering developers to launch services that conform to their own specific needs.\n\n### Token Description\n\nAVAX is the native token of the Avalanche platform and is needed to transact on Avalanche blockchain. AVAX tokens that are used for transaction fees are burned, increasing scarcity of AVAX.\n\nAVAX token holders may stake their funds and earn staking rewards which are subject to dynamic changes as the system evolves. For the first year, the annual staking reward targets a rate between 7% and 12% of the circulating supply.\n\nBecoming a full block-producer in Avalanche and all of its other subnets requires a minimum stake of 2,000 AVAX tokens. \n\n### Token Emission\n\nThere can be at most 720 million tokens, with slightly over 50% of that amount currently in circulation. The rate at which the maximum cap is reached can vary based on AVAX holders governance vote.\n\nAvalanche network transaction fees whicha re paid in AVAX tokens do not go towards any specific validator. Instead, they are burned, thus increasing scarcity of the AVAX.\n\nAvalanche also boasts one of the most egalitarian token distribution plans in the space, with less than 14% of mainnet tokens issued to private investors and almost 70% issued to people building on the ecosystem.",
+      "description": "### Project Description\n\nAvalanche is a high-speed third generation smart-contract enabled blockchain that's capable of confirming transactions in under one second.\n\nAvalanche features complete support for the Ethereum**,** and thus, Ethereum tooling works out of the box. As a result it's very easy to get started developing on Avalanche blockchain for someone coming from Ethereum.\n\nAvalanche supports application-specific sharding, empowering developers to launch services that conform to their own specific needs.\n\n### Token Description\n\nAVAX is the native token of the Avalanche platform and is needed to transact on Avalanche blockchain. AVAX tokens that are used for transaction fees are burned, increasing scarcity of AVAX.\n\nAVAX token holders may stake their funds and earn staking rewards which are subject to dynamic changes as the system evolves. For the first year, the annual staking reward targets a rate between 7% and 12% of the circulating supply.\n\nBecoming a full block-producer in Avalanche and all of its other subnets requires a minimum stake of 2,000 AVAX tokens. \n\n### Token Emission\n\nThere can be at most 720 million tokens, with slightly over 50% of that amount currently in circulation. The rate at which the maximum cap is reached can vary based on AVAX holders governance vote.\n\nAvalanche network transaction fees whicha re paid in AVAX tokens do not go towards any specific validator. Instead, they are burned, thus increasing scarcity of the AVAX.\n\nAvalanche also boasts one of the most egalitarian token distribution plans in the space, with less than 14% of mainnet tokens issued to private investors and almost 70% issued to people building on the ecosystem.",
       "links": {
         "website": "",
         "whitepaper": "",
@@ -7909,11 +7909,11 @@
       "rating": "",
       "audit": [
         {
-          "name": "Least Authority - November 18, 2020",
+          "name": "Least Authority - November 18, 2020",
           "url": "https://github.com/Loopring/protocols/blob/master/packages/loopring_v3/security_audit/Least%20Authority%20-%20Loopring%20Contracts%20Initial%20Audit%20Report.pdf"
         },
         {
-          "name": "Secbit - November 15, 2019",
+          "name": "Secbit - November 15, 2019",
           "url": "https://github.com/Loopring/protocols/blob/master/packages/loopring_v3/security_audit/LoopringV3_1_Report_CN.pdf"
         }
       ],
@@ -8134,7 +8134,7 @@
       "name": "Tron",
       "categories": ["blockchain"],
       "active": true,
-      "description": "## Project Description\n\nTRON was launched by Justin Sun in 2016, initially as an ERC-20 token on Ethereum, and later in 2018 as an independent blockchain with its own native token. Today the project maintained by a non-profit TRON Foundation.\n\nTRON often compared to Ethereum due to many similarities projects share. Like Ethereum TRON enables developers to create autonomous financial and other services powered by smart contracts. Although the platform enables free and considerably faster transactions, it's nowhere near the Ethereum when it comes to the amount of value locked in the services operating on top of the blockchain. \n\nOn 25 July 2018, the TRON Foundation announced it had acquired Bittorrent, the biggest peer-to-peer file sharing network. Later the Bittorent ecosystem got its own token  on TRON platform.\n\n### Token Description\n\nThe native unit of currency in TRON blockchain network is TRONix, denoted by a symbol TRX. While transactions are nearly free the still require a tiny bit of TRX tokens as a measure against spam attacks. \n\nTRX token holders may stake their holdings with the protocol and earn passive income. The more users stake, the more TRON Power (TP) they earn. Then TP tokens can be used for voting on Super Representatives on the blockchain which are tasked with producing blocks. \n\n### Token Emission\n\nIn 2017 TRON Foundation conducted initial coin offering (ICO) and raised about $70 million for further development of the TRON blockchain and ecosystem around it. There was an initial issuance of 100 billion TRX tokens.\n\nInitially, TRON blockchain used to award 32 TRX tokens to one of the Super Representatives powering the network with every new block, roughly every 3 seconds. At the same time, 16 TRX were awarded to one of the witness nodes (or Super Representative Candidate). As a result, the approximated daily inflation is 1.38 million TRX and the approximated yearly inflation is over 500 million TRX.\n\nLater, community voted to change this incetive mechanism. Rewards for each block were lowered from 32TRX to 16TRX, while the amount of voting rewards increased tenfold to 160TRX which gets split between top 127 SRs, proportionally to the number of votes they received.",
+      "description": "## Project Description\n\nTRON was launched by Justin Sun in 2016, initially as an ERC-20 token on Ethereum, and later in 2018 as an independent blockchain with its own native token. Today the project maintained by a non-profit TRON Foundation.\n\nTRON often compared to Ethereum due to many similarities projects share. Like Ethereum TRON enables developers to create autonomous financial and other services powered by smart contracts. Although the platform enables free and considerably faster transactions, it's nowhere near the Ethereum when it comes to the amount of value locked in the services operating on top of the blockchain. \n\nOn 25 July 2018, the TRON Foundation announced it had acquired Bittorrent, the biggest peer-to-peer file sharing network. Later the Bittorent ecosystem got its own token  on TRON platform.\n\n### Token Description\n\nThe native unit of currency in TRON blockchain network is TRONix, denoted by a symbol TRX. While transactions are nearly free the still require a tiny bit of TRX tokens as a measure against spam attacks. \n\nTRX token holders may stake their holdings with the protocol and earn passive income. The more users stake, the more TRON Power (TP) they earn. Then TP tokens can be used for voting on Super Representatives on the blockchain which are tasked with producing blocks. \n\n### Token Emission\n\nIn 2017 TRON Foundation conducted initial coin offering (ICO) and raised about $70 million for further development of the TRON blockchain and ecosystem around it. There was an initial issuance of 100 billion TRX tokens.\n\nInitially, TRON blockchain used to award 32 TRX tokens to one of the Super Representatives powering the network with every new block, roughly every 3 seconds. At the same time, 16 TRX were awarded to one of the witness nodes (or Super Representative Candidate). As a result, the approximated daily inflation is 1.38 million TRX and the approximated yearly inflation is over 500 million TRX.\n\nLater, community voted to change this incetive mechanism. Rewards for each block were lowered from 32TRX to 16TRX, while the amount of voting rewards increased tenfold to 160TRX which gets split between top 127 SRs, proportionally to the number of votes they received.",
       "links": {
         "website": "https://tron.network",
         "whitepaper": "",
@@ -8185,7 +8185,7 @@
       "name": "Tether",
       "categories": ["fiat_stablecoins"],
       "active": true,
-      "description": "### Project Description\n\nLaunched by a Hong Kong based Tether Limited, Tether is a stablecoin with a value meant to mirror the value of the US dollar. It's currently the biggest stablecoin in the cryptocurrency space. \n\nFor individuals Tether opens up ways for anyone to store assets in USD equivalent without the need to have a bank account.\n\nFor cryptocurrency businesses and exchanges Tether provides means to enable cryptocurrency-to-fiat trading without using legacy banking and payment providers which are currently heavily regulated and just plain slow.\n\nTether tokens may be purchased directly from the Tether's website or on crypto exchanges  using fiat money (USD, EUR etc) or other cryptocurrency. In the same manner, users may redeem Tether tokens into fiat currency by selling them on crypto exchanges or via Tether's website.\n\n### Token Description\n\nTether stablecoin tokens are denoted by USDT symbol and exist on several blockchains \n\nBeing a cryptocurrency token on a blockchain, Tether adopts some benefits of cryptocurrency allowing parties to transact with each other pseudo anonymously.\n\nAny individual accepting Tether tokens as payment may potentially do so without knowing the identity of the sender. The sender only needs a wallet that supports sending and receiving of Tether tokens.\n\nTether stablecoin can be found on most cryptocurrency exchages, both centralized and decentralized, and supported by most crypto wallets. It's a highly liquid stablecoin and usually traded in pairs with the highest daily trading volume.\n\nTether is a centralized stablecoin and can potentially be compared to cash in your bank account. Tether funds on your cryptocurrency wallet can potentially be frozen and confiscated, as such functionality is integarted into a smart contract powering Tether stablecoin.\n\nTether is available on many blockchains (Bitcoin, Ethereum, Tron, etc.) \n\n### Token Emission\n\nThere is no limit to supply, and as of April 2020 there is more than 50 billion tokens in circulation.\n\nThe basic operating principle behind any centralized stablecoin like Tether is that there should be an equivalent amount of USD held by the company issuing the stablecoin.\n\nThis deposit ensures that the Tether Limited can always act as a buyer of last resort to purchase all Tethers in circulation should every Tether token holder decide to sell it.\n\nThe Tether Limited currently acts as a centralized custodian of the reserve assets. The company claims that all Tether tokens in circulation are 100% backed by cash and other liquid assets.\n\nAt this point there is no sure way to know that Tether Limited has the required amount of cash or other liquid reserves. There has been some controversy around that. Thus, the reliability of Tether tokens is fully dependent on the amount of trust someone is willing to place into the Tether Limited as a company as well as the external factors that may affect its ability to operate.\n\nThat said, Tether Limited currently offers one of the most convenient ways to purchase large amount of cryptocurrency for someone outside western hemisphere.",
+      "description": "### Project Description\n\nLaunched by a Hong Kong based Tether Limited, Tether is a stablecoin with a value meant to mirror the value of the US dollar. It's currently the biggest stablecoin in the cryptocurrency space. \n\nFor individuals Tether opens up ways for anyone to store assets in USD equivalent without the need to have a bank account.\n\nFor cryptocurrency businesses and exchanges Tether provides means to enable cryptocurrency-to-fiat trading without using legacy banking and payment providers which are currently heavily regulated and just plain slow.\n\nTether tokens may be purchased directly from the Tether's website or on crypto exchanges  using fiat money (USD, EUR etc) or other cryptocurrency. In the same manner, users may redeem Tether tokens into fiat currency by selling them on crypto exchanges or via Tether's website.\n\n### Token Description\n\nTether stablecoin tokens are denoted by USDT symbol and exist on several blockchains \n\nBeing a cryptocurrency token on a blockchain, Tether adopts some benefits of cryptocurrency allowing parties to transact with each other pseudo anonymously.\n\nAny individual accepting Tether tokens as payment may potentially do so without knowing the identity of the sender. The sender only needs a wallet that supports sending and receiving of Tether tokens.\n\nTether stablecoin can be found on most cryptocurrency exchages, both centralized and decentralized, and supported by most crypto wallets. It's a highly liquid stablecoin and usually traded in pairs with the highest daily trading volume.\n\nTether is a centralized stablecoin and can potentially be compared to cash in your bank account. Tether funds on your cryptocurrency wallet can potentially be frozen and confiscated, as such functionality is integarted into a smart contract powering Tether stablecoin.\n\nTether is available on many blockchains (Bitcoin, Ethereum, Tron, etc.) \n\n### Token Emission\n\nThere is no limit to supply, and as of April 2020 there is more than 50 billion tokens in circulation.\n\nThe basic operating principle behind any centralized stablecoin like Tether is that there should be an equivalent amount of USD held by the company issuing the stablecoin.\n\nThis deposit ensures that the Tether Limited can always act as a buyer of last resort to purchase all Tethers in circulation should every Tether token holder decide to sell it.\n\nThe Tether Limited currently acts as a centralized custodian of the reserve assets. The company claims that all Tether tokens in circulation are 100% backed by cash and other liquid assets.\n\nAt this point there is no sure way to know that Tether Limited has the required amount of cash or other liquid reserves. There has been some controversy around that. Thus, the reliability of Tether tokens is fully dependent on the amount of trust someone is willing to place into the Tether Limited as a company as well as the external factors that may affect its ability to operate.\n\nThat said, Tether Limited currently offers one of the most convenient ways to purchase large amount of cryptocurrency for someone outside western hemisphere.",
       "links": {
         "website": "https://tether.to/",
         "whitepaper": "",
@@ -8296,7 +8296,7 @@
       "name": "Monero",
       "categories": ["blockchain", "privacy"],
       "active": true,
-      "description": "### Project Description\n\nMonero is generally known as the top privacy-centric cryptocurrency. It uses a special kind of cryptography to ensure that all of its network transactions are remain unlinkable and untraceable. It's based on the CryptoNote protocol, a secure, private and untraceable currency system. \n\nIn July of 2012, Bytecoin, the first real life implementation of CryptoNote, was launched. While Bytecoin had promise, people noticed that 80% of the coins were already distributed. So, it was decided that the bytecoin blockchain will be forked and the new coins in the new chain will be called Bitmonero, which is was later changed to Monero.\n\nLike some top cryptocurrency projects Monero has a growing community of supporters voluntarily working on various parts of the ecosystem.\n\nMonero also has a block size cap of 2 MBs, but it’s a soft cap. When the line of waiting transactions gets too long, the miners can increase the size of the blocks.\n\n### Token Description\n\nThe native unit of currency in Monero network denoted by a symbol XMR. A single XMR token consists of 1,000,000,000,000 piconero units.\n\nThe main utility value of monero lies in ability to execute fully anonymous transactions which are for the most part impossible with most of the other cryptocurrencies.\n\nToday it's often labelled as the privacy coin of choice when it comes to transacting on the dark web.\n\n### Token Emission\n\nThere are about 18 million XMR tokens in circulation. Similar to many proof of work cryptocurrencies i.e. Bitcoin, new Monero tokens are awarded to one of the network nodes on every block (every 2 minutes)\n\nThe current emission amount is about 1.2 XMR and will gradually drop until end of May 2022. At this point, rewards will be fixed at 0.6 XMR per block.",
+      "description": "### Project Description\n\nMonero is generally known as the top privacy-centric cryptocurrency. It uses a special kind of cryptography to ensure that all of its network transactions are remain unlinkable and untraceable. It's based on the CryptoNote protocol, a secure, private and untraceable currency system. \n\nIn July of 2012, Bytecoin, the first real life implementation of CryptoNote, was launched. While Bytecoin had promise, people noticed that 80% of the coins were already distributed. So, it was decided that the bytecoin blockchain will be forked and the new coins in the new chain will be called Bitmonero, which is was later changed to Monero.\n\nLike some top cryptocurrency projects Monero has a growing community of supporters voluntarily working on various parts of the ecosystem.\n\nMonero also has a block size cap of 2 MBs, but it’s a soft cap. When the line of waiting transactions gets too long, the miners can increase the size of the blocks.\n\n### Token Description\n\nThe native unit of currency in Monero network denoted by a symbol XMR. A single XMR token consists of 1,000,000,000,000 piconero units.\n\nThe main utility value of monero lies in ability to execute fully anonymous transactions which are for the most part impossible with most of the other cryptocurrencies.\n\nToday it's often labelled as the privacy coin of choice when it comes to transacting on the dark web.\n\n### Token Emission\n\nThere are about 18 million XMR tokens in circulation. Similar to many proof of work cryptocurrencies i.e. Bitcoin, new Monero tokens are awarded to one of the network nodes on every block (every 2 minutes)\n\nThe current emission amount is about 1.2 XMR and will gradually drop until end of May 2022. At this point, rewards will be fixed at 0.6 XMR per block.",
       "links": {
         "website": "https://getmonero.org",
         "whitepaper": "",
@@ -9431,7 +9431,7 @@
     {
       "code": "APL",
       "name": "Apollon Limassol Fan Token",
-      "categories": ["fan_token"],
+      "categories": ["fan_tokens"],
       "active": true,
       "platform": {
         "name": "",
