@@ -23,6 +23,10 @@ class CoinMarketsManager(
         return coinGeckoProvider.getCoinMarketsAsync(coinTypes, currencyCode, fetchDiffPeriod)
     }
 
+    override fun getCoinMarketPointsAsync(coinType: CoinType, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarketPoint>> {
+        return coinGeckoProvider.getCoinMarketPointsAsync(coinType, currencyCode, fetchDiffPeriod)
+    }
+
     override fun getCoinMarketDetailsAsync(coinType: CoinType, currencyCode: String, rateDiffCoinCodes: List<String>, rateDiffPeriods: List<TimePeriod>): Single<CoinMarketDetails> {
         return Single.zip(
             coinGeckoProvider.getCoinMarketDetailsAsync(coinType, currencyCode, rateDiffCoinCodes, rateDiffPeriods),

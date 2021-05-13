@@ -282,6 +282,7 @@ class CoinGeckoProvider(
                     rateLow24h = coin.market_data.low_24h[currencyCodeLowercase] ?: BigDecimal.ZERO,
                     marketCap = coin.market_data.market_cap[currencyCodeLowercase] ?: BigDecimal.ZERO,
                     marketCapDiff24h = coin.market_data.market_cap_change_percentage_24h,
+                    marketCapRank = coin.market_data.market_cap_rank,
                     dilutedMarketCap = coin.market_data.fully_diluted_valuation[currencyCodeLowercase] ?: BigDecimal.ZERO,
                     volume24h = coin.market_data.total_volume[currencyCodeLowercase] ?: BigDecimal.ZERO,
                     circulatingSupply = coin.market_data.circulating_supply ?: BigDecimal.ZERO,
@@ -352,6 +353,38 @@ class CoinGeckoProvider(
                         volume,
                         timestamp)
 
+                } else {
+                    null
+                }
+            }.reversed()
+        }
+    }
+
+    override fun getCoinMarketPointsAsync(coinType: CoinType, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarketPoint>> {
+        val providerCoinId = getProviderCoinId(coinType) ?: return Single.error(Exception("No CoinGecko CoinId found for $coinType"))
+        val days = fetchDiffPeriod.seconds/(60 * 60 * 24)
+        val interval = if ( days >= 90) "daily" else null
+
+        return coinGeckoService.coinMarketChart(providerCoinId, currencyCode, days.toInt(), interval).map { chartPointsResponse ->
+            var nextTs = Long.MAX_VALUE
+            val chartPointsCount = fetchDiffPeriod.interval
+            val volumes = chartPointsResponse.total_volumes.reversed()
+
+            chartPointsResponse.market_caps.reversed().mapIndexedNotNull { index, marketData ->
+                val timestamp = marketData[0].toLong() / 1000
+
+                if (timestamp <= nextTs || chartPointsResponse.market_caps.size <= chartPointsCount) {
+                    nextTs = (timestamp - fetchDiffPeriod.seconds) + 180 // + 3 minutes
+                    val marketCap = marketData[1]
+                    val volume = if (days >= 90)
+                        volumes[index][1]
+                    else BigDecimal.ZERO
+
+                    CoinMarketPoint(
+                        timestamp,
+                        marketCap,
+                        volume,
+                    )
                 } else {
                     null
                 }

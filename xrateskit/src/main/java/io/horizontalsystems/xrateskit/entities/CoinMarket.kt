@@ -7,6 +7,12 @@ class CoinMarket(
     val marketInfo: MarketInfo
 )
 
+class CoinMarketPoint(
+    val timestamp: Long,
+    val marketCap: BigDecimal,
+    val volume24h: BigDecimal,
+)
+
 class CoinMarketDetails(
     val data: CoinData,
     val meta: CoinMeta,
@@ -23,6 +29,7 @@ class CoinMarketDetails(
 
     val marketCap: BigDecimal,
     val marketCapDiff24h: BigDecimal,
+    val marketCapRank: Int,
 
     val dilutedMarketCap: BigDecimal?,
 
