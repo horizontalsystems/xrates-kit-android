@@ -11,6 +11,7 @@ import io.horizontalsystems.xrateskit.coinmarkets.GlobalMarketInfoManager
 import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.coins.CoinSyncer
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
+import io.horizontalsystems.xrateskit.coins.provider.CoinInfoResourceProviderImpl
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.cryptonews.CryptoNewsManager
 import io.horizontalsystems.xrateskit.entities.*
@@ -149,7 +150,8 @@ class XRatesKit(
         fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, indicatorPointCount: Int = 50, cryptoCompareApiKey: String = ""): XRatesKit {
             val factory = Factory(rateExpirationInterval)
             val storage = Storage(Database.create(context))
-            val coinInfoManager = CoinInfoManager(context, storage)
+            val coinInfoResourceProvider = CoinInfoResourceProviderImpl(context)
+            val coinInfoManager = CoinInfoManager(storage, coinInfoResourceProvider)
             val providerCoinsManager = ProviderCoinsManager(context, storage)
 
             val coinGeckoProvider = CoinGeckoProvider(factory, coinInfoManager, providerCoinsManager)
