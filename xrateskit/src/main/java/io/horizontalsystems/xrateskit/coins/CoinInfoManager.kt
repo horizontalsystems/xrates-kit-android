@@ -1,20 +1,18 @@
 package io.horizontalsystems.xrateskit.coins
 
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.coins.provider.CoinInfoResourceProvider
+import io.horizontalsystems.xrateskit.coins.provider.CoinInfoResourceManager
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 
 class CoinInfoManager(
     private val storage: IStorage,
-    private val coinInfoResourceProvider: CoinInfoResourceProvider
+    private val coinInfoResourceManager: CoinInfoResourceManager
 ) {
 
     private fun updateCoinInfo() {
-        val resourceInfo = storage.getResourceInfo(ResourceType.COIN_INFO)
-
-        coinInfoResourceProvider.getDataNewerThan(resourceInfo?.version)?.let { coinsResponse ->
+        coinInfoResourceManager.getNewData()?.let { coinsResponse ->
             storage.deleteAllCoinCategories()
             storage.deleteAllCoinLinks()
             storage.deleteAllCoinsCategories()
