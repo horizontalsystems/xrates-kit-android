@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.eclipsesource.json.Json
 import io.horizontalsystems.coinkit.models.CoinType
+import java.io.InputStream
 import java.io.InputStreamReader
 
 @Entity
@@ -34,8 +35,7 @@ data class CoinInfoResource(
     val exchangeInfos: List<ExchangeInfoEntity>){
 
     companion object{
-        fun parseFile(quickParse: Boolean, context: Context, fileName: String) : CoinInfoResource{
-            val inputStream = context.assets.open(fileName)
+        fun parseFile(quickParse: Boolean, inputStream: InputStream) : CoinInfoResource{
             val jsonObject = Json.parse(InputStreamReader(inputStream))
             val version = jsonObject.asObject().get("version").asInt()
             val coinInfos = mutableListOf<CoinInfoEntity>()

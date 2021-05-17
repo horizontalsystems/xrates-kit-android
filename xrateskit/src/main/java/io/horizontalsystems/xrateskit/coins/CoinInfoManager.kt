@@ -1,28 +1,20 @@
 package io.horizontalsystems.xrateskit.coins
 
-import android.content.Context
 import io.horizontalsystems.coinkit.models.CoinType
+import io.horizontalsystems.xrateskit.coins.provider.CoinInfoResourceProvider
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 
 class CoinInfoManager(
-    private val context: Context,
-    private val storage: IStorage
+    private val storage: IStorage,
+    private val coinInfoResourceProvider: CoinInfoResourceProvider
 ) {
 
-    private val coinInfoFileName = "coins.json"
-
     private fun updateCoinInfo() {
-        var coinsResponse = CoinInfoResource.parseFile(true, context, coinInfoFileName)
         val resourceInfo = storage.getResourceInfo(ResourceType.COIN_INFO)
 
-        val update = resourceInfo?.let {
-            coinsResponse.version != it.version
-        } ?: true
-
-        if (update) {
-            coinsResponse = CoinInfoResource.parseFile(false, context, coinInfoFileName)
+        coinInfoResourceProvider.getDataNewerThan(resourceInfo?.version)?.let { coinsResponse ->
             storage.deleteAllCoinCategories()
             storage.deleteAllCoinLinks()
             storage.deleteAllCoinsCategories()
