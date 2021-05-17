@@ -12,6 +12,7 @@ import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.coins.CoinSyncer
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.coins.provider.CoinInfoResourceProviderImpl
+import io.horizontalsystems.xrateskit.coins.provider.CoinInfoResourceManager
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.cryptonews.CryptoNewsManager
 import io.horizontalsystems.xrateskit.entities.*
@@ -151,7 +152,8 @@ class XRatesKit(
             val factory = Factory(rateExpirationInterval)
             val storage = Storage(Database.create(context))
             val coinInfoResourceProvider = CoinInfoResourceProviderImpl(context)
-            val coinInfoManager = CoinInfoManager(storage, coinInfoResourceProvider)
+            val coinInfoResourceManager = CoinInfoResourceManager(coinInfoResourceProvider, storage)
+            val coinInfoManager = CoinInfoManager(storage, coinInfoResourceManager)
             val providerCoinsManager = ProviderCoinsManager(context, storage)
 
             val coinGeckoProvider = CoinGeckoProvider(factory, coinInfoManager, providerCoinsManager)
