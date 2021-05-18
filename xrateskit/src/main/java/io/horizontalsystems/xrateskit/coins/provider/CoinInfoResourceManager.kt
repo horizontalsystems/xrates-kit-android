@@ -5,7 +5,7 @@ import io.horizontalsystems.xrateskit.entities.ResourceType
 import io.horizontalsystems.xrateskit.storage.Storage
 
 class CoinInfoResourceManager(
-    private val coinInfoResourceProvider: CoinInfoResourceProviderImpl,
+    private val coinInfoResourceProvider: CoinInfoResourceProvider,
     private val storage: Storage
 ) {
     fun getNewData(): CoinInfoResource? {

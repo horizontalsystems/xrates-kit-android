@@ -11,8 +11,7 @@ import io.horizontalsystems.xrateskit.coinmarkets.GlobalMarketInfoManager
 import io.horizontalsystems.xrateskit.coins.CoinInfoManager
 import io.horizontalsystems.xrateskit.coins.CoinSyncer
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
-import io.horizontalsystems.xrateskit.coins.provider.CoinInfoResourceProviderImpl
-import io.horizontalsystems.xrateskit.coins.provider.CoinInfoResourceManager
+import io.horizontalsystems.xrateskit.coins.provider.*
 import io.horizontalsystems.xrateskit.core.Factory
 import io.horizontalsystems.xrateskit.cryptonews.CryptoNewsManager
 import io.horizontalsystems.xrateskit.entities.*
@@ -148,10 +147,11 @@ class XRatesKit(
     }
 
     companion object {
-        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, indicatorPointCount: Int = 50, cryptoCompareApiKey: String = ""): XRatesKit {
+        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, indicatorPointCount: Int = 50, cryptoCompareApiKey: String = "", coinsRemoteUrl: String?): XRatesKit {
             val factory = Factory(rateExpirationInterval)
             val storage = Storage(Database.create(context))
-            val coinInfoResourceProvider = CoinInfoResourceProviderImpl(context)
+
+            val coinInfoResourceProvider = buildCoinInfoResourceProvider(context, coinsRemoteUrl)
             val coinInfoResourceManager = CoinInfoResourceManager(coinInfoResourceProvider, storage)
             val coinInfoManager = CoinInfoManager(storage, coinInfoResourceManager)
             val providerCoinsManager = ProviderCoinsManager(context, storage)
@@ -196,6 +196,15 @@ class XRatesKit(
                     providerCoinsManager,
                     coinSyncer
             )
+        }
+
+        private fun buildCoinInfoResourceProvider(context: Context, coinsRemoteUrl: String?): CoinInfoResourceProvider {
+            val coinInfoResourceProvider = CoinInfoResourceProviderImpl()
+            coinInfoResourceProvider.addProvider(LocalCoinInfoResourceProvider(context))
+            coinsRemoteUrl?.let {
+                coinInfoResourceProvider.addProvider(RemoteGitHubCoinInfoResourceProvider(coinsRemoteUrl))
+            }
+            return coinInfoResourceProvider
         }
     }
 }
