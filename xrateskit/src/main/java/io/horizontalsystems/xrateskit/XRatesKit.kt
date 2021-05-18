@@ -147,14 +147,17 @@ class XRatesKit(
     }
 
     companion object {
-        fun create(context: Context, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, cryptoCompareApiKey: String = "", coinsRemoteUrl: String?): XRatesKit {
+        fun create(context: Context, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, cryptoCompareApiKey: String = "", coinsRemoteUrl: String?, providerCoinsRemoteUrl: String?): XRatesKit {
             val factory = Factory(rateExpirationInterval)
             val storage = Storage(Database.create(context))
 
             val coinInfoResourceProvider = buildCoinInfoResourceProvider(context, coinsRemoteUrl)
             val coinInfoResourceManager = CoinInfoResourceManager(coinInfoResourceProvider, storage)
             val coinInfoManager = CoinInfoManager(storage, coinInfoResourceManager)
-            val providerCoinsManager = ProviderCoinsManager(context, storage)
+
+            val providerCoinsResourceProvider = buildProviderCoinsResourceProviderImpl(context, providerCoinsRemoteUrl)
+            val providerCoinsResourceManager = ProviderCoinsResourceManager(providerCoinsResourceProvider, storage)
+            val providerCoinsManager = ProviderCoinsManager(storage, providerCoinsResourceManager)
 
             val coinGeckoProvider = CoinGeckoProvider(factory, coinInfoManager, providerCoinsManager)
             providerCoinsManager.coinGeckoProvider = coinGeckoProvider
@@ -198,13 +201,23 @@ class XRatesKit(
             )
         }
 
-        private fun buildCoinInfoResourceProvider(context: Context, coinsRemoteUrl: String?): CoinInfoResourceProvider {
-            val coinInfoResourceProvider = CoinInfoResourceProviderImpl()
-            coinInfoResourceProvider.addProvider(LocalCoinInfoResourceProvider(context))
-            coinsRemoteUrl?.let {
-                coinInfoResourceProvider.addProvider(RemoteGitHubCoinInfoResourceProvider(coinsRemoteUrl))
+        private fun buildProviderCoinsResourceProviderImpl(context: Context, providerCoinsRemoteUrl: String?): ProviderCoinsResourceProvider {
+            val provider = ProviderCoinsResourceProviderImpl()
+            provider.addProvider(LocalProviderCoinsResourceProvider(context))
+            providerCoinsRemoteUrl?.let {
+                provider.addProvider(RemoteGitHubProviderCoinsResourceProvider(providerCoinsRemoteUrl))
             }
-            return coinInfoResourceProvider
+
+            return provider
+        }
+
+        private fun buildCoinInfoResourceProvider(context: Context, coinsRemoteUrl: String?): CoinInfoResourceProvider {
+            val provider = CoinInfoResourceProviderImpl()
+            provider.addProvider(LocalCoinInfoResourceProvider(context))
+            coinsRemoteUrl?.let {
+                provider.addProvider(RemoteGitHubCoinInfoResourceProvider(coinsRemoteUrl))
+            }
+            return provider
         }
     }
 }
