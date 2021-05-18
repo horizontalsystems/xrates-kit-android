@@ -1,15 +1,10 @@
 package io.horizontalsystems.xrateskit.coins.provider
 
-import android.content.Context
 import io.horizontalsystems.xrateskit.entities.CoinInfoResource
 
-class CoinInfoResourceProviderImpl(context: Context) : CoinInfoResourceProvider {
+class CoinInfoResourceProviderImpl : CoinInfoResourceProvider {
 
-    private val concreteProviders: List<CoinInfoResourceProvider> =
-        listOf(
-            LocalCoinInfoResourceProvider(context),
-            RemoteGitHubCoinInfoResourceProvider(),
-        )
+    private val concreteProviders = mutableListOf<CoinInfoResourceProvider>()
 
     override fun getDataNewerThan(version: Int?): CoinInfoResource? {
         for (provider in concreteProviders) {
@@ -19,5 +14,9 @@ class CoinInfoResourceProviderImpl(context: Context) : CoinInfoResourceProvider 
         }
 
         return null
+    }
+
+    fun addProvider(coinInfoResourceProvider: CoinInfoResourceProvider) {
+        concreteProviders.add(coinInfoResourceProvider)
     }
 }

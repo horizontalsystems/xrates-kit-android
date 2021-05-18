@@ -4,8 +4,7 @@ import io.horizontalsystems.xrateskit.entities.CoinInfoResource
 import java.io.InputStream
 import java.net.URL
 
-class RemoteGitHubCoinInfoResourceProvider : CoinInfoResourceProvider {
-    private val path = "https://raw.githubusercontent.com/horizontalsystems/cryptocurrencies/version/0.21/coins.json"
+class RemoteGitHubCoinInfoResourceProvider(private val path: String) : CoinInfoResourceProvider {
 
     override fun getDataNewerThan(version: Int?): CoinInfoResource? {
         val inputStream: InputStream
