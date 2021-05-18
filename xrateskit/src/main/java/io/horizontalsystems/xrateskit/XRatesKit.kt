@@ -147,7 +147,7 @@ class XRatesKit(
     }
 
     companion object {
-        fun create(context: Context, currency: String, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, indicatorPointCount: Int = 50, cryptoCompareApiKey: String = "", coinsRemoteUrl: String?): XRatesKit {
+        fun create(context: Context, rateExpirationInterval: Long = 60L, retryInterval: Long = 30, cryptoCompareApiKey: String = "", coinsRemoteUrl: String?): XRatesKit {
             val factory = Factory(rateExpirationInterval)
             val storage = Storage(Database.create(context))
 
