@@ -1,22 +1,20 @@
 package io.horizontalsystems.xrateskit.coins
 
-import android.content.Context
 import io.horizontalsystems.coinkit.models.CoinType
+import io.horizontalsystems.xrateskit.ProviderCoinsResourceManager
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
-import io.horizontalsystems.xrateskit.providers.coingecko.CoinGeckoProvider
 import io.horizontalsystems.xrateskit.providers.InfoProvider
+import io.horizontalsystems.xrateskit.providers.coingecko.CoinGeckoProvider
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 class ProviderCoinsManager(
-    private val context: Context,
-    private val storage: IStorage
+    private val storage: IStorage,
+    private val providerCoinsResourceManager: ProviderCoinsResourceManager
 ) {
-
-    private val providerCoinsFileName = "provider.coins.json"
 
     private val disposable = CompositeDisposable()
     private val priorityUpdateInterval: Long = 10 * 24 * 60 * 60 // 10 days in seconds
@@ -54,17 +52,9 @@ class ProviderCoinsManager(
     }
 
     private fun updateCoinIds() {
-        var coinsResponse = ProviderCoinsResource.parseFile(true, context, providerCoinsFileName)
-        val resourceInfo = storage.getResourceInfo(ResourceType.PROVIDER_COINS)
-
-        val update = resourceInfo?.let {
-            coinsResponse.version != it.version
-        } ?: true
-
-        if (update) {
-            coinsResponse = ProviderCoinsResource.parseFile(false, context, providerCoinsFileName)
-            storage.saveProviderCoins(coinsResponse.providerCoins)
-            storage.saveResourceInfo(ResourceInfo(ResourceType.PROVIDER_COINS, coinsResponse.version))
+        providerCoinsResourceManager.getNewData()?.let {
+            storage.saveProviderCoins(it.providerCoins)
+            storage.saveResourceInfo(ResourceInfo(ResourceType.PROVIDER_COINS, it.version))
         }
     }
 

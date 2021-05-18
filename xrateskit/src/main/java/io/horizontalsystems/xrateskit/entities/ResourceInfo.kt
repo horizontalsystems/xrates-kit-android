@@ -1,6 +1,5 @@
 package io.horizontalsystems.xrateskit.entities
 
-import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -149,8 +148,7 @@ data class ProviderCoinsResource(
     val providerCoins: List<ProviderCoinEntity>){
 
     companion object{
-        fun parseFile(quickParse: Boolean, context: Context, fileName: String) : ProviderCoinsResource{
-            val inputStream = context.assets.open(fileName)
+        fun parseFile(quickParse: Boolean, inputStream: InputStream) : ProviderCoinsResource{
             val jsonObject = Json.parse(InputStreamReader(inputStream))
             val version = jsonObject.asObject().get("version").asInt()
             val providerCoins = mutableListOf<ProviderCoinEntity>()
