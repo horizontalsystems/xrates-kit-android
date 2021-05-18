@@ -1,4 +1,4 @@
-package io.horizontalsystems.xrateskit
+package io.horizontalsystems.xrateskit.coins.provider
 
 import io.horizontalsystems.xrateskit.entities.ProviderCoinsResource
 import io.horizontalsystems.xrateskit.entities.ResourceInfo
@@ -6,13 +6,13 @@ import io.horizontalsystems.xrateskit.entities.ResourceType
 import io.horizontalsystems.xrateskit.storage.Storage
 
 class CoinExternalIdsSyncer(
-    private val providerCoinsResourceProvider: ProviderCoinsResourceProvider,
+    private val dataProvider: DataProvider<ProviderCoinsResource>,
     private val storage: Storage
 ) {
-    fun syncData() {
+    fun sync() {
         val resourceInfo = storage.getResourceInfo(ResourceType.PROVIDER_COINS)
 
-        providerCoinsResourceProvider.getDataNewerThan(resourceInfo?.version)?.let {
+        dataProvider.getDataNewerThan(resourceInfo?.version)?.let {
             storage.saveProviderCoins(it.providerCoins)
             storage.saveResourceInfo(ResourceInfo(ResourceType.PROVIDER_COINS, it.version))
         }

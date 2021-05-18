@@ -1,7 +1,7 @@
 package io.horizontalsystems.xrateskit.coins
 
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.CoinExternalIdsSyncer
+import io.horizontalsystems.xrateskit.coins.provider.CoinExternalIdsSyncer
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.providers.InfoProvider
@@ -53,7 +53,7 @@ class ProviderCoinsManager(
 
     fun sync(): Single<Unit> {
         return Single.create { emitter ->
-            coinExternalIdsSyncer.syncData()
+            coinExternalIdsSyncer.sync()
             emitter.onSuccess(Unit)
         }
     }
