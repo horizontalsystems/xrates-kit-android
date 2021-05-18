@@ -1,7 +1,7 @@
 package io.horizontalsystems.xrateskit.coins
 
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.ProviderCoinsResourceManager
+import io.horizontalsystems.xrateskit.CoinExternalIdsSyncer
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.providers.InfoProvider
@@ -13,7 +13,7 @@ import java.util.*
 
 class ProviderCoinsManager(
     private val storage: IStorage,
-    private val providerCoinsResourceManager: ProviderCoinsResourceManager
+    private val coinExternalIdsSyncer: CoinExternalIdsSyncer
 ) {
 
     private val disposable = CompositeDisposable()
@@ -51,16 +51,9 @@ class ProviderCoinsManager(
         )
     }
 
-    private fun updateCoinIds() {
-        providerCoinsResourceManager.getNewData()?.let {
-            storage.saveProviderCoins(it.providerCoins)
-            storage.saveResourceInfo(ResourceInfo(ResourceType.PROVIDER_COINS, it.version))
-        }
-    }
-
     fun sync(): Single<Unit> {
         return Single.create { emitter ->
-            updateCoinIds()
+            coinExternalIdsSyncer.syncData()
             emitter.onSuccess(Unit)
         }
     }
