@@ -3,7 +3,7 @@ package io.horizontalsystems.xrateskit.coins.provider
 import android.content.Context
 import io.horizontalsystems.xrateskit.entities.CoinInfoResource
 
-class LocalCoinInfoResourceProvider(private val context: Context) : CoinInfoResourceProvider {
+class DataProviderCoinsInfoLocal(private val context: Context) : DataProvider<CoinInfoResource> {
     private val coinInfoAssetFileName = "coins.json"
 
     override fun getDataNewerThan(version: Int?): CoinInfoResource? {

@@ -1,17 +1,18 @@
 package io.horizontalsystems.xrateskit.coins.provider
 
+import io.horizontalsystems.xrateskit.entities.CoinInfoResource
 import io.horizontalsystems.xrateskit.entities.ResourceInfo
 import io.horizontalsystems.xrateskit.entities.ResourceType
 import io.horizontalsystems.xrateskit.storage.Storage
 
 class CoinInfoSyncer(
-    private val coinInfoResourceProvider: CoinInfoResourceProvider,
+    private val dataProvider: DataProvider<CoinInfoResource>,
     private val storage: Storage
 ) {
-    fun syncData() {
+    fun sync() {
         val resourceInfo = storage.getResourceInfo(ResourceType.COIN_INFO)
 
-        coinInfoResourceProvider.getDataNewerThan(resourceInfo?.version)?.let { coinsResponse ->
+        dataProvider.getDataNewerThan(resourceInfo?.version)?.let { coinsResponse ->
             storage.deleteAllCoinCategories()
             storage.deleteAllCoinLinks()
             storage.deleteAllCoinsCategories()

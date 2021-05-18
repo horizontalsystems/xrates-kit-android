@@ -13,7 +13,7 @@ class CoinInfoManager(
 
     fun sync(): Single<Unit> {
         return Single.create { emitter ->
-            coinInfoSyncer.syncData()
+            coinInfoSyncer.sync()
             emitter.onSuccess(Unit)
         }
     }

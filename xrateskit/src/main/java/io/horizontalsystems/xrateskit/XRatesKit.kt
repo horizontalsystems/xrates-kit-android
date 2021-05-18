@@ -201,21 +201,21 @@ class XRatesKit(
             )
         }
 
-        private fun buildProviderCoinsResourceProviderImpl(context: Context, providerCoinsRemoteUrl: String?): ProviderCoinsResourceProvider {
-            val provider = ProviderCoinsResourceProviderImpl()
-            provider.addProvider(LocalProviderCoinsResourceProvider(context))
+        private fun buildProviderCoinsResourceProviderImpl(context: Context, providerCoinsRemoteUrl: String?): DataProvider<ProviderCoinsResource> {
+            val provider = DataProviderChain<ProviderCoinsResource>()
+            provider.addProvider(DataProviderCoinExternalIdsLocal(context))
             providerCoinsRemoteUrl?.let {
-                provider.addProvider(RemoteGitHubProviderCoinsResourceProvider(providerCoinsRemoteUrl))
+                provider.addProvider(DataProviderCoinExternalIdsRemote(providerCoinsRemoteUrl))
             }
 
             return provider
         }
 
-        private fun buildCoinInfoResourceProvider(context: Context, coinsRemoteUrl: String?): CoinInfoResourceProvider {
-            val provider = CoinInfoResourceProviderImpl()
-            provider.addProvider(LocalCoinInfoResourceProvider(context))
+        private fun buildCoinInfoResourceProvider(context: Context, coinsRemoteUrl: String?): DataProvider<CoinInfoResource> {
+            val provider = DataProviderChain<CoinInfoResource>()
+            provider.addProvider(DataProviderCoinsInfoLocal(context))
             coinsRemoteUrl?.let {
-                provider.addProvider(RemoteGitHubCoinInfoResourceProvider(coinsRemoteUrl))
+                provider.addProvider(DataProviderCoinsInfoRemote(coinsRemoteUrl))
             }
             return provider
         }
