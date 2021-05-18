@@ -1,41 +1,19 @@
 package io.horizontalsystems.xrateskit.coins
 
 import io.horizontalsystems.coinkit.models.CoinType
-import io.horizontalsystems.xrateskit.coins.provider.CoinInfoResourceManager
+import io.horizontalsystems.xrateskit.coins.provider.CoinInfoSyncer
 import io.horizontalsystems.xrateskit.core.IStorage
 import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 
 class CoinInfoManager(
     private val storage: IStorage,
-    private val coinInfoResourceManager: CoinInfoResourceManager
+    private val coinInfoSyncer: CoinInfoSyncer
 ) {
-
-    private fun updateCoinInfo() {
-        coinInfoResourceManager.getNewData()?.let { coinsResponse ->
-            storage.deleteAllCoinCategories()
-            storage.deleteAllCoinLinks()
-            storage.deleteAllCoinsCategories()
-            storage.deleteAllCoinFunds()
-            storage.deleteAllCoinsFunds()
-            storage.deleteAllCoinFundCategories()
-            storage.deleteAllExchangeInfo()
-
-            storage.saveCoinInfos(coinsResponse.coinInfos)
-            storage.saveCoinCategories(coinsResponse.coinsCategories)
-            storage.saveCoinCategory(coinsResponse.categories)
-            storage.saveCoinFund(coinsResponse.funds)
-            storage.saveCoinFunds(coinsResponse.coinFunds)
-            storage.saveCoinFundCategory(coinsResponse.fundCategories)
-            storage.saveCoinLinks(coinsResponse.links)
-            storage.saveExchangeInfo(coinsResponse.exchangeInfos)
-            storage.saveResourceInfo(ResourceInfo(ResourceType.COIN_INFO, coinsResponse.version))
-        }
-    }
 
     fun sync(): Single<Unit> {
         return Single.create { emitter ->
-            updateCoinInfo()
+            coinInfoSyncer.syncData()
             emitter.onSuccess(Unit)
         }
     }

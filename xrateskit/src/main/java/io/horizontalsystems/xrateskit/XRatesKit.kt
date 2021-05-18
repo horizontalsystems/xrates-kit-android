@@ -152,12 +152,12 @@ class XRatesKit(
             val storage = Storage(Database.create(context))
 
             val coinInfoResourceProvider = buildCoinInfoResourceProvider(context, coinsRemoteUrl)
-            val coinInfoResourceManager = CoinInfoResourceManager(coinInfoResourceProvider, storage)
-            val coinInfoManager = CoinInfoManager(storage, coinInfoResourceManager)
+            val coinInfoSyncer = CoinInfoSyncer(coinInfoResourceProvider, storage)
+            val coinInfoManager = CoinInfoManager(storage, coinInfoSyncer)
 
             val providerCoinsResourceProvider = buildProviderCoinsResourceProviderImpl(context, providerCoinsRemoteUrl)
-            val providerCoinsResourceManager = ProviderCoinsResourceManager(providerCoinsResourceProvider, storage)
-            val providerCoinsManager = ProviderCoinsManager(storage, providerCoinsResourceManager)
+            val coinExternalIdsSyncer = CoinExternalIdsSyncer(providerCoinsResourceProvider, storage)
+            val providerCoinsManager = ProviderCoinsManager(storage, coinExternalIdsSyncer)
 
             val coinGeckoProvider = CoinGeckoProvider(factory, coinInfoManager, providerCoinsManager)
             providerCoinsManager.coinGeckoProvider = coinGeckoProvider
