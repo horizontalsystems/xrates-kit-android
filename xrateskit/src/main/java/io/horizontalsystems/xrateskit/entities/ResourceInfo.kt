@@ -7,13 +7,16 @@ import com.eclipsesource.json.Json
 import io.horizontalsystems.coinkit.models.CoinType
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.util.*
 
 @Entity
 class ResourceInfo(
     @PrimaryKey
     @ColumnInfo(name = "id")
     val resourceType: ResourceType,
-    val version: Int)
+    val versionId: String,
+    val updatedAt: Long = Date().time / 1000,
+)
 
 enum class ResourceType{
     COIN_INFO,
@@ -23,7 +26,6 @@ enum class ResourceType{
 
 
 data class CoinInfoResource(
-    val version:Int,
     val coinInfos: List<CoinInfoEntity>,
     val categories: List<CoinCategory>,
     val coinsCategories: List<CoinCategoriesEntity>,
@@ -36,7 +38,6 @@ data class CoinInfoResource(
     companion object{
         fun parseFile(quickParse: Boolean, inputStream: InputStream) : CoinInfoResource{
             val jsonObject = Json.parse(InputStreamReader(inputStream))
-            val version = jsonObject.asObject().get("version").asInt()
             val coinInfos = mutableListOf<CoinInfoEntity>()
             val categories = mutableListOf<CoinCategory>()
             val coinCategories = mutableListOf<CoinCategoriesEntity>()
@@ -138,19 +139,17 @@ data class CoinInfoResource(
                 }
             }
 
-            return CoinInfoResource(version, coinInfos, categories, coinCategories, funds, coinFunds, fundCategories, coinLinks, exchangeInfos)
+            return CoinInfoResource(coinInfos, categories, coinCategories, funds, coinFunds, fundCategories, coinLinks, exchangeInfos)
         }
     }
 }
 
 data class ProviderCoinsResource(
-    val version:Int,
     val providerCoins: List<ProviderCoinEntity>){
 
     companion object{
         fun parseFile(quickParse: Boolean, inputStream: InputStream) : ProviderCoinsResource{
             val jsonObject = Json.parse(InputStreamReader(inputStream))
-            val version = jsonObject.asObject().get("version").asInt()
             val providerCoins = mutableListOf<ProviderCoinEntity>()
 
             if(!quickParse) {
@@ -188,7 +187,7 @@ data class ProviderCoinsResource(
                 }
             }
 
-            return ProviderCoinsResource(version, providerCoins)
+            return ProviderCoinsResource(providerCoins)
         }
     }
 }

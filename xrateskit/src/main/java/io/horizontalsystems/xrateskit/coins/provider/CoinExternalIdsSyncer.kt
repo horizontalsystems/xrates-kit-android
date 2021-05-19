@@ -12,9 +12,9 @@ class CoinExternalIdsSyncer(
     fun sync() {
         val resourceInfo = storage.getResourceInfo(ResourceType.PROVIDER_COINS)
 
-        dataProvider.getDataNewerThan(resourceInfo?.version)?.let {
-            storage.saveProviderCoins(it.providerCoins)
-            storage.saveResourceInfo(ResourceInfo(ResourceType.PROVIDER_COINS, it.version))
+        dataProvider.getDataNewerThan(resourceInfo)?.let {
+            storage.saveProviderCoins(it.value.providerCoins)
+            storage.saveResourceInfo(ResourceInfo(ResourceType.PROVIDER_COINS, it.versionId))
         }
     }
 
