@@ -14,10 +14,10 @@ import kotlinx.android.synthetic.main.view_holder_top_markets.view.*
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
-class TopMarketsAdapter: RecyclerView.Adapter<TopMarketsAdapter.ViewHolderTopMarkets>(){
+class TopMarketsAdapter : RecyclerView.Adapter<TopMarketsAdapter.ViewHolderTopMarkets>() {
 
     var items = listOf<CoinMarket>()
-    lateinit var context : Context
+    lateinit var context: Context
 
     override fun getItemCount(): Int {
         return items.size
@@ -25,15 +25,19 @@ class TopMarketsAdapter: RecyclerView.Adapter<TopMarketsAdapter.ViewHolderTopMar
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderTopMarkets {
         context = parent.context
-        return ViewHolderTopMarkets(LayoutInflater.from(parent.context).inflate(R.layout.view_holder_top_markets, parent, false))
+        return ViewHolderTopMarkets(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.view_holder_top_markets, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: TopMarketsAdapter.ViewHolderTopMarkets, position: Int) {
         holder.bind(items[position], itemCount - position)
     }
 
-    inner class ViewHolderTopMarkets(override val containerView: View) : RecyclerView.ViewHolder(containerView),
-                                                                         LayoutContainer {
+    inner class ViewHolderTopMarkets(override val containerView: View) :
+        RecyclerView.ViewHolder(containerView),
+        LayoutContainer {
         private val txtCoinCode = containerView.txtCoinCode
         private val txtCoinTitle = containerView.txtCoinTitle
         private val txtPrice = containerView.txtPrice
@@ -41,18 +45,25 @@ class TopMarketsAdapter: RecyclerView.Adapter<TopMarketsAdapter.ViewHolderTopMar
         private val txtPriceChange = containerView.txtPriceChange
 
         fun bind(item: CoinMarket, index: Int) {
-            containerView.setBackgroundColor(if (index % 2 == 0)
-                                                 Color.parseColor("#dddddd") else
-                                                 Color.TRANSPARENT
+            containerView.setBackgroundColor(
+                if (index % 2 == 0)
+                    Color.parseColor("#dddddd") else
+                    Color.TRANSPARENT
             )
             val dec = DecimalFormat("#,###.00")
             txtIndex.text = "${itemCount - index + 1}"
             txtCoinCode.text = "${item.data.code}"
             txtCoinTitle.text = "${item.data.title}"
             txtPrice.text = "Volume24h : ${dec.format(item.marketInfo.volume)} - Price:${dec.format(item.marketInfo.rate)} $"
-            if(item.marketInfo.rateDiffPeriod < BigDecimal.ZERO)
-                    txtPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red_d))
-            txtPriceChange.text = "PriceChange: % " + "%.2f".format(item.marketInfo.rateDiffPeriod)
+
+            val rateDiff = item.marketInfo.rateDiffPeriod
+            if (rateDiff == null) {
+                txtPriceChange.setTextColor(ContextCompat.getColor(context, R.color.grey_50))
+                txtPriceChange.text = "----"
+            } else if (rateDiff < BigDecimal.ZERO) {
+                txtPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red_d))
+                txtPriceChange.text = "PriceChange: % " + "%.2f".format(rateDiff)
+            }
         }
     }
 }

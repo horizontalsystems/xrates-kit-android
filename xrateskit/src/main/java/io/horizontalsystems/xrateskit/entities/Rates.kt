@@ -21,7 +21,7 @@ data class LatestRateEntity(
         var coinType: CoinType,
         val currencyCode: String,
         val rate: BigDecimal,
-        val rateDiff24h: BigDecimal,
+        val rateDiff24h: BigDecimal?,
         val timestamp: Long
 )
 

@@ -151,7 +151,7 @@ class CoinGeckoProvider(
             TimePeriod.DAY_200 -> responseCoinMarket.price_change_percentage_200d_in_currency
             TimePeriod.YEAR_1 -> responseCoinMarket.price_change_percentage_1y_in_currency
             else -> null
-        } ?: BigDecimal.ZERO
+        }
 
         return factory.createCoinMarket(
             coinData = CoinData(type, responseCoinMarket.symbol.toUpperCase(Locale.ENGLISH), responseCoinMarket.name),

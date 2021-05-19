@@ -12,7 +12,7 @@ class MarketInfo(
     val rateDiff: BigDecimal,
     val volume: BigDecimal,
     val supply: BigDecimal,
-    val rateDiffPeriod: BigDecimal,
+    val rateDiffPeriod: BigDecimal?,
     val timestamp: Long,
     val marketCap: BigDecimal?,
     val athChangePercentage: BigDecimal?,
