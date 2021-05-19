@@ -1,15 +1,19 @@
 package io.horizontalsystems.xrateskit.coins.provider
 
+import io.horizontalsystems.xrateskit.entities.ResourceInfo
+
 interface DataProvider<T> {
-    fun getDataNewerThan(version: Int?): T?
+    fun getDataNewerThan(resourceInfo: ResourceInfo?): Data<T>?
 }
+
+data class Data<T>(val versionId: String, val value: T)
 
 class DataProviderChain<T> : DataProvider<T> {
     private val concreteProviders = mutableListOf<DataProvider<T>>()
 
-    override fun getDataNewerThan(version: Int?): T? {
+    override fun getDataNewerThan(resourceInfo: ResourceInfo?): Data<T>? {
         for (provider in concreteProviders) {
-            provider.getDataNewerThan(version)?.let {
+            provider.getDataNewerThan(resourceInfo)?.let {
                 return it
             }
         }

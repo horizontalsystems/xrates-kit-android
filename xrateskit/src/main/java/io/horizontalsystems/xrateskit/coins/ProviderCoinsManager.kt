@@ -19,8 +19,8 @@ class ProviderCoinsManager(
     private val disposable = CompositeDisposable()
     private val priorityUpdateInterval: Long = 10 * 24 * 60 * 60 // 10 days in seconds
     private val categorizedCoinPriority: Int = 0
-    private val currentTimestamp: Int
-        get() = (Date().time / 1000).toInt()
+    private val currentTimestamp: Long
+        get() = Date().time / 1000
 
     var coinGeckoProvider: CoinGeckoProvider? = null
 
@@ -46,6 +46,7 @@ class ProviderCoinsManager(
         storage.saveResourceInfo(
             ResourceInfo(
                 ResourceType.PROVIDER_COINS_PRIORITY,
+                "ProviderCoinsPriority",
                 currentTimestamp
             )
         )
@@ -59,7 +60,7 @@ class ProviderCoinsManager(
     }
 
     fun updatePriorities() {
-        val coinsPriorityUpdateTimestamp = storage.getResourceInfo(ResourceType.PROVIDER_COINS_PRIORITY)?.version ?: 0
+        val coinsPriorityUpdateTimestamp = storage.getResourceInfo(ResourceType.PROVIDER_COINS_PRIORITY)?.updatedAt ?: 0
         if (currentTimestamp - coinsPriorityUpdateTimestamp < priorityUpdateInterval) return
 
         coinGeckoProvider?.let { provider ->
