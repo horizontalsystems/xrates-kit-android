@@ -331,33 +331,53 @@ class CoinGeckoProvider(
             2 * chartPointKey.chartType.days,
             interval
         ).map { chartPointsResponse ->
-            var nextTs = Long.MAX_VALUE
-            val chartPointsCount = chartPointKey.chartType.interval * 2
-            val volumes = chartPointsResponse.total_volumes.reversed()
-            
-            chartPointsResponse.prices.reversed().mapIndexedNotNull { index, rateData ->
-                val timestamp = rateData[0].toLong() / 1000
+            val intervalInSeconds = chartPointKey.chartType.seconds
+            val mapper = CoinGeckoMarketChartsMapper(intervalInSeconds)
 
-                if (timestamp <= nextTs || chartPointsResponse.prices.size <= chartPointsCount) {
-                    nextTs = (timestamp - chartPointKey.chartType.seconds) + 180 // + 3 minutes
-                    val rate = rateData[1]
-                    val volume = if (chartPointKey.chartType.days >= 90)
-                                    volumes[index][1]
-                                 else BigDecimal.ZERO
 
-                    ChartPointEntity(
-                        chartPointKey.chartType,
-                        chartPointKey.coinType,
-                        chartPointKey.currency,
-                        rate,
-                        volume,
-                        timestamp)
+            mapper.normalize(mapper.map(chartPointsResponse, chartPointKey))
+        }.map { chartPoints ->
+            if (chartPoints.size <= coinGeckoPointCount(chartPointKey.chartType)) {
+                return@map chartPoints
+            }
 
+            val result = mutableListOf<ChartPointEntity>()
+
+            val hour4: Long = 4 * 60 * 60
+            val hour8: Long = hour4 * 2
+
+            val last = chartPoints.last()
+            var nextTs = when (chartPointKey.chartType.seconds) {
+                hour4 -> last.timestamp - (last.timestamp % hour4)
+                hour8 -> last.timestamp - (last.timestamp % hour8)
+                else -> Long.MAX_VALUE
+            }
+
+            var aggregatedVolume = BigDecimal.ZERO
+            var tmpPoint: ChartPointEntity? = null
+
+            chartPoints.reversed().forEach { point ->
+                if (point.timestamp <= nextTs) {
+                    tmpPoint?.let {
+                        result.add(it.copy(volume = it.volume + aggregatedVolume))
+                        aggregatedVolume = BigDecimal.ZERO
+                    }
+
+                    tmpPoint = point
+                    nextTs = point.timestamp - chartPointKey.chartType.seconds
                 } else {
-                    null
+                    aggregatedVolume += point.volume
                 }
-            }.reversed()
+            }
+
+            result.reversed()
         }
+    }
+
+    private fun coinGeckoPointCount(chartType: ChartType) = when (chartType) {
+        ChartType.TODAY -> chartType.points
+        ChartType.DAILY -> chartType.points
+        else -> chartType.points * 2
     }
 
     override fun getCoinMarketPointsAsync(coinType: CoinType, currencyCode: String, fetchDiffPeriod: TimePeriod): Single<List<CoinMarketPoint>> {

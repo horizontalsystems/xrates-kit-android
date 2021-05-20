@@ -5,7 +5,7 @@ import io.horizontalsystems.coinkit.models.CoinType
 import java.math.BigDecimal
 
 @Entity(primaryKeys = ["type", "coinType", "currency", "timestamp"])
-class ChartPointEntity(
+data class ChartPointEntity(
         val type: ChartType,
         val coinType: CoinType,
         val currency: String,
