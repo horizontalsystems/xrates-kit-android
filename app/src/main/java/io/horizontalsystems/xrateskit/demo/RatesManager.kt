@@ -70,4 +70,9 @@ class RatesManager(context: Context, currency: String) {
     fun searchCoins(text: String): List<CoinData>{
         return kit.searchCoins(text)
     }
+
+    fun getTopTokenHolders(coinType: CoinType, itemsCount: Int): Single<List<TokenHolder>> {
+        return kit.getTopTokenHoldersAsync(coinType, itemsCount)
+    }
+
 }

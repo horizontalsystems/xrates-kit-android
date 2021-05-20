@@ -12,6 +12,7 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
 
     val searchCoinsLiveData = MutableLiveData<List<CoinData>>()
     val topMarkets = MutableLiveData<List<CoinMarket>>()
+    val topHolders = MutableLiveData<List<TokenHolder>>()
     val news = MutableLiveData<List<CryptoNews>>()
     val topDefiMarkets = MutableLiveData<List<DefiTvl>>()
     val coinMarketDetails = MutableLiveData<List<CoinMarketDetailsItem>>()
@@ -21,18 +22,34 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
 
     private var disposables = CompositeDisposable()
 
+    fun loadTopTokenHolders(coinType: CoinType) {
+        progressState.postValue(true)
+        ratesManager.getTopTokenHolders (coinType, 10)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .subscribe({ topHoldersList ->
+                topHolders.postValue(topHoldersList)
+                progressState.postValue(false) }, {
+                println("Error !!! ${it.message}")
+                progressState.postValue(false)
+                })
+            .let {
+                disposables.add(it)
+            }
+    }
+
     fun loadTopMarkets(timePeriod: TimePeriod) {
         progressState.postValue(true)
         ratesManager.topList(255, "USD", timePeriod)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .subscribe({ topMarketList ->
-                           topMarkets.postValue(topMarketList)
-                           progressState.postValue(false)
-                       }, {
-                            println("Error !!! ${it.message}")
-                            progressState.postValue(false)
-                       })
+                topMarkets.postValue(topMarketList)
+                progressState.postValue(false)
+            }, {
+                println("Error !!! ${it.message}")
+                progressState.postValue(false)
+            })
             .let {
                 disposables.add(it)
             }
