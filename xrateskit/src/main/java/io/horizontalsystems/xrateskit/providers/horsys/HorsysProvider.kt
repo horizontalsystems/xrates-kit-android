@@ -35,14 +35,12 @@ class HorsysProvider(
             return Single.error(Exception("Unsupported coinType: $coinType"))
 
         return horsysService.tokenHolders(coinType.address, itemsCount).map { response ->
-            val holders = response.map {
+            response.map {
                 TokenHolder(
                     address = it.address,
                     share = it.share
                 )
             }
-
-            holders
         }
     }
 
