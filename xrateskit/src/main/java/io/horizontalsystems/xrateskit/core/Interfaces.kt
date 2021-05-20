@@ -112,6 +112,10 @@ interface IGlobalCoinMarketProvider : IInfoProvider {
     fun getGlobalCoinMarketPointsAsync(currencyCode: String, timePeriod: TimePeriod): Single<List<GlobalCoinMarketPoint>>
 }
 
+interface ITokenInfoProvider : IInfoProvider {
+    fun getTopTokenHoldersAsync(coinType: CoinType, itemsCount: Int): Single<List<TokenHolder>>
+}
+
 interface IDefiMarketsProvider : IInfoProvider {
     fun getTopDefiTvlAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<DefiTvl>>
     fun getDefiTvlAsync(coinType: CoinType, currencyCode: String): Single<DefiTvl>

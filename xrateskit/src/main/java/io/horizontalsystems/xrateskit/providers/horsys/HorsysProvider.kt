@@ -4,6 +4,7 @@ import io.horizontalsystems.coinkit.models.CoinType
 import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.core.IDefiMarketsProvider
 import io.horizontalsystems.xrateskit.core.IGlobalCoinMarketProvider
+import io.horizontalsystems.xrateskit.core.ITokenInfoProvider
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.providers.InfoProvider
 import io.horizontalsystems.xrateskit.utils.RetrofitUtils
@@ -13,7 +14,7 @@ import java.util.*
 
 class HorsysProvider(
     private val providerCoinsManager: ProviderCoinsManager
-) : IGlobalCoinMarketProvider, IDefiMarketsProvider {
+) : IGlobalCoinMarketProvider, IDefiMarketsProvider, ITokenInfoProvider {
 
     override val provider: InfoProvider = InfoProvider.HorSys()
 
@@ -27,6 +28,22 @@ class HorsysProvider(
 
     private fun getCoinType(providerCoinId: String, provider: InfoProvider): CoinType? {
         return providerCoinsManager.getCoinTypes(providerCoinId.toLowerCase(Locale.ENGLISH), provider).firstOrNull()
+    }
+
+    override fun getTopTokenHoldersAsync(coinType: CoinType, itemsCount: Int): Single<List<TokenHolder>> {
+        if(!(coinType is CoinType.Erc20))
+            return Single.error(Exception("Unsupported coinType: $coinType"))
+
+        return horsysService.tokenHolders(coinType.address, itemsCount).map { response ->
+            val holders = response.map {
+                TokenHolder(
+                    address = it.address,
+                    share = it.share
+                )
+            }
+
+            holders
+        }
     }
 
     override fun getGlobalCoinMarketPointsAsync(currencyCode: String, timePeriod: TimePeriod): Single<List<GlobalCoinMarketPoint>> {
