@@ -7,6 +7,9 @@ import retrofit2.http.Query
 import java.math.BigDecimal
 
 interface HorsysService {
+    @GET("tokens/holders/{tokenAddress}")
+    fun tokenHolders(@Path("tokenAddress") tokenAddress: String, @Query("limit") limit: Int): Single<List<Response.TokenHolder>>
+
     @GET("markets/global/{timePeriod}")
     fun globalCoinMarketPoints(@Path("timePeriod") timePeriod: String, @Query("currency_code") currencyCode: String): Single<List<Response.GlobalCoinMarketPoint>>
 
@@ -53,5 +56,10 @@ object Response {
         val timestamp: Long,
         val currency_code: String,
         var tvl: BigDecimal
+    )
+
+    data class TokenHolder(
+        val address: String,
+        var share: BigDecimal
     )
 }
