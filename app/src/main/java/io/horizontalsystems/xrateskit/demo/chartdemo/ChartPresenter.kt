@@ -21,7 +21,7 @@ class ChartPresenter(
     private val factory: ChartViewFactory)
     : ViewModel() {
 
-    private val coinType = CoinType.Bitcoin
+    private val coinType = CoinType.fromString("erc20|0x761d38e5ddf6ccf6cf7c55759d5210750b5d60f3")
     private val executor = Executors.newSingleThreadExecutor()
     private var chartType = ChartType.WEEKLY
     private var emaIsEnabled = false
