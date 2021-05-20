@@ -175,6 +175,14 @@ class TopMarketsFragment() : Fragment() {
             topMarketsAdapter.notifyDataSetChanged()
         })
 
+        viewModel.topHolders.observe(viewLifecycleOwner, Observer {
+            if(it.size > 0) {
+                val newsItem = it.first()
+                val sbar = Snackbar.make(this.requireView(), "Title${newsItem.address} - Source:${newsItem.share}", Snackbar.LENGTH_LONG)
+                sbar.show()
+            }
+        })
+
         viewModel.topDefiMarkets.observe(viewLifecycleOwner, Observer {
             topDefiMarketsAdapter.items = it
             topDefiMarketsAdapter.notifyDataSetChanged()
