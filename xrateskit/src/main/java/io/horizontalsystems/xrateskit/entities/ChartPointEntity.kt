@@ -10,6 +10,6 @@ data class ChartPointEntity(
         val coinType: CoinType,
         val currency: String,
         val value: BigDecimal,
-        val volume: BigDecimal,
+        val volume: BigDecimal?,
         val timestamp: Long
 )

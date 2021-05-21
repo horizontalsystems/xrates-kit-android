@@ -334,7 +334,6 @@ class CoinGeckoProvider(
             val intervalInSeconds = chartPointKey.chartType.seconds
             val mapper = CoinGeckoMarketChartsMapper(intervalInSeconds)
 
-
             mapper.normalize(mapper.map(chartPointsResponse, chartPointKey))
         }.map { chartPoints ->
             if (chartPoints.size <= coinGeckoPointCount(chartPointKey.chartType)) {
@@ -353,20 +352,31 @@ class CoinGeckoProvider(
                 else -> Long.MAX_VALUE
             }
 
-            var aggregatedVolume = BigDecimal.ZERO
-            var tmpPoint: ChartPointEntity? = null
+            val chartHasVolumeData = chartPointKey.chartType.resource == "histoday"
 
-            chartPoints.reversed().forEach { point ->
-                if (point.timestamp <= nextTs) {
-                    tmpPoint?.let {
-                        result.add(it.copy(volume = it.volume + aggregatedVolume))
+            if (!chartHasVolumeData) {
+                chartPoints.reversed().forEach { point ->
+                    if (point.timestamp <= nextTs) {
+                        result.add(point.copy(volume = null))
+
+                        nextTs = point.timestamp - chartPointKey.chartType.seconds
+                    }
+                }
+            } else {
+                var aggregatedVolume = BigDecimal.ZERO
+                var tmpPoint: ChartPointEntity? = null
+
+                chartPoints.reversed().forEach { point ->
+                    if (point.timestamp <= nextTs) {
+                        tmpPoint?.let {
+                            result.add(it.copy(volume = aggregatedVolume))
+                        }
+
+                        tmpPoint = point
+                        nextTs = point.timestamp - chartPointKey.chartType.seconds
                         aggregatedVolume = BigDecimal.ZERO
                     }
-
-                    tmpPoint = point
-                    nextTs = point.timestamp - chartPointKey.chartType.seconds
-                } else {
-                    aggregatedVolume += point.volume
+                    point.volume?.let { aggregatedVolume += it }
                 }
             }
 

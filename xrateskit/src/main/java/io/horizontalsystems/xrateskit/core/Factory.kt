@@ -10,7 +10,7 @@ class Factory(private val expirationInterval: Long) {
         return HistoricalRate(coinType, currency, value, timestamp)
     }
 
-    fun createChartPoint(value: BigDecimal, volume: BigDecimal, timestamp: Long): ChartPoint {
+    fun createChartPoint(value: BigDecimal, volume: BigDecimal?, timestamp: Long): ChartPoint {
         return ChartPoint(value, volume, timestamp)
     }
 
