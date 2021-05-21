@@ -334,8 +334,8 @@ class CoinGeckoProvider(
             val intervalInSeconds = chartPointKey.chartType.seconds
             val mapper = CoinGeckoMarketChartsMapper(intervalInSeconds)
 
-            mapper.normalize(mapper.map(chartPointsResponse, chartPointKey))
-        }.map { chartPoints ->
+            val chartPoints = mapper.map(chartPointsResponse, chartPointKey)
+
             if (chartPoints.size <= coinGeckoPointCount(chartPointKey.chartType)) {
                 return@map chartPoints
             }

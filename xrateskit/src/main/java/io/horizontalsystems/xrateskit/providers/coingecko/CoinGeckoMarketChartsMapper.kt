@@ -8,7 +8,7 @@ import kotlin.math.floor
 
 class CoinGeckoMarketChartsMapper(private val intervalInSeconds: Long) {
     fun map(chartPointsResponse: CoinGeckoService.Response.HistoricalMarketData, chartPointKey: ChartInfoKey): List<ChartPointEntity> {
-        return chartPointsResponse.prices.mapIndexed { index, priceValue ->
+        val points = chartPointsResponse.prices.mapIndexed { index, priceValue ->
             val nullifyVolume = chartPointKey.chartType.resource != "histoday"
 
             val timestamp = priceValue[0].toLong() / 1000
@@ -24,6 +24,8 @@ class CoinGeckoMarketChartsMapper(private val intervalInSeconds: Long) {
                 timestamp
             )
         }
+
+        return normalize(points)
     }
 
     private fun nearest(timestamp: Long, truncInterval: Long): Long {
@@ -32,7 +34,7 @@ class CoinGeckoMarketChartsMapper(private val intervalInSeconds: Long) {
         return if (timestamp - lower > truncInterval / 2) (lower + truncInterval) else lower
     }
 
-    fun normalize(charts: List<ChartPointEntity>) : List<ChartPointEntity> {
+    private fun normalize(charts: List<ChartPointEntity>) : List<ChartPointEntity> {
 
         val normalized = mutableMapOf<Long, ChartPointEntity>()
         var latestDelta = 0L
