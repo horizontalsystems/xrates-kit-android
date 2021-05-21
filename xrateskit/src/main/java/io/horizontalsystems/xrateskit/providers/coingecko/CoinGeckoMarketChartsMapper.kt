@@ -9,9 +9,11 @@ import kotlin.math.floor
 class CoinGeckoMarketChartsMapper(private val intervalInSeconds: Long) {
     fun map(chartPointsResponse: CoinGeckoService.Response.HistoricalMarketData, chartPointKey: ChartInfoKey): List<ChartPointEntity> {
         return chartPointsResponse.prices.mapIndexed { index, priceValue ->
+            val nullifyVolume = chartPointKey.chartType.resource != "histoday"
+
             val timestamp = priceValue[0].toLong() / 1000
             val price = priceValue[1]
-            val volume = chartPointsResponse.total_volumes[index][1]
+            val volume = if (nullifyVolume) null else chartPointsResponse.total_volumes[index][1]
 
             ChartPointEntity(
                 chartPointKey.chartType,
