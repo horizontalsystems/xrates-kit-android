@@ -29,7 +29,7 @@ class CoinMarketDetails(
 
     val marketCap: BigDecimal,
     val marketCapDiff24h: BigDecimal,
-    val marketCapRank: Int,
+    val marketCapRank: Int?,
 
     val dilutedMarketCap: BigDecimal?,
 
