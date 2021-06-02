@@ -6,8 +6,10 @@ import io.horizontalsystems.xrateskit.coins.ProviderCoinsManager
 import io.horizontalsystems.xrateskit.core.*
 import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.providers.InfoProvider
+import io.horizontalsystems.xrateskit.providers.ProviderError
 import io.horizontalsystems.xrateskit.utils.RetrofitUtils
 import io.reactivex.Single
+import retrofit2.HttpException
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -330,7 +332,13 @@ class CoinGeckoProvider(
             chartPointKey.currency,
             2 * chartPointKey.chartType.days,
             interval
-        ).map { chartPointsResponse ->
+        ).onErrorResumeNext {
+            if (it is HttpException) {
+                Single.error(ProviderError.NoDataForCoin())
+            } else {
+                Single.error(it)
+            }
+        }.map { chartPointsResponse ->
             val intervalInSeconds = chartPointKey.chartType.seconds
             val mapper = CoinGeckoMarketChartsMapper(intervalInSeconds)
 
