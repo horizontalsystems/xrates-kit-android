@@ -402,21 +402,19 @@ class CoinGeckoProvider(
         val providerCoinId = getProviderCoinId(coinType) ?: return Single.error(Exception("No CoinGecko CoinId found for $coinType"))
         val days = fetchDiffPeriod.seconds/(60 * 60 * 24)
         val interval = if ( days >= 90) "daily" else null
+        val chartType = fetchDiffPeriod.getChartType()
 
         return coinGeckoService.coinMarketChart(providerCoinId, currencyCode, days.toInt(), interval).map { chartPointsResponse ->
             var nextTs = Long.MAX_VALUE
-            val chartPointsCount = fetchDiffPeriod.interval
             val volumes = chartPointsResponse.total_volumes.reversed()
 
             chartPointsResponse.market_caps.reversed().mapIndexedNotNull { index, marketData ->
                 val timestamp = marketData[0].toLong() / 1000
 
-                if (timestamp <= nextTs || chartPointsResponse.market_caps.size <= chartPointsCount) {
-                    nextTs = (timestamp - fetchDiffPeriod.seconds) + 180 // + 3 minutes
+                if (timestamp <= nextTs || chartPointsResponse.market_caps.size <= chartType.interval) {
+                    nextTs = (timestamp - chartType.seconds) + 180 // + 3 minutes
                     val marketCap = marketData[1]
-                    val volume = if (days >= 90)
-                        volumes[index][1]
-                    else BigDecimal.ZERO
+                    val volume = volumes[index][1]
 
                     CoinMarketPoint(
                         timestamp,

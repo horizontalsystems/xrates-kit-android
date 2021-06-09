@@ -10,4 +10,14 @@ enum class TimePeriod(val id: Int, val seconds: Long, val title: String, val int
     DAY_30(5, 2592000, "30d", 12),
     DAY_200(5, 2592000, "200d", 3),
     YEAR_1(6, 31104000, "1y", 7);
+
+    fun getChartType(): ChartType{
+        return when(this){
+            DAY_7 -> ChartType.WEEKLY
+            DAY_14 -> ChartType.WEEKLY2
+            DAY_30 -> ChartType.MONTHLY
+            DAY_200 -> ChartType.MONTHLY6
+            else -> ChartType.DAILY
+        }
+    }
 }
