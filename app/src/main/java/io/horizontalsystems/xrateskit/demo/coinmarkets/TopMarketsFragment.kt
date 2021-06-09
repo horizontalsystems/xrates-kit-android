@@ -183,6 +183,14 @@ class TopMarketsFragment() : Fragment() {
             }
         })
 
+        viewModel.coinMarketPoints.observe(viewLifecycleOwner, Observer {
+            if(it.size > 0) {
+                val newsItem = it.first()
+                val sbar = Snackbar.make(this.requireView(), "Date${newsItem.timestamp} - Volume/MCap:${newsItem.volume24h}", Snackbar.LENGTH_LONG)
+                sbar.show()
+            }
+        })
+
         viewModel.topDefiMarkets.observe(viewLifecycleOwner, Observer {
             topDefiMarketsAdapter.items = it
             topDefiMarketsAdapter.notifyDataSetChanged()

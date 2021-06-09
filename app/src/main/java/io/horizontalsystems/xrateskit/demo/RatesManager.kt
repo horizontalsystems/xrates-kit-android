@@ -63,6 +63,10 @@ class RatesManager(context: Context, currency: String) {
         return kit.getHistoricalRateAsync(coinType, currency, timestamp)
     }
 
+    fun getCoinMarketPoints(coinType: CoinType, currency: String, period: TimePeriod): Single<List<CoinMarketPoint>>{
+        return kit.getCoinMarketPointsAsync(coinType, currency, period)
+    }
+
     fun globalMarketInfo(currency: String): Single<GlobalCoinMarket>{
         return kit.getGlobalCoinMarketsAsync(currency)
     }
