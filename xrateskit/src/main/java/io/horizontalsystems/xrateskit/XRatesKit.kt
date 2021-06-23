@@ -63,6 +63,10 @@ class XRatesKit(
         return latestRatesManager.getLatestRate(coinType, currencyCode)
     }
 
+    fun getLatestRateMap(coinTypes: List<CoinType>, currencyCode: String): Map<CoinType, LatestRate> {
+        return latestRatesManager.getLatestRates(coinTypes, currencyCode)
+    }
+
     fun getLatestRateAsync(coinType: CoinType, currencyCode: String): Observable<LatestRate> {
         return latestRatesSyncManager.getLatestRateAsync(PairKey(coinType, currencyCode))
     }
