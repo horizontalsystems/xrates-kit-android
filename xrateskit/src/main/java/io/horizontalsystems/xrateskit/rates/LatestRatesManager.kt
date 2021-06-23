@@ -27,6 +27,12 @@ class LatestRatesManager(private val storage: IStorage, private val factory: Fac
         return storage.getLatestRate(coinType, currency)?.let { factory.createLatestRate(it) }
     }
 
+    fun getLatestRates(coinTypes: List<CoinType>, currency: String): Map<CoinType, LatestRate> {
+        return storage.getOldLatestRates(coinTypes, currency).map {
+            it.coinType to factory.createLatestRate(it)
+        }.toMap()
+    }
+
     fun notifyExpired(coinTypes: List<CoinType>, currency: String) {
         val entities = storage.getOldLatestRates(coinTypes, currency)
         notify(entities, currency)
