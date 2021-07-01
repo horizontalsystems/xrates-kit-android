@@ -49,7 +49,7 @@ class TopDefiMarketsAdapter: RecyclerView.Adapter<TopDefiMarketsAdapter.ViewHold
             val dec = DecimalFormat("#,###.00")
             txtIndex.text = "${itemCount - index + 1}"
             txtCoinCode.text = "${item.data.code}"
-            txtCoinTitle.text = "${item.data.title}"
+            txtCoinTitle.text = "${item.chains?.joinToString(",")}"
             txtPrice.text = "TVL:${dec.format(item.tvl)} $"
             if(item.tvlDiff < BigDecimal.ZERO)
                     txtPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red_d))
