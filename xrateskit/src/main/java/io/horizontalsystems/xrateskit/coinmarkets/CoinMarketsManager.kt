@@ -31,7 +31,7 @@ class CoinMarketsManager(
         return Single.zip(
             coinGeckoProvider.getCoinMarketDetailsAsync(coinType, currencyCode, rateDiffCoinCodes, rateDiffPeriods),
             // on Error return empty object with ZERO TVL
-            defiMarketsProvider.getDefiTvlAsync(coinType, currencyCode).onErrorReturnItem(DefiTvl(CoinData(coinType,"",""), BigDecimal.ZERO, BigDecimal.ZERO))
+            defiMarketsProvider.getDefiTvlAsync(coinType, currencyCode).onErrorReturnItem(DefiTvl(CoinData(coinType,"",""), BigDecimal.ZERO, BigDecimal.ZERO, 0, null))
         ){ coinMarketDetails, defiTvlDetails ->
 
             if(defiTvlDetails.tvl.compareTo(BigDecimal.ZERO) != 0) {
