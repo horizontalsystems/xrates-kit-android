@@ -42,7 +42,7 @@ object Response {
         val currency_code: String,
         val coingecko_id: String?,
         val name: String,
-        val code: String,
+        val code: String?,
         var tvl: BigDecimal,
         var tvl_rank: Int?,
         var tvl_diff_1h: BigDecimal?,
@@ -50,6 +50,7 @@ object Response {
         var tvl_diff_7d: BigDecimal?,
         var tvl_diff_14d: BigDecimal?,
         var tvl_diff_30d: BigDecimal?,
+        var chains: List<String>?
     )
 
     data class DefiTvlPoint(

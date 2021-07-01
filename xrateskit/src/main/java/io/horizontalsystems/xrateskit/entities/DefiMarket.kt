@@ -7,6 +7,7 @@ class DefiTvl(
     val tvl: BigDecimal,
     val tvlDiff: BigDecimal,
     val tvlRank: Int = 0,
+    val chains: List<String>?
 )
 
 class DefiTvlPoint(

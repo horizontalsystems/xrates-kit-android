@@ -80,22 +80,30 @@ class HorsysProvider(
 
         return horsysService.defiTvl(currencyCode, period).map { responseList ->
             val markets = responseList.mapNotNull { item ->
-                item.coingecko_id?.let {
-                    if(item.coingecko_id.isNotEmpty()){
+                item.code?.let { coinCode ->
+                    item.coingecko_id?.let { coinGeckoId ->
+                        if (item.coingecko_id.isNotEmpty()) {
 
-                        val rateDiffPeriod = when (fetchDiffPeriod) {
-                            TimePeriod.HOUR_1 -> item.tvl_diff_1h
-                            TimePeriod.DAY_7 -> item.tvl_diff_7d
-                            TimePeriod.DAY_14 -> item.tvl_diff_14d
-                            TimePeriod.DAY_30 -> item.tvl_diff_30d
-                            else -> item.tvl_diff_24h
+                            val rateDiffPeriod = when (fetchDiffPeriod) {
+                                TimePeriod.HOUR_1 -> item.tvl_diff_1h
+                                TimePeriod.DAY_7 -> item.tvl_diff_7d
+                                TimePeriod.DAY_14 -> item.tvl_diff_14d
+                                TimePeriod.DAY_30 -> item.tvl_diff_30d
+                                else -> item.tvl_diff_24h
 
-                        } ?: BigDecimal.ZERO
+                            } ?: BigDecimal.ZERO
 
-                        getCoinType(item.coingecko_id, InfoProvider.CoinGecko())?.let {
-                            DefiTvl(CoinData(it, item.code, item.name), item.tvl, rateDiffPeriod)
-                        }
-                    } else null
+                            getCoinType(coinGeckoId, InfoProvider.CoinGecko())?.let {
+                                DefiTvl(
+                                    CoinData(it, coinCode, item.name),
+                                    item.tvl,
+                                    rateDiffPeriod,
+                                    item.tvl_rank ?: 0,
+                                    item.chains
+                                )
+                            }
+                        } else null
+                    }
                 }
             }
             markets.sortedByDescending { it.tvl }
@@ -106,7 +114,9 @@ class HorsysProvider(
 
         providerCoinsManager.getProviderIds(listOf(coinType), InfoProvider.CoinGecko()).firstOrNull()?.let { coinGeckoId ->
             return horsysService.coinDefiTvl(coinGeckoId, currencyCode).map { response ->
-                DefiTvl(CoinData(coinType, response.code, response.name), response.tvl, BigDecimal.ZERO, response.tvl_rank?:0)
+                response.code?.let{
+                    DefiTvl(CoinData(coinType, it, response.name), response.tvl, BigDecimal.ZERO, response.tvl_rank?:0, response.chains)
+                }
             }
         }?: return Single.error(Exception("No CoinGecko CoinId found for $coinType"))
     }
