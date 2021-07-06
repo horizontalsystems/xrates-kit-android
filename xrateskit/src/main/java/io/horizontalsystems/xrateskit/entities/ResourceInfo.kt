@@ -33,7 +33,10 @@ data class CoinInfoResource(
     val coinFunds: List<CoinFundsEntity>,
     val fundCategories: List<CoinFundCategory>,
     val links: List<CoinLinksEntity>,
-    val exchangeInfos: List<ExchangeInfoEntity>){
+    val exchangeInfos: List<ExchangeInfoEntity>,
+    val coinTreasuries: List<CoinTreasuryEntity>,
+    val treasuryCompanies: List<TreasuryCompany>
+){
 
     companion object{
         fun parseFile(quickParse: Boolean, inputStream: InputStream) : CoinInfoResource{
@@ -46,6 +49,8 @@ data class CoinInfoResource(
             val fundCategories = mutableListOf<CoinFundCategory>()
             val coinLinks = mutableListOf<CoinLinksEntity>()
             val exchangeInfos = mutableListOf<ExchangeInfoEntity>()
+            val coinTreasuries = mutableListOf<CoinTreasuryEntity>()
+            val treasuryCompanies = mutableListOf<TreasuryCompany>()
 
             if(!quickParse) {
                 jsonObject.asObject().get("exchanges").asArray().forEach { exchangeInfo ->
@@ -70,6 +75,26 @@ data class CoinInfoResource(
                         val order = fund.asObject().get("order").asInt()
 
                         fundCategories.add(CoinFundCategory(id, name, order))
+                    }
+                }
+
+                jsonObject.asObject().get("treasuries")?.let { coinTreasuriesJson ->
+                    coinTreasuriesJson.asArray().forEach { treasury ->
+                        val companyData = treasury.asObject().get("company").asObject()
+                        val company = TreasuryCompany(
+                            companyData.get("id").asString(),
+                            companyData.get("name").asString(),
+                            companyData.get("select").asString(),
+                            companyData.get("country").asString()
+                        )
+                        treasury.asObject().get("data").asArray().forEach { treasuryData ->
+                            val coinId = treasuryData.asObject().names()[0]
+                            val coinType = CoinType.fromString(coinId)
+                            val amount = treasuryData.asObject()[coinId].asObject().get("amount").asDouble().toBigDecimal()
+                            coinTreasuries.add(CoinTreasuryEntity(coinType, company.id, amount))
+                        }
+
+                        treasuryCompanies.add(company)
                     }
                 }
 
@@ -139,7 +164,7 @@ data class CoinInfoResource(
                 }
             }
 
-            return CoinInfoResource(coinInfos, categories, coinCategories, funds, coinFunds, fundCategories, coinLinks, exchangeInfos)
+            return CoinInfoResource(coinInfos, categories, coinCategories, funds, coinFunds, fundCategories, coinLinks, exchangeInfos, coinTreasuries, treasuryCompanies)
         }
     }
 }
