@@ -110,6 +110,11 @@ data class CoinMarketDetailsItem(val infoTitle: String, val value: BigDecimal, v
                 }
             }
 
+            list.add(CoinMarketDetailsItem("--------------- Treasures ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
+            coinMarketDetails.treasuries?.forEach{
+                list.add(CoinMarketDetailsItem("Company : ${ it.company.name } : ${it.amount}", BigDecimal.ZERO, BigDecimal.ZERO))
+            }
+
             return list
         }
     }
