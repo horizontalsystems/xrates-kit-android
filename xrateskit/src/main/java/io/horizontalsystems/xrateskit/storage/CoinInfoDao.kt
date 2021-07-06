@@ -11,6 +11,12 @@ import io.horizontalsystems.xrateskit.entities.*
 interface CoinInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCoinTreasuries(all: List<CoinTreasuryEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertTreasuryCompanies(all: List<TreasuryCompany>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCoinInfo(all: List<CoinInfoEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -33,6 +39,12 @@ interface CoinInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCoinFundCategory(all: List<CoinFundCategory>)
+
+    @Query("DELETE FROM CoinTreasuryEntity")
+    fun deleteAllCoinTreasuries()
+
+    @Query("DELETE FROM TreasuryCompany")
+    fun deleteAllTreasuryCompanies()
 
     @Query("DELETE FROM CoinCategory")
     fun deleteAllCoinCategories()
@@ -85,4 +97,9 @@ interface CoinInfoDao {
     @Query("SELECT DISTINCT coinType FROM CoinCategoriesEntity")
     fun getCategorizedCoinTypes(): List<CoinType>
 
+    @Query("SELECT * FROM CoinTreasuryEntity where coinType=:coinType")
+    fun getCoinTreasuries(coinType: CoinType): List<CoinTreasuryEntity>
+
+    @Query("SELECT * FROM TreasuryCompany where id IN(:companyIds)")
+    fun getTreasuryCompanies(companyIds: List<String>): List<TreasuryCompany>
 }

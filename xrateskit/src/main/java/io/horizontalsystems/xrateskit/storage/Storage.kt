@@ -65,6 +65,14 @@ class Storage(private val database: Database) : IStorage {
         return coinInfoDao.getCategorizedCoinTypes()
     }
 
+    override fun getCoinTreasuries(coinType: CoinType): List<CoinTreasuryEntity>{
+        return coinInfoDao.getCoinTreasuries(coinType)
+    }
+
+    override fun getTreasuryCompanies(companyIds: List<String>): List<TreasuryCompany>{
+        return coinInfoDao.getTreasuryCompanies(companyIds)
+    }
+
     override fun saveCoinInfos(coinInfos: List<CoinInfoEntity>) {
         coinInfoDao.insertCoinInfo(coinInfos)
     }
@@ -97,10 +105,25 @@ class Storage(private val database: Database) : IStorage {
         coinInfoDao.insertCoinFundCategory(coinFundCategories)
     }
 
+    override fun saveCoinTreasuries(coinTreasuries: List<CoinTreasuryEntity>){
+        coinInfoDao.insertCoinTreasuries(coinTreasuries)
+    }
+
+    override fun saveTreasuryCompanies(treasuryCompanies: List<TreasuryCompany>){
+        coinInfoDao.insertTreasuryCompanies(treasuryCompanies)
+    }
+
+    override fun deleteAllCoinTreasuries(){
+        coinInfoDao.deleteAllCoinTreasuries()
+    }
+
+    override fun deleteAllTreasuryCompanies(){
+        coinInfoDao.deleteAllTreasuryCompanies()
+    }
+
     override fun deleteAllCoinCategories(){
         coinInfoDao.deleteAllCoinCategories()
     }
-
     override fun deleteAllExchangeInfo(){
         coinInfoDao.deleteAllExchangeInfo()
     }
