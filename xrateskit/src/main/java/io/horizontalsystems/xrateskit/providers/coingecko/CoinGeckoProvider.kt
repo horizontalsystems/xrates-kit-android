@@ -300,7 +300,8 @@ class CoinGeckoProvider(
                         launchDate
                     ),
                     rateDiffs = rateDiffsPeriod,
-                    tickers = marketTickers
+                    tickers = marketTickers,
+                    treasuries = coinInfoManager.getCoinTreasuries(coinType)
                 )
             }
     }

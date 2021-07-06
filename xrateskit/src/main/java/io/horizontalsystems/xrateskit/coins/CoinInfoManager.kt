@@ -36,6 +36,27 @@ class CoinInfoManager(
         } ?: emptyList()
     }
 
+    fun getCoinTreasuries(coinType: CoinType): List<CoinTreasury>? {
+
+        val coinTreasuries = mutableListOf<CoinTreasury>()
+
+        return storage.getCoinTreasuries(coinType).let {  storedValues ->
+            val companyIds = storedValues.map { it.companyId }
+            val companies = storage.getTreasuryCompanies(companyIds)
+            if(!companies.isEmpty()){
+                storedValues.forEach { treasureData ->
+
+                    companies.find { it.id == treasureData.companyId}?.let {
+                        coinTreasuries.add(CoinTreasury(coinType, it, treasureData.amount))
+                    }
+                }
+                coinTreasuries
+            } else {
+                null
+            }
+        }
+    }
+
     fun getCoinFundCategories(coinType: CoinType): List<CoinFundCategory> {
 
         return storage.getCoinInfo(coinType)?.let {
