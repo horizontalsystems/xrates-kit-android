@@ -1,5 +1,7 @@
 package io.horizontalsystems.xrateskit.entities
 
+import androidx.room.Entity
+import io.horizontalsystems.coinkit.models.CoinType
 import java.math.BigDecimal
 
 class CoinMarket(
@@ -36,7 +38,8 @@ class CoinMarketDetails(
     val rateDiffs: Map<TimePeriod, Map<String, BigDecimal>>,
     val tickers: List<MarketTicker>,
 
-    var defiTvlInfo: DefiTvlInfo? = null
+    var defiTvlInfo: DefiTvlInfo? = null,
+    var treasuries : List<CoinTreasury>? = null
 )
 
 class MarketTicker(
@@ -52,4 +55,25 @@ class DefiTvlInfo(
     val tvl: BigDecimal,
     val tvlRank: Int,
     val marketCapTvlRatio: BigDecimal
+)
+
+data class CoinTreasury(
+    val coinType: CoinType,
+    val company: TreasuryCompany,
+    val amount: BigDecimal
+)
+
+@Entity(primaryKeys = ["id"])
+data class TreasuryCompany(
+    val id: String,
+    val name: String,
+    val select: String,
+    val country: String
+)
+
+@Entity(primaryKeys = ["coinType", "companyId"])
+data class CoinTreasuryEntity(
+    val coinType: CoinType,
+    val companyId: String,
+    val amount: BigDecimal = BigDecimal.ZERO,
 )
