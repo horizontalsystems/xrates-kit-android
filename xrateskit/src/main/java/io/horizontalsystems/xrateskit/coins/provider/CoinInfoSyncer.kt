@@ -15,6 +15,8 @@ class CoinInfoSyncer(
         dataProvider.getDataNewerThan(resourceInfo)?.let { data ->
             val coinsResponse = data.value
 
+            storage.deleteAllTreasuryCompanies()
+            storage.deleteAllCoinTreasuries()
             storage.deleteAllCoinCategories()
             storage.deleteAllCoinLinks()
             storage.deleteAllCoinsCategories()
@@ -31,6 +33,8 @@ class CoinInfoSyncer(
             storage.saveCoinFundCategory(coinsResponse.fundCategories)
             storage.saveCoinLinks(coinsResponse.links)
             storage.saveExchangeInfo(coinsResponse.exchangeInfos)
+            storage.saveCoinTreasuries(coinsResponse.coinTreasuries)
+            storage.saveTreasuryCompanies(coinsResponse.treasuryCompanies)
 
             storage.saveResourceInfo(ResourceInfo(ResourceType.COIN_INFO, data.versionId))
         }

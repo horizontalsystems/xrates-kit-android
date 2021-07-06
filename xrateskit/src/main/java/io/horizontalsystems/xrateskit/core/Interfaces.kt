@@ -22,6 +22,8 @@ interface IStorage {
     fun getCoinInfo(coinType: CoinType): CoinInfoEntity?
     fun getCoinLinks(coinType: CoinType): List<CoinLinksEntity>
     fun getCategorizedCoinTypes(): List<CoinType>
+    fun getCoinTreasuries(coinType: CoinType): List<CoinTreasuryEntity>
+    fun getTreasuryCompanies(companyIds: List<String>): List<TreasuryCompany>
     fun saveCoinInfos(coinInfos: List<CoinInfoEntity>)
     fun saveExchangeInfo(exchangeInfos: List<ExchangeInfoEntity>)
     fun saveCoinCategories(coinCategoryEntities: List<CoinCategoriesEntity>)
@@ -30,6 +32,10 @@ interface IStorage {
     fun saveCoinFunds(coinFunds: List<CoinFundsEntity>)
     fun saveCoinFund(coinFunds: List<CoinFund>)
     fun saveCoinFundCategory(coinFundCategories: List<CoinFundCategory>)
+    fun saveCoinTreasuries(coinTreasuries: List<CoinTreasuryEntity>)
+    fun saveTreasuryCompanies(treasuryCompanies: List<TreasuryCompany>)
+    fun deleteAllCoinTreasuries()
+    fun deleteAllTreasuryCompanies()
     fun deleteAllExchangeInfo()
     fun deleteAllCoinCategories()
     fun deleteAllCoinsCategories()
