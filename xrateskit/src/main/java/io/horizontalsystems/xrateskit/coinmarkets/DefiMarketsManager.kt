@@ -19,8 +19,8 @@ class DefiMarketsManager(
         return coinGeckoProvider.getTopCoinMarketsAsync(currency, fetchDiffPeriod, itemsCount, true)
     }
 
-    fun getTopDefiTvlAsync(currency: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<DefiTvl>> {
-        return defiMarketsProvider.getTopDefiTvlAsync(currency, fetchDiffPeriod, itemsCount)
+    fun getTopDefiTvlAsync(currency: String, fetchDiffPeriod: TimePeriod, itemsCount: Int, chain: String?): Single<List<DefiTvl>> {
+        return defiMarketsProvider.getTopDefiTvlAsync(currency, fetchDiffPeriod, itemsCount, chain)
     }
 
     fun getDefiTvlPointsAsync(coinType: CoinType, currency: String, fetchDiffPeriod: TimePeriod): Single<List<DefiTvlPoint>> {
