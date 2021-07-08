@@ -74,11 +74,11 @@ class HorsysProvider(
         }
     }
 
-    override fun getTopDefiTvlAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<DefiTvl>> {
+    override fun getTopDefiTvlAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int, chain: String?): Single<List<DefiTvl>> {
 
         val period = if(isTimePeriodSupported(fetchDiffPeriod)) fetchDiffPeriod.title else TimePeriod.HOUR_24.title
 
-        return horsysService.defiTvl(currencyCode, period).map { responseList ->
+        return horsysService.defiTvl(currencyCode, period, chain).map { responseList ->
             val markets = responseList.mapNotNull { item ->
                 item.code?.let { coinCode ->
                     item.coingecko_id?.let { coinGeckoId ->

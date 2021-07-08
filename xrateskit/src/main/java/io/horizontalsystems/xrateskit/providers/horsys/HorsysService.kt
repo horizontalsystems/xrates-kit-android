@@ -14,7 +14,11 @@ interface HorsysService {
     fun globalCoinMarketPoints(@Path("timePeriod") timePeriod: String, @Query("currency_code") currencyCode: String): Single<List<Response.GlobalCoinMarketPoint>>
 
     @GET("markets/defi")
-    fun defiTvl(@Query("currency_code") currencyCode: String, @Query("diff_period") periods: String): Single<List<Response.DefiTvl>>
+    fun defiTvl(
+        @Query("currency_code") currencyCode: String,
+        @Query("diff_period") periods: String,
+        @Query("chain_filter") chainFilter: String?,
+    ): Single<List<Response.DefiTvl>>
 
     @GET("markets/defi/{coinGeckoId}/latest")
     fun coinDefiTvl(@Path("coinGeckoId") timePeriod: String, @Query("currency_code") currencyCode: String): Single<Response.DefiTvl>

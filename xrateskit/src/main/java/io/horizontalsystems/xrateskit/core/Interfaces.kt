@@ -123,7 +123,7 @@ interface ITokenInfoProvider : IInfoProvider {
 }
 
 interface IDefiMarketsProvider : IInfoProvider {
-    fun getTopDefiTvlAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int): Single<List<DefiTvl>>
+    fun getTopDefiTvlAsync(currencyCode: String, fetchDiffPeriod: TimePeriod, itemsCount: Int, chain: String?): Single<List<DefiTvl>>
     fun getDefiTvlAsync(coinType: CoinType, currencyCode: String): Single<DefiTvl>
     fun getDefiTvlPointsAsync(coinType: CoinType, currencyCode: String, timePeriod: TimePeriod): Single<List<DefiTvlPoint>>
 }
