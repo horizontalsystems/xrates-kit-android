@@ -412,7 +412,7 @@ class CoinGeckoProvider(
             chartPointsResponse.market_caps.reversed().mapIndexedNotNull { index, marketData ->
                 val timestamp = marketData[0].toLong() / 1000
 
-                if (timestamp <= nextTs || chartPointsResponse.market_caps.size <= chartType.interval) {
+                if (timestamp <= nextTs || chartPointsResponse.market_caps.size <= chartType.points) {
                     nextTs = (timestamp - chartType.seconds) + 180 // + 3 minutes
                     val marketCap = marketData[1]
                     val volume = volumes[index][1]
