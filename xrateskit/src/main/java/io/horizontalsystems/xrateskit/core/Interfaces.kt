@@ -15,6 +15,7 @@ interface IStorage {
     fun getCoinInfoCount(): Int
     fun getCoinInfos(): List<CoinInfoEntity>
     fun getExchangeInfo(exchangeId: String): ExchangeInfoEntity?
+    fun getSecurityParameter(coinType: CoinType): SecurityParameter?
     fun getCoinCategories(coinType: CoinType): List<CoinCategory>
     fun getCoinFunds(coinType: CoinType): List<CoinFund>
     fun getCoinFundCategories(categoriesId: List<String>): List<CoinFundCategory>
@@ -25,6 +26,7 @@ interface IStorage {
     fun getCoinTreasuries(coinType: CoinType): List<CoinTreasuryEntity>
     fun getTreasuryCompanies(companyIds: List<String>): List<TreasuryCompany>
     fun saveCoinInfos(coinInfos: List<CoinInfoEntity>)
+    fun saveSecurityParameters(params: List<SecurityParameter>)
     fun saveExchangeInfo(exchangeInfos: List<ExchangeInfoEntity>)
     fun saveCoinCategories(coinCategoryEntities: List<CoinCategoriesEntity>)
     fun saveCoinCategory(coinCategories: List<CoinCategory>)
@@ -34,6 +36,7 @@ interface IStorage {
     fun saveCoinFundCategory(coinFundCategories: List<CoinFundCategory>)
     fun saveCoinTreasuries(coinTreasuries: List<CoinTreasuryEntity>)
     fun saveTreasuryCompanies(treasuryCompanies: List<TreasuryCompany>)
+    fun deleteAllSecurityParameters()
     fun deleteAllCoinTreasuries()
     fun deleteAllTreasuryCompanies()
     fun deleteAllExchangeInfo()

@@ -11,6 +11,9 @@ import io.horizontalsystems.xrateskit.entities.*
 interface CoinInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertSecurityParameters(all: List<SecurityParameter>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCoinTreasuries(all: List<CoinTreasuryEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -40,6 +43,9 @@ interface CoinInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCoinFundCategory(all: List<CoinFundCategory>)
 
+    @Query("DELETE FROM SecurityParameter")
+    fun deleteAllSecurityParameters()
+
     @Query("DELETE FROM CoinTreasuryEntity")
     fun deleteAllCoinTreasuries()
 
@@ -66,6 +72,9 @@ interface CoinInfoDao {
 
     @Query("DELETE FROM CoinLinksEntity")
     fun deleteAllCoinLinks()
+
+    @Query("SELECT * FROM SecurityParameter WHERE coinType=:coinType")
+    fun getSecurityParameter(coinType: CoinType): SecurityParameter?
 
     @Query("SELECT * FROM CoinCategory WHERE id IN (SELECT categoryId FROM CoinCategoriesEntity WHERE coinType =:coinType)")
     fun getCoinCategories(coinType: CoinType): List<CoinCategory>

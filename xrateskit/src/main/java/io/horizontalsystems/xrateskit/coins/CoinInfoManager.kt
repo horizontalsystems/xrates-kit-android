@@ -30,6 +30,10 @@ class CoinInfoManager(
         return storage.getExchangeInfo(exchagenId)
     }
 
+    fun getSecurityParameter(coinType: CoinType): SecurityParameter? {
+        return storage.getSecurityParameter(coinType)
+    }
+
     fun getCoinCategories(coinType: CoinType): List<CoinCategory> {
         return storage.getCoinInfo(coinType)?.let {
             storage.getCoinCategories(it.coinType)

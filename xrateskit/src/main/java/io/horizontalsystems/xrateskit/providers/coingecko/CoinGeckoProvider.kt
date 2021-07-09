@@ -297,7 +297,8 @@ class CoinGeckoProvider(
                         coinInfoManager.getCoinCategories(coinType),
                         coinInfoManager.getCoinFundCategories(coinType),
                         platforms,
-                        launchDate
+                        launchDate,
+                        coinInfoManager.getSecurityParameter(coinType)
                     ),
                     rateDiffs = rateDiffsPeriod,
                     tickers = marketTickers,
