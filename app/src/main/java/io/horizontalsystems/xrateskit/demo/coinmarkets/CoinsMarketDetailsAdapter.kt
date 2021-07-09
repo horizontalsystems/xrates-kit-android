@@ -76,6 +76,10 @@ data class CoinMarketDetailsItem(val infoTitle: String, val value: BigDecimal, v
             }
             list.add(CoinMarketDetailsItem("--------------- Rating ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
             list.add(CoinMarketDetailsItem("${coinMarketDetails.meta.rating}", BigDecimal.ZERO, BigDecimal.ZERO))
+            list.add(CoinMarketDetailsItem("--------------- Security ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
+            list.add(CoinMarketDetailsItem("IsDecentralized : ${coinMarketDetails.meta.securityParameter?.decentralized}", BigDecimal.ZERO, BigDecimal.ZERO))
+            list.add(CoinMarketDetailsItem("Privay : ${coinMarketDetails.meta.securityParameter?.privacy}", BigDecimal.ZERO, BigDecimal.ZERO))
+            list.add(CoinMarketDetailsItem("CensorshipResistance : ${coinMarketDetails.meta.securityParameter?.censorshipResistance}", BigDecimal.ZERO, BigDecimal.ZERO))
             list.add(CoinMarketDetailsItem("--------------- Categories ------------------", BigDecimal.ZERO, BigDecimal.ZERO))
             list.add(CoinMarketDetailsItem("${coinMarketDetails.meta.categories?.joinToString(",")}", BigDecimal.ZERO, BigDecimal.ZERO))
             coinMarketDetails.meta.platforms?.let {

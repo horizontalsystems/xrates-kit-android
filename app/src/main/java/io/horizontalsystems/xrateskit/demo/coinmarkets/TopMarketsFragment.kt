@@ -133,8 +133,8 @@ class TopMarketsFragment() : Fragment() {
 
         btnLoadCoinInfo.setOnClickListener {
             //val coinType = CoinType.fromString("bitcoin")
-            val coinType = CoinType.fromString("erc20|0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2") //Maker
-            // val coinType = CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9") //aave
+            //val coinType = CoinType.fromString("erc20|0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2") //Maker
+            val coinType = CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9") //aave
             //val coinType = CoinType.fromString("unsupported|theta-token") //Theta
             viewModel.loadCoinInfo(coinType)
             rviewInfo4.visibility = View.GONE
