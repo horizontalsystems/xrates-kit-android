@@ -1,5 +1,5 @@
 {
-  "version": 30,
+  "version": 33,
   "categories": [
     {
       "id": "blockchain",
@@ -17,14 +17,14 @@
       "description": "Protocols for lending and borrowing."
     },
     {
-      "id": "privacy",
-      "name": "Privacy",
-      "description": "Projects working on privacy solutions."
+      "id": "yield_aggregators",
+      "name": "Yield Aggregators",
+      "description": "Solutions for earning from idle crypto assets."
     },
     {
-      "id": "scaling",
-      "name": "Scaling",
-      "description": "Solutions for faster blockchain transactions."
+      "id": "investment_tools",
+      "name": "Investment Tools",
+      "description": "Token-powered analytics and investment instruments."
     },
     {
       "id": "oracles",
@@ -32,14 +32,29 @@
       "description": "Connecting real world data to smart contracts."
     },
     {
-      "id": "prediction_markets",
-      "name": "Prediction Markets",
-      "description": "Markets to bet on events in the future."
+      "id": "gaming",
+      "name": "Gaming",
+      "description": "Crypto projects in gaming and VR sector."
     },
     {
-      "id": "yield_aggregators",
-      "name": "Yield Aggregators",
-      "description": "Solutions for earning from idle crypto assets."
+      "id": "scaling",
+      "name": "Scaling",
+      "description": "Solutions for faster blockchain transactions."
+    },
+    {
+      "id": "privacy",
+      "name": "Privacy",
+      "description": "Projects working on privacy solutions."
+    },
+    {
+      "id": "exchange_tokens",
+      "name": "Exchange Tokens",
+      "description": "Tokens issued by centralized exchanges."
+    },
+    {
+      "id": "wallets",
+      "name": "Wallets",
+      "description": "Tokens issued by cryptocurrency wallets."
     },
     {
       "id": "fiat_stablecoins",
@@ -57,6 +72,11 @@
       "description": "Stablecoins with algorithmic 1-1 price peg to fiat."
     },
     {
+      "id": "nft",
+      "name": "NFT",
+      "description": "Marketplaces for NFT tokens."
+    },
+    {
       "id": "tokenized_bitcoin",
       "name": "Tokenized Bitcoin",
       "description": "Crypto tokens pegged 1-1 to Bitcoin price."
@@ -66,20 +86,16 @@
       "name": "Stablecoin Issuers",
       "description": "Decentralized issuers of fiat pegged stablecoin tokens."
     },
-    {
-      "id": "exchange_tokens",
-      "name": "Exchange Tokens",
-      "description": "Tokens issued by centralized exchanges."
-    },
+
     {
       "id": "risk_management",
       "name": "Risk Management",
       "description": "Risk assessment, insurance and hedging."
     },
     {
-      "id": "wallets",
-      "name": "Wallets",
-      "description": "Tokens issued by cryptocurrency wallets."
+      "id": "fan_tokens",
+      "name": "Fan Tokens",
+      "description": "Digital fan tokens, typically specific to a team or club ."
     },
     {
       "id": "synthetics",
@@ -92,19 +108,14 @@
       "description": "Assets that pegged in price to a set of tokens."
     },
     {
-      "id": "nft",
-      "name": "NFT",
-      "description": "Marketplaces for NFT tokens."
-    },
-    {
       "id": "fundraising",
       "name": "Fundraising",
       "description": "Fundraising and token sale platforms."
     },
     {
-      "id": "gaming",
-      "name": "Gaming",
-      "description": "Crypto projects in gaming and VR sector."
+      "id": "prediction_markets",
+      "name": "Prediction Markets",
+      "description": "Markets to bet on events in the future."
     },
     {
       "id": "b2b",
@@ -132,14 +143,14 @@
       "description": "Decentralized on-demand computing solutions."
     },
     {
-      "id": "fan_tokens",
-      "name": "Fan Tokens",
-      "description": "Digital fan tokens, typically specific to a team or club ."
+      "id": "data_storage",
+      "name": "Data Storage",
+      "description": "Decentralized data-storage solutions."
     },
     {
-      "id": "investment_tools",
-      "name": "Investment Tools",
-      "description": "Token-powered analytics and investment instruments."
+      "id": "decentralized_identity",
+      "name": "Decentralized Identity",
+      "description": "Decentralized identity solutions."
     }
   ],
   "funds": [
@@ -917,6 +928,12 @@
         "reddit": "",
         "telegram": ""
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
       "id": "erc20|0x111111111117dc0aa78b770fa6a738034120c302",
       "funds": [
@@ -953,45 +970,13 @@
         "reddit": "https://www.reddit.com/r/Aave_Official",
         "telegram": "https://t.me/Aavesome"
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
-      "audit": [
-        {
-          "name": "MixBytes - December 3, 2020",
-          "url": "https://github.com/aave/protocol-v2/blob/master/audits/Mixbytes-aave-v2-03-12-2020.pdf"
-        },
-        {
-          "name": "PeckShield - December 3, 2020",
-          "url": "https://github.com/aave/protocol-v2/blob/master/audits/Peckshield-aave-v2-03-12-2020-EN.pdf"
-        },
-        {
-          "name": "CertiK - December 2, 2020",
-          "url": "https://github.com/aave/protocol-v2/blob/master/audits/Certik-aave-v2-03-12-2020.pdf"
-        },
-        {
-          "name": "CertiK - September 21, 2020",
-          "url": "https://github.com/aave/safety-module/blob/master/audits/CertiK_Aave_Staking_audit.pdf"
-        },
-        {
-          "name": "ConsenSys Diligence - August 2020",
-          "url": "https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-M3C77KySce4HXyLqkEq%2F-ME38dH38FdIqGZrM3GR%2F-ME3L_NQih4VSsV3iruG%2FAave_CreditDelegationVault_Audit_Final.pdf?alt=media&token=43412247-b932-4015-bf5e-e81f81c088f2"
-        },
-        {
-          "name": "CertiK - July 2020",
-          "url": "https://github.com/aave/aave-token/blob/master/audits/AaveTokenReport_CertiK.pdf"
-        },
-        {
-          "name": "ConsenSys Diligence - July 2020",
-          "url": "https://consensys.net/diligence/audits/2020/07/aave-token/"
-        },
-        {
-          "name": "ConsenSys Diligence - May 20, 2020",
-          "url": "https://consensys.net/diligence/audits/2020/05/aave-cpm-price-provider/"
-        },
-        {
-          "name": "OpenZeppelin - January 20, 2020",
-          "url": "https://blog.openzeppelin.com/aave-protocol-audit/"
-        }
-      ],
       "id": "erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
       "funds": [
         "three_arrows_capital",
@@ -1069,12 +1054,6 @@
         "telegram": "https://t.me/AlphaFinanceLab"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "PeckShield - October 5, 2020",
-          "url": "https://github.com/peckshield/publications/blob/master/reviews/PeckShield-Security-Review-Alpha-Homora-v1.0.pdf"
-        }
-      ],
       "id": "erc20|0xa1faa113cbe53436df28ff0aee54275c13b40975",
       "funds": ["multicoin_capital", "divergence_ventures"]
     },
@@ -1193,12 +1172,6 @@
         "telegram": "https://t.me/auctusproject"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "OpenZeppelin - August 6, 2020",
-          "url": "https://blog.openzeppelin.com/aco-protocol-audit/"
-        }
-      ],
       "id": "erc20|0xc12d099be31567add4e4e4d0d45691c3f58f5663",
       "funds": []
     },
@@ -1213,14 +1186,7 @@
         "type": "ERC20"
       },
       "description": "",
-      "links": {
-        "website": "",
-        "whitepaper": "",
-        "guide": "",
-        "twitter": "",
-        "reddit": "",
-        "telegram": ""
-      },
+      "links": { "website": "", "whitepaper": "", "guide": "", "twitter": "", "reddit": "", "telegram": "" },
       "id": "erc20|0x3449fc1cd036255ba1eb19d65ff4ba2b8903a69a",
       "funds": []
     },
@@ -1245,12 +1211,6 @@
         "telegram": ""
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "Zokyo - December 11, 2020",
-          "url": "https://assets.website-files.com/5f99eb7870add47583eb24af/5fd9c6549c803429a0c80748_Badger%20SC%20Audit.pdf"
-        }
-      ],
       "id": "erc20|0x3472a5a71965499acd81997a54bba8d852c6e53d",
       "funds": ["polychain_capital", "parafi_capital"]
     },
@@ -1274,21 +1234,13 @@
         "reddit": "",
         "telegram": ""
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
-      "audit": [
-        {
-          "name": "OpenZeppelin - August 9, 2020",
-          "url": "https://blog.openzeppelin.com/balancer-contracts-audit/"
-        },
-        {
-          "name": "ConsenSys Diligence - May 2020",
-          "url": "https://diligence.consensys.net/audits/2020/05/balancer-finance/"
-        },
-        {
-          "name": "Trail of Bits - March 5, 2020",
-          "url": "https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LtMQYB90ZuO38aKDyto%2F-M2EdQiZCQBtqpohoGtt%2F-M2EdpY4ind-7TyqtJL-%2FTrail%20of%20Bits%20Full%20Audit.pdf?alt=media&token=285781fb-c180-4cc3-8aeb-f5fc99578693"
-        }
-      ],
       "id": "erc20|0xba100000625a3754423978a60c9317c58a424e3d",
       "funds": [
         "three_arrows_capital",
@@ -1390,32 +1342,6 @@
         "telegram": "https://t.me/bancor"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "PeckShield - October 11, 2020",
-          "url": "https://drive.google.com/file/d/1baijgjazL4PXD98hD8lGHfuvwNruIUbU/view"
-        },
-        {
-          "name": "Certik - Octobe",
-          "url": "https://drive.google.com/file/d/1gGszH3bSU6gUZG0oCN79tfYWCx7OfGDe/view)r 202"
-        },
-        {
-          "name": "Certik - October 9, 2020",
-          "url": "https://drive.google.com/file/d/1QvYBjlGsYKtuO6C82c4-eX4YF2F_NaPk/view"
-        },
-        {
-          "name": "Halborn - August 17, 2020",
-          "url": "https://github.com/HalbornSecurity/PublicReports/blob/master/Solidity%20Smart%20Contract%20Audits/Bancor_smartcontract_halborn_report_V1.pdf"
-        },
-        {
-          "name": "ConsenSys Diligence - July 2020",
-          "url": "https://drive.google.com/file/d/1NaUEy29L5vk6lcBn0L4DRv3cWgdpAGQu/view"
-        },
-        {
-          "name": "Arachnid - May 2017",
-          "url": "https://gist.github.com/Arachnid/c65fd1bd61a8e0294aef95a4808edc78"
-        }
-      ],
       "id": "erc20|0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c",
       "funds": ["kr1", "draper_associates"]
     },
@@ -1509,30 +1435,14 @@
         "reddit": "",
         "telegram": "https://t.me/b0xnet"
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "description": "### Project Description\n\nbZx defines a protocol for decentralized lending, trading, and borrowing. One of the project highlights is that it seeks to offer margin trading in a truly decentralized fashion.\n\nBorrowing can be done through Torque protocol while the Fulcrum protocol handles aspects of lending and margin trading.\n\nThe bZx protocol employs a hybrid order model, where 3'rd party relayers each maintain order books outside blockchain while the actual orders are settled on blockchain.\n\n### Token Description\n\nThe BZRX token is a governance token, first and foremost. Collectively, the token holders have the power to upgrade the protocol as they see fit.\n\nThe protocol mandates that relay fees are denominated in BZRX, so it acts primarily as a payment token. \n\nIn the future, there are plans to make the token redeemable for a proportion of the insurance fund to provide a backstop to its value.\n\nFurther, the token will be used to vote on various key parameters such as assets supported by the protoco, the % of interest collected from lenders, the rate of inflation of the BZRX token and more.\n\n### Token Emission\n\nThe 1.03 billion tokens are allocated as follows:\n\n- 50% for token sales\n- 15% to the team\n- 15% to development fund\n- 15% to ecosystem fund\n- 5% to project advisors",
       "rating": "",
-      "audit": [
-        {
-          "name": "Certik - September 2020",
-          "url": "https://bzx.network/pdfs/bZx_v2_Audit%E2%80%93Report_CertiK.pdf"
-        },
-        {
-          "name": "PeckShield - September 2020",
-          "url": "https://bzx.network/pdfs/peckshield-audit-report-bZxV2-v1.0rc1.pdf"
-        },
-        {
-          "name": "Certik - July 2020",
-          "url": "https://bzx.network/pdfs/BZRX_vBZRX_CertiK_Verification_Report_1_07_11_2020.pdf"
-        },
-        {
-          "name": "Certik - March 2020",
-          "url": "https://bzx.network/pdfs/CertiK%20Verification%20Report%20for%20bZx.pdf"
-        },
-        {
-          "name": "ZK Labs - September 2018",
-          "url": "https://github.com/mattdf/audits/blob/master/bZx/bzx-audit.pdf"
-        }
-      ],
       "id": "erc20|0x56d811088235f11c8920698a204a5010a788f4b3",
       "funds": ["hashed"]
     },
@@ -1711,7 +1621,7 @@
         "address": "0xc00e94cb662c3520282e6f5717214004a7f26888",
         "type": "ERC20"
       },
-      "description": "### Project Description\n\nCompound is a decentralized platform that connects cryptocurrency lenders and borrowers.\n\nIn essence, users lend idle cryptocurrency assets to the Compound Finance liquidity pool, from which borrowers can borrow these assets.\n\nFor cryptocurrency owners Compound allows to deposit their holdings into a smart contract and earn an interest on deposits.\n\nAt the same time potential borrowers may request credit from Compound for a fee and collateral deposit (in form of another cryptocurrency).\n\nBorrowing and lending available to regular users as well as smart contracts. This enables DeFi engineers to build decentralized autonomous services which are able to access liquidity on Compound on demand, without requiring any mediating party or other preconditions.\n\nThe borrowing and lending rates are defined algorithmically based on real-time market dynamics. For instance, when the asset supply increases as more users deposit this asset, it leads to a decrease in borrowing/lending rates.\n\n### Token Description\n\nThe COMP token is governance token of the protocol. COMP token-holders can discuss and vote on any future changes to the Compound protocol. For instance, they can initiate proposals to include new assets, or change asset-specific requirements on Compound like required collateralization margins.\n\nIt was explicitly not marketed as an investment, however, it is widely believed token holders will eventually vote in a mechanism of value capture providing them with some claim on the cash flows of the system\n\n### Token Emission\n\nA total of 10 million COMP tokens were created and distributed as follows:\n\n- 4,229,949: users of the protocol (over 4-year period)\n- 2,396,307: shareholders of Compound Labs, Inc.\n- 2,226,037: founders & team (4-year vesting)\n- 372,707: future team members\n- 775,000: for community to advance governance through other means",
+      "description": "### Project Description\n\nCompound is a decentralized platform that connects cryptocurrency lenders and borrowers.\n\nIn essence, users lend idle cryptocurrency assets to the Compound Finance liquidity pool, from which borrowers can borrow these assets.\n\nFor cryptocurrency owners Compound allows to deposit their holdings into a smart contract and earn an interest on deposits.\n\nAt the same time potential borrowers may request credit from Compound for a fee and collateral deposit (in form of another cryptocurrency).\n\nBorrowing and lending available to regular users as well as smart contracts. This enables DeFi engineers to build decentralized autonomous services which are able to access liquidity on Compound on demand, without requiring any mediating party or other preconditions.\n\nThe borrowing and lending rates are defined algorithmically based on real-time market dynamics. For instance, when the asset supply increases as more users deposit this asset, it leads to a decrease in borrowing/lending rates.\n\n### Token Description\n\nThe COMP token is governance token of the protocol. COMP token-holders can discuss and vote on any future changes to the Compound protocol. For instance, they can initiate proposals to include new assets, or change asset-specific requirements on Compound like required collateralization margins.\n\nIt was explicitly not marketed as an investment, however, it is widely believed token holders will eventually vote in a mechanism of value capture providing them with some claim on the cash flows of the system\n\n### Token Emission\n\nA total of 10 million COMP tokens were created and distributed as follows:\n\n- 4,229,949: users of the protocol (over 4-year period)\n- 2,396,307: shareholders of Compound Labs, Inc.\n- 2,226,037: founders & team (4-year vesting)\n- 372,707: future team members\n- 775,000: for community to advance governance through other means",
       "links": {
         "website": "https://compound.finance/governance/comp",
         "whitepaper": "",
@@ -1721,29 +1631,13 @@
         "reddit": "",
         "telegram": ""
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
-      "audit": [
-        {
-          "name": "OpenZeppelin - May 22, 2020",
-          "url": "https://blog.openzeppelin.com/compound-comp-distribution-system-audit/"
-        },
-        {
-          "name": "OpenZeppelin - April 26, 2020",
-          "url": "https://blog.openzeppelin.com/compound-tether-integration-audit/"
-        },
-        {
-          "name": "Trail of Bits - February 28, 2020",
-          "url": "https://github.com/trailofbits/publications/blob/master/reviews/compound-governance.pdf"
-        },
-        {
-          "name": "OpenZeppelin - February 25, 2020",
-          "url": "https://blog.openzeppelin.com/compound-alpha-governance-system-audit/"
-        },
-        {
-          "name": "OpenZeppelin - February 9, 2020",
-          "url": "https://blog.openzeppelin.com/compound-finance-mcd-dsr-integration/"
-        }
-      ],
       "id": "erc20|0xc00e94cb662c3520282e6f5717214004a7f26888",
       "funds": [
         "polychain_capital",
@@ -1867,20 +1761,20 @@
         "reddit": "",
         "telegram": "https://t.me/curvefi"
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
-      "audit": [
-        {
-          "name": "Quantstamp - October 15, 2020",
-          "url": "https://www.curve.fi/curve_audits/CurveMetapoolAudit.pdf"
-        }
-      ],
       "id": "erc20|0xd533a949740bb3306d119cc777fa900ba034cd52",
       "funds": []
     },
     {
       "code": "CVC",
       "name": "Civic",
-      "categories": ["infrastructure"],
+      "categories": ["infrastructure", "decentralized_identity"],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -2208,16 +2102,6 @@
         "telegram": "https://t.me/dodoex_official"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "Trail of Bits - September 18, 2020",
-          "url": "https://github.com/DODOEX/dodo-smart-contract/blob/master/audit/%5BTrail%20of%20Bits%5D%20DODO%20Summary%20Report.pdf"
-        },
-        {
-          "name": "PeckShield - July 10, 2020",
-          "url": "https://github.com/DODOEX/dodo-smart-contract/blob/master/audit/%5BPeckshield%5D%20dodo_audit_report_2020_16_en_1.0.pdf"
-        }
-      ],
       "id": "erc20|0x43dfc4159d86f3a37a5a4b3d4580b888ad7d4ddd",
       "funds": [
         "three_arrows_capital",
@@ -2438,16 +2322,6 @@
         "telegram": "https://t.me/Breadforthepeople"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "PeckShield - October 1, 2020",
-          "url": "https://github.com/harvest-finance/harvest/blob/master/audits/PeckShield-Harvest.pdf"
-        },
-        {
-          "name": "Haechi - September 29, 2020",
-          "url": "https://github.com/harvest-finance/harvest/blob/master/audits/Haechi-Harvest.pdf"
-        }
-      ],
       "id": "erc20|0xa0246c9032bc3a600820415ae600c6388619a14d",
       "funds": []
     },
@@ -2471,16 +2345,6 @@
         "telegram": "https://t.me/DeFiner"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "Trail of Bits - September 2020",
-          "url": "https://docs.definer.org/02-trail-of-bits-sep-2020"
-        },
-        {
-          "name": "TakaSecurity - August 25, 2020",
-          "url": "https://takasecurity.com/pdf/TakaSecurity_DeFiner.pdf"
-        }
-      ],
       "id": "erc20|0x054f76beed60ab6dbeb23502178c52d6c5debe40",
       "funds": []
     },
@@ -2551,16 +2415,6 @@
         "telegram": "https://t.me/theforceprotocol666"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "Certik - July 8, 2020",
-          "url": "https://certik-public-assets.s3.amazonaws.com/REP-ForTube-01_08_2020.pdf"
-        },
-        {
-          "name": "SlowMist - May 2020",
-          "url": "https://www.for.tube/ForTube2.0_BOND%20Smart%20Contract%20Security%20Audit_20200602.pdf"
-        }
-      ],
       "id": "erc20|0x1fcdce58959f536621d76f5b7ffb955baa5a672f",
       "funds": ["ngc_ventures"]
     },
@@ -2725,24 +2579,6 @@
         "telegram": ""
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "G0 Group - May 4, 2020",
-          "url": "https://github.com/gnosis/safe-contracts/blob/development/docs/Gnosis_Safe_Audit_Report_1_2_0.pdf"
-        },
-        {
-          "name": "G0 Group - November 11, 2019",
-          "url": "https://github.com/g0-group/Audits/blob/master/G0Group-GnosisSafe-Ammended.pdf"
-        },
-        {
-          "name": "Runtime Verification - February 7, 2019",
-          "url": "https://github.com/gnosis/safe-contracts/blob/development/docs/Gnosis_Safe_Formal_Verification_Report_1_0_0.pdf"
-        },
-        {
-          "name": "Alexey Akhunov - July 2018",
-          "url": "https://github.com/gnosis/safe-contracts/blob/development/docs/Gnosis_Safe_Audit_Report.pdf"
-        }
-      ],
       "id": "erc20|0x6810e776880c02933d47db1b9fc05908e5386b96",
       "funds": []
     },
@@ -2918,12 +2754,6 @@
         "telegram": "https://t.me/HegicOptions"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "PeckShield - October 1, 2020",
-          "url": "https://github.com/peckshield/publications/blob/master/audit_reports/PeckShield-Audit-Report-Hegic-v1.0.pdf"
-        }
-      ],
       "id": "erc20|0x584bc13c7d411c00c01a62e8019472de68768430",
       "funds": []
     },
@@ -2976,7 +2806,7 @@
     {
       "code": "HOT",
       "name": "Holo",
-      "categories": ["infrastructure"],
+      "categories": ["data_storage"],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -3064,16 +2894,6 @@
         "telegram": "https://t.me/idlefinance"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "Quantstamp - November 26, 2020",
-          "url": "https://certificate.quantstamp.com/full/idle-goverance"
-        },
-        {
-          "name": "Quantstamp - December 10, 2020",
-          "url": "https://certificate.quantstamp.com/full/idle-finance"
-        }
-      ],
       "id": "erc20|0x875773784af8135ea0ef43b5a374aad105c5d39e",
       "funds": ["gumi_cryptos"]
     },
@@ -3189,24 +3009,6 @@
         "telegram": "https://t.me/officialkybernetwork"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "SmartDec - December 2, 2019",
-          "url": "https://github.com/KyberNetwork/smart-contracts/blob/master/audits/APRAudit/SmartDecAudit.pdf"
-        },
-        {
-          "name": "ChainSecurity - January 9, 2019",
-          "url": "https://github.com/KyberNetwork/smart-contracts/blob/master/audits/kyberV3Audit/ChainSecurity_Kyberv3.pdf"
-        },
-        {
-          "name": "ChainSecurity - June 28, 2018",
-          "url": "https://github.com/KyberNetwork/smart-contracts/blob/master/audits/kyberV2Audit/ChainSecurity_KyberNetwork_Public.pdf"
-        },
-        {
-          "name": "BlockchainLabs.NZ - February 7, 2018",
-          "url": "https://github.com/KyberNetwork/smart-contracts/blob/master/audits/kyberV1Audit2/KyberNetwork%20BlockchainLabs%20Audit%20Report.pdf"
-        }
-      ],
       "id": "erc20|0xdefa4e8a7bcba345f687a2f1456f5edd9ce97202",
       "funds": [
         "three_arrows_capital",
@@ -3307,6 +3109,12 @@
         "github": "https://github.com/smartcontractkit/chainlink",
         "reddit": "https://www.reddit.com/r/Chainlink/",
         "telegram": "https://t.me/chainlinkofficial"
+      },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
       },
       "rating": "",
       "id": "erc20|0x514910771af9ca656af840dff83e8264ecf986ca",
@@ -3428,12 +3236,6 @@
         "telegram": "https://t.me/maticnetwork"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "Nomic Labs - May 15, 2019",
-          "url": "https://medium.com/nomic-labs-blog/matic-network-security-audit-report-c3b2e9d5dcc4"
-        }
-      ],
       "id": "erc20|0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0",
       "funds": ["coinbase_ventures"]
     },
@@ -3458,16 +3260,6 @@
         "telegram": "https://t.me/Mcdex"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "OpenZeppelin - June 5, 2020",
-          "url": "https://blog.openzeppelin.com/mcdex-mai-protocol-audit/"
-        },
-        {
-          "name": "ConsenSys Diligence - May 2020",
-          "url": "https://consensys.net/diligence/audits/2020/05/mcdex-mai-protocol-v2/"
-        }
-      ],
       "id": "erc20|0x4e352cf164e64adcbad318c3a1e222e9eba4ce42",
       "funds": []
     },
@@ -3561,29 +3353,13 @@
         "reddit": "https://www.reddit.com/r/MakerDAO",
         "telegram": ""
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
-      "audit": [
-        {
-          "name": "Trail of Bits - March 23, 2018",
-          "url": "https://github.com/makerdao/audits/blob/master/mcd/trail-of-bits.pdf"
-        },
-        {
-          "name": "Bok Consulting - June 21, 2018",
-          "url": "https://github.com/bokkypoobah/MakerDAOSaiContractAudit/tree/8dbefb06826c01082ff2fb9c368d30c0336733a1/audit"
-        },
-        {
-          "name": "White Hat Group - December 15, 2017",
-          "url": "https://github.com/makerdao/audits/blob/master/scd/white-hat-group.pdf"
-        },
-        {
-          "name": "Trail of Bits - December 8, 2017",
-          "url": "https://github.com/makerdao/audits/blob/master/dappsys/trail-of-bits.pdf"
-        },
-        {
-          "name": "Trail of Bits - October 24, 2017",
-          "url": "https://github.com/makerdao/audits/blob/master/scd/trail-of-bits.pdf"
-        }
-      ],
       "id": "erc20|0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
       "funds": [
         "placeholder",
@@ -3667,16 +3443,6 @@
         "telegram": "https://t.me/mstableofficial"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "ConsenSys Diligence - July 2020",
-          "url": "https://consensys.net/diligence/audits/2020/07/mstable-1.1/"
-        },
-        {
-          "name": "Bramah Systems - April 2020",
-          "url": "https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LxR8Ppz-_JQ7mRRKKgl%2F-M8VZ0fN5FQOJZPhONiA%2F-M8V_c3WStQFYTR5G2NP%2FmStable%20Audit%20--%20Bramah%20Systems.pdf?alt=media&token=d1f5756e-6e76-4918-877c-1c791b82e74f"
-        }
-      ],
       "id": "erc20|0xe2f2a5c287993345a840db3b0845fbc70f5935a5",
       "funds": []
     },
@@ -3753,7 +3519,7 @@
     {
       "code": "PUNDIX",
       "name": "Pundi X",
-      "categories": ["b2b","wallets"],
+      "categories": ["b2b", "wallets"],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -3915,11 +3681,7 @@
       "name": "AirSwap",
       "categories": ["dexes"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -3939,11 +3701,7 @@
       "name": "Aergo",
       "categories": ["b2b"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -3982,11 +3740,7 @@
       "name": "Sifchain",
       "categories": ["dexes"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4006,11 +3760,7 @@
       "name": "Tornado Cash",
       "categories": ["privacy"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4030,11 +3780,7 @@
       "name": "ZKSwap",
       "categories": ["scaling"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4054,11 +3800,7 @@
       "name": "NuCypher",
       "categories": ["privacy", "infrastructure"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4125,11 +3867,7 @@
       "name": "HOPR",
       "categories": ["privacy"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4149,11 +3887,7 @@
       "name": "Sentinel",
       "categories": ["privacy"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4173,11 +3907,7 @@
       "name": "Blank",
       "categories": ["wallets"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4197,11 +3927,7 @@
       "name": "Dusk Network",
       "categories": ["privacy"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4276,7 +4002,7 @@
     {
       "code": "ONE",
       "name": "Harmony",
-      "categories": ["scaling", "cross_chain","blockchain"],
+      "categories": ["scaling", "cross_chain", "blockchain"],
       "active": true,
       "description": "",
       "links": {
@@ -4297,11 +4023,7 @@
       "name": "Fantom",
       "categories": ["scaling"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4321,11 +4043,7 @@
       "name": "RAZOR Network",
       "categories": ["oracles"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4345,11 +4063,7 @@
       "name": "Kylin Network",
       "categories": ["oracles"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4369,11 +4083,7 @@
       "name": "Berry Data",
       "categories": ["oracles"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4393,11 +4103,7 @@
       "name": "OptionRoom",
       "categories": ["oracles", "prediction_markets"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4417,11 +4123,7 @@
       "name": "Umbrella Network",
       "categories": ["oracles"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4441,11 +4143,7 @@
       "name": "Polkamarkets",
       "categories": ["prediction_markets"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4465,11 +4163,7 @@
       "name": "Vesper Finance",
       "categories": ["yield_aggregators"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4489,11 +4183,7 @@
       "name": "Bella Protocol",
       "categories": ["yield_aggregators"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4513,11 +4203,7 @@
       "name": "Auto",
       "categories": ["yield_aggregators"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4537,11 +4223,7 @@
       "name": "Shroom.Finance",
       "categories": [],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4561,11 +4243,7 @@
       "name": "mStable BTC",
       "categories": ["tokenized_bitcoin"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4585,11 +4263,7 @@
       "name": "LEO Token",
       "categories": ["exchange_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4609,11 +4283,7 @@
       "name": "KeeperDAO",
       "categories": ["yield_aggregators"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4633,11 +4303,7 @@
       "name": "Stafi",
       "categories": ["risk_management", "synthetics", "staking_eth_2_0"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4655,13 +4321,9 @@
     {
       "code": "OXY",
       "name": "Oxygen",
-      "categories": ["risk_management", "wallets","lending"],
+      "categories": ["risk_management", "wallets", "lending"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4681,11 +4343,7 @@
       "name": "Hedget",
       "categories": ["risk_management"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4705,11 +4363,7 @@
       "name": "ARMOR",
       "categories": ["risk_management"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4729,11 +4383,7 @@
       "name": "MATH",
       "categories": ["wallets"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4753,11 +4403,7 @@
       "name": "SafePal",
       "categories": ["wallets"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4777,11 +4423,7 @@
       "name": "Lisk",
       "categories": ["wallets", "infrastructure"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4801,11 +4443,7 @@
       "name": "Wanchain",
       "categories": ["wallets", "infrastructure", "cross_chain"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4825,11 +4463,7 @@
       "name": "Plasma Finance",
       "categories": ["wallets"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4849,11 +4483,7 @@
       "name": "Index Cooperative",
       "categories": ["index_funds"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4873,11 +4503,7 @@
       "name": "NFTX",
       "categories": ["index_funds"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4897,11 +4523,7 @@
       "name": "Degen Index",
       "categories": ["index_funds"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4921,11 +4543,7 @@
       "name": "sDEFI",
       "categories": ["index_funds"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4945,11 +4563,7 @@
       "name": "PieDAO DEFI Large Cap",
       "categories": ["index_funds"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4969,11 +4583,7 @@
       "name": "Ethernity Chain",
       "categories": ["nft"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -4993,11 +4603,7 @@
       "name": "Terra Virtua Kolect",
       "categories": ["nft"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5017,11 +4623,7 @@
       "name": "Flow",
       "categories": ["nft"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5041,11 +4643,7 @@
       "name": "WHALE",
       "categories": ["nft"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5065,11 +4663,7 @@
       "name": "WAX",
       "categories": ["nft"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5089,11 +4683,7 @@
       "name": "Muse",
       "categories": ["nft"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5113,11 +4703,7 @@
       "name": "DAO Maker",
       "categories": ["fundraising"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5137,11 +4723,7 @@
       "name": "Axie Infinity",
       "categories": ["gaming"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5161,11 +4743,7 @@
       "name": "Decentral Games",
       "categories": ["gaming"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5185,11 +4763,7 @@
       "name": "Aavegotchi",
       "categories": ["nft"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5209,11 +4783,7 @@
       "name": "REVV",
       "categories": ["gaming"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5233,11 +4803,7 @@
       "name": "Gala",
       "categories": ["gaming"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5257,11 +4823,7 @@
       "name": "Crowns",
       "categories": ["gaming"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5281,11 +4843,7 @@
       "name": "Orion Protocol",
       "categories": ["infrastructure"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5303,13 +4861,9 @@
     {
       "code": "CRE",
       "name": "Carry",
-      "categories": ["b2b"],
+      "categories": ["b2b", "decentralized_identity"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5327,13 +4881,9 @@
     {
       "code": "BLZ",
       "name": "Bluzelle",
-      "categories": ["infrastructure"],
+      "categories": ["data_storage"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5353,11 +4903,7 @@
       "name": "Kusama",
       "categories": ["infrastructure"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5375,13 +4921,9 @@
     {
       "code": "FIL",
       "name": "Filecoin",
-      "categories": ["infrastructure"],
+      "categories": ["data_storage"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5407,13 +4949,9 @@
     {
       "code": "AR",
       "name": "Arweave",
-      "categories": ["infrastructure"],
+      "categories": ["data_storage"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5439,13 +4977,9 @@
     {
       "code": "FIO",
       "name": "FIO Protocol",
-      "categories": ["infrastructure"],
+      "categories": ["infrastructure", "decentralized_identity"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5465,11 +4999,7 @@
       "name": "Contentos",
       "categories": ["infrastructure"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5487,13 +5017,9 @@
     {
       "code": "PKF",
       "name": "PolkaFoundry",
-      "categories": ["infrastructure"],
+      "categories": [""],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5511,13 +5037,9 @@
     {
       "code": "META",
       "name": "Metadium",
-      "categories": ["infrastructure"],
+      "categories": ["infrastructure", "decentralized_identity"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5544,11 +5066,7 @@
       "name": "Indexed Finance",
       "categories": [],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5568,11 +5086,7 @@
       "name": "SuperFarm",
       "categories": ["cross_chain"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5592,11 +5106,7 @@
       "name": "Switcheo",
       "categories": ["cross_chain"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5616,11 +5126,7 @@
       "name": "Konomi Network",
       "categories": ["cross_chain"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5640,11 +5146,7 @@
       "name": "Linear",
       "categories": ["cross_chain"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5664,11 +5166,7 @@
       "name": "ankrETH",
       "categories": ["staking_eth_2_0"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5688,11 +5186,7 @@
       "name": "StakeHound Staked Ether",
       "categories": ["staking_eth_2_0"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5712,11 +5206,7 @@
       "name": "DIGG",
       "categories": ["rebase_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5736,11 +5226,7 @@
       "name": "Benchmark Protocol ",
       "categories": ["rebase_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5760,11 +5246,7 @@
       "name": "Ditto ",
       "categories": ["rebase_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5784,11 +5266,7 @@
       "name": "Coil ",
       "categories": [],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -5880,12 +5358,6 @@
         "telegram": "https://t.me/opium_network"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "SmartDec - March 24, 2020",
-          "url": "https://blog.smartdec.net/opium-smart-contracts-security-analysis-4c1857cfd93f"
-        }
-      ],
       "id": "erc20|0x888888888889c00c67689029d7856aac1065ec11",
       "funds": ["cms", "alameda_research_", "zee_prime_capital", "kenetic", "galaxy_digital_lp"]
     },
@@ -6100,12 +5572,6 @@
         "telegram": "https://t.me/perlinnetworkchat"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "Quantstamp - August 29, 2020",
-          "url": "https://certificate.quantstamp.com/full/perlin-xerc-20-emission"
-        }
-      ],
       "id": "erc20|0xeca82185adce47f39c684352b0439f030f860318",
       "funds": ["arrington_xrp_capital", "1kx"]
     },
@@ -6160,12 +5626,6 @@
         "telegram": ""
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "MixBytes - November 05, 2020",
-          "url": "https://github.com/pickle-finance/protocol/blob/master/audits/MixBytes_Audit_All_Strategies.pdf"
-        }
-      ],
       "id": "erc20|0x429881672b9ae42b8eba0e26cd9c73711b891ca5",
       "funds": []
     },
@@ -6239,7 +5699,7 @@
     {
       "code": "POLS",
       "name": "Polkastarter",
-      "categories": ["fundraising","cross_chain"],
+      "categories": ["fundraising", "cross_chain"],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -6679,29 +6139,13 @@
         "reddit": "https://www.reddit.com/r/synthetix_io/",
         "telegram": ""
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
-      "audit": [
-        {
-          "name": "iosiro - November 2020",
-          "url": "https://iosiro.com/audits/synthetix-mimosa-release-smart-contract-audit"
-        },
-        {
-          "name": "iosiro - October 2020",
-          "url": "https://iosiro.com/audits/synthetix-deneb-release-smart-contract-audit"
-        },
-        {
-          "name": "iosiro - September 2020",
-          "url": "https://iosiro.com/audits/synthetix-fomalhaut-release-smart-contract-audit"
-        },
-        {
-          "name": "iosiro - August 2020",
-          "url": "https://iosiro.com/audits/synthetix-pollux-release-smart-contract-audit"
-        },
-        {
-          "name": "Sigma Prime - July 2020",
-          "url": "https://github.com/sigp/public-audits/blob/master/synthetix/ethercollateral/review.pdf"
-        }
-      ],
       "id": "erc20|0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f",
       "funds": [
         "three_arrows_capital",
@@ -6717,7 +6161,7 @@
     {
       "code": "SPDR",
       "name": "SpiderDAO",
-      "categories": [ ],
+      "categories": [],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -6757,6 +6201,12 @@
         "reddit": "",
         "telegram": "https://t.me/ProjectSerum"
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
       "id": "erc20|0x476c5e26a75bd202a9683ffd34359c0cc15be0ff",
       "funds": [
@@ -6791,27 +6241,13 @@
         "telegram": "https://t.me/xdaistable"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "Quantstamp - August 3, 2020",
-          "url": "https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-Lpi9AHj62wscNlQjI-l%2F-MDpPr8Yo6WRri70y6jK%2F-MDpRA6694Ae1hZvk3TW%2FXDai%20Easy%20Staking%20-%20Final%20Report.pdf?alt=media&token=f58a70c3-d5e8-40be-812e-e1f9aad0996f"
-        },
-        {
-          "name": "Quantstamp - June 24, 2020",
-          "url": "https://github.com/xdaichain/stake-token/blob/master/audit/Quantstamp/xDAI%20STAKE%20Token%20Distribution%20-%20Additional%20Report.pdf"
-        },
-        {
-          "name": "Quantstamp - September 5, 2019",
-          "url": "https://github.com/xdaichain/stake-token/blob/master/audit/Quantstamp/DPOS%20token-Audit%20Final%20Report.pdf"
-        }
-      ],
       "id": "erc20|0x0ae055097c6d159879521c384f1d2123d1f195e6",
       "funds": []
     },
     {
       "code": "STORJ",
       "name": "Storj",
-      "categories": ["infrastructure"],
+      "categories": ["data_storage"],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -6866,7 +6302,7 @@
         "address": "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2",
         "type": "ERC20"
       },
-      "description": "### Project Description\n\nSushiswap is a peer-to-peer, decentralized cryptocurrency exchange for trading Ethereum and Ethereum-based tokens (ERC20). Initially launched as a Uniswap clone, Sushiswap managed to attract significant userbase and attract some liquidity from Uniswap by introducing additional incentives.\n\n### Token Description\n\nThe native cryptocurrency token on Sushiswap protocol is SUSHI. The primary use case for SUSHI token holders is governance over Sushiswap protocol (i.e. Sushiswap development fund) as well as being able to claim 0.05% of all trading fees on the platform.\n\n### Token Emission\n\nSUSHI tokens can only be minted by supplying liquidity to SushiSwap pools. \n\nThere can be about 214 million SUSHI tokens in total. To ensure the long-term viability of the project, 10% of every SUSHI minted are set aside to fund the development of the platform. \n\nThe remaining 90% are meant for distribution among public community of liquidity providers.",
+      "description": "### Project Description\n\nSushiswap is a peer-to-peer, decentralized cryptocurrency exchange for trading Ethereum and Ethereum-based tokens (ERC20). Initially launched as a Uniswap clone, Sushiswap managed to attract significant userbase and attract some liquidity from Uniswap by introducing additional incentives.\n\n### Token Description\n\nThe native cryptocurrency token on Sushiswap protocol is SUSHI. The primary use case for SUSHI token holders is governance over Sushiswap protocol (i.e. Sushiswap development fund) as well as being able to claim 0.05% of all trading fees on the platform.\n\n### Token Emission\n\nSUSHI tokens can only be minted by supplying liquidity to SushiSwap pools. \n\nThere can be about 214 million SUSHI tokens in total. To ensure the long-term viability of the project, 10% of every SUSHI minted are set aside to fund the development of the platform. \n\nThe remaining 90% are meant for distribution among public community of liquidity providers.",
       "links": {
         "website": "https://sushiswap.org/",
         "whitepaper": "",
@@ -6875,17 +6311,13 @@
         "reddit": "",
         "telegram": ""
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
-      "audit": [
-        {
-          "name": "Quantstamp - September 9, 2020",
-          "url": "https://github.com/quantstamp/sushiswap-security-review"
-        },
-        {
-          "name": "PeckShield - September 3, 2020",
-          "url": "https://github.com/peckshield/publications/blob/master/audit_reports/PeckShield-Audit-Report-SushiSwap-v1.0.pdf"
-        }
-      ],
       "id": "erc20|0x6b3595068778dd592e39a122f4f5a5cf09c90fe2",
       "funds": []
     },
@@ -6978,12 +6410,6 @@
         "telegram": "https://t.me/swervefi"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "CrypticLabs - September 14, 2020",
-          "url": "https://github.com/crypticlabs/swerve-audit-report/blob/master/Swerve%20Finance%20Audit%20-%20by%20Cryptic%20Labs%20v3.pdf"
-        }
-      ],
       "id": "erc20|0xb8baa0e4287890a5f79863ab62b7f175cecbd433",
       "funds": []
     },
@@ -7127,12 +6553,6 @@
         "telegram": ""
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "SlowMist - November 21, 2020",
-          "url": "https://github.com/trusttoken/audits/blob/master/TrueFi/truefi_audit_slowmist_november_21_2020.pdf"
-        }
-      ],
       "id": "erc20|0x4c19596f5aaff459fa38b0f7ed92f11ae6543784",
       "funds": []
     },
@@ -7181,6 +6601,343 @@
       },
       "rating": "",
       "id": "erc20|0x8eef5a82e6aa222a60f009ac18c24ee12dbf4b41",
+      "funds": []
+    },
+    {
+      "code": "PDEX",
+      "name": "Polkadex",
+      "categories": ["dexes"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0xf59ae934f6fe444afc309586cc60a84a0f89aaea",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0xf59ae934f6fe444afc309586cc60a84a0f89aaea",
+      "funds": []
+    },
+    {
+      "code": "OM",
+      "name": "MANTRA DAO",
+      "categories": ["lending"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0x3593d125a4f7849a1b059e64f4517a86dd60c95d",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x3593d125a4f7849a1b059e64f4517a86dd60c95d",
+      "funds": []
+    },
+    {
+      "code": "SAN",
+      "name": "Santiment Network Token",
+      "categories": ["investment_tools"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0x7c5a0ce9267ed19b22f8cae653f198e3e8daf098",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x7c5a0ce9267ed19b22f8cae653f198e3e8daf098",
+      "funds": []
+    },
+    {
+      "code": "ARES",
+      "name": "Ares Protocol",
+      "categories": ["oracles"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0x358aa737e033f34df7c54306960a38d09aabd523",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x358aa737e033f34df7c54306960a38d09aabd523",
+      "funds": []
+    },
+    {
+      "code": "DPR",
+      "name": "Deeper Network",
+      "categories": ["privacy"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0xf3ae5d769e153ef72b4e3591ac004e89f48107a1",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0xf3ae5d769e153ef72b4e3591ac004e89f48107a1",
+      "funds": []
+    },
+    {
+      "code": "AUCTION",
+      "name": "Bounce Token",
+      "categories": ["nft"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0xa9b1eb5908cfc3cdf91f9b8b3a74108598009096",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0xa9b1eb5908cfc3cdf91f9b8b3a74108598009096",
+      "funds": []
+    },
+    {
+      "code": "SOS",
+      "name": "Solstarter",
+      "categories": ["fundraising"],
+      "active": true,
+      "platform": { "name": "solana", "address": "", "type": "" },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|solstarter",
+      "funds": []
+    },
+    {
+      "code": "DOCK",
+      "name": "Dock",
+      "categories": ["b2b"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0xe5dada80aa6477e85d09747f2842f7993d0df71c",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0xe5dada80aa6477e85d09747f2842f7993d0df71c",
+      "funds": []
+    },
+    {
+      "code": "DORA",
+      "name": "Dora Factory",
+      "categories": ["infrastructure"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0xbc4171f45ef0ef66e76f979df021a34b46dcc81d",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0xbc4171f45ef0ef66e76f979df021a34b46dcc81d",
+      "funds": []
+    },
+    {
+      "code": "KEY",
+      "name": "SelfKey",
+      "categories": ["decentralized_identity"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0x4cc19356f2d37338b9802aa8e8fc58b0373296e7",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x4cc19356f2d37338b9802aa8e8fc58b0373296e7",
+      "funds": []
+    },
+    {
+      "code": "LIT",
+      "name": "Litentry",
+      "categories": ["decentralized_identity"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0xb59490ab09a0f526cc7305822ac65f2ab12f9723",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0xb59490ab09a0f526cc7305822ac65f2ab12f9723",
+      "funds": []
+    },
+    {
+      "code": "SC",
+      "name": "Siacoin",
+      "categories": ["data_storage"],
+      "active": true,
+      "platform": { "name": "", "address": "", "type": "" },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "unsupported|siacoin",
+      "funds": []
+    },
+    {
+      "code": "PROM",
+      "name": "Prometeus",
+      "categories": ["data_storage"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0xfc82bb4ba86045af6f327323a46e80412b91b27d",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0xfc82bb4ba86045af6f327323a46e80412b91b27d",
+      "funds": []
+    },
+    {
+      "code": "CRU",
+      "name": "Crust Network",
+      "categories": ["data_storage"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0x32a7c02e79c4ea1008dd6564b35f131428673c41",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x32a7c02e79c4ea1008dd6564b35f131428673c41",
+      "funds": []
+    },
+    {
+      "code": "MXC",
+      "name": "MXC",
+      "categories": ["infrastructure"],
+      "active": true,
+      "platform": {
+        "name": "ethereum",
+        "address": "0x5ca381bbfb58f0092df149bd3d243b08b9a8386e",
+        "type": "ERC20"
+      },
+      "links": {
+        "website": "",
+        "whitepaper": "",
+        "guide": "",
+        "twitter": "",
+        "github": "",
+        "reddit": "",
+        "telegram": ""
+      },
+      "rating": "",
+      "id": "erc20|0x5ca381bbfb58f0092df149bd3d243b08b9a8386e",
       "funds": []
     },
     {
@@ -7240,7 +6997,7 @@
     {
       "code": "UMX",
       "name": "UniMex Network",
-      "categories": [ ],
+      "categories": [],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -7270,7 +7027,7 @@
         "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
         "type": "ERC20"
       },
-      "description": "### Project Description\n\nUniswap is a peer-to-peer, decentralized cryptocurrency exchange to trade Ethereum and Ethereum-based tokens (ERC20). Uniswap is one the first exchanges to utilize Automated Market Making (AMM) model and currently the largest decentralized exchange by trading volume.\n\nUniswap smart contracts today facilitate close to a billion worth of cryptocurrency daily, in autonomous and decentralized manner. Exchange operators have no means to censor service users or interfere with its operation.\n\nEach trading pair on Uniswap has its own liquidity pool. Anyone with cryptocurrency can create a liquidity pool on Uniswap or join an existing one and earn a share of trading fees (0.3%) as a reward.\n\n### Token Description\n\nThe native cryptocurrency token of Uniswap protocol is UNI. The primary use case for token is to oversee future Uniswap development steps, take part in a decision making and other governance related aspects.\n\n### Token Emission\n\nThere are 1,000,000,000 UNI tokens in total with a yearly 2% emission that will start 4 years after launch, sometime in 2024.\n\nThe tokens are being distributed per following criteria:\n\n- 60% to public community\n- 21.51% for team (4-year vesting)\n- 17.80% for investors (4-year vesting)\n- 0.69% for advisors (4-year vesting)",
+      "description": "### Project Description\n\nUniswap is a peer-to-peer, decentralized cryptocurrency exchange to trade Ethereum and Ethereum-based tokens (ERC20). Uniswap is one the first exchanges to utilize Automated Market Making (AMM) model and currently the largest decentralized exchange by trading volume.\n\nUniswap smart contracts today facilitate close to a billion worth of cryptocurrency daily, in autonomous and decentralized manner. Exchange operators have no means to censor service users or interfere with its operation.\n\nEach trading pair on Uniswap has its own liquidity pool. Anyone with cryptocurrency can create a liquidity pool on Uniswap or join an existing one and earn a share of trading fees (0.3%) as a reward.\n\n### Token Description\n\nThe native cryptocurrency token of Uniswap protocol is UNI. The primary use case for token is to oversee future Uniswap development steps, take part in a decision making and other governance related aspects.\n\n### Token Emission\n\nThere are 1,000,000,000 UNI tokens in total with a yearly 2% emission that will start 4 years after launch, sometime in 2024.\n\nThe tokens are being distributed per following criteria:\n\n- 60% to public community\n- 21.51% for team (4-year vesting)\n- 17.80% for investors (4-year vesting)\n- 0.69% for advisors (4-year vesting)",
       "links": {
         "website": "https://uniswap.org/",
         "whitepaper": "",
@@ -7279,21 +7036,13 @@
         "reddit": "",
         "telegram": ""
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
-      "audit": [
-        {
-          "name": "dapp.org - April 2020",
-          "url": "https://uniswap.org/audit.html"
-        },
-        {
-          "name": "OpenZeppelin - July 28, 2019",
-          "url": "https://blog.openzeppelin.com/exploiting-uniswap-from-reentrancy-to-actual-profit/"
-        },
-        {
-          "name": "ConsenSys Diligence - January 2019",
-          "url": "https://github.com/ConsenSys/Uniswap-audit-report-2018-12/blob/master/Uniswap-final.md"
-        }
-      ],
       "id": "erc20|0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
       "funds": [
         "blockchain_capital",
@@ -7315,7 +7064,7 @@
         "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
         "type": "ERC20"
       },
-      "description": "### Project Description\n\nUSDC is a digital dollar stablecoin, issued by heavily regulated financial institutions, backed by fully reserved assets, redeemable on a 1:1 basis for US dollars, and governed by Centre, a membership-based consortium that sets technical, policy and financial standards for stablecoins.\n\nUSDC tokens are treable on many crypto exchanges and supported by most cryptocurrency wallets. It's a highly liquid stablecoin. While it's not as popular as it main competitor Tether (USDT) it's been growing fast and typically regarded as more reliable. \n\n### Token Description\n\nStablecoin denoted by USDC symbol and as of May 2020 exist on Ethereum, Algorand and Solana blockchains.\n\nUSDC is available on Ethereum, Algorand and Solana blockchains. \n\nBeing a cryptocurrency token on a blockchain, USDC adopts some benefits of cryptocurrency allowing parties to transact with each other pseudo anonymously.\n\nUSDC is a centralized stablecoin and therefore your USDC balance can potentially be frozen even if's on non-custodial wallet. Such functionality is integarted into a smart contract powering the USDC stablecoin.\n\n### Token Emission\n\nThere is no limit to Tether supply, and as of May 2020 there were 13.5 billion USDC tokens in circulation.",
+      "description": "### Project Description\n\nUSDC is a digital dollar stablecoin, issued by heavily regulated financial institutions, backed by fully reserved assets, redeemable on a 1:1 basis for US dollars, and governed by Centre, a membership-based consortium that sets technical, policy and financial standards for stablecoins.\n\nUSDC tokens are treable on many crypto exchanges and supported by most cryptocurrency wallets. It's a highly liquid stablecoin. While it's not as popular as it main competitor Tether (USDT) it's been growing fast and typically regarded as more reliable. \n\n### Token Description\n\nStablecoin denoted by USDC symbol and as of May 2020 exist on Ethereum, Algorand and Solana blockchains.\n\nUSDC is available on Ethereum, Algorand and Solana blockchains. \n\nBeing a cryptocurrency token on a blockchain, USDC adopts some benefits of cryptocurrency allowing parties to transact with each other pseudo anonymously.\n\nUSDC is a centralized stablecoin and therefore your USDC balance can potentially be frozen even if's on non-custodial wallet. Such functionality is integarted into a smart contract powering the USDC stablecoin.\n\n### Token Emission\n\nThere is no limit to Tether supply, and as of May 2020 there were 13.5 billion USDC tokens in circulation.",
       "links": {
         "website": "https://www.circle.com/en/usdc",
         "whitepaper": "",
@@ -7324,6 +7073,12 @@
         "github": "https://github.com/centrehq/centre-tokens",
         "reddit": "",
         "telegram": ""
+      },
+      "security": {
+        "privacy": "low",
+        "decentralized": false,
+        "confiscation_resistance": "low",
+        "censorship_resistance": "low"
       },
       "rating": "",
       "id": "erc20|0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
@@ -7390,40 +7145,6 @@
         "telegram": "https://t.me/ValueDeFi"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "Arcadia Group - August 29, 2020",
-          "url": "https://valuedefi.io/files/YFV_Protocol_Audit_Summary.pdf"
-        },
-        {
-          "name": "Arcadia Group - September 1, 2020",
-          "url": "https://valuedefi.io/files/YFV_Staking_Pool_v2_-_Audit_Summary.pdf"
-        },
-        {
-          "name": "Pessimistic - September 11, 2020",
-          "url": "https://valuedefi.io/files/Security_Analysis_by_Pessimistic.pdf"
-        },
-        {
-          "name": "Arcadia Group - September 18, 2020",
-          "url": "https://valuedefi.io/files/Arcadia_Vault_AuditPublic.pdf"
-        },
-        {
-          "name": "Arcadia Group - October 14, 2020",
-          "url": "https://valuedefi.io/files/Value_Token_Contract_Audit.pdf"
-        },
-        {
-          "name": "Arcadia Group - October 20, 2020",
-          "url": "https://valuedefi.io/files/ValueGov2Audit.pdf"
-        },
-        {
-          "name": "PeckShield - November 28, 2020",
-          "url": "https://valuedefi.io/files/Peckshield_Audit_Report.pdf"
-        },
-        {
-          "name": "Arcadia Group - November 4, 2020",
-          "url": "https://valuedefi.io/files/FaaSPool.pdf"
-        }
-      ],
       "id": "erc20|0x49e833337ece7afe375e44f4e3e8481029218e5c",
       "funds": []
     },
@@ -7501,7 +7222,7 @@
     {
       "code": "XFT",
       "name": "Offshift",
-      "categories": [ ],
+      "categories": [],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -7656,6 +7377,12 @@
         "reddit": "",
         "telegram": "https://t.me/yfiifinance"
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "id": "erc20|0xa1d0e215a23d7030842fc67ce582a6afa3ccab83",
       "funds": []
     },
@@ -7708,7 +7435,7 @@
     {
       "code": "ZCN",
       "name": "0Chain",
-      "categories": ["privacy"],
+      "categories": ["privacy", "data_storage"],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -7813,6 +7540,12 @@
         "reddit": "https://www.reddit.com/r/Bitcoin/",
         "telegram": ""
       },
+      "security": {
+        "privacy": "medium",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
       "id": "bitcoin",
       "funds": []
@@ -7832,6 +7565,12 @@
         "reddit": "https://www.reddit.com/r/ethereum",
         "telegram": ""
       },
+      "security": {
+        "privacy": "high",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
       "id": "ethereum",
       "funds": ["8_decimal_capital", "kr1"]
@@ -7842,12 +7581,12 @@
       "categories": ["blockchain"],
       "active": true,
       "description": "### Project Description\n\nBitcoin Cash is a fork of Bitcoin blockchain. It has forked from the original Bitcoin blockchain on August 2017 as a result of a community split. \n\nUntil the split point the Bitcoin and what now known as Bitcoin Cash was essentially a single blockchain. As a result of the split a new Bitcoin Cash blockchain was formed.\n\nBitcoin Cash blockchain allows larger block sizes which enables the network to fit more transactions into the block and as a result provides higher processing speed and cheaper transaction fees.\n\n### Token Description\n\nThe native unit of currency in Bitcoin Cash blockchain network is called Bitcoin Cash. It's denoted by a symbol BCH and divisible into 100,000,000 subunits. \n\n### Token Emission\n\nThere can be at most 21 million BCH units in circulation.\n\nBeing a fork of Bitcoin, Bitcoin Cash inherited the emission model of the Bitcoin blockchain. Just like BTC, new BCH are minted every new block which takes about 10 minutes and then sent to one of the network miners. The award amount is cut in half every 4 years by the protocol powering the network. \n\nIt's estimated that around 3-4 million BCH units mined in early days were permanently lost due to users loosing their private keys. As a result these Bitcoin Cash units remain dormant and out of circulation.",
-      "links": {
-        "website": "",
-        "whitepaper": "",
-        "twitter": "",
-        "reddit": "",
-        "telegram": ""
+      "links": { "website": "", "whitepaper": "", "twitter": "", "reddit": "", "telegram": "" },
+      "security": {
+        "privacy": "medium",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
       },
       "rating": "",
       "id": "bitcoinCash",
@@ -7868,6 +7607,12 @@
         "reddit": "https://www.reddit.com/r/dashpay",
         "telegram": "https://t.me/dash_chat"
       },
+      "security": {
+        "privacy": "high",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
       "id": "dash",
       "funds": []
@@ -7886,6 +7631,12 @@
         "github": "https://github.com/litecoin-project/litecoin",
         "reddit": "https://www.reddit.com/r/litecoin/",
         "telegram": ""
+      },
+      "security": {
+        "privacy": "medium",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
       },
       "rating": "",
       "id": "litecoin",
@@ -7906,6 +7657,12 @@
         "reddit": "https://www.reddit.com/r/zec",
         "telegram": ""
       },
+      "security": {
+        "privacy": "high",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
       "id": "zcash",
       "funds": ["placeholder", "fenbushi_capital", "digital_currency_group", "pantera_capital"]
@@ -7923,6 +7680,12 @@
         "reddit": "https://www.reddit.com/r/cardano",
         "telegram": ""
       },
+      "security": {
+        "privacy": "medium",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
       "id": "unsupported|cardano",
       "funds": []
@@ -7932,13 +7695,19 @@
       "name": "Algorand",
       "categories": ["blockchain"],
       "active": true,
-      "description": "### Project Description\n\nAlgorand is a scalable, secure, and decentralized cryptocurrency and smart contract platform. Algorand blockchain finalizes blocks in seconds and provides immediate transaction finality. Along with Avalanche and Solana, Algorand is one of the key contenders to the Ethereum.\n\nAlgorand headed by a strong team from MIT and other academic institutions. It was founded by a turning award-winning MIT cryptography professor Silvio Micali who has conceived a number of key technologies currently used in blockchains such as zero-knowledge proofs. So, to say that he’s accomplished in the field of cryptography is an understatement. \n\nThe project raised a large amount of money through 2 private sales and one public sale over 120 million dollars from funds like Union Square Ventures and many others. \n\nThe proceeds of the sales have been used by the team to finance the development of community, academics involved in the project, and development of the Algorand blockchain ecosystem.\n\n### Token Description\n\nThe native cryptocurrency on Alagorand blockchain known as Algo and denoted as ALGO.\n\nAs is the case with most proof-of-stake blockchains, Algo token holders may stake their holdings with the protocol and earn rewards in a form of newly emitted tokens by the protocol. Also, a small amount of Algo required to execute a transaction on the blockchain.\n\nFinally, Algo token holders are in charge of governance and control the direction of Algorand protocol.\n\n### Token Emission\n\nAt genesis of the Algorand blockchain, 10 billion ALGO was minted and it represents the fixed and immutable maximum supply of the Algo cryptocurrency. About 30% of that amount was in circulation as of April, 2021. \n\nThe 2.5 billion of initially minted tokens were primarily assigned to  Algorand Inc (2 billion ALGO) and Algorand Foundation (500 million ALGO).\n\nThe remaining supply of 7 billion ALGO is expected to be in circulation by the end of 2030 and distributed in the following manner:\n\n- Community Incentives: 6.2 billion ALGO\n- Ecosystem Support: 1.25 billion ALGO\n\nWhile the ALGO emission rate is going to remain pretty high over the next 9 years it should facilitate more democratic distribution of ALGO tokens in the ecosystem.",
+      "description": "### Project Description\n\nAlgorand is a scalable, secure, and decentralized cryptocurrency and smart contract platform. Algorand blockchain finalizes blocks in seconds and provides immediate transaction finality. Along with Avalanche and Solana, Algorand is one of the key contenders to the Ethereum.\n\nAlgorand headed by a strong team from MIT and other academic institutions. It was founded by a turning award-winning MIT cryptography professor Silvio Micali who has conceived a number of key technologies currently used in blockchains such as zero-knowledge proofs. So, to say that he’s accomplished in the field of cryptography is an understatement. \n\nThe project raised a large amount of money through 2 private sales and one public sale over 120 million dollars from funds like Union Square Ventures and many others. \n\nThe proceeds of the sales have been used by the team to finance the development of community, academics involved in the project, and development of the Algorand blockchain ecosystem.\n\n### Token Description\n\nThe native cryptocurrency on Alagorand blockchain known as Algo and denoted as ALGO.\n\nAs is the case with most proof-of-stake blockchains, Algo token holders may stake their holdings with the protocol and earn rewards in a form of newly emitted tokens by the protocol. Also, a small amount of Algo required to execute a transaction on the blockchain.\n\nFinally, Algo token holders are in charge of governance and control the direction of Algorand protocol.\n\n### Token Emission\n\nAt genesis of the Algorand blockchain, 10 billion ALGO was minted and it represents the fixed and immutable maximum supply of the Algo cryptocurrency. About 30% of that amount was in circulation as of April, 2021. \n\nThe 2.5 billion of initially minted tokens were primarily assigned to  Algorand Inc (2 billion ALGO) and Algorand Foundation (500 million ALGO).\n\nThe remaining supply of 7 billion ALGO is expected to be in circulation by the end of 2030 and distributed in the following manner:\n\n- Community Incentives: 6.2 billion ALGO\n- Ecosystem Support: 1.25 billion ALGO\n\nWhile the ALGO emission rate is going to remain pretty high over the next 9 years it should facilitate more democratic distribution of ALGO tokens in the ecosystem.",
       "links": {
         "website": "https://algorand.foundation/",
         "whitepaper": "",
         "twitter": "https://twitter.com/algorand",
         "reddit": "https://www.reddit.com/r/algorand/",
         "telegram": "https://t.me/algorand"
+      },
+      "security": {
+        "privacy": "medium",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
       },
       "id": "unsupported|algorand",
       "funds": ["arrington_xrp_capital", "lemniscap", "ngc_ventures", "foundation_capital"]
@@ -7987,13 +7756,13 @@
       "name": "Avalanche",
       "categories": ["blockchain"],
       "active": true,
-      "description": "### Project Description\n\nAvalanche is a high-speed third generation smart-contract enabled blockchain that's capable of confirming transactions in under one second.\n\nAvalanche features complete support for the Ethereum**,** and thus, Ethereum tooling works out of the box. As a result it's very easy to get started developing on Avalanche blockchain for someone coming from Ethereum.\n\nAvalanche supports application-specific sharding, empowering developers to launch services that conform to their own specific needs.\n\n### Token Description\n\nAVAX is the native token of the Avalanche platform and is needed to transact on Avalanche blockchain. AVAX tokens that are used for transaction fees are burned, increasing scarcity of AVAX.\n\nAVAX token holders may stake their funds and earn staking rewards which are subject to dynamic changes as the system evolves. For the first year, the annual staking reward targets a rate between 7% and 12% of the circulating supply.\n\nBecoming a full block-producer in Avalanche and all of its other subnets requires a minimum stake of 2,000 AVAX tokens. \n\n### Token Emission\n\nThere can be at most 720 million tokens, with slightly over 50% of that amount currently in circulation. The rate at which the maximum cap is reached can vary based on AVAX holders governance vote.\n\nAvalanche network transaction fees whicha re paid in AVAX tokens do not go towards any specific validator. Instead, they are burned, thus increasing scarcity of the AVAX.\n\nAvalanche also boasts one of the most egalitarian token distribution plans in the space, with less than 14% of mainnet tokens issued to private investors and almost 70% issued to people building on the ecosystem.",
-      "links": {
-        "website": "",
-        "whitepaper": "",
-        "twitter": "",
-        "reddit": "",
-        "telegram": ""
+      "description": "### Project Description\n\nAvalanche is a high-speed third generation smart-contract enabled blockchain that's capable of confirming transactions in under one second.\n\nAvalanche features complete support for the Ethereum**,** and thus, Ethereum tooling works out of the box. As a result it's very easy to get started developing on Avalanche blockchain for someone coming from Ethereum.\n\nAvalanche supports application-specific sharding, empowering developers to launch services that conform to their own specific needs.\n\n### Token Description\n\nAVAX is the native token of the Avalanche platform and is needed to transact on Avalanche blockchain. AVAX tokens that are used for transaction fees are burned, increasing scarcity of AVAX.\n\nAVAX token holders may stake their funds and earn staking rewards which are subject to dynamic changes as the system evolves. For the first year, the annual staking reward targets a rate between 7% and 12% of the circulating supply.\n\nBecoming a full block-producer in Avalanche and all of its other subnets requires a minimum stake of 2,000 AVAX tokens. \n\n### Token Emission\n\nThere can be at most 720 million tokens, with slightly over 50% of that amount currently in circulation. The rate at which the maximum cap is reached can vary based on AVAX holders governance vote.\n\nAvalanche network transaction fees whicha re paid in AVAX tokens do not go towards any specific validator. Instead, they are burned, thus increasing scarcity of the AVAX.\n\nAvalanche also boasts one of the most egalitarian token distribution plans in the space, with less than 14% of mainnet tokens issued to private investors and almost 70% issued to people building on the ecosystem.",
+      "links": { "website": "", "whitepaper": "", "twitter": "", "reddit": "", "telegram": "" },
+      "security": {
+        "privacy": "medium",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
       },
       "id": "unsupported|avalanche-2",
       "funds": ["digital_finance_group", "lemniscap", "iosg_ventures", "ngc_ventures"]
@@ -8019,7 +7788,7 @@
     {
       "code": "BNB",
       "name": "Binance Coin",
-      "categories": ["blockchain","exchange_tokens"],
+      "categories": ["blockchain", "exchange_tokens"],
       "active": true,
       "description": "### Project Description\n\nBNB powers the Binance ecosystem and is the native asset of the Binance Chain. BNB is a cryptocurrency created in June 2017, launched during an ICO in July, and initially issued as an ERC-20 token. Designed to be used for a fee reduction on the Binance exchange, its scope was extended over the years.BNB powers the Binance Chain as its native chain token. For instance, it is used to pay fees on the Binance DEX, issue new tokens, send/cancel orders, and transfer assets.BNB is also powering the Binance Smart Chain, which is an EVM-compatible network, forked from “go-ethereum”. It supports smart contracts and relies on a new consensus mechanism: Proof-of-Staked Authority (PoSA) consensus (“Parlia”), which incorporates elements from both Proof of Stake and Proof of Authority. BNB is used for delegated staking on the authority validator, leading to staking rewards for users and validators.Besides its on-chain functions, BNB has multiple additional use-cases such as fee discounts on multiple exchanges (e.g., Binance.com), payment asset on third-party services, and participation rights &amp; transacting currency on Binance Launchpad.At the core of the economics of BNB, there is a burn mechanism leading to period reductions in its total supply (~ every three months). From its initial maximum supply of 200 million, burns are expected to continue until the supply reaches 100 million.Whitepaper",
       "links": {
@@ -8047,6 +7816,12 @@
         "github": "https://github.com/pancakeswap",
         "reddit": "",
         "telegram": "https://t.me/PancakeSwap"
+      },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
       },
       "rating": "",
       "id": "bep20|0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
@@ -8130,6 +7905,12 @@
         "reddit": "https://www.reddit.com",
         "telegram": "https://t.me/PolkadotOfficial"
       },
+      "security": {
+        "privacy": "medium",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "id": "unsupported|polkadot",
       "funds": [
         "8_decimal_capital",
@@ -8148,13 +7929,7 @@
       "categories": [],
       "active": true,
       "description": "### Project Description\n\nEDC Blockchain is a multifunctional blockchain platform that is based on the DPoS (Delegated-Proof-of-Steak) consensus algorithm. EDC Blockchain it’s the tools platform for entrepreneurs based on blockchain. The goal is to create effective tools for the tokenization of private small and medium businesses and the global popularization of blockchain technology.",
-      "links": {
-        "website": "",
-        "whitepaper": "",
-        "twitter": "",
-        "reddit": "",
-        "telegram": ""
-      },
+      "links": { "website": "", "whitepaper": "", "twitter": "", "reddit": "", "telegram": "" },
       "rating": "",
       "id": "unsupported|edc-blockchain",
       "funds": []
@@ -8165,13 +7940,7 @@
       "categories": ["scaling"],
       "active": true,
       "description": "### Project Description\n\nElrond is a novel architecture that goes beyond state-of-the-art by introducing a genuine State Sharding scheme for practical scalability, eliminating energy and computational waste while ensuring distributed fairness through a Secure Proof of Stake (SPoS) consensus mechanism. Having a strong focus on security, Elrond’s network is built to ensure resistance to known security problems like the Sybil attack, Rogue-key attack, Nothing at Stake attack, and others. In an ecosystem that strives for interconnectivity, Elrond’s solution for smart contracts offers an EVM compliant engine to ensure interoperability by design.Elrond (ERD) to Elrond (EGLD) swap:Following the launch of the Elrond Mainnet on the 30th of July, Elrond officially began the token swap from ERD to EGLD on the 3rd of September of 2020. The eGLD ticker is an abbreviation for eGold, denoting the metaphor of what the Elrond currency aims to become. Elrond&#39;s dedicated website Elrond Bridge enabled ERC20/BEP2 ERD holders to swap their tokens for eGLD at a 1000:1 ratio (1000 ERD (old) = 1 eGLD (new)). ",
-      "links": {
-        "website": "",
-        "whitepaper": "",
-        "twitter": "",
-        "reddit": "",
-        "telegram": ""
-      },
+      "links": { "website": "", "whitepaper": "", "twitter": "", "reddit": "", "telegram": "" },
       "rating": "",
       "id": "unsupported|elrond-erd-2",
       "funds": ["electric_capital", "maven_11_capital", "woodstock", "ngc_ventures"]
@@ -8232,13 +8001,7 @@
       "categories": ["cross_chain"],
       "active": true,
       "description": "### Project Description\n\nThe IRIS network is an internet of blockchains intended to provide a technology foundation that facilitates construction of distributed business applications.The IRIS network is part of the larger Cosmos network -- all zones in the network would be able to interact with any other zone in the Cosmos network over the standard IBC protocol. By introducing a layer of service semantics into the network, IRIS is going to provide an innovative solution that enables a whole new set of business scenarios, which would result in an increase in scale and diversity of the Cosmos network.",
-      "links": {
-        "website": "",
-        "whitepaper": "",
-        "twitter": "",
-        "reddit": "",
-        "telegram": ""
-      },
+      "links": { "website": "", "whitepaper": "", "twitter": "", "reddit": "", "telegram": "" },
       "rating": "",
       "id": "unsupported|iris-network",
       "funds": ["8_decimal_capital"]
@@ -8263,7 +8026,7 @@
     {
       "code": "LRC",
       "name": "Loopring",
-      "categories": ["dexes","scaling"],
+      "categories": ["dexes", "scaling"],
       "active": true,
       "platform": {
         "name": "ethereum",
@@ -8281,32 +8044,16 @@
         "telegram": "https://t.me/loopring_en"
       },
       "rating": "",
-      "audit": [
-        {
-          "name": "Least Authority - November 18, 2020",
-          "url": "https://github.com/Loopring/protocols/blob/master/packages/loopring_v3/security_audit/Least%20Authority%20-%20Loopring%20Contracts%20Initial%20Audit%20Report.pdf"
-        },
-        {
-          "name": "Secbit - November 15, 2019",
-          "url": "https://github.com/Loopring/protocols/blob/master/packages/loopring_v3/security_audit/LoopringV3_1_Report_CN.pdf"
-        }
-      ],
       "id": "erc20|0xbbbbca6a901c926f240b89eacb641d8aec7aeafd",
       "funds": []
     },
     {
       "code": "LUNA",
       "name": "Terra",
-      "categories": ["stablecoin_issuers","wallets"],
+      "categories": ["stablecoin_issuers", "wallets"],
       "active": true,
       "description": "### Project Description\n\nTerra aims to build a new financial infrastructure that works better for everyone. The network is powered by a family of stablecoins, each pegged to major fiat currencies all algorithmically stabilized by Terra’s native token, Luna. Terra’s mission is to set money free by building open financial infrastructure. Luna, as the native staking asset from which the family of Terra stablecoins derives their stability, utility, and value, acts both as collateral for the entire Terra economy and as a staking token that secures the PoS network. Luna can be held and traded like a normal crypto asset, but can also be staked to accrue rewards in the network generated from transaction fees. Luna can also be used to make and vote on governance proposals.The family of Terra stablecoins is designed to achieve stability through consistent mining rewards with a contracting and expanding money supply. For example, if the system has detected that the price of a Terra currency has deviated from its peg, it applies pressure to normalize the price. Currently, the family of Terra stablecoins includes: KRT (Terra stablecoin pegged to Korean Won), UST (Terra stablecoin pegged to US Dollar), MNT (Terra stablecoin pegged to Mongolian Togrog), SDR (Terra stablecoin pegged to IMF SDR), with more being added in the future.",
-      "links": {
-        "website": "",
-        "whitepaper": "",
-        "twitter": "",
-        "reddit": "",
-        "telegram": ""
-      },
+      "links": { "website": "", "whitepaper": "", "twitter": "", "reddit": "", "telegram": "" },
       "rating": "",
       "id": "unsupported|terra-luna",
       "funds": [
@@ -8374,13 +8121,7 @@
       "categories": ["exchange_tokens"],
       "active": true,
       "description": "",
-      "links": {
-        "website": "",
-        "whitepaper": "",
-        "twitter": "",
-        "reddit": "",
-        "telegram": ""
-      },
+      "links": { "website": "", "whitepaper": "", "twitter": "", "reddit": "", "telegram": "" },
       "id": "erc20|0x75231f58b43240c9718dd58b4967c5114342a86c",
       "funds": []
     },
@@ -8415,6 +8156,12 @@
         "reddit": "https://www.reddit.com/r/republicprotocol/",
         "telegram": "https://t.me/renproject"
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "id": "erc20|0x408e41876cccdc0f92210600ef50372656052a38",
       "funds": ["polychain_capital", "fbg_capital", "infinite_capital", "1kx"]
     },
@@ -8438,17 +8185,13 @@
         "reddit": "https://www.reddit.com/r/Augur",
         "telegram": ""
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
-      "audit": [
-        {
-          "name": "Least Authority - December 1, 2017",
-          "url": "https://github.com/AugurProject/augur-audits/blob/master/augur-core/LeastAuthority%20-%20Augur%20Core%20v1.pdf"
-        },
-        {
-          "name": "OpenZeppelin - March 10, 2018",
-          "url": "https://github.com/AugurProject/augur-audits/blob/master/augur-core/Zeppelin%20-%20Augur%20Core%20v3.1.pdf"
-        }
-      ],
       "id": "erc20|0x221657776846890989a759ba2973e427dff5c9bb",
       "funds": ["kr1", "1confirmation", "pantera_capital"]
     },
@@ -8467,6 +8210,12 @@
         "reddit": "https://www.reddit.com/r/thorchain",
         "telegram": "https://t.me/thorchain_org"
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
       "id": "erc20|0x3155ba85d5f96b2d030a4966af206230e46849cb",
       "funds": ["zee_prime_capital"]
@@ -8484,6 +8233,12 @@
         "reddit": "https://www.reddit.com/r/solana",
         "telegram": "https://t.me/solanaio"
       },
+      "security": {
+        "privacy": "medium",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "id": "unsupported|solana",
       "funds": ["blocktower_capital", "zee_prime_capital"]
     },
@@ -8493,13 +8248,7 @@
       "categories": ["blockchain"],
       "active": true,
       "description": "### Project Description\n\nTheta is a decentralized video delivery network, powered by users.The Theta mainnet was launched on March 15th, 2019 with the swap from ERC20 (Ethereum) Theta Tokens to native Theta Tokens on the Theta blockchain. To make sure that you receive your Theta Tokens on the mainnet as well as the 1:5 distribution of Theta Fuel, download the new Theta wallet for Android OS or Apple iOS and move your tokens there.",
-      "links": {
-        "website": "",
-        "whitepaper": "",
-        "twitter": "",
-        "reddit": "",
-        "telegram": ""
-      },
+      "links": { "website": "", "whitepaper": "", "twitter": "", "reddit": "", "telegram": "" },
       "id": "unsupported|theta-token",
       "funds": ["infinite_capital", "iosg_ventures", "gumi_cryptos"]
     },
@@ -8508,13 +8257,19 @@
       "name": "Tron",
       "categories": ["blockchain"],
       "active": true,
-      "description": "## Project Description\n\nTRON was launched by Justin Sun in 2016, initially as an ERC-20 token on Ethereum, and later in 2018 as an independent blockchain with its own native token. Today the project maintained by a non-profit TRON Foundation.\n\nTRON often compared to Ethereum due to many similarities projects share. Like Ethereum TRON enables developers to create autonomous financial and other services powered by smart contracts. Although the platform enables free and considerably faster transactions, it's nowhere near the Ethereum when it comes to the amount of value locked in the services operating on top of the blockchain. \n\nOn 25 July 2018, the TRON Foundation announced it had acquired Bittorrent, the biggest peer-to-peer file sharing network. Later the Bittorent ecosystem got its own token  on TRON platform.\n\n### Token Description\n\nThe native unit of currency in TRON blockchain network is TRONix, denoted by a symbol TRX. While transactions are nearly free the still require a tiny bit of TRX tokens as a measure against spam attacks. \n\nTRX token holders may stake their holdings with the protocol and earn passive income. The more users stake, the more TRON Power (TP) they earn. Then TP tokens can be used for voting on Super Representatives on the blockchain which are tasked with producing blocks. \n\n### Token Emission\n\nIn 2017 TRON Foundation conducted initial coin offering (ICO) and raised about $70 million for further development of the TRON blockchain and ecosystem around it. There was an initial issuance of 100 billion TRX tokens.\n\nInitially, TRON blockchain used to award 32 TRX tokens to one of the Super Representatives powering the network with every new block, roughly every 3 seconds. At the same time, 16 TRX were awarded to one of the witness nodes (or Super Representative Candidate). As a result, the approximated daily inflation is 1.38 million TRX and the approximated yearly inflation is over 500 million TRX.\n\nLater, community voted to change this incetive mechanism. Rewards for each block were lowered from 32TRX to 16TRX, while the amount of voting rewards increased tenfold to 160TRX which gets split between top 127 SRs, proportionally to the number of votes they received.",
+      "description": "## Project Description\n\nTRON was launched by Justin Sun in 2016, initially as an ERC-20 token on Ethereum, and later in 2018 as an independent blockchain with its own native token. Today the project maintained by a non-profit TRON Foundation.\n\nTRON often compared to Ethereum due to many similarities projects share. Like Ethereum TRON enables developers to create autonomous financial and other services powered by smart contracts. Although the platform enables free and considerably faster transactions, it's nowhere near the Ethereum when it comes to the amount of value locked in the services operating on top of the blockchain. \n\nOn 25 July 2018, the TRON Foundation announced it had acquired Bittorrent, the biggest peer-to-peer file sharing network. Later the Bittorent ecosystem got its own token  on TRON platform.\n\n### Token Description\n\nThe native unit of currency in TRON blockchain network is TRONix, denoted by a symbol TRX. While transactions are nearly free the still require a tiny bit of TRX tokens as a measure against spam attacks. \n\nTRX token holders may stake their holdings with the protocol and earn passive income. The more users stake, the more TRON Power (TP) they earn. Then TP tokens can be used for voting on Super Representatives on the blockchain which are tasked with producing blocks. \n\n### Token Emission\n\nIn 2017 TRON Foundation conducted initial coin offering (ICO) and raised about $70 million for further development of the TRON blockchain and ecosystem around it. There was an initial issuance of 100 billion TRX tokens.\n\nInitially, TRON blockchain used to award 32 TRX tokens to one of the Super Representatives powering the network with every new block, roughly every 3 seconds. At the same time, 16 TRX were awarded to one of the witness nodes (or Super Representative Candidate). As a result, the approximated daily inflation is 1.38 million TRX and the approximated yearly inflation is over 500 million TRX.\n\nLater, community voted to change this incetive mechanism. Rewards for each block were lowered from 32TRX to 16TRX, while the amount of voting rewards increased tenfold to 160TRX which gets split between top 127 SRs, proportionally to the number of votes they received.",
       "links": {
         "website": "https://tron.network",
         "whitepaper": "",
         "twitter": "https://twitter.com/tronfoundation",
         "reddit": "https://www.reddit.com/r/Tronix",
         "telegram": "https://t.me/tronnetworkEN03"
+      },
+      "security": {
+        "privacy": "low",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
       },
       "rating": "",
       "id": "unsupported|tron",
@@ -8526,13 +8281,7 @@
       "categories": ["wallets"],
       "active": true,
       "description": "### Project Description\n\nTrust Wallet Token is an utility token that provides a range of benefits and incentives to Trust Wallet users. Trust Wallet itself is a mobile cryptocurrency wallet that supports dozens of popular native assets, in addition to popular tokens on the Ethereum, Binance and TRON blockchains.\nHolders of TWT tokens unlock a variety of benefits when using Trust Wallet, including discounts on in-app cryptocurrency purchases and on the use of decentralized exchange (DEX) services. TWT holders can also participate in the governance of Trust Wallet and can vote on Trust Wallet update proposals, helping to shape the development of the app.\nTrust Wallet Token was initially launched as a BEP-2 asset on Binance Chain, but was relaunched as a BEP-20 token on Binance Smart Chain in October 2020.",
-      "links": {
-        "website": "",
-        "whitepaper": "",
-        "twitter": "",
-        "reddit": "",
-        "telegram": ""
-      },
+      "links": { "website": "", "whitepaper": "", "twitter": "", "reddit": "", "telegram": "" },
       "rating": "",
       "id": "bep20|0x4b0f1812e5df2a09796481ff14017e6005508003",
       "funds": []
@@ -8559,7 +8308,7 @@
       "name": "Tether",
       "categories": ["fiat_stablecoins"],
       "active": true,
-      "description": "### Project Description\n\nLaunched by a Hong Kong based Tether Limited, Tether is a stablecoin with a value meant to mirror the value of the US dollar. It's currently the biggest stablecoin in the cryptocurrency space. \n\nFor individuals Tether opens up ways for anyone to store assets in USD equivalent without the need to have a bank account.\n\nFor cryptocurrency businesses and exchanges Tether provides means to enable cryptocurrency-to-fiat trading without using legacy banking and payment providers which are currently heavily regulated and just plain slow.\n\nTether tokens may be purchased directly from the Tether's website or on crypto exchanges  using fiat money (USD, EUR etc) or other cryptocurrency. In the same manner, users may redeem Tether tokens into fiat currency by selling them on crypto exchanges or via Tether's website.\n\n### Token Description\n\nTether stablecoin tokens are denoted by USDT symbol and exist on several blockchains \n\nBeing a cryptocurrency token on a blockchain, Tether adopts some benefits of cryptocurrency allowing parties to transact with each other pseudo anonymously.\n\nAny individual accepting Tether tokens as payment may potentially do so without knowing the identity of the sender. The sender only needs a wallet that supports sending and receiving of Tether tokens.\n\nTether stablecoin can be found on most cryptocurrency exchages, both centralized and decentralized, and supported by most crypto wallets. It's a highly liquid stablecoin and usually traded in pairs with the highest daily trading volume.\n\nTether is a centralized stablecoin and can potentially be compared to cash in your bank account. Tether funds on your cryptocurrency wallet can potentially be frozen and confiscated, as such functionality is integarted into a smart contract powering Tether stablecoin.\n\nTether is available on many blockchains (Bitcoin, Ethereum, Tron, etc.) \n\n### Token Emission\n\nThere is no limit to supply, and as of April 2020 there is more than 50 billion tokens in circulation.\n\nThe basic operating principle behind any centralized stablecoin like Tether is that there should be an equivalent amount of USD held by the company issuing the stablecoin.\n\nThis deposit ensures that the Tether Limited can always act as a buyer of last resort to purchase all Tethers in circulation should every Tether token holder decide to sell it.\n\nThe Tether Limited currently acts as a centralized custodian of the reserve assets. The company claims that all Tether tokens in circulation are 100% backed by cash and other liquid assets.\n\nAt this point there is no sure way to know that Tether Limited has the required amount of cash or other liquid reserves. There has been some controversy around that. Thus, the reliability of Tether tokens is fully dependent on the amount of trust someone is willing to place into the Tether Limited as a company as well as the external factors that may affect its ability to operate.\n\nThat said, Tether Limited currently offers one of the most convenient ways to purchase large amount of cryptocurrency for someone outside western hemisphere.",
+      "description": "### Project Description\n\nLaunched by a Hong Kong based Tether Limited, Tether is a stablecoin with a value meant to mirror the value of the US dollar. It's currently the biggest stablecoin in the cryptocurrency space. \n\nFor individuals Tether opens up ways for anyone to store assets in USD equivalent without the need to have a bank account.\n\nFor cryptocurrency businesses and exchanges Tether provides means to enable cryptocurrency-to-fiat trading without using legacy banking and payment providers which are currently heavily regulated and just plain slow.\n\nTether tokens may be purchased directly from the Tether's website or on crypto exchanges  using fiat money (USD, EUR etc) or other cryptocurrency. In the same manner, users may redeem Tether tokens into fiat currency by selling them on crypto exchanges or via Tether's website.\n\n### Token Description\n\nTether stablecoin tokens are denoted by USDT symbol and exist on several blockchains \n\nBeing a cryptocurrency token on a blockchain, Tether adopts some benefits of cryptocurrency allowing parties to transact with each other pseudo anonymously.\n\nAny individual accepting Tether tokens as payment may potentially do so without knowing the identity of the sender. The sender only needs a wallet that supports sending and receiving of Tether tokens.\n\nTether stablecoin can be found on most cryptocurrency exchages, both centralized and decentralized, and supported by most crypto wallets. It's a highly liquid stablecoin and usually traded in pairs with the highest daily trading volume.\n\nTether is a centralized stablecoin and can potentially be compared to cash in your bank account. Tether funds on your cryptocurrency wallet can potentially be frozen and confiscated, as such functionality is integarted into a smart contract powering Tether stablecoin.\n\nTether is available on many blockchains (Bitcoin, Ethereum, Tron, etc.) \n\n### Token Emission\n\nThere is no limit to supply, and as of April 2020 there is more than 50 billion tokens in circulation.\n\nThe basic operating principle behind any centralized stablecoin like Tether is that there should be an equivalent amount of USD held by the company issuing the stablecoin.\n\nThis deposit ensures that the Tether Limited can always act as a buyer of last resort to purchase all Tethers in circulation should every Tether token holder decide to sell it.\n\nThe Tether Limited currently acts as a centralized custodian of the reserve assets. The company claims that all Tether tokens in circulation are 100% backed by cash and other liquid assets.\n\nAt this point there is no sure way to know that Tether Limited has the required amount of cash or other liquid reserves. There has been some controversy around that. Thus, the reliability of Tether tokens is fully dependent on the amount of trust someone is willing to place into the Tether Limited as a company as well as the external factors that may affect its ability to operate.\n\nThat said, Tether Limited currently offers one of the most convenient ways to purchase large amount of cryptocurrency for someone outside western hemisphere.",
       "links": {
         "website": "https://tether.to/",
         "whitepaper": "",
@@ -8567,6 +8316,12 @@
         "twitter": "https://twitter.com/Tether_to",
         "reddit": "",
         "telegram": ""
+      },
+      "security": {
+        "privacy": "low",
+        "decentralized": false,
+        "confiscation_resistance": "low",
+        "censorship_resistance": "low"
       },
       "rating": "",
       "id": "erc20|0xdac17f958d2ee523a2206206994597c13d831ec7",
@@ -8670,13 +8425,19 @@
       "name": "Monero",
       "categories": ["blockchain", "privacy"],
       "active": true,
-      "description": "### Project Description\n\nMonero is generally known as the top privacy-centric cryptocurrency. It uses a special kind of cryptography to ensure that all of its network transactions are remain unlinkable and untraceable. It's based on the CryptoNote protocol, a secure, private and untraceable currency system. \n\nIn July of 2012, Bytecoin, the first real life implementation of CryptoNote, was launched. While Bytecoin had promise, people noticed that 80% of the coins were already distributed. So, it was decided that the bytecoin blockchain will be forked and the new coins in the new chain will be called Bitmonero, which is was later changed to Monero.\n\nLike some top cryptocurrency projects Monero has a growing community of supporters voluntarily working on various parts of the ecosystem.\n\nMonero also has a block size cap of 2 MBs, but it’s a soft cap. When the line of waiting transactions gets too long, the miners can increase the size of the blocks.\n\n### Token Description\n\nThe native unit of currency in Monero network denoted by a symbol XMR. A single XMR token consists of 1,000,000,000,000 piconero units.\n\nThe main utility value of monero lies in ability to execute fully anonymous transactions which are for the most part impossible with most of the other cryptocurrencies.\n\nToday it's often labelled as the privacy coin of choice when it comes to transacting on the dark web.\n\n### Token Emission\n\nThere are about 18 million XMR tokens in circulation. Similar to many proof of work cryptocurrencies i.e. Bitcoin, new Monero tokens are awarded to one of the network nodes on every block (every 2 minutes)\n\nThe current emission amount is about 1.2 XMR and will gradually drop until end of May 2022. At this point, rewards will be fixed at 0.6 XMR per block.",
+      "description": "### Project Description\n\nMonero is generally known as the top privacy-centric cryptocurrency. It uses a special kind of cryptography to ensure that all of its network transactions are remain unlinkable and untraceable. It's based on the CryptoNote protocol, a secure, private and untraceable currency system. \n\nIn July of 2012, Bytecoin, the first real life implementation of CryptoNote, was launched. While Bytecoin had promise, people noticed that 80% of the coins were already distributed. So, it was decided that the bytecoin blockchain will be forked and the new coins in the new chain will be called Bitmonero, which is was later changed to Monero.\n\nLike some top cryptocurrency projects Monero has a growing community of supporters voluntarily working on various parts of the ecosystem.\n\nMonero also has a block size cap of 2 MBs, but it’s a soft cap. When the line of waiting transactions gets too long, the miners can increase the size of the blocks.\n\n### Token Description\n\nThe native unit of currency in Monero network denoted by a symbol XMR. A single XMR token consists of 1,000,000,000,000 piconero units.\n\nThe main utility value of monero lies in ability to execute fully anonymous transactions which are for the most part impossible with most of the other cryptocurrencies.\n\nToday it's often labelled as the privacy coin of choice when it comes to transacting on the dark web.\n\n### Token Emission\n\nThere are about 18 million XMR tokens in circulation. Similar to many proof of work cryptocurrencies i.e. Bitcoin, new Monero tokens are awarded to one of the network nodes on every block (every 2 minutes)\n\nThe current emission amount is about 1.2 XMR and will gradually drop until end of May 2022. At this point, rewards will be fixed at 0.6 XMR per block.",
       "links": {
         "website": "https://getmonero.org",
         "whitepaper": "",
         "twitter": "https://twitter.com/monero",
         "reddit": "https://www.reddit.com/r/monero",
         "telegram": ""
+      },
+      "security": {
+        "privacy": "high",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
       },
       "rating": "",
       "id": "unsupported|monero",
@@ -8727,11 +8488,7 @@
       "name": "Ellipsis",
       "categories": ["dexes"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -8751,11 +8508,7 @@
       "name": "Raiden Network Token",
       "categories": ["scaling"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -8775,11 +8528,7 @@
       "name": "SKALE",
       "categories": ["scaling"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -8799,11 +8548,7 @@
       "name": "BunnyToken",
       "categories": ["yield_aggregators"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -8823,11 +8568,7 @@
       "name": "Value DeFi",
       "categories": ["yield_aggregators"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -8847,11 +8588,7 @@
       "name": "SharedStake Governance Token",
       "categories": ["staking_eth_2_0"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -8869,13 +8606,9 @@
     {
       "code": "ALPACA",
       "name": "Alpaca Finance",
-      "categories": ["yield_aggregators","lending"],
+      "categories": ["yield_aggregators", "lending"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -8895,11 +8628,7 @@
       "name": "Fei Protocol",
       "categories": ["algo_stablecoins"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -8919,11 +8648,7 @@
       "name": "IOTA",
       "categories": ["blockchain"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -8943,11 +8668,7 @@
       "name": "XRP",
       "categories": ["blockchain"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "### Project Description\n\nXRP Ledger is an open-source, permissionless, peer-to-peer payment network that allows fast transactions. It was designed to challenge existing financial system, eliminate high fees, reduce processing times and address liquidity challenges faced by financial institutions when using traditional payment channels (i.e. SWIFT, ACH, FedWire etc). \n\nToday, the development of XRP Ledger is driven primarily by Ripple, a privately owned company. The company funded through their own reserves of XRP as well as by private investments from Andressen Horowitz, Google Ventures and others. \n\nWhen compared to other projects in the crypto ecosystem the XRP Ledger is relatively less decentralized because of Ripple’s heavy involvement as one of the driving forces of adoption. It is also important to note that approximately 21% of the validator nodes on the network are controlled by Ripple company.\n\nThe XRP Ledger is integrated with a number of commercial non-open (permissioned) services from Ripple like RippleNet, a permissioned payment network comprised of over 300 institutions (banks, payment providers, brokers, unions) that serve as independent users and transaction validators on the network.\n\n### Token Description\n\nXRP is the native digital currency supported by XRP Ledger. XRP is measured precisely to the nearest 0.000001 XRP, called a drop.\n\nEvery transaction on the Ripple network requires a tiny commison fee of 10 drops (.00001 XRP) which gets destroyed. \n\nAlso, a minimum balance of 20 XRP is required to be held in each wallet address\n\n### Token Emission\n\nAt inception, 100 billion XRP tokens were created and fixed to be the maximum supply cap. The 80 billion XRP were allocated in the form of a grant to Ripple company.\n\nAccording to Ripple company, approximately 50 billion XRP is currently being held in escrow with a max. of 1 billion XRP released on a monthly basis for sale to fund its activities. It is important to note that several reports from independent data providers have surfaced that discuss some discrepancies with how XRP supply is disseminated.\n\nThe majority of XRP supply is still held by the Ripple founders and the company. Though there are selling restrictions placed on both, there is a risk of pressure on the price of XRP.",
       "links": {
         "website": "",
@@ -8958,6 +8679,12 @@
         "reddit": "",
         "telegram": ""
       },
+      "security": {
+        "privacy": "low",
+        "decentralized": false,
+        "confiscation_resistance": "medium",
+        "censorship_resistance": "low"
+      },
       "rating": "",
       "id": "unsupported|ripple",
       "funds": []
@@ -8967,11 +8694,7 @@
       "name": "WINk",
       "categories": ["oracles"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -8991,11 +8714,7 @@
       "name": "ACryptoS",
       "categories": ["yield_aggregators"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9015,11 +8734,7 @@
       "name": "Bitmax Token",
       "categories": ["exchange_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9039,11 +8754,7 @@
       "name": "Wootrade Network",
       "categories": ["exchange_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9063,11 +8774,7 @@
       "name": "Zipmex Token",
       "categories": ["exchange_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9087,11 +8794,7 @@
       "name": "Interest Bearing DPI",
       "categories": ["index_funds"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9111,11 +8814,7 @@
       "name": "FC Barcelona Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9135,11 +8834,7 @@
       "name": "Paris Saint-Germain Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9159,11 +8854,7 @@
       "name": "Juventus Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9183,11 +8874,7 @@
       "name": "Galatasaray Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9207,11 +8894,7 @@
       "name": "AC Milan Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9231,11 +8914,7 @@
       "name": "Atletico Madrid Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9255,11 +8934,7 @@
       "name": "OG Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9279,11 +8954,7 @@
       "name": "AS Roma Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9303,11 +8974,7 @@
       "name": "Sint-Truidense Voetbalvereniging Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9327,11 +8994,7 @@
       "name": "Team Heretics Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9351,11 +9014,7 @@
       "name": "Trabzonspor Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9375,11 +9034,7 @@
       "name": "Natus Vincere Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9399,11 +9054,7 @@
       "name": "Nervos Network",
       "categories": ["infrastructure"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9423,11 +9074,7 @@
       "name": "Tokocrypto",
       "categories": ["exchange_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9447,11 +9094,7 @@
       "name": "PARSIQ",
       "categories": ["investment_tools"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9471,11 +9114,7 @@
       "name": "DexTools",
       "categories": ["investment_tools"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9495,11 +9134,7 @@
       "name": "Big Data Protocol",
       "categories": ["investment_tools"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9519,11 +9154,7 @@
       "name": "GraphLinq Protocol",
       "categories": ["investment_tools"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9543,11 +9174,7 @@
       "name": "UniWhales",
       "categories": ["investment_tools"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9567,11 +9194,7 @@
       "name": "Yieldwatch",
       "categories": ["investment_tools"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9591,11 +9214,7 @@
       "name": "Raydium",
       "categories": ["dexes"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "### Project Description\n\nRaydium is a high speed and low-fee decentralized exchange built on top of Solana blockchain and uses a Uniswap style automated market maker (AMM) model to settle trades. Users can exchange two tokens at great speeds in a deentralized manner.\n\nWhat makes it standout from other AMM based decentralized exchanges is that Radium is tightly integrated with Serum decentralized exchange and connects all of its liquidity pools to the orderflow of Serum exchange. In other words, Raydium provides liquidity to Serum's limit order book, meaning that Raydium's users and liquidity pools have access to the order flow and liquidity of the entire Serum ecosystem, and vice versa. \n\nAmong other things, Raydium gives users the option to view trade charts and set limit orders.\n\n### Token Description\n\nThe native cryptocurrency token of Raydium is RAY. \n\nUsers may stake RAY tokens and earn a percentage of transaction fees originating from trades. Traders that make transactions on the platform pay a fee, which is then redistributed to liquidity providers and stakers.\n\nOne other way through which users can earn RAY tokens is by depositing their funds to farming pools. \n\n### Token Emission\n\nThere is a hard cap of 555 million of RAY tokens.\n\n- Team : 20% (locked 1-3 years)\n\n- Advisors : 2% (locked 1-3 years)\n\n- Partnerships : 2%\n\n- Mining : 34% (over 36 months)\n\n- Liquidity Reserve : 8% \n\n- Community and Seed : 6%  (locked 1-3 years)",
       "links": {
         "website": "",
@@ -9606,6 +9225,12 @@
         "reddit": "",
         "telegram": ""
       },
+      "security": {
+        "privacy": "medium",
+        "decentralized": true,
+        "confiscation_resistance": "high",
+        "censorship_resistance": "high"
+      },
       "rating": "",
       "id": "unsupported|raydium",
       "funds": []
@@ -9615,11 +9240,7 @@
       "name": "Hermez Network",
       "categories": ["wallets"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9639,11 +9260,7 @@
       "name": "0.exchange",
       "categories": ["dexes"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9663,11 +9280,7 @@
       "name": "Anyswap",
       "categories": ["dexes"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9687,11 +9300,7 @@
       "name": "Burger Swap",
       "categories": ["dexes"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9711,11 +9320,7 @@
       "name": "Pendle",
       "categories": ["dexes"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9735,11 +9340,7 @@
       "name": "Alchemix",
       "categories": ["lending", "synthetics"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9757,13 +9358,9 @@
     {
       "code": "XVS",
       "name": "Venus",
-      "categories": ["lending","stablecoin_issuers"],
+      "categories": ["lending", "stablecoin_issuers"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9783,11 +9380,7 @@
       "name": "UniLend Finance",
       "categories": ["lending"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9807,11 +9400,7 @@
       "name": "Apollon Limassol Fan Token",
       "categories": ["fan_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9831,11 +9420,7 @@
       "name": "Liquity",
       "categories": ["lending"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9855,11 +9440,7 @@
       "name": "Firo",
       "categories": ["privacy"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9879,11 +9460,7 @@
       "name": "Grin",
       "categories": ["privacy"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9903,11 +9480,7 @@
       "name": "Prosper",
       "categories": ["prediction_markets"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9927,11 +9500,7 @@
       "name": "Vai",
       "categories": ["algo_stablecoins"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9951,11 +9520,7 @@
       "name": "ZB Token",
       "categories": ["exchange_tokens"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9975,11 +9540,7 @@
       "name": "ETH 2x Flexible Leverage Index",
       "categories": ["index_funds"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -9999,11 +9560,7 @@
       "name": "Cardstarter",
       "categories": ["fundraising"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -10023,11 +9580,7 @@
       "name": "Ultra",
       "categories": ["gaming"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -10047,11 +9600,7 @@
       "name": "My Neighbor Alice",
       "categories": ["gaming"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -10071,11 +9620,7 @@
       "name": "Bonfida",
       "categories": ["infrastructure"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -10095,11 +9640,7 @@
       "name": "Step Finance",
       "categories": ["investment_tools"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -10119,11 +9660,7 @@
       "name": "UST",
       "categories": ["fiat_stablecoins"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
@@ -10143,11 +9680,7 @@
       "name": "Lido Staked Ether",
       "categories": ["algo_stablecoins"],
       "active": true,
-      "platform": {
-        "name": "",
-        "address": "",
-        "type": ""
-      },
+      "platform": { "name": "", "address": "", "type": "" },
       "description": "",
       "links": {
         "website": "",
