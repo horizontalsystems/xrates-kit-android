@@ -23,9 +23,34 @@ class CoinMeta(
     var fundCategories: List<CoinFundCategory>,
     val platforms: Map<CoinPlatformType, String>,
     val launchDate: Date? = null,
+    val securityParameter: SecurityParameter? = null
 ) {
     enum class DescriptionType {
         HTML, MARKDOWN
+    }
+}
+
+enum class Level {
+    LOW,
+    MEDIUM,
+    HIGH;
+
+    companion object {
+        fun intValue(level: Level): Int{
+            return when(level){
+                LOW -> 1
+                MEDIUM -> 2
+                HIGH -> 3
+            }
+        }
+
+        fun fromInt(intValue: Int): Level {
+            return when(intValue){
+                1 -> LOW
+                2 -> MEDIUM
+                else -> HIGH
+            }
+        }
     }
 }
 
@@ -48,6 +73,16 @@ enum class CoinPlatformType{
     TRON,
     EOS,
 }
+
+@Entity
+data class SecurityParameter(
+    @PrimaryKey
+    val coinType: CoinType,
+    val privacy: Level,
+    val decentralized: Boolean,
+    val confiscationResistance: Level,
+    val censorshipResistance: Level
+)
 
 @Entity
 data class ExchangeInfoEntity(

@@ -35,7 +35,8 @@ data class CoinInfoResource(
     val links: List<CoinLinksEntity>,
     val exchangeInfos: List<ExchangeInfoEntity>,
     val coinTreasuries: List<CoinTreasuryEntity>,
-    val treasuryCompanies: List<TreasuryCompany>
+    val treasuryCompanies: List<TreasuryCompany>,
+    val securityParameters: List<SecurityParameter>
 ){
 
     companion object{
@@ -51,6 +52,7 @@ data class CoinInfoResource(
             val exchangeInfos = mutableListOf<ExchangeInfoEntity>()
             val coinTreasuries = mutableListOf<CoinTreasuryEntity>()
             val treasuryCompanies = mutableListOf<TreasuryCompany>()
+            val securityParameters = mutableListOf<SecurityParameter>()
 
             if(!quickParse) {
                 jsonObject.asObject().get("exchanges").asArray().forEach { exchangeInfo ->
@@ -139,12 +141,24 @@ data class CoinInfoResource(
 
                     coinInfos.add(CoinInfoEntity(coinType, code, name, rating, description))
 
+                    coinInfo.asObject().get("security")?.let {
+                        it.asObject().let { security ->
+
+                            securityParameters.add(SecurityParameter(
+                                coinType,
+                                Level.valueOf(security.get("privacy").asString().toUpperCase()),
+                                security.get("decentralized").asBoolean(),
+                                Level.valueOf(security.get("confiscation_resistance").asString().toUpperCase()),
+                                Level.valueOf(security.get("censorship_resistance").asString().toUpperCase())
+                            ))
+                        }
+                    }
+
                     coinInfo.asObject().get("categories")?.let {
                         it.asArray().forEach { categoryId ->
                             coinCategories.add(CoinCategoriesEntity(coinType, categoryId.asString()))
                         }
                     }
-
                     coinInfo.asObject().get("funds")?.let {
                         it.asArray().forEach { fundId ->
                             coinFunds.add(CoinFundsEntity(coinType, fundId.asString()))
@@ -164,7 +178,7 @@ data class CoinInfoResource(
                 }
             }
 
-            return CoinInfoResource(coinInfos, categories, coinCategories, funds, coinFunds, fundCategories, coinLinks, exchangeInfos, coinTreasuries, treasuryCompanies)
+            return CoinInfoResource(coinInfos, categories, coinCategories, funds, coinFunds, fundCategories, coinLinks, exchangeInfos, coinTreasuries, treasuryCompanies, securityParameters)
         }
     }
 }

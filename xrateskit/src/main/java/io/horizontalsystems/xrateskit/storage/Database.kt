@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import io.horizontalsystems.xrateskit.entities.*
 
-@androidx.room.Database(version = 20, exportSchema = false, entities = [
+@androidx.room.Database(version = 21, exportSchema = false, entities = [
     HistoricalRate::class,
     ChartPointEntity::class,
     GlobalCoinMarketPointInfo::class,
@@ -23,7 +23,8 @@ import io.horizontalsystems.xrateskit.entities.*
     LatestRateEntity::class,
     ExchangeInfoEntity::class,
     CoinTreasuryEntity::class,
-    TreasuryCompany::class
+    TreasuryCompany::class,
+    SecurityParameter::class
 ])
 
 @TypeConverters(DatabaseConverters::class)
