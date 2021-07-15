@@ -15,6 +15,35 @@ class Storage(private val database: Database) : IStorage {
     private val coinInfoDao = database.coinInfoDao
     private val resourceInfoDao = database.resourceInfoDao
 
+    //Audit
+    override fun getAuditReports(coinType: CoinType): List<Auditor> {
+        val auditors = coinInfoDao.getAuditors(coinType)
+        auditors.forEach { auditor ->
+            auditor.reports.addAll(coinInfoDao.getAuditReports(coinType, auditor.id))
+        }
+
+        return auditors
+    }
+
+    override fun saveAuditReports(coinType: CoinType, auditors: List<Auditor>){
+        val coinAuditReports = mutableListOf<CoinAuditReports>()
+
+        auditors.forEach { auditor ->
+            auditor.reports.forEach{ report->
+                val newId = coinInfoDao.insertAuditReport(report)
+                coinAuditReports.add(CoinAuditReports(coinType, auditor.id, newId))
+            }
+        }
+
+        coinInfoDao.insertAuditors(auditors)
+        coinInfoDao.insertCoinsAuditorReports(coinAuditReports)
+    }
+
+    override fun deleteCoinAuditReports(coinType: CoinType) {
+        coinInfoDao.deleteAuditReports(coinType)
+        coinInfoDao.deleteCoinAuditReports(coinType)
+    }
+
     //Resource
     override fun getResourceInfo(resourceType: ResourceType): ResourceInfo? {
         return resourceInfoDao.getResourceInfo(resourceType.name)

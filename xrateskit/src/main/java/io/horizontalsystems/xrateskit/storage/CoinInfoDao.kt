@@ -11,6 +11,15 @@ import io.horizontalsystems.xrateskit.entities.*
 interface CoinInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAuditors(all: List<Auditor>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAuditReport(report: AuditReport): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCoinsAuditorReports(all: List<CoinAuditReports>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSecurityParameters(all: List<SecurityParameter>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -46,6 +55,12 @@ interface CoinInfoDao {
     @Query("DELETE FROM SecurityParameter")
     fun deleteAllSecurityParameters()
 
+    @Query("DELETE FROM CoinAuditReports where coinType=:coinType")
+    fun deleteCoinAuditReports(coinType: CoinType)
+
+    @Query("DELETE FROM AuditReport where id IN( SELECT reportId from CoinAuditReports where coinType=:coinType )")
+    fun deleteAuditReports(coinType: CoinType)
+
     @Query("DELETE FROM CoinTreasuryEntity")
     fun deleteAllCoinTreasuries()
 
@@ -75,6 +90,12 @@ interface CoinInfoDao {
 
     @Query("SELECT * FROM SecurityParameter WHERE coinType=:coinType")
     fun getSecurityParameter(coinType: CoinType): SecurityParameter?
+
+    @Query("SELECT * FROM AuditReport WHERE id IN (SELECT reportId from CoinAuditReports WHERE coinType=:coinType AND auditorId=:auditorId)")
+    fun getAuditReports(coinType: CoinType, auditorId: String): List<AuditReport>
+
+    @Query("SELECT * FROM Auditor WHERE id IN (SELECT auditorId from CoinAuditReports WHERE coinType=:coinType)")
+    fun getAuditors(coinType: CoinType): List<Auditor>
 
     @Query("SELECT * FROM CoinCategory WHERE id IN (SELECT categoryId FROM CoinCategoriesEntity WHERE coinType =:coinType)")
     fun getCoinCategories(coinType: CoinType): List<CoinCategory>
