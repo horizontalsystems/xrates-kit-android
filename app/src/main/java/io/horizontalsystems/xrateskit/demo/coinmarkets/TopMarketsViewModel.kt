@@ -14,6 +14,7 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
     val topMarkets = MutableLiveData<List<CoinMarket>>()
     val topHolders = MutableLiveData<List<TokenHolder>>()
     val coinMarketPoints = MutableLiveData<List<CoinMarketPoint>>()
+    val auditorsData = MutableLiveData<List<Auditor>>()
     val news = MutableLiveData<List<CryptoNews>>()
     val topDefiMarkets = MutableLiveData<List<DefiTvl>>()
     val coinMarketDetails = MutableLiveData<List<CoinMarketDetailsItem>>()
@@ -46,6 +47,22 @@ class TopMarketsViewModel(val ratesManager: RatesManager) : ViewModel() {
             .observeOn(Schedulers.io())
             .subscribe({ points ->
                 coinMarketPoints.postValue(points)
+                progressState.postValue(false) }, {
+                println("Error !!! ${it.message}")
+                progressState.postValue(false)
+            })
+            .let {
+                disposables.add(it)
+            }
+    }
+
+    fun loadAuditInfo(coinType: CoinType) {
+        progressState.postValue(true)
+        ratesManager.getAuditInfo(coinType)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .subscribe({ items ->
+                auditorsData.postValue(items)
                 progressState.postValue(false) }, {
                 println("Error !!! ${it.message}")
                 progressState.postValue(false)
