@@ -21,7 +21,8 @@ class ResourceInfo(
 enum class ResourceType{
     COIN_INFO,
     PROVIDER_COINS,
-    PROVIDER_COINS_PRIORITY
+    PROVIDER_COINS_PRIORITY,
+    AUDIT_INFO_TIMESTAMP
 }
 
 

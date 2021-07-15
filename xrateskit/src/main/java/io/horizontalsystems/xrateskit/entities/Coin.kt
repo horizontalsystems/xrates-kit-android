@@ -5,6 +5,7 @@ import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.horizontalsystems.coinkit.models.CoinType
+import java.sql.Timestamp
 import java.util.*
 
 data class CoinData(
@@ -144,3 +145,25 @@ data class CoinFundCategory(
     var funds = mutableListOf<CoinFund>()
 }
 
+@Entity
+data class Auditor(
+    @PrimaryKey
+    val id :String,
+    val name :String,
+) {
+    @Ignore
+    val reports: MutableList<AuditReport> = mutableListOf()
+}
+
+@Entity(indices = [Index(value = ["name", "timestamp"], unique = true)])
+data class AuditReport(
+    @PrimaryKey(autoGenerate = true)
+    val id :Long = 0,
+    val name :String,
+    val timestamp: Long,
+    val issues: Int = 0,
+    val link: String
+)
+
+@Entity(primaryKeys = ["auditorId", "coinType","reportId"])
+data class CoinAuditReports(val coinType: CoinType, val auditorId: String, val reportId: Long)
