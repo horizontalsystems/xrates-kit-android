@@ -19,6 +19,7 @@ import io.horizontalsystems.xrateskit.entities.*
 import io.horizontalsystems.xrateskit.providers.*
 import io.horizontalsystems.xrateskit.providers.coingecko.CoinGeckoProvider
 import io.horizontalsystems.xrateskit.providers.cryptocompare.CryptoCompareProvider
+import io.horizontalsystems.xrateskit.providers.defiyield.DefiYieldProvider
 import io.horizontalsystems.xrateskit.providers.horsys.HorsysProvider
 import io.horizontalsystems.xrateskit.rates.HistoricalRateManager
 import io.horizontalsystems.xrateskit.rates.LatestRatesManager
@@ -99,6 +100,10 @@ class XRatesKit(
         return tokenInfoManager.getTopTokenHoldersAsync(coinType, itemsCount)
     }
 
+    fun getAuditReportsAsync(coinType: CoinType): Single<List<Auditor>> {
+        return tokenInfoManager.getAuditReportsAsync(coinType)
+    }
+
     fun getTopCoinMarketsAsync(currencyCode: String, fetchDiffPeriod: TimePeriod = TimePeriod.HOUR_24, itemsCount: Int = 200): Single<List<CoinMarket>> {
         return coinMarketManager.getTopCoinMarketsAsync(currencyCode, fetchDiffPeriod, itemsCount)
     }
@@ -174,6 +179,7 @@ class XRatesKit(
             providerCoinsManager.coinGeckoProvider = coinGeckoProvider
             val cryptoCompareProvider = CryptoCompareProvider(factory, cryptoCompareApiKey)
             val horsysProvider = HorsysProvider(providerCoinsManager)
+            val defiYieldProvider = DefiYieldProvider()
             val globalMarketInfoManager = GlobalMarketInfoManager(horsysProvider, storage)
             val defiMarketInfoManager = DefiMarketsManager(coinGeckoProvider, horsysProvider)
 
@@ -193,7 +199,7 @@ class XRatesKit(
             }
 
             val topMarketsManager = CoinMarketsManager(coinGeckoProvider, horsysProvider)
-            val tokenInfoManager = TokenInfoManager(horsysProvider)
+            val tokenInfoManager = TokenInfoManager(storage, horsysProvider, defiYieldProvider)
 
             val coinSyncer = CoinSyncer(providerCoinsManager, coinInfoManager)
 
