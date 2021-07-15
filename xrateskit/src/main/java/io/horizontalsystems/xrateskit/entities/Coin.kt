@@ -81,8 +81,8 @@ data class SecurityParameter(
     val coinType: CoinType,
     val privacy: Level,
     val decentralized: Boolean,
-    val confiscationResistance: Level,
-    val censorshipResistance: Level
+    val confiscationResistance: Boolean,
+    val censorshipResistance: Boolean
 )
 
 @Entity
