@@ -28,35 +28,10 @@ class CoinGeckoProvider(
     private val MAX_ITEM_PER_PAGE = 250
     private val MINUTES_10_IN_SECONDS = 60 * 10
     private val HOURS_2_IN_SECONDS = 60 * 60 * 2
-    private val exchangesOrdering by lazy {
-        var i = 0
-
-        hashMapOf(
-            "binance" to ++i,
-            "binance_us" to ++i,
-            "binance_dex" to ++i,
-            "binance_dex_mini" to ++i,
-            "uniswap_v1" to ++i,
-            "uniswap" to ++i,
-            "gdax" to ++i, // Coinbase
-            "sushiswap" to ++i,
-            "huobi" to ++i,
-            "huobi_thailand" to ++i,
-            "huobi_id" to ++i,
-            "huobi_korea" to ++i,
-            "huobi_japan" to ++i,
-            "ftx_spot" to ++i,
-            "ftx_us" to ++i,
-            "one_inch" to ++i,
-            "one_inch_liquidity_protocol" to ++i,
-            "one_inch_liquidity_protocol_bsc" to ++i,
-        )
-    }
 
     private val coinGeckoService: CoinGeckoService by lazy {
         RetrofitUtils.build(provider.baseUrl).create(CoinGeckoService::class.java)
     }
-
 
     init {
         initProvider()
@@ -218,22 +193,32 @@ class CoinGeckoProvider(
 
                 val contractAddresses = platforms.map { it.value.toLowerCase(Locale.ENGLISH) }
                 val marketTickers = coin.tickers.map {
-                    val base = if (contractAddresses.contains(it.base.toLowerCase(Locale.ENGLISH))) {
+                    var base = if (contractAddresses.contains(it.base.toLowerCase(Locale.ENGLISH))) {
                         coin.symbol
                     } else {
                         it.base
                     }
 
-                    val target = if (contractAddresses.contains(it.target.toLowerCase(Locale.ENGLISH))) {
+                    var target = if (contractAddresses.contains(it.target.toLowerCase(Locale.ENGLISH))) {
                         coin.symbol
                     } else {
                         it.target
                     }
 
-                    CoinGeckoService.Response.Coin.Ticker(base, target, it.market, it.last, it.volume)
+                    var rateLast = it.last
+                    var volume = it.volume
+
+                    if (target.equals(coin.symbol, ignoreCase = true)) {
+                        target = base
+                        base = coin.symbol.toUpperCase(Locale.ENGLISH)
+
+                        volume *= rateLast
+                        rateLast =  BigDecimal.ONE / rateLast
+                    }
+
+                    CoinGeckoService.Response.Coin.Ticker(base, target, it.market, rateLast, volume)
                 }
                     .filter { filterTicker(it) }
-                    .sortedBy { exchangesOrdering[it.market.identifier] ?: Integer.MAX_VALUE }
                     .map {
                         val imageUrl = coinInfoManager.getExchangeInfo(it.market.identifier)?.imageUrl
                         MarketTicker(it.base, it.target, it.market.name, it.last, it.volume, imageUrl)
