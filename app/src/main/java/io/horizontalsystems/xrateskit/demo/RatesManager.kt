@@ -67,6 +67,10 @@ class RatesManager(context: Context, currency: String) {
         return kit.getCoinMarketPointsAsync(coinType, currency, period)
     }
 
+    fun getAuditInfo(coinType: CoinType): Single<List<Auditor>>{
+        return kit.getAuditReportsAsync(coinType)
+    }
+
     fun globalMarketInfo(currency: String): Single<GlobalCoinMarket>{
         return kit.getGlobalCoinMarketsAsync(currency)
     }

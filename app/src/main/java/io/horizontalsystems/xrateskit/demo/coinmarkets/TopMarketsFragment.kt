@@ -117,9 +117,11 @@ class TopMarketsFragment() : Fragment() {
         }
 
         btnTVL.setOnClickListener {
-            val coinType = CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9") //aave
+            //val coinType = CoinType.fromString("erc20|0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9") //aave
             //val coinType = CoinType.fromString("unsupported|theta-token") //Theta
-            viewModel.loadTvl(coinType)
+            val coinType = CoinType.fromString("erc20|0x111111111117dc0aa78b770fa6a738034120c302") //1inch
+            //viewModel.loadTvl(coinType)
+            viewModel.loadAuditInfo(coinType)
         }
 
         btnLoadGLobalMarkets.setOnClickListener {
@@ -188,6 +190,14 @@ class TopMarketsFragment() : Fragment() {
             if(it.size > 0) {
                 val newsItem = it.first()
                 val sbar = Snackbar.make(this.requireView(), "Date${newsItem.timestamp} - Volume/MCap:${newsItem.volume24h}", Snackbar.LENGTH_LONG)
+                sbar.show()
+            }
+        })
+
+        viewModel.auditorsData.observe(viewLifecycleOwner, Observer {
+            if(it.size > 0) {
+                val item = it.first()
+                val sbar = Snackbar.make(this.requireView(), "Auditor${item.name} - Repors :${item.reports.first().name}", Snackbar.LENGTH_LONG)
                 sbar.show()
             }
         })
