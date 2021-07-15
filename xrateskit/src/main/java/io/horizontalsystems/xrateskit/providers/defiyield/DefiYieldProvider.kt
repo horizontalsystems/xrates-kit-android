@@ -10,11 +10,11 @@ import io.reactivex.Single
 import java.text.SimpleDateFormat
 import java.util.logging.Logger
 
-class DefiYieldProvider : IAuditInfoProvider {
+class DefiYieldProvider(private val defiyieldApiKey: String) : IAuditInfoProvider {
 
     private val logger = Logger.getLogger("DefiYieldProvider")
     override val provider: InfoProvider = InfoProvider.DefiYield()
-    private val AUTH_BEARER_TOKEN = "Bearer ${provider.accessKey}"
+    private val AUTH_BEARER_TOKEN = "Bearer ${defiyieldApiKey}"
 
     private val FILES_BASE_URL = "https://files.safe.defiyield.app/"
     private val defiYieldService: DefiYieldService by lazy {
