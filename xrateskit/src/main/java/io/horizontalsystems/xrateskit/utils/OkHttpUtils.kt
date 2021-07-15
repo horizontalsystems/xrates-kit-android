@@ -10,7 +10,7 @@ object OkHttpUtils {
 
     val client: OkHttpClient by lazy {
         val logging = HttpLoggingInterceptor()
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY)
 
         OkHttpClient.Builder()
             .connectTimeout(5, TimeUnit.SECONDS)
