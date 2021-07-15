@@ -218,19 +218,30 @@ class CoinGeckoProvider(
 
                 val contractAddresses = platforms.map { it.value.toLowerCase(Locale.ENGLISH) }
                 val marketTickers = coin.tickers.map {
-                    val base = if (contractAddresses.contains(it.base.toLowerCase(Locale.ENGLISH))) {
+                    var base = if (contractAddresses.contains(it.base.toLowerCase(Locale.ENGLISH))) {
                         coin.symbol
                     } else {
                         it.base
                     }
 
-                    val target = if (contractAddresses.contains(it.target.toLowerCase(Locale.ENGLISH))) {
+                    var target = if (contractAddresses.contains(it.target.toLowerCase(Locale.ENGLISH))) {
                         coin.symbol
                     } else {
                         it.target
                     }
 
-                    CoinGeckoService.Response.Coin.Ticker(base, target, it.market, it.last, it.volume)
+                    var rateLast = it.last
+                    var volume = it.volume
+
+                    if (target.equals(coin.symbol, ignoreCase = true)) {
+                        target = base
+                        base = coin.symbol.toUpperCase(Locale.ENGLISH)
+
+                        volume *= rateLast
+                        rateLast =  BigDecimal.ONE / rateLast
+                    }
+
+                    CoinGeckoService.Response.Coin.Ticker(base, target, it.market, rateLast, volume)
                 }
                     .filter { filterTicker(it) }
                     .sortedBy { exchangesOrdering[it.market.identifier] ?: Integer.MAX_VALUE }
