@@ -6,8 +6,12 @@ import io.horizontalsystems.xrateskit.entities.*
 import io.reactivex.Single
 
 interface IStorage {
+    // Audit
+    fun getAuditReports(coinType: CoinType): List<Auditor>
+    fun saveAuditReports(coinType: CoinType, auditors: List<Auditor>)
+    fun deleteCoinAuditReports(coinType: CoinType)
 
-    //ResourceInfo
+        //ResourceInfo
     fun getResourceInfo(resourceType: ResourceType): ResourceInfo?
     fun saveResourceInfo(resourceInfo: ResourceInfo)
 
@@ -123,6 +127,10 @@ interface IGlobalCoinMarketProvider : IInfoProvider {
 
 interface ITokenInfoProvider : IInfoProvider {
     fun getTopTokenHoldersAsync(coinType: CoinType, itemsCount: Int): Single<List<TokenHolder>>
+}
+
+interface IAuditInfoProvider : IInfoProvider {
+    fun getAuditReportsAsync(coinType: CoinType): Single<List<Auditor>>
 }
 
 interface IDefiMarketsProvider : IInfoProvider {
