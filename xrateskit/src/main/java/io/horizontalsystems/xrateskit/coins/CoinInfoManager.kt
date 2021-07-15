@@ -22,6 +22,10 @@ class CoinInfoManager(
         return storage.getCoinInfo(coinType)?.description
     }
 
+    fun getCoinAddress(coinType: CoinType): String? {
+        return storage.getCoinInfo(coinType)?.description
+    }
+
     fun getCoinRating(coinType: CoinType): String? {
         return storage.getCoinInfo(coinType)?.rating
     }
