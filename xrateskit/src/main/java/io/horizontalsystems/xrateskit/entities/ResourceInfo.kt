@@ -149,8 +149,8 @@ data class CoinInfoResource(
                                 coinType,
                                 Level.valueOf(security.get("privacy").asString().toUpperCase()),
                                 security.get("decentralized").asBoolean(),
-                                Level.valueOf(security.get("confiscation_resistance").asString().toUpperCase()),
-                                Level.valueOf(security.get("censorship_resistance").asString().toUpperCase())
+                                security.get("confiscation_resistance").asBoolean(),
+                                security.get("censorship_resistance").asBoolean()
                             ))
                         }
                     }
