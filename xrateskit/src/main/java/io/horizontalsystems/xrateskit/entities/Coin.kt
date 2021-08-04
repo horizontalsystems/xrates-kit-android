@@ -162,7 +162,7 @@ data class AuditReport(
     val name :String,
     val timestamp: Long,
     val issues: Int = 0,
-    val link: String
+    val link: String?
 )
 
 @Entity(primaryKeys = ["auditorId", "coinType","reportId"])

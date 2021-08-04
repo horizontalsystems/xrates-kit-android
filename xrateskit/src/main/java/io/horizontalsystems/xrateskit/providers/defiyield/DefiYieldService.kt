@@ -31,8 +31,8 @@ object Response {
         val name: String,
         val date: String,
         val tech_issues: Int?,
-        val audit_link: String,
-        val partner : Partner
+        val audit_link: String?,
+        val partner : Partner?
     )
 
     data class Partner(
