@@ -44,24 +44,26 @@ class DefiYieldProvider(private val defiyieldApiKey: String) : IAuditInfoProvide
 
                 response.partnerAudits.forEach { audit ->
 
-                    var auditor = auditors.find { it.name.contentEquals(audit.partner.name) }
+                    audit.partner?.let { partner ->
+                        var auditor = auditors.find { it.name.contentEquals(partner.name) }
 
-                    if(auditor == null){
-                        auditor = Auditor(
-                            id = audit.partner.name.trim().toLowerCase().replace("\\s".toRegex(), "-"),
-                            name = audit.partner.name
+                        if(auditor == null){
+                            auditor = Auditor(
+                                id = partner.name.trim().toLowerCase().replace("\\s".toRegex(), "-"),
+                                name = partner.name
+                            )
+                            auditors.add(auditor)
+                        }
+
+                        val auditReport = AuditReport(
+                            name = audit.name,
+                            issues = audit.tech_issues ?: 0,
+                            timestamp = SimpleDateFormat("yyyy-MM-dd").parse(audit.date).time / 1000,
+                            link = audit.audit_link?.let { "${FILES_BASE_URL}${it}" }
                         )
-                        auditors.add(auditor)
+
+                        auditor.reports.add(auditReport)
                     }
-
-                    val auditReport = AuditReport(
-                        name = audit.name,
-                        issues = audit.tech_issues ?: 0,
-                        timestamp = SimpleDateFormat("yyyy-MM-dd").parse(audit.date).time / 1000,
-                        link = "${FILES_BASE_URL}${audit.audit_link}"
-                    )
-
-                    auditor.reports.add(auditReport)
                 }
             }
 
