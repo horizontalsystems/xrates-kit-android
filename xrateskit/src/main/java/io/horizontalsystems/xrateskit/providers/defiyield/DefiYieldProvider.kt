@@ -8,6 +8,7 @@ import io.horizontalsystems.xrateskit.providers.InfoProvider
 import io.horizontalsystems.xrateskit.utils.RetrofitUtils
 import io.reactivex.Single
 import java.text.SimpleDateFormat
+import java.util.*
 import java.util.logging.Logger
 
 class DefiYieldProvider(private val defiyieldApiKey: String) : IAuditInfoProvider {
@@ -26,20 +27,20 @@ class DefiYieldProvider(private val defiyieldApiKey: String) : IAuditInfoProvide
 
     override fun getAuditReportsAsync(coinType: CoinType): Single<List<Auditor>> {
 
-        var address = when(coinType){
+        val address = when(coinType){
             is CoinType.Bep20 -> coinType.address
             is CoinType.Erc20 -> coinType.address
             else -> null
         }
 
-        if(address.isNullOrEmpty())
+        if (address.isNullOrEmpty()) {
             return Single.error(Exception("Unsupported coinType: $coinType"))
-
-        val auditors = mutableListOf<Auditor>()
+        }
 
         return defiYieldService.auditInfo(AUTH_BEARER_TOKEN, InputParams.BodyTokensAddress(listOf(address))).map {
-            it.first().let { response ->
+            val auditors = mutableListOf<Auditor>()
 
+            it.firstOrNull()?.let { response ->
                 logger.info("Audit info found for coin:${coinType} - Response Count:${response.partnerAudits.size}")
 
                 response.partnerAudits.forEach { audit ->
@@ -47,7 +48,7 @@ class DefiYieldProvider(private val defiyieldApiKey: String) : IAuditInfoProvide
                     audit.partner?.let { partner ->
                         var auditor = auditors.find { it.name.contentEquals(partner.name) }
 
-                        if(auditor == null){
+                        if (auditor == null) {
                             auditor = Auditor(
                                 id = partner.name.trim().toLowerCase().replace("\\s".toRegex(), "-"),
                                 name = partner.name
