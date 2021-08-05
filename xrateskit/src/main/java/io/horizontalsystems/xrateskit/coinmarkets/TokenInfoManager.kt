@@ -23,11 +23,13 @@ class TokenInfoManager(
         val currentTimestamp = System.currentTimeMillis()/1000
         val auditTimestamp = storage.getResourceInfo(ResourceType.AUDIT_INFO_TIMESTAMP)?.updatedAt ?: 0
 
-        storage.getAuditReports(coinType)?.let { data ->
-            if((currentTimestamp - auditTimestamp ) <= AUDIT_DATA_LIFETIME_SECONDS )
-                return Single.just(data)
-            else
-                storage.deleteCoinAuditReports(coinType)
+        storage.getAuditReports(coinType).let { data ->
+            if (data.isNotEmpty()) {
+                if((currentTimestamp - auditTimestamp ) <= AUDIT_DATA_LIFETIME_SECONDS )
+                    return Single.just(data)
+                else
+                    storage.deleteCoinAuditReports(coinType)
+            }
         }
 
         return auditInfoProvider.getAuditReportsAsync(coinType).map { response ->
